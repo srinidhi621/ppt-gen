@@ -34,7 +34,8 @@ PPT-Gen takes:
 | 0.4 | Template analysis | ✅ Done |
 | 0.5 | Alt-Text placeholder tagging | ✅ Done |
 | 0.6 | Layout catalog generation | ✅ Done |
-| 1.x | MVP Pipeline | ⏳ Pending |
+| 1.x | MVP Pipeline | ✅ Done |
+| 2.x | LLM Planning + Review Loop | ⏳ Pending |
 
 ## Repository Structure
 
@@ -87,7 +88,29 @@ source .venv/bin/activate
 pip install python-pptx
 ```
 
-### Scripts
+### CLI Commands
+
+**Validate template against layout catalog:**
+```bash
+python -m src.cli validate
+```
+
+**Render a DeckIR JSON to PPTX:**
+```bash
+python -m src.cli render --deckir inputs/sample_deckir.json
+```
+
+**Run smoke test (validate → preflight → render):**
+```bash
+python -m src.cli smoke --deckir inputs/sample_deckir.json
+```
+
+**Run tests:**
+```bash
+python -m pytest tests/ -v
+```
+
+### Utility Scripts
 
 **Analyze template:**
 ```bash

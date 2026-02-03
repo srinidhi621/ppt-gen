@@ -13,13 +13,15 @@
 | Template preparation | ✅ DONE | Corp Deck 2025 - Nov.pptx (118 layouts, 5 masters) |
 | Icon conversion | ✅ DONE | 213 PNG icons at 512x512px |
 | Alt-Text field_keys | ✅ DONE | 387/387 placeholders tagged (100%) |
-| Layout catalog | ⏳ PENDING | Next: generate from template analysis |
-| Pydantic schemas | ⏳ PENDING | ContentModel, DeckIR, ValidationReport, etc. |
-| Content normalization | ⏳ PENDING | Markdown → ContentModel |
-| LLM Planner | ⏳ PENDING | ContentModel → DeckIR |
-| Preflight validation | ⏳ PENDING | Fit checks + remediation |
-| Renderer | ⏳ PENDING | DeckIR → PPTX via python-pptx |
-| Vision critique | ⏳ PENDING | Phase 1 review loop |
+| Layout catalog | ✅ DONE | 12 MVP layouts with constraints |
+| Pydantic schemas | ✅ DONE | ContentModel, DeckIR, ValidationReport, etc. |
+| Content normalization | ✅ DONE | Markdown → ContentModel with stable IDs |
+| LLM Planner | ⏳ PENDING | Phase 2 - ContentModel → DeckIR |
+| Preflight validation | ✅ DONE | Fit checks + deterministic remediation |
+| Renderer | ✅ DONE | DeckIR → PPTX via python-pptx |
+| Vision critique | ⏳ PENDING | Phase 2 review loop |
+| CLI commands | ✅ DONE | validate, render, smoke |
+| Unit tests | ✅ DONE | 45 tests passing |
 
 ---
 

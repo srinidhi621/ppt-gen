@@ -1,0 +1,165 @@
+{
+  "deck_id": "sample_deck_001",
+  "run_id": "determinism_proof_001",
+  "template_id": "corp_deck_2025",
+  "title": "AI-Powered Analytics Platform",
+  "subtitle": "Client Briefing | Q1 2026",
+  "global_constraints": {
+    "max_slides": 12,
+    "theme": "light",
+    "audience": "executive"
+  },
+  "slides": [
+    {
+      "slide_id": "slide_title",
+      "layout_id": "title_image_light",
+      "fields": {
+        "ph_title": "AI-Powered Analytics Platform",
+        "ph_subtitle": "Client Briefing | Q1 2026",
+        "ph_body": "Transforming data into actionable insights for enterprise decision-making."
+      },
+      "speaker_notes": "Opening slide - set the tone for the presentation. Presented by Ascendion Analytics Practice."
+    },
+    {
+      "slide_id": "slide_agenda",
+      "layout_id": "agenda_light",
+      "fields": {
+        "ph_title": "Agenda",
+        "ph_body": [
+          "Current Business Challenges",
+          "Our Proposed Solution",
+          "Key Platform Capabilities",
+          "Implementation Approach",
+          "Expected Outcomes",
+          "Next Steps"
+        ]
+      },
+      "speaker_notes": "Keep agenda items brief and scannable."
+    },
+    {
+      "slide_id": "slide_challenges",
+      "layout_id": "one_content_light",
+      "fields": {
+        "ph_title": "Current Business Challenges",
+        "ph_body": [
+          "Data Silos: Critical information trapped in disconnected systems",
+          "Manual Processes: Analytics team spends 40+ hours weekly on reporting",
+          "Delayed Insights: Decision-makers receive outdated information",
+          "Inconsistent Metrics: Different teams report conflicting numbers",
+          "Limited Self-Service: Business users depend entirely on IT"
+        ]
+      },
+      "speaker_notes": "Emphasize pain points that resonate with the audience. These challenges are common across enterprises."
+    },
+    {
+      "slide_id": "slide_solution",
+      "layout_id": "two_content_light",
+      "fields": {
+        "ph_title": "Our Proposed Solution",
+        "ph_body_left": [
+          "Unified Data Platform",
+          "Centralized data lake architecture",
+          "Real-time data integration",
+          "Automated data quality monitoring"
+        ],
+        "ph_body_right": [
+          "AI-Powered Analytics",
+          "Natural language query interface",
+          "Predictive analytics models",
+          "Automated anomaly detection"
+        ]
+      },
+      "speaker_notes": "Two-column comparison of platform components. Highlight the synergy between unified data and AI capabilities."
+    },
+    {
+      "slide_id": "slide_capabilities",
+      "layout_id": "three_content_light",
+      "fields": {
+        "ph_title": "Key Platform Capabilities",
+        "ph_col1": [
+          "Data Integration",
+          "50+ pre-built connectors",
+          "Real-time streaming",
+          "Schema detection"
+        ],
+        "ph_col2": [
+          "Analytics Engine",
+          "Self-service BI tools",
+          "Advanced ML models",
+          "Custom visualizations"
+        ],
+        "ph_col3": [
+          "Governance & Security",
+          "Role-based access",
+          "Data encryption",
+          "Audit logging"
+        ]
+      },
+      "speaker_notes": "Three pillars of the platform. Each column represents a key capability area."
+    },
+    {
+      "slide_id": "slide_approach",
+      "layout_id": "one_content_light",
+      "fields": {
+        "ph_title": "Implementation Approach",
+        "ph_body": [
+          "Phase 1 (Weeks 1-4): Discovery and architecture design",
+          "Phase 2 (Weeks 5-10): Core platform build and data onboarding",
+          "Phase 3 (Weeks 11-14): Analytics development and training",
+          "Phase 4 (Weeks 15-16): Go-live support and knowledge transfer"
+        ]
+      },
+      "speaker_notes": "Phased delivery model ensures minimal disruption to ongoing operations while delivering measurable value at each milestone."
+    },
+    {
+      "slide_id": "slide_outcomes",
+      "layout_id": "two_content_light",
+      "fields": {
+        "ph_title": "Expected Outcomes",
+        "ph_body_left": [
+          "Efficiency Gains",
+          "60% reduction in report generation",
+          "80% decrease in data preparation",
+          "5x faster insights to decision"
+        ],
+        "ph_body_right": [
+          "Business Impact",
+          "$2M+ annual cost savings",
+          "25% better forecast accuracy",
+          "Single source of truth for KPIs"
+        ]
+      },
+      "speaker_notes": "Quantifiable benefits in two categories. These metrics are based on similar implementations."
+    },
+    {
+      "slide_id": "slide_statement",
+      "layout_id": "statement_light",
+      "fields": {
+        "ph_body": "Transform your data into your most valuable strategic asset."
+      },
+      "speaker_notes": "Memorable closing statement - large text for emphasis."
+    },
+    {
+      "slide_id": "slide_next_steps",
+      "layout_id": "one_content_light",
+      "fields": {
+        "ph_title": "Next Steps",
+        "ph_body": [
+          "Week 1: Finalize scope and sign statement of work",
+          "Week 2: Kick-off workshop with key stakeholders",
+          "Week 3: Begin discovery phase and technical assessment",
+          "Week 4: Present detailed architecture and project plan"
+        ]
+      },
+      "speaker_notes": "Clear call to action with timeline. Contact your Ascendion account team to schedule the kick-off meeting."
+    },
+    {
+      "slide_id": "slide_closing",
+      "layout_id": "boilerplate_light",
+      "fields": {
+        "ph_body": "Ascendion is a leading provider of AI-first software engineering and digital transformation services. With over 10,000 engineers across 30+ global delivery centers, we help enterprises accelerate their digital journey. www.ascendion.com | analytics@ascendion.com"
+      },
+      "speaker_notes": "Standard company boilerplate. Our Analytics Practice specializes in building enterprise-grade data platforms."
+    }
+  ]
+}
