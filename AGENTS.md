@@ -15,6 +15,7 @@ Agent: follow this guide strictly. Do not invent new architecture or deviate fro
 You must keep these consistent:
 - `SPEC.md` — full specification and contracts
 - `PLAN.md` — phase-wise MVP plan
+- `assets/` — canonical asset root (lowercase). If a legacy `Assets/` directory exists, treat it as transitional; new work must standardize on `assets/`.
 - `assets/template/template.pptx` — corporate template (masters + layouts)
 - `assets/layout/layout_catalog.json` — allowed layouts + fields + fit budgets
 - `assets/icons/icons.json` — icon metadata
@@ -78,7 +79,7 @@ Do not implement AppleScript automation unless explicitly asked in a later phase
 - Layout catalog: `assets/layout/layout_catalog.json`
 - Icons: `assets/icons/png/` and `assets/icons/icons.json`
 - Inputs: `inputs/`
-- Outputs: `runs/<run_id>/`
+- Outputs: `runs/<run_id>/` (do not introduce `output/` directories or conventions)
 - Manual slide images: `review_images/<run_id>/`
 
 ### 3.2 Run ID
@@ -142,6 +143,11 @@ Produce `ValidationReport` (persist it).
 - Insert PNG icons.
 - Write speaker notes.
 - Emit `render_map.json` mapping slide_id → slide index + field_key mapping.
+
+### Layer 4.1 — Determinism Proof (required before LLM integration)
+Before wiring the planner, implement a way to render from a hand-authored `DeckIR` JSON and verify:
+- template drift detection blocks mismatches
+- rendering produces deterministic outputs for the same inputs
 
 ### Layer 5 — Review images ingestion (manual)
 - Load slide images from `review_images/<run_id>/`.
@@ -248,16 +254,18 @@ Do not attempt pixel-perfect visual tests in MVP.
 ---
 
 ## 12) Suggested Work Order for Agent (MVP)
-1. Implement schemas + config loader
-2. Implement ContentModel normalization from Markdown
-3. Implement planner LLM adapter producing DeckIR
-4. Implement preflight validation + remediation
-5. Implement renderer (alt-text placeholder binding)
-6. Implement run artifact persistence
-7. Implement review ingestion (manual images)
-8. Implement vision critic → CritiqueReport
-9. Implement patch planner + applier
-10. Wire CLI commands:
+1. Canonicalize paths to `assets/` (lowercase) and keep docs/scripts consistent
+2. Implement schemas + config loader
+3. Implement template drift detection + layout catalog validation
+4. Implement renderer (alt-text placeholder binding) from hand-authored DeckIR (determinism proof)
+5. Implement preflight validation + remediation + ValidationReport
+6. Add sample inputs + smoke test (end-to-end artifacts under `runs/<run_id>/`)
+7. Implement ContentModel normalization from Markdown
+8. Implement planner LLM adapter producing DeckIR (schema-constrained, bounded retries)
+9. Implement review ingestion (manual images)
+10. Implement vision critic → CritiqueReport
+11. Implement patch planner + applier
+12. Wire CLI commands:
    - `generate`
    - `critique`
    - `patch-and-render`
