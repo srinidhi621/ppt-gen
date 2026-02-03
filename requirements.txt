@@ -1,0 +1,6 @@
+# Core runtime deps
+python-pptx
+pydantic
+
+# Used by scripts/convert_svg_to_png.py
+CairoSVG

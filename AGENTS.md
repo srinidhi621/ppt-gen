@@ -9,6 +9,10 @@ This repo builds a deterministic PPTX generator using:
 
 Agent: follow this guide strictly. Do not invent new architecture or deviate from contracts without updating SPEC.md.
 
+## Agent Policies (Repo-wide)
+- **No new Markdown for reviews/analysis:** Do not create new `.md` files for reviews, analysis, or reports unless the user explicitly asks. Prefer updating existing docs (`SPEC.md`, `PLAN.md`, `README.md`) when requested, or writing structured artifacts under `runs/<run_id>/` (e.g., JSON) as part of the pipeline.
+- **No new dependencies without approval:** Do not add or install new third-party libraries (e.g., `pip install`, adding to `requirements.txt`) unless the user explicitly approves. Prefer Python stdlib and existing dependencies first; if a new library would materially help, propose it and wait for approval.
+
 ---
 
 ## 0) Primary Artifacts (Source of Truth)
