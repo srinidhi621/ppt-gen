@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="uuid-9ca105fd-2891-4308-88d5-d94a7d182e17" data-name="&amp;lt;Layer&amp;gt;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 451.11 451.11">
+  <defs>
+    <style>
+      .uuid-36af1bc1-2352-45a8-9502-f060bdd51a27, .uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559, .uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798 {
+        fill: none;
+        stroke: #000;
+        stroke-linecap: round;
+      }
+
+      .uuid-36af1bc1-2352-45a8-9502-f060bdd51a27, .uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798 {
+        stroke-linejoin: round;
+        stroke-width: 4.113px;
+      }
+
+      .uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559 {
+        stroke-miterlimit: 10;
+        stroke-width: 1.163px;
+      }
+
+      .uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <polygon class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" points="321.803 88.232 293.218 71.718 129.553 166.157 158.133 182.673 321.803 88.232"/>
+  <polygon class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" points="158.133 182.673 129.553 166.157 129.306 362.9 157.887 379.391 158.133 182.673"/>
+  <polygon class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" points="321.803 88.232 158.133 182.673 157.887 379.391 321.803 284.979 321.803 88.232"/>
+  <polyline class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" points="174.743 325.797 174.743 264.286 176.211 262.357"/>
+  <polyline class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" points="176.211 262.357 174.743 264.286 174.743 192.126 304.944 117.011 304.944 216.31"/>
+  <path class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" d="M267.569,149.67c11.726-6.74,21.01-1.269,21.01,12.216s-9.526,29.872-21.252,36.617c-11.483,6.718-21.009,1.269-21.009-12.216s9.526-29.876,21.252-36.617Z"/>
+  <line class="uuid-36af1bc1-2352-45a8-9502-f060bdd51a27" x1="304.944" y1="216.31" x2="304.944" y2="250.679"/>
+  <path class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" d="M304.944,250.679c0,2.639-1.953,5.84-4.154,7.135"/>
+  <line class="uuid-36af1bc1-2352-45a8-9502-f060bdd51a27" x1="300.79" y1="257.814" x2="178.896" y2="328.189"/>
+  <path class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" d="M178.896,328.189c-2.196,1.295-4.154.247-4.154-2.392"/>
+  <path class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" d="M176.211,262.357c4.396-6.207,10.505-9.603,14.901-8.355"/>
+  <line class="uuid-36af1bc1-2352-45a8-9502-f060bdd51a27" x1="191.112" y1="254.002" x2="231.905" y2="265.776"/>
+  <path class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" d="M231.905,265.776c3.911,1.199,9.773-1.785,14.169-7.524"/>
+  <line class="uuid-36af1bc1-2352-45a8-9502-f060bdd51a27" x1="246.074" y1="258.251" x2="276.852" y2="218.827"/>
+  <path class="uuid-628d1abf-1cbc-4774-9d1d-2bf3f6e75798" d="M276.852,218.827c4.643-5.914,10.505-8.92,14.658-7.428"/>
+  <line class="uuid-36af1bc1-2352-45a8-9502-f060bdd51a27" x1="291.511" y1="211.399" x2="304.944" y2="216.31"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="204.055" y1="255.809" x2="175.964" y2="239.689"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="249.003" y1="255.713" x2="174.5" y2="212.671"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="263.419" y1="237.926" x2="178.654" y2="189.046"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="277.099" y1="219.802" x2="201.613" y2="176.197"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="303.969" y1="209.151" x2="275.878" y2="193.053"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="246.564" y1="176.076" x2="226.043" y2="164.204"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="303.48" y1="182.843" x2="288.089" y2="173.927"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="257.064" y1="156.142" x2="249.003" y2="151.403"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="303.969" y1="157.142" x2="270.748" y2="137.896"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="303.233" y1="130.592" x2="294.196" y2="125.315"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="184.515" y1="322.939" x2="176.7" y2="318.494"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="195.999" y1="316.661" x2="176.211" y2="305.204"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="207.721" y1="310.38" x2="175.964" y2="291.966"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="219.447" y1="304.077" x2="175.479" y2="278.624"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="231.173" y1="297.753" x2="174.989" y2="265.337"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="242.653" y1="291.328" x2="182.071" y2="256.397"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="253.157" y1="284.389" x2="216.271" y2="263.016"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="263.905" y1="277.601" x2="241.431" y2="264.579"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="275.388" y1="271.151" x2="249.249" y2="256.077"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="286.868" y1="264.727" x2="256.09" y2="246.993"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="298.351" y1="258.303" x2="262.93" y2="237.904"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="303.969" y1="248.625" x2="270.012" y2="228.911"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="303.722" y1="235.461" x2="277.099" y2="220.071"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="303.48" y1="222.219" x2="287.357" y2="212.936"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="159.355" y1="180.547" x2="146.407" y2="157.852"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="178.896" y1="169.236" x2="165.949" y2="146.542"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="198.438" y1="157.951" x2="185.494" y2="135.283"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="218.226" y1="146.642" x2="205.034" y2="123.995"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="237.77" y1="135.353" x2="224.575" y2="112.737"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="257.311" y1="124.068" x2="244.121" y2="101.426"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="276.852" y1="112.783" x2="263.662" y2="90.189"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="296.398" y1="101.474" x2="283.206" y2="78.878"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="315.448" y1="89.626" x2="313.252" y2="85.52"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.176" y1="372.845" x2="153.248" y2="374.409"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.423" y1="359.581" x2="141.768" y2="368.128"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="346.339" x2="130.528" y2="361.487"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="333.321" x2="130.528" y2="348.466"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="320.227" x2="130.528" y2="335.349"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="307.183" x2="130.528" y2="322.301"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="294.162" x2="130.528" y2="309.259"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="281.068" x2="130.774" y2="296.189"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="268.05" x2="130.774" y2="283.146"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="255.029" x2="130.774" y2="270.124"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="242.007" x2="130.774" y2="257.081"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="228.963" x2="130.774" y2="244.06"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="215.942" x2="130.774" y2="231.017"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="202.924" x2="130.774" y2="217.995"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="156.912" y1="189.878" x2="130.774" y2="204.952"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="151.048" y1="180.204" x2="131.017" y2="191.783"/>
+  <line class="uuid-aa0fc048-6d31-4f00-ada6-4efeed1b6559" x1="139.325" y1="173.902" x2="131.264" y2="178.519"/>
+</svg>

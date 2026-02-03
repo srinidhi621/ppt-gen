@@ -83,7 +83,7 @@ Create a programmable system that takes:
 ## 5. Inputs
 ### 5.1 Template Inputs (One-time)
 
-**Current template:** `Assets/template/template.pptx` (Corp Deck 2025 - Nov)
+**Current template:** `assets/template/template.pptx` (Corp Deck 2025 - Nov)
 
 | Property | Value |
 |----------|-------|
@@ -95,7 +95,7 @@ Create a programmable system that takes:
 - `template.pptx`:
   - corporate theme, masters, and curated layouts
   - placeholder shapes labeled via **Alt-Text** with canonical `field_key` values
-  - Backup maintained at `Assets/template/template_backup_*.pptx`
+  - Backup maintained at `assets/template/template_backup_*.pptx`
 
 - `layout_catalog.json` (pending):
   - maps `layout_id` → template layout + expected fields + constraint profile (fit heuristics)
@@ -116,16 +116,16 @@ Create a programmable system that takes:
 
 ## 6. Outputs
 ### 6.1 Primary Output
-- `output/deck.pptx` (editable, PowerPoint compatible)
+- `runs/<run_id>/deck.pptx` (editable, PowerPoint compatible)
 
 ### 6.2 Secondary Outputs
-- `output/render_map.json`:
+- `runs/<run_id>/render_map.json`:
   - mapping between `slide_id`, slide index, and placeholder/shape identifiers
 
-- `output/run_log.jsonl`:
+- `runs/<run_id>/run_log.jsonl`:
   - structured event logs (planning, validation, render, critique, patch)
 
-- (Optional) `output/critique_report.json` + `output/patch_set.json`
+- (Optional) `runs/<run_id>/critique_report.json` + `runs/<run_id>/patch_set.json`
 
 ---
 

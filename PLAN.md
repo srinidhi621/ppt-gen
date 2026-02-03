@@ -7,7 +7,7 @@ Implement an MVP pipeline that generates an editable, on-brand PPTX using:
 - **Deterministic preflight validation to prevent overflow**
 - **Manual review image export + vision critique + patch iteration**
 
-No Beamer/LaTeX. No LibreOffice in MVP.
+
 
 ---
 
@@ -15,15 +15,10 @@ No Beamer/LaTeX. No LibreOffice in MVP.
 
 | Phase | Task | Status |
 |-------|------|--------|
-| 0.1 | Template selection | DONE |
-| 0.2 | SVG → PNG icon conversion | DONE |
-| 0.3 | Directory structure setup | DONE |
-| 0.4 | Template analysis | DONE |
-| 0.5 | Add Alt-Text to placeholders | DONE |
-| 0.6 | Contract alignment + catalog gate | PENDING (next) |
-| 1.x | MVP pipeline (prove determinism) | PENDING (blocked on 0.6) |
+| 0.x | Phase 0 complete | DONE |
+| 1.x | MVP pipeline (prove determinism) | PENDING (next) |
 | 2.x | LLM planning + review loop | PENDING (blocked on 1.x) |
-| 3.x | Productization (deferred) | DEFERRED (after MVP proven) |
+| 3.x | Productization | DEFERRED (after MVP proven) |
 
 **Last updated:** 2026-02-03
 
@@ -40,13 +35,12 @@ ppt-gen/
 │
 ├── assets/                   # Canonical asset root (lowercase)
 │   ├── template/
-│   │   ├── template.pptx                    # ✅ Corp Deck 2025 (387 placeholders tagged)
-│   │   └── template_backup_*.pptx           # ✅ Auto-generated backups
+│   │   └── template.pptx                    # ✅ Corp Deck 2025 (387 placeholders tagged)
 │   ├── icons/
 │   │   ├── icons.json                       # ✅ Icon metadata (213 icons)
 │   │   └── png/                             # ✅ 512x512 PNG icons
 │   ├── layout/
-│   │   └── layout_catalog.json              # ⏳ NEXT: generate from template
+│   │   └── layout_catalog.json              # ✅ 12 MVP layouts + constraints
 │   ├── Icons and Dimensional Keywords/      # Original SVG source
 │   └── Ascendion Logos/                     # Logo assets
 │
@@ -54,10 +48,10 @@ ppt-gen/
 │   ├── inspect_template.py                  # ✅ Template analysis + alt-text report
 │   ├── convert_svg_to_png.py                # ✅ SVG → PNG batch converter
 │   ├── add_alt_text.py                      # ✅ Automated field_key assignment
-│   ├── alt_text_report.json                 # ✅ Field_key assignment log
-│   └── template_report_*.json               # ✅ Template analysis snapshots
+│   ├── generate_layout_catalog.py           # ✅ Build layout catalog + drift validation
+│   └── alt_text_report.json                 # ✅ Field_key assignment log
 │
-├── inputs/                    # To be created
+├── inputs/                    # Sample inputs
 │   ├── content.md
 │   ├── cues.json
 │   └── constraints.json (optional)
@@ -81,168 +75,14 @@ ppt-gen/
 
 ---
 
-## 2. Phase 0 — Template + Catalog Hardening
+## 2. Phase 0 — Template + Catalog Hardening (Complete)
 
-### 2.1 Select/Prepare the template PPTX — DONE
-
-**Selected template:** `Corp Deck 2025 - Nov.pptx`
-- **Dimensions:** 13.33" x 7.5" (standard 16:9)
-- **Slide masters:** 5
-- **Total layouts:** 118
-- **Location (canonical):** `assets/template/template.pptx`
-
-Available layout categories:
-- Title slides (with/without images, light/dark variants)
-- Section breaks (light/dark)
-- Content layouts: One/Two/Three/Four content (light/dark)
-- Content with image layouts
-- Case study templates
-- Agenda layouts
-- Statement/Boilerplate layouts
-- Blank layouts
-
-### 2.2 Convert icons to PNG — DONE
-
-**Source:** `assets/Icons and Dimensional Keywords/2025 New Icons/` (213 SVG files)
-**Output:** `assets/icons/png/` (213 PNG files, 512x512px)
-**Metadata:** `assets/icons/icons.json`
-
-Icon naming: `icon_001.png` through `icon_213.png` (zero-padded)
-
-To re-run conversion:
-```bash
-DYLD_LIBRARY_PATH=/opt/homebrew/lib python scripts/convert_svg_to_png.py
-```
-
-### 2.3 Add Alt-Text field_key tags to placeholders — DONE (Automated)
-
-**Coverage:** 100% (387 of 387 placeholders have Alt-Text)
-
-Automated via `scripts/add_alt_text.py`:
-
-```bash
-source .venv/bin/activate
-python scripts/add_alt_text.py              # Add alt-text to all layouts
-python scripts/add_alt_text.py --dry-run    # Preview without changes
-python scripts/add_alt_text.py --mvp-only   # Only MVP layouts
-```
-
-**Field key naming convention:**
-
-| Placeholder Type | field_key |
-|-----------------|-----------|
-| Title | `ph_title` |
-| Subtitle | `ph_subtitle` |
-| Body (single) | `ph_body` |
-| Body (2 columns) | `ph_body_left`, `ph_body_right` |
-| Body (3+ columns) | `ph_col1`, `ph_col2`, `ph_col3`, `ph_col4` |
-| Image (single) | `ph_image` |
-| Image (2) | `ph_image_left`, `ph_image_right` |
-| Image (3) | `ph_image_left`, `ph_image_center`, `ph_image_right` |
-| Image (many) | `ph_image_1`, `ph_image_2`, ... |
-
-**Outputs:**
-- Modified template: `assets/template/template.pptx`
-- Backup: `assets/template/template_backup_YYYYMMDD_HHMMSS.pptx`
-- Report: `scripts/alt_text_report.json`
-
-**Definition of Done:** ✓
-- All 118 layouts processed
-- 387 placeholders tagged
-- Template saved with backup
-
-## 2.4 Phase 0.6 — Contract Alignment + Catalog Gate (PENDING — Next Milestone)
-
-This is a hard gate before implementing the MVP pipeline. It eliminates path/contract drift and produces the layout catalog + drift validation needed to safely render.
-
-### 2.4.1 Canonical paths + contract alignment (must-do)
-**Policy:** Use `assets/` (lowercase) as the canonical asset root going forward.
-
-Tasks:
-1. Migrate the repo asset directory naming to `assets/` (lowercase) and update references everywhere:
-   - `PLAN.md`, `SPEC.md`, `README.md`, scripts
-2. Standardize outputs exclusively under `runs/<run_id>/` (avoid `output/` conventions).
-
-**Definition of Done**
-- All docs/scripts reference `assets/...` paths only
-- Run artifacts are specified under `runs/<run_id>/` only
-
-### 2.4.2 Build `layout_catalog.json` (hard requirement for planning + validation)
-Generate `assets/layout/layout_catalog.json` from template analysis.
-
-**Approach:** Create `scripts/generate_layout_catalog.py` that:
-1. Loads `assets/template/template.pptx` and reads all layouts and their placeholder `field_key`s from alt-text
-2. Filters to MVP-priority layouts (or all)
-3. Generates a structured catalog with initial fit constraints per layout
-4. Produces a validation report if any layout/field is ambiguous or missing
-
-**Required fields per layout entry:**
-
-```json
-{
-  "layout_id": "one_content_light",
-  "template_layout_name": "One Content - Light",
-  "master_index": 0,
-  "layout_index": 10,
-  "fields": [
-    {"field_key": "ph_title", "type": "title", "required": true},
-    {"field_key": "ph_body", "type": "content", "required": true}
-  ],
-  "constraints": {
-    "max_title_chars": 60,
-    "max_bullets": 6,
-    "max_words_per_bullet": 15,
-    "max_total_body_chars": 600,
-    "body_line_budget": 12,
-    "avg_chars_per_line": 50
-  }
-}
-```
-
-**MVP Layout Selection (12 layouts to start):**
-
-| Layout Name | layout_id | Use Case |
-|-------------|-----------|----------|
-| Title with Image 2 | `title_image_light` | Opening slide |
-| Section Break - Light 1 | `section_break_light` | Section dividers |
-| Header Only - Light | `header_only_light` | Title-only slides |
-| One Content - Light | `one_content_light` | Standard bullet slide |
-| Two Content - Light | `two_content_light` | Two-column comparison |
-| Three content - Light | `three_content_light` | Three-column layout |
-| Four content - Light | `four_content_light` | Four-column layout |
-| One Content With Image - Light | `content_image_light` | Content + visual |
-| Two Content with Image - Light | `two_content_image_light` | Two columns + image |
-| Statement - Light | `statement_light` | Big quote/statement |
-| Agenda - Light | `agenda_light` | Agenda/TOC slide |
-| BoilerPlate - Light | `boilerplate_light` | Closing slide |
-
-**Constraint calibration strategy:**
-- Start with conservative estimates based on placeholder dimensions
-- Refine after testing with real content
-- Use `avg_chars_per_line` ≈ placeholder_width_inches × 7 (heuristic for body text)
-
-**Definition of Done:**
-- `assets/layout/layout_catalog.json` exists with at least 12 MVP layouts
-- Each layout has field_keys matching template alt-text
-- Each layout has initial constraint estimates
-- A validation script confirms catalog matches template (template drift detection)
-
-### 2.4.3 Template drift detection (fail fast)
-Add a startup validator (and/or standalone script) that checks:
-- every `layout_id` in the catalog maps to a real layout in the template
-- every required `field_key` exists in that layout
-
-**Definition of Done**
-- Rendering (and optionally the CLI startup) refuses to proceed on mismatch
-
-### 2.4.4 Add sample inputs for repeatable testing
-Create:
-- `inputs/content.md` (small but representative deck content)
-- `inputs/cues.json` (minimal cues)
-
-**Definition of Done**
-- Sample inputs are stable and used by the smoke test in Phase 1
-- A short deck can be generated end-to-end once Phase 1 is implemented
+Key outputs now in place:
+- Canonical assets under `assets/` (lowercase)
+- `assets/template/template.pptx` tagged with 387 `field_key`s
+- `assets/layout/layout_catalog.json` with 12 MVP layouts + constraints
+- Template drift validation implemented in `scripts/generate_layout_catalog.py`
+- Sample inputs in `inputs/`
 
 ---
 
@@ -386,10 +226,10 @@ Policy (pressure valve first):
 | Risk | Mitigation |
 |------|------------|
 | Overflow risk | Hard preflight budgets + pressure valve |
-| Icon rendering (SVG) | Phase 1 uses PNG only (DONE) |
+| Icon rendering (SVG) | Phase 1 uses PNG only |
 | macOS automation flaky | Manual export for MVP |
 | Template drift | Validate template vs catalog at startup |
-| Path drift | Canonicalize `assets/` + update all references (Phase 0.6) |
+| Path drift | Canonicalize `assets/` + update all references |
 
 ---
 
@@ -405,78 +245,117 @@ Policy (pressure valve first):
 
 ## Next Action Required
 
-**NEXT:** Complete Phase 0.6 (contract alignment + layout catalog + drift detection)
+**NEXT:** Begin Phase 1 (MVP Pipeline - Prove Determinism)
 
-### Immediate Steps
+### Phase 1 — Detailed Build Plan
 
-1. **Canonicalize `assets/` paths**
-   - Migrate directory naming and update all references (docs + scripts)
-   - Standardize run artifacts under `runs/<run_id>/` only
+#### 1.1 Models + Config (Pydantic)
+**Status:** DONE
+**Build direction**
+- Create `src/models/` with strict Pydantic models for: Config, ContentModel, DeckIR, ValidationReport, CritiqueReport, PatchSet, RenderMap.
+- Enforce schema validation on all JSON inputs/outputs at module boundaries.
+- Add JSON serialization helpers (deterministic ordering, stable defaults).
 
-2. **Create `scripts/generate_layout_catalog.py`**
-   - Read template layouts and their field_keys from alt-text
-   - Generate `layout_id` from layout name (snake_case, normalized)
-   - Compute initial fit constraints from placeholder dimensions
-   - Output `assets/layout/layout_catalog.json`
+**Definition of Done**
+- All schemas validate against sample fixtures (valid + invalid cases).
+- A model round-trip (dict → model → JSON → model) preserves data.
+- `Config` loads canonical paths (`assets/`, `inputs/`, `runs/`) and defaults.
 
-3. **Select MVP layouts** (start with 12 core layouts)
-   - Title slides, section breaks, content layouts, agenda, statement
+**Tests**
+- Unit tests for each schema (required fields, enum values, field_key constraints).
+- Negative tests for invalid layout_id / field_key / missing required fields.
 
-4. **Validate catalog against template**
-   - Ensure all field_keys in catalog exist in template
-   - Fail fast on mismatch (template drift detection per AGENTS.md)
+#### 1.2 Template Drift Detection + Catalog Validation
+**Status:** DONE
+**Build direction**
+- Add a validator module (or script) that loads `assets/layout/layout_catalog.json` and `assets/template/template.pptx`.
+- Verify every catalog entry resolves to a template layout by master/layout index and name.
+- Verify required `field_key`s exist in each layout.
+- Fail fast when mismatch is detected.
 
-5. **Add sample inputs**
-   - Create `inputs/content.md` and `inputs/cues.json`
+**Definition of Done**
+- Validator fails on missing layout or missing required field_key.
+- Validator passes on current template + catalog.
+- Clear error output identifies layout_id + missing item.
 
-### After Phase 0.6
+**Tests**
+- Unit tests with a mocked catalog containing missing layout and missing field_key.
+- Smoke test that runs validator against real template + catalog.
 
-6. **Phase 1.1: Implement Pydantic schemas**
-   - `src/models/`: ContentModel, DeckIR, ValidationReport, CritiqueReport, PatchSet
+#### 1.3 Renderer (DeckIR → PPTX) from Hand-Authored DeckIR
+**Status:** DONE
+**Build direction**
+- Create `src/render/` to load `assets/template/template.pptx`.
+- Add slides by `layout_id` (use catalog to resolve master/layout index).
+- Populate placeholders by matching `shape.alt_text == field_key`.
+- Insert PNG icons and images by `asset_refs`.
+- Always write speaker notes.
+- Emit `render_map.json` mapping `slide_id → slide_index + field_key`.
 
-7. **Phase 1.2: Renderer from hand-authored DeckIR**
-   - Prove deterministic rendering + render_map
+**Definition of Done**
+- Given the same DeckIR + template, output PPTX is deterministic.
+- All populated fields map to correct placeholders by alt-text.
+- `render_map.json` is emitted and matches slide order.
 
-8. **Phase 1.3: Preflight validation**
-   - Fit checks + remediation + ValidationReport + DeckIR v1.1 artifact
+**Tests**
+- Unit test: placeholder binding returns expected field_key mapping.
+- Golden test: same DeckIR yields identical render_map + stable output file hash.
 
-9. **Phase 1.4: Content normalization**
-   - `src/normalize/`: Markdown parser → ContentModel with stable IDs
+#### 1.4 Preflight Validation + Remediation (DeckIR v1 → v1.1)
+**Build direction**
+- Implement fit checks using catalog constraints: title length, bullet count, words per bullet, total chars, estimated lines.
+- Implement deterministic remediation in order: DROP_BULLETS → CONDENSE → MOVE_TO_SPEAKER_NOTES → SPLIT_SLIDE.
+- Emit `validation_report.json` and `deckir_v1_1.json`.
 
-10. **Phase 1.5: Smoke test**
-   - A small end-to-end run produces a PPTX and all artifacts under `runs/<run_id>/`
+**Definition of Done**
+- Any violating slide is either remediated or flagged as BLOCKING.
+- `ValidationReport` includes slide_id, field_key, violation_type, and action taken.
+- Remediation is deterministic for the same input.
 
-11. **Phase 2: LLM Planner**
+**Tests**
+- Unit tests for each violation type and each remediation action.
+- Regression tests to ensure remediation order is enforced.
+
+#### 1.5 Content Normalization (Markdown → ContentModel)
+**Build direction**
+- Parse `inputs/content.md` into sections with stable IDs (use markers or deterministic hashing).
+- Normalize bullets/paragraphs consistently.
+- Link cues from `inputs/cues.json` to section IDs.
+- Persist `source_hash` for change detection.
+
+**Definition of Done**
+- Same input → identical ContentModel (stable IDs + hash).
+- Sections and bullets maintain order and structure.
+- Cues map deterministically to sections.
+
+**Tests**
+- Snapshot test for ContentModel output from sample `content.md`.
+- ID stability test across runs with same input.
+
+#### 1.6 Determinism Proof + End-to-End Smoke Test
+**Build direction**
+- Add a CLI entry that accepts a hand-authored DeckIR JSON.
+- Run: validate → render → emit artifacts under `runs/<run_id>/`.
+- Provide a smoke test script for local use.
+
+**Definition of Done**
+- Running the smoke test produces:
+  - `deckir_v1.json`
+  - `deckir_v1_1.json`
+  - `validation_report.json`
+  - `render_map.json`
+  - `deck_v1.pptx`
+  - `run_log.jsonl`
+- PPTX opens cleanly in PowerPoint and is editable.
+
+**Tests**
+- Automated smoke test command in `tests/` or `scripts/` (no manual steps).
+- File existence and basic schema validation checks for run artifacts.
+
+### After Phase 1
+
+6. **Phase 2: LLM Planner**
    - `src/plan/`: Prompt templates + DeckIR generation (only after Phase 1 is stable)
 
-12. **Phase 2: Critique + patch iteration**
+7. **Phase 2: Critique + patch iteration**
    - `src/critique/`: Vision critic + PatchSet generation + applier
-
----
-
-## Completed Work Summary
-
-### Phase 0 Deliverables (All Done)
-
-| Task | Deliverable | Details |
-|------|-------------|---------|
-| 0.1 | Template selected | Corp Deck 2025 - Nov.pptx (13.33" × 7.5", 118 layouts, 5 masters) |
-| 0.2 | Icons converted | 213 SVG → PNG at 512×512px with metadata in icons.json |
-| 0.3 | Directory structure | assets/, scripts/, organized per AGENTS.md |
-| 0.4 | Template analyzed | `inspect_template.py` generates JSON reports |
-| 0.5 | Alt-text automated | `add_alt_text.py` tagged 387/387 placeholders (100%) |
-
-### Scripts Created
-
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| `inspect_template.py` | Analyze template structure, report alt-text coverage | `python scripts/inspect_template.py` |
-| `convert_svg_to_png.py` | Batch convert SVG icons to PNG | `DYLD_LIBRARY_PATH=/opt/homebrew/lib python scripts/convert_svg_to_png.py` |
-| `add_alt_text.py` | Programmatically set field_key alt-text | `python scripts/add_alt_text.py [--dry-run] [--mvp-only]` |
-
-### Key Technical Decisions
-
-1. **Alt-text location:** `p:cNvPr/@descr` (presentation namespace, not drawing namespace)
-2. **Field_key naming:** Position-based disambiguation for multi-placeholder layouts
-3. **Backup strategy:** Timestamped backups before template modification
-4. **Verification:** `inspect_template.py` updated to read `p:cNvPr` correctly

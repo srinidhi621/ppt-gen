@@ -104,6 +104,17 @@ If review loop is executed:
 - `deckir_v2.json`
 - `deck_v2.pptx`
 
+### 3.4 Python Environment
+- Virtual environment: `.venv/` (project-local)
+- Activate before running scripts:
+  ```bash
+  source .venv/bin/activate
+  ```
+- For SVG conversion (requires librsvg):
+  ```bash
+  DYLD_LIBRARY_PATH=/opt/homebrew/lib python scripts/convert_svg_to_png.py
+  ```
+
 ---
 
 ## 4) Architecture Implementation Checklist

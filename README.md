@@ -33,7 +33,7 @@ PPT-Gen takes:
 | 0.3 | Directory structure | ✅ Done |
 | 0.4 | Template analysis | ✅ Done |
 | 0.5 | Alt-Text placeholder tagging | ✅ Done |
-| 0.6 | Layout catalog generation | ⏳ Pending |
+| 0.6 | Layout catalog generation | ✅ Done |
 | 1.x | MVP Pipeline | ⏳ Pending |
 
 ## Repository Structure
@@ -44,14 +44,14 @@ ppt-gen/
 ├── PLAN.md                    # Implementation plan
 ├── AGENTS.md                  # Agent operating guide
 │
-├── Assets/
+├── assets/
 │   ├── template/
 │   │   └── template.pptx      # Corporate template (118 layouts, 387 placeholders)
 │   ├── icons/
 │   │   ├── icons.json         # Icon metadata (213 icons)
 │   │   └── png/               # 512x512 PNG icons
 │   └── layout/
-│       └── layout_catalog.json  # Layout definitions (pending)
+│       └── layout_catalog.json  # Layout definitions (12 MVP layouts)
 │
 ├── scripts/
 │   ├── inspect_template.py    # Template analysis tool
@@ -91,7 +91,7 @@ pip install python-pptx
 
 **Analyze template:**
 ```bash
-python scripts/inspect_template.py Assets/template/template.pptx
+python scripts/inspect_template.py assets/template/template.pptx
 ```
 
 **Add alt-text to placeholders (if needed):**

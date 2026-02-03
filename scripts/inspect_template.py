@@ -215,8 +215,7 @@ def main():
     if len(sys.argv) < 2:
         # Default paths to check
         default_paths = [
-            "Assets/Ascendion_Presentation-Template_Apr25.pptx",
-            "Assets/Corp Deck 2025 - Nov.pptx",
+            "assets/template/template.pptx",
         ]
         
         base_path = Path(__file__).parent.parent

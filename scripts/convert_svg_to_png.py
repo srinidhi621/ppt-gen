@@ -74,7 +74,7 @@ def main():
     # Paths
     base_path = Path(__file__).parent.parent
     
-    svg_source_dir = base_path / "Assets" / "Icons and Dimensional Keywords" / "2025 New Icons"
+    svg_source_dir = base_path / "assets" / "Icons and Dimensional Keywords" / "2025 New Icons"
     png_output_dir = base_path / "assets" / "icons" / "png"
     icons_json_path = base_path / "assets" / "icons" / "icons.json"
     

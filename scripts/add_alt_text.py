@@ -258,7 +258,7 @@ def main():
         "--template",
         type=str,
         default=None,
-        help="Path to template file (default: Assets/template/template.pptx)"
+        help="Path to template file (default: assets/template/template.pptx)"
     )
     args = parser.parse_args()
     
@@ -269,7 +269,7 @@ def main():
     if args.template:
         template_path = Path(args.template)
     else:
-        template_path = project_root / "Assets" / "template" / "template.pptx"
+        template_path = project_root / "assets" / "template" / "template.pptx"
     
     if not template_path.exists():
         print(f"Error: Template not found at {template_path}")

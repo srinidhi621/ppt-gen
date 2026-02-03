@@ -1,0 +1,69 @@
+{
+  "doc_id": "sample_deck_001",
+  "version": "1.0",
+  "title": "AI-Powered Analytics Platform",
+  "subtitle": "Client Briefing | Q1 2026",
+  "cues": [
+    {
+      "section_id": "title",
+      "layout_hint": "title_image_light",
+      "notes": "Opening slide - set the tone for the presentation"
+    },
+    {
+      "section_id": "agenda",
+      "layout_hint": "agenda_light",
+      "notes": "Keep agenda items brief and scannable"
+    },
+    {
+      "section_id": "challenges",
+      "layout_hint": "one_content_light",
+      "icon_hints": ["warning", "data", "time"],
+      "notes": "Emphasize pain points that resonate with the audience"
+    },
+    {
+      "section_id": "solution",
+      "layout_hint": "two_content_light",
+      "icon_hints": ["cloud", "ai", "analytics"],
+      "notes": "Two-column comparison of platform components"
+    },
+    {
+      "section_id": "capabilities",
+      "layout_hint": "three_content_light",
+      "icon_hints": ["integration", "engine", "security"],
+      "notes": "Three pillars of the platform"
+    },
+    {
+      "section_id": "approach",
+      "layout_hint": "content_image_light",
+      "image_hint": "timeline or roadmap visual",
+      "notes": "Show phased implementation timeline"
+    },
+    {
+      "section_id": "outcomes",
+      "layout_hint": "two_content_image_light",
+      "icon_hints": ["efficiency", "growth"],
+      "notes": "Quantifiable benefits in two categories"
+    },
+    {
+      "section_id": "statement",
+      "layout_hint": "statement_light",
+      "notes": "Memorable closing statement - large text"
+    },
+    {
+      "section_id": "next_steps",
+      "layout_hint": "one_content_light",
+      "icon_hints": ["calendar", "action"],
+      "notes": "Clear call to action with timeline"
+    },
+    {
+      "section_id": "closing",
+      "layout_hint": "boilerplate_light",
+      "notes": "Standard company boilerplate"
+    }
+  ],
+  "global_constraints": {
+    "max_slides": 12,
+    "theme": "light",
+    "audience": "executive"
+  }
+}
