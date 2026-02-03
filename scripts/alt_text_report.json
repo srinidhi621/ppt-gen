@@ -1,0 +1,3543 @@
+{
+  "template_path": "/Users/Srinidhi/my_projects/ppt-gen/Assets/template/template.pptx",
+  "timestamp": "2026-02-03T15:10:44.221527",
+  "dry_run": false,
+  "mvp_only": false,
+  "layouts_processed": [
+    {
+      "master_index": 0,
+      "layout_index": 0,
+      "layout_name": "Title with Image 2",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.55, T:1.55",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.55, T:3.75",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:6.48",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 1,
+      "layout_name": "Title with Image 5",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.55, T:1.55",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.55, T:3.75",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:6.48",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 2,
+      "layout_name": "Title with Half Image - Light",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.55, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.55, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:6.48",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 19",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.20, T:-0.01",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 3,
+      "layout_name": "Title with Half Image 1",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.55, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.55, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:6.48",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 19",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.20, T:-0.01",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 4,
+      "layout_name": "Title with Half Image - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.55, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.55, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:6.48",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 19",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.20, T:-0.01",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 5,
+      "layout_name": "Title with Half Image 4",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.55, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.55, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:6.48",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 19",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.20, T:-0.01",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 6,
+      "layout_name": "Agenda - Light",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.33",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body",
+          "position": "L:0.56, T:1.63",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 7,
+      "layout_name": "Agenda - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body",
+          "position": "L:0.56, T:1.65",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 8,
+      "layout_name": "Header Only - Light",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.33",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 9,
+      "layout_name": "Header Only - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.33",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 10,
+      "layout_name": "One Content - Light",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.61, T:0.25",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body",
+          "position": "L:0.61, T:1.49",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 11,
+      "layout_name": "One Content - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.61, T:0.34",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body",
+          "position": "L:0.61, T:1.87",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 12,
+      "layout_name": "Two Content - Light",
+      "placeholders": [
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_left",
+          "position": "L:0.56, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_right",
+          "position": "L:6.95, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 13,
+      "layout_name": "1_Two Content - Light",
+      "placeholders": [
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_left",
+          "position": "L:0.56, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_right",
+          "position": "L:6.95, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 14,
+      "layout_name": "Two Content - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_left",
+          "position": "L:0.56, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_right",
+          "position": "L:6.95, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 15,
+      "layout_name": "One Content With Image - Light",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:7.71, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body",
+          "position": "L:0.56, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 16,
+      "layout_name": "One Content With Image 1",
+      "placeholders": [
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body",
+          "position": "L:0.56, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:7.71, T:1.03",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 17,
+      "layout_name": "One Content with Image - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:7.71, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body",
+          "position": "L:0.56, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 18,
+      "layout_name": "One Content with Image 2",
+      "placeholders": [
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body",
+          "position": "L:0.56, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:7.71, T:1.03",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 19,
+      "layout_name": "Two Content with Image - Light",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_left",
+          "position": "L:0.56, T:4.55",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_right",
+          "position": "L:6.87, T:4.55",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 6",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.56, T:1.99",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 20,
+      "layout_name": "Two Content with Image - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_left",
+          "position": "L:0.56, T:4.55",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_right",
+          "position": "L:6.87, T:4.55",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 6",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.56, T:1.99",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 21,
+      "layout_name": "Three content - Light",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col1",
+          "position": "L:0.56, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col2",
+          "position": "L:4.75, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col3",
+          "position": "L:8.94, T:1.97",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 22,
+      "layout_name": "Three content with Images",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col1",
+          "position": "L:0.37, T:3.89",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col2",
+          "position": "L:4.75, T:3.87",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col3",
+          "position": "L:9.14, T:3.89",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_left",
+          "position": "L:1.19, T:1.71",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_center",
+          "position": "L:5.79, T:1.78",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_right",
+          "position": "L:10.06, T:1.78",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 23,
+      "layout_name": "Three content with Image - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_left",
+          "position": "L:4.75, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_right",
+          "position": "L:8.94, T:1.97",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 24,
+      "layout_name": "Four content - Light",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col1",
+          "position": "L:0.56, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col2",
+          "position": "L:3.70, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col3",
+          "position": "L:6.83, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col4",
+          "position": "L:9.97, T:1.97",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 25,
+      "layout_name": "Four content - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col1",
+          "position": "L:0.56, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col2",
+          "position": "L:3.70, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col3",
+          "position": "L:6.83, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col4",
+          "position": "L:9.97, T:1.97",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 26,
+      "layout_name": "Section Break - Light 1",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 47",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:999.00, T:0.85",
+          "success": true
+        },
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:6.33, T:3.23",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 27,
+      "layout_name": "Section Break - Light 3",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:6.33, T:3.23",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 47",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:999.00, T:0.85",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 28,
+      "layout_name": "Section Break - Dark 1",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 47",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:999.00, T:0.85",
+          "success": true
+        },
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:6.33, T:3.23",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 29,
+      "layout_name": "Section Break - Dark 2",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:6.33, T:3.23",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 47",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:999.00, T:0.85",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 30,
+      "layout_name": "Statement - Light",
+      "placeholders": [
+        {
+          "shape_name": "Text Placeholder 9",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.56, T:0.47",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 31,
+      "layout_name": "Statement - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Text Placeholder 9",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.56, T:0.47",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 32,
+      "layout_name": "Side with logo and Photos",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_1",
+          "position": "L:1.25, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_2",
+          "position": "L:1.25, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_3",
+          "position": "L:1.27, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_4",
+          "position": "L:2.36, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_5",
+          "position": "L:2.36, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_6",
+          "position": "L:2.37, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_7",
+          "position": "L:3.46, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_8",
+          "position": "L:3.46, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_9",
+          "position": "L:3.48, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_10",
+          "position": "L:4.57, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_11",
+          "position": "L:4.57, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_12",
+          "position": "L:4.58, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_13",
+          "position": "L:5.67, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_14",
+          "position": "L:5.67, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_15",
+          "position": "L:5.69, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_16",
+          "position": "L:6.78, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_17",
+          "position": "L:6.78, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_18",
+          "position": "L:6.80, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_19",
+          "position": "L:7.89, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_20",
+          "position": "L:7.89, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_21",
+          "position": "L:7.90, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_22",
+          "position": "L:8.99, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_23",
+          "position": "L:8.99, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_24",
+          "position": "L:9.01, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_25",
+          "position": "L:10.10, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_26",
+          "position": "L:10.10, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_27",
+          "position": "L:10.11, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_28",
+          "position": "L:11.20, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_29",
+          "position": "L:11.20, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_30",
+          "position": "L:11.22, T:4.45",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 33,
+      "layout_name": "pure white with edges and footer",
+      "placeholders": []
+    },
+    {
+      "master_index": 0,
+      "layout_index": 34,
+      "layout_name": "pure black",
+      "placeholders": []
+    },
+    {
+      "master_index": 0,
+      "layout_index": 35,
+      "layout_name": "Title BLACK",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.55, T:0.56",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.55, T:3.75",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:6.48",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 36,
+      "layout_name": "Blank",
+      "placeholders": []
+    },
+    {
+      "master_index": 0,
+      "layout_index": 37,
+      "layout_name": "1_Only Title",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 38,
+      "layout_name": "Only Title - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 39,
+      "layout_name": "Only Title",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 40,
+      "layout_name": "MTH Statement - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Text Placeholder 9",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:3.70, T:2.66",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 41,
+      "layout_name": "BoilerPlate - Light",
+      "placeholders": [
+        {
+          "shape_name": "Text Placeholder 9",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.49, T:1.97",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 42,
+      "layout_name": "BoilerPlate - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Text Placeholder 9",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.49, T:1.97",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 0,
+      "layout_index": 43,
+      "layout_name": "1_Three content with Images",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col1",
+          "position": "L:0.37, T:3.89",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col2",
+          "position": "L:4.75, T:3.87",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col3",
+          "position": "L:9.14, T:3.89",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_left",
+          "position": "L:1.40, T:1.43",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_center",
+          "position": "L:5.89, T:1.43",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_right",
+          "position": "L:10.38, T:1.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 1,
+      "layout_index": 0,
+      "layout_name": "pure black",
+      "placeholders": []
+    },
+    {
+      "master_index": 2,
+      "layout_index": 0,
+      "layout_name": "Title Slide",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:1.67, T:1.23",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:1.67, T:3.94",
+          "success": true
+        },
+        {
+          "shape_name": "Date Placeholder 3",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 4",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 5",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 1,
+      "layout_name": "Title and Content",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.92, T:0.40",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body",
+          "position": "L:0.92, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Date Placeholder 3",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 4",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 5",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 2,
+      "layout_name": "Section Header",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.91, T:1.87",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 2",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.91, T:5.02",
+          "success": true
+        },
+        {
+          "shape_name": "Date Placeholder 3",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 4",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 5",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 3,
+      "layout_name": "Two Content",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.92, T:0.40",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_left",
+          "position": "L:0.92, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_right",
+          "position": "L:6.75, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Date Placeholder 4",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 5",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 6",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 4,
+      "layout_name": "Comparison",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.92, T:0.40",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 2",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body_left",
+          "position": "L:0.92, T:1.84",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body_right",
+          "position": "L:6.75, T:1.84",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_left",
+          "position": "L:0.92, T:2.74",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 5",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_right",
+          "position": "L:6.75, T:2.74",
+          "success": true
+        },
+        {
+          "shape_name": "Date Placeholder 6",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 7",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 8",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 5,
+      "layout_name": "Title Only",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.92, T:0.40",
+          "success": true
+        },
+        {
+          "shape_name": "Date Placeholder 2",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 3",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 4",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 6,
+      "layout_name": "Blank",
+      "placeholders": [
+        {
+          "shape_name": "Date Placeholder 1",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 2",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 3",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 7,
+      "layout_name": "Content with Caption",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.92, T:0.50",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body",
+          "position": "L:5.67, T:1.08",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 3",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.92, T:2.25",
+          "success": true
+        },
+        {
+          "shape_name": "Date Placeholder 4",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 5",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 6",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 8,
+      "layout_name": "Picture with Caption",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.92, T:0.50",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:5.67, T:1.08",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 3",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.92, T:2.25",
+          "success": true
+        },
+        {
+          "shape_name": "Date Placeholder 4",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 5",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 6",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 9,
+      "layout_name": "Title and Vertical Text",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.92, T:0.40",
+          "success": true
+        },
+        {
+          "shape_name": "Vertical Text Placeholder 2",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.92, T:2.00",
+          "success": true
+        },
+        {
+          "shape_name": "Date Placeholder 3",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 4",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 5",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 10,
+      "layout_name": "Vertical Title and Text",
+      "placeholders": [
+        {
+          "shape_name": "Vertical Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:9.54, T:0.40",
+          "success": true
+        },
+        {
+          "shape_name": "Vertical Text Placeholder 2",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.92, T:0.40",
+          "success": true
+        },
+        {
+          "shape_name": "Date Placeholder 3",
+          "placeholder_type": "DATE (16)",
+          "field_key": "ph_date",
+          "position": "L:0.92, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Footer Placeholder 4",
+          "placeholder_type": "FOOTER (15)",
+          "field_key": "ph_footer",
+          "position": "L:4.42, T:6.95",
+          "success": true
+        },
+        {
+          "shape_name": "Slide Number Placeholder 5",
+          "placeholder_type": "SLIDE_NUMBER (13)",
+          "field_key": "ph_slide_number",
+          "position": "L:9.42, T:6.95",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 2,
+      "layout_index": 11,
+      "layout_name": "Header Only - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.33",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 3,
+      "layout_index": 0,
+      "layout_name": "Title+Content - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 2",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:1.75",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 3,
+      "layout_index": 1,
+      "layout_name": "Only Title - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 3,
+      "layout_index": 2,
+      "layout_name": "Title and two columns",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 2",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body_left",
+          "position": "L:0.58, T:1.76",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 2",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body_right",
+          "position": "L:6.82, T:1.76",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 3,
+      "layout_index": 3,
+      "layout_name": "Blank",
+      "placeholders": []
+    },
+    {
+      "master_index": 3,
+      "layout_index": 4,
+      "layout_name": "Two Content with Image - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_left",
+          "position": "L:0.56, T:4.48",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_body_right",
+          "position": "L:6.81, T:4.48",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 6",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.56, T:1.76",
+          "success": true
+        },
+        {
+          "shape_name": "Title Placeholder 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 3,
+      "layout_index": 5,
+      "layout_name": "Three content - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col1",
+          "position": "L:0.56, T:1.75",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col2",
+          "position": "L:4.73, T:1.75",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col3",
+          "position": "L:8.89, T:1.75",
+          "success": true
+        },
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 3,
+      "layout_index": 6,
+      "layout_name": "Four content - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col1",
+          "position": "L:0.56, T:1.78",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col2",
+          "position": "L:3.69, T:1.78",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col3",
+          "position": "L:6.81, T:1.78",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col4",
+          "position": "L:9.93, T:1.78",
+          "success": true
+        },
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 3,
+      "layout_index": 7,
+      "layout_name": "Three content with Images - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_left",
+          "position": "L:1.49, T:1.73",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_center",
+          "position": "L:5.65, T:1.73",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 10",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_right",
+          "position": "L:9.81, T:1.73",
+          "success": true
+        },
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col1",
+          "position": "L:0.56, T:3.89",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col2",
+          "position": "L:4.72, T:3.87",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 3",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col3",
+          "position": "L:8.88, T:3.89",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 3,
+      "layout_index": 8,
+      "layout_name": "1 - Case Study Template - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 12",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:999.00, T:0.00",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col1",
+          "position": "L:2.48, T:2.58",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col2",
+          "position": "L:5.13, T:2.58",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col3",
+          "position": "L:7.78, T:2.58",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col4",
+          "position": "L:10.42, T:2.58",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 20",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_col1",
+          "position": "L:0.15, T:3.61",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 20",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_col2",
+          "position": "L:0.19, T:6.09",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 20",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_col3",
+          "position": "L:0.19, T:4.90",
+          "success": true
+        },
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:2.45, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 3,
+      "layout_index": 9,
+      "layout_name": "2 - Case Study Template - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 12",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:8.63, T:1.76",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col1",
+          "position": "L:0.56, T:2.38",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col2",
+          "position": "L:0.56, T:4.81",
+          "success": true
+        },
+        {
+          "shape_name": "Content Placeholder 2",
+          "placeholder_type": "OBJECT (7)",
+          "field_key": "ph_col3",
+          "position": "L:4.70, T:4.81",
+          "success": true
+        },
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 3,
+      "layout_index": 10,
+      "layout_name": "Slide with logo and Photos - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_1",
+          "position": "L:1.25, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_2",
+          "position": "L:1.25, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_3",
+          "position": "L:1.27, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_4",
+          "position": "L:2.36, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_5",
+          "position": "L:2.36, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_6",
+          "position": "L:2.37, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_7",
+          "position": "L:3.46, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_8",
+          "position": "L:3.46, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_9",
+          "position": "L:3.48, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_10",
+          "position": "L:4.57, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_11",
+          "position": "L:4.57, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_12",
+          "position": "L:4.58, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_13",
+          "position": "L:5.67, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_14",
+          "position": "L:5.67, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_15",
+          "position": "L:5.69, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_16",
+          "position": "L:6.78, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_17",
+          "position": "L:6.78, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_18",
+          "position": "L:6.80, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_19",
+          "position": "L:7.89, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_20",
+          "position": "L:7.89, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_21",
+          "position": "L:7.90, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_22",
+          "position": "L:8.99, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_23",
+          "position": "L:8.99, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_24",
+          "position": "L:9.01, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_25",
+          "position": "L:10.10, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_26",
+          "position": "L:10.10, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_27",
+          "position": "L:10.11, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_28",
+          "position": "L:11.20, T:2.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_29",
+          "position": "L:11.20, T:3.33",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image_30",
+          "position": "L:11.22, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 0,
+      "layout_name": "Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:4.75",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:6.31",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 1,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:4.75",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:6.31",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 2,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:2.81",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:4.37",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 3,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:2.81",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:4.37",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 4,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 5,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 6,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.63, T:-0.02",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 7,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.63, T:-0.02",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 8,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 9,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:999.00, T:-0.00",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 10,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:999.00, T:-0.00",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 11,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:999.00, T:-0.00",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 12,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:5.11",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 13,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:4.75",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:6.31",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 14,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:4.75",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:6.31",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 15,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.02",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:2.81",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:4.37",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 16,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:2.81",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:4.37",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 17,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 18,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 19,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.64, T:-0.02",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 20,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.64, T:-0.02",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 21,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 22,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 23,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 24,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 25,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:5.11",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 26,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:4.75",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:6.31",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 27,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:4.75",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:6.31",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 28,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:2.81",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:4.37",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 29,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:0.00, T:1.03",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:2.81",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;11;p2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.44, T:4.37",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 30,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 31,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 32,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.64, T:-0.02",
+          "success": true
+        },
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 33,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.64, T:-0.02",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 34,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 35,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 15",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:2.17",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 36,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 37,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:3.20",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 38,
+      "layout_name": "1_Title slide",
+      "placeholders": [
+        {
+          "shape_name": "Google Shape;10;p2",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.45, T:5.11",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 2",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:-0.01, T:-0.00",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 39,
+      "layout_name": "Only Title",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.43",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 40,
+      "layout_name": "1_Agenda - Light",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 1",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:9.56, T:1.67",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 41,
+      "layout_name": "Header Only - Light",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.57",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 42,
+      "layout_name": "Blank - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.32",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 43,
+      "layout_name": "Title with Half Image 4",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.55, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.55, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:6.48",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 19",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.20, T:-0.01",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 44,
+      "layout_name": "Header Only - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:0.56, T:0.33",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 45,
+      "layout_name": "Title with Half Image - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.55, T:1.97",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.55, T:4.45",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:6.48",
+          "success": true
+        },
+        {
+          "shape_name": "Picture Placeholder 19",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:6.20, T:-0.01",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 46,
+      "layout_name": "Title with Image - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 32",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:999.00, T:999.00",
+          "success": true
+        },
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "CENTER_TITLE (3)",
+          "field_key": "ph_title",
+          "position": "L:0.55, T:1.55",
+          "success": true
+        },
+        {
+          "shape_name": "Subtitle 2",
+          "placeholder_type": "SUBTITLE (4)",
+          "field_key": "ph_subtitle",
+          "position": "L:0.55, T:3.75",
+          "success": true
+        },
+        {
+          "shape_name": "Text Placeholder 4",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.55, T:6.48",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 47,
+      "layout_name": "pure black",
+      "placeholders": []
+    },
+    {
+      "master_index": 4,
+      "layout_index": 48,
+      "layout_name": "Section Break - Dark 1",
+      "placeholders": [
+        {
+          "shape_name": "Picture Placeholder 47",
+          "placeholder_type": "PICTURE (18)",
+          "field_key": "ph_image",
+          "position": "L:999.00, T:0.85",
+          "success": true
+        },
+        {
+          "shape_name": "Title 1",
+          "placeholder_type": "TITLE (1)",
+          "field_key": "ph_title",
+          "position": "L:6.33, T:3.23",
+          "success": true
+        }
+      ]
+    },
+    {
+      "master_index": 4,
+      "layout_index": 49,
+      "layout_name": "BoilerPlate - Dark",
+      "placeholders": [
+        {
+          "shape_name": "Text Placeholder 9",
+          "placeholder_type": "BODY (2)",
+          "field_key": "ph_body",
+          "position": "L:0.49, T:1.97",
+          "success": true
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_layouts": 118,
+    "layouts_with_placeholders": 112,
+    "total_placeholders": 387,
+    "successful_assignments": 387
+  }
+}
