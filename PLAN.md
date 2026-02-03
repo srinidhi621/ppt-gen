@@ -20,8 +20,10 @@ No Beamer/LaTeX. No LibreOffice in MVP.
 | 0.3 | Directory structure setup | DONE |
 | 0.4 | Template analysis | DONE |
 | 0.5 | Add Alt-Text to placeholders | DONE |
-| 0.6 | Build layout_catalog.json | PENDING |
-| 1.x | MVP Pipeline implementation | PENDING (needs 0.6) |
+| 0.6 | Contract alignment + catalog gate | PENDING (next) |
+| 1.x | MVP pipeline (prove determinism) | PENDING (blocked on 0.6) |
+| 2.x | LLM planning + review loop | PENDING (blocked on 1.x) |
+| 3.x | Productization (deferred) | DEFERRED (after MVP proven) |
 
 **Last updated:** 2026-02-03
 
@@ -36,7 +38,7 @@ ppt-gen/
 ├── AGENTS.md                  # Agent operating guide
 ├── .venv/                     # Python virtual environment
 │
-├── Assets/
+├── assets/                   # Canonical asset root (lowercase)
 │   ├── template/
 │   │   ├── template.pptx                    # ✅ Corp Deck 2025 (387 placeholders tagged)
 │   │   └── template_backup_*.pptx           # ✅ Auto-generated backups
@@ -70,8 +72,10 @@ ppt-gen/
 │
 └── runs/<run_id>/             # Created at runtime
     ├── deckir_v1.json
+    ├── deckir_v1_1.json
     ├── deck_v1.pptx
     ├── render_map.json
+    ├── validation_report.json
     └── run_log.jsonl
 ```
 
@@ -85,7 +89,7 @@ ppt-gen/
 - **Dimensions:** 13.33" x 7.5" (standard 16:9)
 - **Slide masters:** 5
 - **Total layouts:** 118
-- **Location:** `Assets/template/template.pptx`
+- **Location (canonical):** `assets/template/template.pptx`
 
 Available layout categories:
 - Title slides (with/without images, light/dark variants)
@@ -99,9 +103,9 @@ Available layout categories:
 
 ### 2.2 Convert icons to PNG — DONE
 
-**Source:** `Assets/Icons and Dimensional Keywords/2025 New Icons/` (213 SVG files)
-**Output:** `Assets/icons/png/` (213 PNG files, 512x512px)
-**Metadata:** `Assets/icons/icons.json`
+**Source:** `assets/Icons and Dimensional Keywords/2025 New Icons/` (213 SVG files)
+**Output:** `assets/icons/png/` (213 PNG files, 512x512px)
+**Metadata:** `assets/icons/icons.json`
 
 Icon naming: `icon_001.png` through `icon_213.png` (zero-padded)
 
@@ -138,8 +142,8 @@ python scripts/add_alt_text.py --mvp-only   # Only MVP layouts
 | Image (many) | `ph_image_1`, `ph_image_2`, ... |
 
 **Outputs:**
-- Modified template: `Assets/template/template.pptx`
-- Backup: `Assets/template/template_backup_YYYYMMDD_HHMMSS.pptx`
+- Modified template: `assets/template/template.pptx`
+- Backup: `assets/template/template_backup_YYYYMMDD_HHMMSS.pptx`
 - Report: `scripts/alt_text_report.json`
 
 **Definition of Done:** ✓
@@ -147,14 +151,30 @@ python scripts/add_alt_text.py --mvp-only   # Only MVP layouts
 - 387 placeholders tagged
 - Template saved with backup
 
-### 2.4 Build `layout_catalog.json` — PENDING (Next Task)
+## 2.4 Phase 0.6 — Contract Alignment + Catalog Gate (PENDING — Next Milestone)
 
-Now that Alt-Text is complete, generate `Assets/layout/layout_catalog.json`.
+This is a hard gate before implementing the MVP pipeline. It eliminates path/contract drift and produces the layout catalog + drift validation needed to safely render.
+
+### 2.4.1 Canonical paths + contract alignment (must-do)
+**Policy:** Use `assets/` (lowercase) as the canonical asset root going forward.
+
+Tasks:
+1. Migrate the repo asset directory naming to `assets/` (lowercase) and update references everywhere:
+   - `PLAN.md`, `SPEC.md`, `README.md`, scripts
+2. Standardize outputs exclusively under `runs/<run_id>/` (avoid `output/` conventions).
+
+**Definition of Done**
+- All docs/scripts reference `assets/...` paths only
+- Run artifacts are specified under `runs/<run_id>/` only
+
+### 2.4.2 Build `layout_catalog.json` (hard requirement for planning + validation)
+Generate `assets/layout/layout_catalog.json` from template analysis.
 
 **Approach:** Create `scripts/generate_layout_catalog.py` that:
-1. Loads the template and reads all layouts with their field_keys
+1. Loads `assets/template/template.pptx` and reads all layouts and their placeholder `field_key`s from alt-text
 2. Filters to MVP-priority layouts (or all)
-3. Generates a structured catalog with fit constraints
+3. Generates a structured catalog with initial fit constraints per layout
+4. Produces a validation report if any layout/field is ambiguous or missing
 
 **Required fields per layout entry:**
 
@@ -202,14 +222,33 @@ Now that Alt-Text is complete, generate `Assets/layout/layout_catalog.json`.
 - Use `avg_chars_per_line` ≈ placeholder_width_inches × 7 (heuristic for body text)
 
 **Definition of Done:**
-- `Assets/layout/layout_catalog.json` exists with at least 12 MVP layouts
+- `assets/layout/layout_catalog.json` exists with at least 12 MVP layouts
 - Each layout has field_keys matching template alt-text
 - Each layout has initial constraint estimates
-- Validation script confirms catalog matches template
+- A validation script confirms catalog matches template (template drift detection)
+
+### 2.4.3 Template drift detection (fail fast)
+Add a startup validator (and/or standalone script) that checks:
+- every `layout_id` in the catalog maps to a real layout in the template
+- every required `field_key` exists in that layout
+
+**Definition of Done**
+- Rendering (and optionally the CLI startup) refuses to proceed on mismatch
+
+### 2.4.4 Add sample inputs for repeatable testing
+Create:
+- `inputs/content.md` (small but representative deck content)
+- `inputs/cues.json` (minimal cues)
+
+**Definition of Done**
+- Sample inputs are stable and used by the smoke test in Phase 1
+- A short deck can be generated end-to-end once Phase 1 is implemented
 
 ---
 
-## 3. Phase 1 — MVP Pipeline (Single Pass + One Rework Iteration)
+## 3. Phase 1 — MVP Pipeline (Prove Determinism First)
+
+**Principle:** Build the deterministic engine and prove it works with hand-authored inputs before integrating LLM planning. This keeps debugging fast and establishes stable contracts.
 
 ### 3.1 Implement Models (Pydantic)
 Schemas needed:
@@ -219,31 +258,19 @@ Schemas needed:
 - ValidationReport
 - CritiqueReport
 - PatchSet
+- RenderMap
 
 **Definition of Done:** All artifacts validate and serialize reliably.
 
-### 3.2 Content Normalization (Markdown → ContentModel)
-- Parse `inputs/content.md`
-- Produce normalized model with sections, bullets, paragraphs
-- Tie cues to sections/bullets by IDs
-- Store `source_hash` for diffing
+### 3.2 Renderer from a hand-authored DeckIR (determinism proof)
+Add a CLI command that takes an explicit `DeckIR` JSON and produces:
+- `runs/<run_id>/deck_v1.pptx`
+- `runs/<run_id>/render_map.json`
+- `runs/<run_id>/run_log.jsonl`
 
-**Definition of Done:** Same input → stable ContentModel with stable IDs.
+**Definition of Done:** Rendering is deterministic given the same DeckIR + template + assets.
 
-### 3.3 Planner (LLM → DeckIR v1)
-Responsibilities:
-- Propose slide list with `layout_id`
-- Produce concise fields for each slide
-- Select icons by `icon_id`
-- Produce speaker notes skeleton
-
-Constraints:
-- Only allowed layouts and field keys
-- Obey global constraints (max bullets etc.)
-
-**Definition of Done:** Planner outputs schema-valid DeckIR v1 consistently.
-
-### 3.4 Preflight Validation + Remediation (DeckIR v1 → v1.1)
+### 3.3 Preflight Validation + Remediation (DeckIR v1 → v1.1)
 Hard fit checks:
 - title chars, bullets count, words per bullet
 - total body chars, estimated line count
@@ -254,11 +281,46 @@ Remediation order:
 3. Pressure valve: move overflow to notes
 4. Split slide
 
-**Definition of Done:** Overflow transformed before rendering; ValidationReport records changes.
+Artifacts:
+- `runs/<run_id>/deckir_v1_1.json`
+- `runs/<run_id>/validation_report.json`
 
-### 3.5 Renderer (python-pptx)
+**Definition of Done:** Overflow is transformed before rendering; ValidationReport records changes.
+
+### 3.4 Content Normalization (Markdown → ContentModel)
+- Parse `inputs/content.md`
+- Produce normalized model with sections, bullets, paragraphs
+- Tie cues to sections/bullets by IDs
+- Store `source_hash` for diffing
+
+**Definition of Done:** Same input → stable ContentModel with stable IDs.
+
+### 3.5 Smoke test (local)
+One command runs the deterministic path using sample inputs and produces all run artifacts under `runs/<run_id>/`.
+
+**Definition of Done:** A PPTX is generated and opens in PowerPoint; logs and artifacts are present.
+
+---
+
+## 4. Phase 2 — LLM Planning + Review Loop (After MVP Determinism)
+
+### 4.1 Planner (LLM → DeckIR v1)
 Responsibilities:
-- Load `Assets/template/template.pptx`
+- Propose slide list with `layout_id`
+- Produce concise fields for each slide
+- Select icons by `icon_id`
+- Produce speaker notes skeleton
+
+Constraints:
+- Only allowed layouts and field keys
+- Obey global constraints (max bullets etc.)
+- Bounded retries only on schema invalidity (do not “retry” for quality)
+
+**Definition of Done:** Planner outputs schema-valid DeckIR v1 consistently.
+
+### 4.2 Renderer (python-pptx)
+Responsibilities:
+- Load `assets/template/template.pptx`
 - Add slides from template layout
 - Populate placeholders by matching Alt-Text `field_key`
 - Insert PNG icons
@@ -269,14 +331,14 @@ Responsibilities:
 
 ---
 
-## 4. Phase 1 Review Cycle — Vision Critique + Patch
+## 5. Phase 2 Review Cycle — Vision Critique + Patch
 
-### 4.1 Manual export protocol
+### 5.1 Manual export protocol
 1. Open `runs/<run_id>/deck_v1.pptx` in PowerPoint
 2. Export slides as PNGs to `review_images/<run_id>/`
 3. Name files by slide order: `slide_001.png`, etc.
 
-### 4.2 Vision Critic (Images → CritiqueReport)
+### 5.2 Vision Critic (Images → CritiqueReport)
 Check each slide for:
 - Clipping/overflow (S0)
 - Density/too-small text (S1)
@@ -284,7 +346,7 @@ Check each slide for:
 - Icon mismatch (S2)
 - Whitespace balance (S3)
 
-### 4.3 Patch Planner (CritiqueReport → PatchSet)
+### 5.3 Patch Planner (CritiqueReport → PatchSet)
 Policy (pressure valve first):
 1. MOVE_TO_SPEAKER_NOTES
 2. DROP_BULLETS keep_top_n
@@ -292,7 +354,7 @@ Policy (pressure valve first):
 4. REWRITE_FIELD_TEXT
 5. CHANGE_LAYOUT (last resort)
 
-### 4.4 Apply patches and re-render (DeckIR v2)
+### 5.4 Apply patches and re-render (DeckIR v2)
 - Apply patches → DeckIR v2
 - Run preflight again
 - Render `deck_v2.pptx`
@@ -300,7 +362,7 @@ Policy (pressure valve first):
 
 ---
 
-## 5. Operational Workflow (MVP)
+## 6. Operational Workflow (MVP)
 1. Prepare inputs: `content.md`, `cues.json`
 2. Run pipeline → `deck_v1.pptx` + artifacts
 3. Export PNGs manually to `review_images/<run_id>/`
@@ -310,7 +372,7 @@ Policy (pressure valve first):
 
 ---
 
-## 6. MVP Acceptance Criteria
+## 7. MVP Acceptance Criteria
 - PPTX opens and is editable in PowerPoint (Mac)
 - Corporate theme preserved
 - No S0/S1 issues after iteration
@@ -319,7 +381,7 @@ Policy (pressure valve first):
 
 ---
 
-## 7. Known Risks and Mitigations
+## 8. Known Risks and Mitigations
 
 | Risk | Mitigation |
 |------|------------|
@@ -327,10 +389,11 @@ Policy (pressure valve first):
 | Icon rendering (SVG) | Phase 1 uses PNG only (DONE) |
 | macOS automation flaky | Manual export for MVP |
 | Template drift | Validate template vs catalog at startup |
+| Path drift | Canonicalize `assets/` + update all references (Phase 0.6) |
 
 ---
 
-## 8. Phase 2+ Backlog
+## 9. Post-MVP Backlog (Defer until MVP proven)
 - Automate slide image export
 - Calibrate fit heuristics from real decks
 - Diff-aware regeneration
@@ -342,39 +405,52 @@ Policy (pressure valve first):
 
 ## Next Action Required
 
-**NEXT:** Build `layout_catalog.json` (Task 0.6)
+**NEXT:** Complete Phase 0.6 (contract alignment + layout catalog + drift detection)
 
 ### Immediate Steps
 
-1. **Create `scripts/generate_layout_catalog.py`**
+1. **Canonicalize `assets/` paths**
+   - Migrate directory naming and update all references (docs + scripts)
+   - Standardize run artifacts under `runs/<run_id>/` only
+
+2. **Create `scripts/generate_layout_catalog.py`**
    - Read template layouts and their field_keys from alt-text
    - Generate `layout_id` from layout name (snake_case, normalized)
    - Compute initial fit constraints from placeholder dimensions
-   - Output `Assets/layout/layout_catalog.json`
+   - Output `assets/layout/layout_catalog.json`
 
-2. **Select MVP layouts** (start with 12 core layouts)
+3. **Select MVP layouts** (start with 12 core layouts)
    - Title slides, section breaks, content layouts, agenda, statement
 
-3. **Validate catalog against template**
+4. **Validate catalog against template**
    - Ensure all field_keys in catalog exist in template
    - Fail fast on mismatch (template drift detection per AGENTS.md)
 
-### After Task 0.6
+5. **Add sample inputs**
+   - Create `inputs/content.md` and `inputs/cues.json`
 
-4. **Phase 1.1: Implement Pydantic schemas**
+### After Phase 0.6
+
+6. **Phase 1.1: Implement Pydantic schemas**
    - `src/models/`: ContentModel, DeckIR, ValidationReport, CritiqueReport, PatchSet
 
-5. **Phase 1.2: Content normalization**
+7. **Phase 1.2: Renderer from hand-authored DeckIR**
+   - Prove deterministic rendering + render_map
+
+8. **Phase 1.3: Preflight validation**
+   - Fit checks + remediation + ValidationReport + DeckIR v1.1 artifact
+
+9. **Phase 1.4: Content normalization**
    - `src/normalize/`: Markdown parser → ContentModel with stable IDs
 
-6. **Phase 1.3: LLM Planner**
-   - `src/plan/`: Prompt templates + DeckIR generation
+10. **Phase 1.5: Smoke test**
+   - A small end-to-end run produces a PPTX and all artifacts under `runs/<run_id>/`
 
-7. **Phase 1.4: Preflight validation**
-   - `src/validate/`: Fit checks + remediation pipeline
+11. **Phase 2: LLM Planner**
+   - `src/plan/`: Prompt templates + DeckIR generation (only after Phase 1 is stable)
 
-8. **Phase 1.5: Renderer**
-   - `src/render/`: DeckIR → PPTX via python-pptx + alt-text binding
+12. **Phase 2: Critique + patch iteration**
+   - `src/critique/`: Vision critic + PatchSet generation + applier
 
 ---
 
@@ -386,7 +462,7 @@ Policy (pressure valve first):
 |------|-------------|---------|
 | 0.1 | Template selected | Corp Deck 2025 - Nov.pptx (13.33" × 7.5", 118 layouts, 5 masters) |
 | 0.2 | Icons converted | 213 SVG → PNG at 512×512px with metadata in icons.json |
-| 0.3 | Directory structure | Assets/, scripts/, organized per AGENTS.md |
+| 0.3 | Directory structure | assets/, scripts/, organized per AGENTS.md |
 | 0.4 | Template analyzed | `inspect_template.py` generates JSON reports |
 | 0.5 | Alt-text automated | `add_alt_text.py` tagged 387/387 placeholders (100%) |
 
