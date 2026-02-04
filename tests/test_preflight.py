@@ -48,7 +48,7 @@ class TestPreflightHelpers(unittest.TestCase):
     def test_truncate_text(self) -> None:
         result = _truncate_text("Hello World Test", 12)
         self.assertTrue(result.endswith("..."))
-        self.assertLessEqual(len(result), 15)  # 12 + "..."
+        self.assertLessEqual(len(result), 12)
 
     def test_truncate_text_short(self) -> None:
         result = _truncate_text("Short", 10)
@@ -164,6 +164,31 @@ class TestPreflightValidation(unittest.TestCase):
         notes = str(remediated.slides[0].speaker_notes)
         self.assertIn("REMEDIATION OVERFLOW", notes)
         self.assertIn("Original notes", notes)
+
+    def test_remediation_truncates_single_bullet_list(self) -> None:
+        long_bullet = "A" * 900
+        deck = DeckIR(
+            deck_id="test",
+            run_id="test_run",
+            template_id="template",
+            title="Title",
+            slides=[
+                DeckSlide(
+                    slide_id="s1",
+                    layout_id="one_content_light",
+                    fields={"ph_title": "Title", "ph_body": [long_bullet]},
+                    speaker_notes="Notes",
+                )
+            ],
+        )
+        remediated, report = validate_and_remediate(deck, self.catalog_path)
+        body = remediated.slides[0].fields["ph_body"]
+        self.assertIsInstance(body, list)
+        self.assertEqual(len(body), 1)
+        self.assertLessEqual(len(str(body[0])), 700)
+        notes = str(remediated.slides[0].speaker_notes)
+        self.assertIn("REMEDIATION OVERFLOW", notes)
+        self.assertIn("Full text from ph_body", notes)
 
     def test_unknown_layout_flags_violation(self) -> None:
         deck = DeckIR(

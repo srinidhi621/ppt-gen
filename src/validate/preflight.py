@@ -56,11 +56,15 @@ def _estimate_lines(value: FieldValue, avg_chars_per_line: int) -> int:
 
 def _truncate_text(text: str, max_chars: int) -> str:
     """Truncate text to max chars, preserving word boundaries."""
+    if max_chars <= 0:
+        return ""
     if len(text) <= max_chars:
         return text
-    truncated = text[:max_chars]
+    if max_chars <= 3:
+        return text[:max_chars]
+    truncated = text[: max_chars - 3]
     last_space = truncated.rfind(" ")
-    if last_space > max_chars * 0.7:  # Keep at least 70% of allowed length
+    if last_space > (max_chars - 3) * 0.7:  # Keep at least 70% of allowed length
         truncated = truncated[:last_space]
     return truncated.rstrip() + "..."
 
@@ -232,6 +236,12 @@ def _remediate_slide(
                     moved = value.pop()
                     notes_additions.append(f"[Moved from {field_key}]: {moved}")
                 new_fields[field_key] = value
+            elif isinstance(value, list) and len(value) == 1:
+                original = str(value[0])
+                truncated = _truncate_text(original, max_total_body_chars)
+                new_fields[field_key] = [truncated]
+                if truncated != original:
+                    notes_additions.append(f"[Full text from {field_key}]: {original}")
             elif isinstance(value, str):
                 # Truncate string
                 new_fields[field_key] = _truncate_text(value, max_total_body_chars)
