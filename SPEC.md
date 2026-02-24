@@ -21,7 +21,7 @@
 | Renderer | ✅ DONE | DeckIR → PPTX via python-pptx |
 | Vision critique | ⏳ PENDING | Phase 2 review loop |
 | CLI commands | ✅ DONE | validate, render, smoke |
-| Unit tests | ✅ DONE | 45 tests passing |
+| Unit tests | ✅ DONE | 46 tests passing |
 
 ---
 

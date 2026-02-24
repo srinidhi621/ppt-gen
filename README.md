@@ -54,6 +54,17 @@ ppt-gen/
 │   └── layout/
 │       └── layout_catalog.json  # Layout definitions (12 MVP layouts)
 │
+├── src/                       # Source code
+│   ├── cli.py                 # CLI entry point (validate, render, smoke)
+│   ├── config.py              # Configuration loader
+│   ├── logging_utils.py       # Structured JSONL logging
+│   ├── models/                # Pydantic data models
+│   ├── normalize/             # Markdown → ContentModel parser
+│   ├── validate/              # Template drift + preflight validation
+│   └── render/                # DeckIR → PPTX renderer
+│
+├── tests/                     # Test suite (46 tests)
+│
 ├── scripts/
 │   ├── inspect_template.py    # Template analysis tool
 │   ├── convert_svg_to_png.py  # SVG to PNG converter
@@ -61,7 +72,8 @@ ppt-gen/
 │
 ├── inputs/                    # Runtime inputs
 │   ├── content.md
-│   └── cues.json
+│   ├── cues.json
+│   └── sample_deckir.json     # Sample DeckIR for smoke tests
 │
 └── runs/<run_id>/             # Output artifacts
 ```

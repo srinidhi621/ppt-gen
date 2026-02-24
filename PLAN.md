@@ -31,9 +31,9 @@ Implement an MVP pipeline that generates an editable, on-brand PPTX using:
 | 1.5 Content Normalization (Markdown → ContentModel) | ✅ DONE |
 | 1.6 CLI Commands (validate, render, smoke) | ✅ DONE |
 | 1.7 Sample DeckIR (determinism proof) | ✅ DONE |
-| 1.8 Unit Tests (45 tests passing) | ✅ DONE |
+| 1.8 Unit Tests (46 tests passing) | ✅ DONE |
 
-**Last updated:** 2026-02-03
+**Last updated:** 2026-02-24
 
 ---
 
@@ -304,7 +304,7 @@ Policy (pressure valve first):
 - Produces all required artifacts under `runs/<run_id>/`:
   - deckir_v1.json, deckir_v1_1.json, validation_report.json
   - render_map.json, deck_v1.pptx, run_log.jsonl
-- 45 tests passing (pytest tests/)
+- 46 tests passing (pytest tests/)
 
 ### After Phase 1
 
