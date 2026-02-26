@@ -11,9 +11,9 @@ FLUENT_VERSION="1.2.38"
 AWS_ZIP_LABEL="Icon-package_01302026"
 
 TABLER_URLS=(
-  "https://app.unpkg.com/@iconify-json/tabler@1.2.17/files/icons.json"
-  "https://app.unpkg.com/@iconify-json/tabler@1.2.17/files/info.json"
-  "https://app.unpkg.com/@iconify-json/tabler@1.2.17/files/metadata.json"
+  "https://unpkg.com/@iconify-json/tabler@1.2.17/icons.json"
+  "https://unpkg.com/@iconify-json/tabler@1.2.17/info.json"
+  "https://unpkg.com/@iconify-json/tabler@1.2.17/metadata.json"
 )
 LUCIDE_URLS=(
   "https://unpkg.com/@iconify-json/lucide@1.2.5/icons.json"
@@ -21,9 +21,9 @@ LUCIDE_URLS=(
   "https://unpkg.com/@iconify-json/lucide@1.2.5/metadata.json"
 )
 FLUENT_URLS=(
-  "https://app.unpkg.com/@iconify-json/fluent@1.2.38/files/icons.json"
-  "https://app.unpkg.com/@iconify-json/fluent@1.2.38/files/info.json"
-  "https://app.unpkg.com/@iconify-json/fluent@1.2.38/files/metadata.json"
+  "https://unpkg.com/@iconify-json/fluent@1.2.38/icons.json"
+  "https://unpkg.com/@iconify-json/fluent@1.2.38/info.json"
+  "https://unpkg.com/@iconify-json/fluent@1.2.38/metadata.json"
 )
 AWS_ZIP_URL="https://d1.awsstatic.com/onedam/marketing-channels/website/aws/en_US/architecture/approved/architecture-icons/Icon-package_01302026.31b40d126ed27079b708594940ad577a86150582.zip"
 

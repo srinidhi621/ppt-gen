@@ -8,9 +8,9 @@
   },
   "source": {
     "download_urls": [
-      "https://app.unpkg.com/@iconify-json/fluent@1.2.38/files/icons.json",
-      "https://app.unpkg.com/@iconify-json/fluent@1.2.38/files/info.json",
-      "https://app.unpkg.com/@iconify-json/fluent@1.2.38/files/metadata.json"
+      "https://unpkg.com/@iconify-json/fluent@1.2.38/icons.json",
+      "https://unpkg.com/@iconify-json/fluent@1.2.38/info.json",
+      "https://unpkg.com/@iconify-json/fluent@1.2.38/metadata.json"
     ],
     "pinned": true
   },
