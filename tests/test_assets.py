@@ -40,6 +40,7 @@ class TestBuildAssetCatalog(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "icons").mkdir(parents=True)
+            (root / "external_assets").mkdir(parents=True)
             (root / "Ascendion Logos").mkdir(parents=True)
             (root / "Icons and Dimensional Keywords").mkdir(parents=True)
             (root / "Ascendion Logos" / "logo.png").write_bytes(b"")
@@ -48,11 +49,21 @@ class TestBuildAssetCatalog(unittest.TestCase):
                 '{"icons":[{"icon_id":"icon_1","filename":"icon_1.png","tags":[],"synonyms":[]}]}',
                 encoding="utf-8",
             )
+            (root / "external_assets" / "registry.manifest.json").write_text(
+                (
+                    '{"icons":[{"id":"tabler:cloud","pack":"tabler","svg_path":"svg/cloud.svg",'
+                    '"tags":["cloud"],"categories":["weather"],"aliases":["cloudy"]}]}'
+                ),
+                encoding="utf-8",
+            )
 
             payload = build_asset_catalog(root)
             self.assertIn("summary", payload)
             self.assertIn("assets", payload)
             self.assertGreaterEqual(payload["summary"]["assets_count"], 3)
+            self.assertTrue(
+                any(asset["asset_id"] == "tabler:cloud" for asset in payload["assets"])
+            )
 
 
 if __name__ == "__main__":

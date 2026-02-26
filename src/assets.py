@@ -30,8 +30,6 @@ def load_asset_catalog(catalog_path: Path) -> Dict[str, Any]:
 
 def ensure_asset_catalog(assets_dir: Path) -> Dict[str, Any]:
     catalog_path = assets_dir / "catalog" / "asset_catalog.json"
-    if catalog_path.exists():
-        return load_asset_catalog(catalog_path)
     payload = build_asset_catalog(assets_dir)
     catalog_path.parent.mkdir(parents=True, exist_ok=True)
     catalog_path.write_text(
@@ -81,8 +79,10 @@ def match_asset(
 
 def build_asset_catalog(assets_dir: Path) -> Dict[str, Any]:
     icons_json = assets_dir / "icons" / "icons.json"
+    external_registry = assets_dir / "external_assets" / "registry.manifest.json"
     assets: List[Dict[str, Any]] = []
     assets.extend(_icon_entries(icons_json))
+    assets.extend(_external_icon_entries(external_registry))
     assets.extend(_image_entries(assets_dir))
     return {
         "summary": {
@@ -117,6 +117,33 @@ def _icon_entries(icons_json_path: Path) -> List[Dict[str, Any]]:
                 "tags": sorted(set(tags)),
                 "synonyms": sorted(set(synonyms)),
                 "quality": "high" if tags or synonyms else "low",
+            }
+        )
+    return out
+
+
+def _external_icon_entries(registry_manifest_path: Path) -> List[Dict[str, Any]]:
+    if not registry_manifest_path.exists():
+        return []
+    payload = json.loads(registry_manifest_path.read_text(encoding="utf-8"))
+    out: List[Dict[str, Any]] = []
+    for icon in payload.get("icons", []):
+        pack = str(icon.get("pack", "")).strip()
+        svg_path = str(icon.get("svg_path", "")).strip()
+        icon_id = str(icon.get("id", "")).strip()
+        if not pack or not svg_path or not icon_id:
+            continue
+        tags = [str(t).lower() for t in icon.get("tags", [])]
+        categories = [str(c).lower() for c in icon.get("categories", [])]
+        aliases = [str(a).lower() for a in icon.get("aliases", [])]
+        out.append(
+            {
+                "asset_type": "icon",
+                "asset_id": icon_id,
+                "source_path": f"external_assets/{pack}/{svg_path}",
+                "tags": sorted(set(tags + categories)),
+                "synonyms": sorted(set(aliases)),
+                "quality": "high",
             }
         )
     return out

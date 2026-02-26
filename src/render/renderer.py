@@ -160,19 +160,42 @@ class Renderer:
         return {entry["layout_id"]: entry for entry in layouts}
 
     def _load_icon_index(self) -> Dict[str, str]:
+        icon_index: Dict[str, str] = {}
         with open(self.icons_json_path, "r", encoding="utf-8") as handle:
             icons = json.load(handle)
         icon_entries = icons.get("icons", [])
-        return {entry["icon_id"]: entry["filename"] for entry in icon_entries}
+        for entry in icon_entries:
+            icon_id = entry["icon_id"]
+            icon_index[icon_id] = f"assets/icons/png/{entry['filename']}"
+
+        external_registry_path = (
+            self.icons_json_path.parent.parent / "external_assets" / "registry.manifest.json"
+        )
+        if external_registry_path.exists():
+            with open(external_registry_path, "r", encoding="utf-8") as handle:
+                registry = json.load(handle)
+            for icon in registry.get("icons", []):
+                icon_id = icon.get("id")
+                pack = icon.get("pack")
+                svg_path = icon.get("svg_path")
+                if not icon_id or not pack or not svg_path:
+                    continue
+                icon_index[str(icon_id)] = f"assets/external_assets/{pack}/{svg_path}"
+
+        return icon_index
 
     def _resolve_asset_path(self, asset_ref, icon_index: Dict[str, str]) -> Path:
         if asset_ref.asset_type == "icon":
-            filename = icon_index.get(asset_ref.asset_id)
-            if not filename:
+            source_path = icon_index.get(asset_ref.asset_id)
+            if not source_path:
                 raise FileNotFoundError(
                     f"Unknown icon_id: {asset_ref.asset_id}"
                 )
-            return self.icons_json_path.parent / "png" / filename
+            project_root = self.template_path.parents[2]
+            candidate = project_root / source_path
+            if candidate.exists():
+                return candidate
+            raise FileNotFoundError(f"Missing icon asset file: {candidate}")
         asset_path = Path(asset_ref.asset_id)
         if asset_path.is_absolute():
             return asset_path
