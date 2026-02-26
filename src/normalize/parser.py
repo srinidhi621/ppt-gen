@@ -112,6 +112,7 @@ def parse_markdown(path: Path, cues_path: Optional[Path] = None) -> ContentModel
     
     # Track if we just saw a separator (expect new section)
     expecting_new_section = False
+    last_nonempty_token: str | None = None
     
     for line in lines:
         stripped = line.strip()
@@ -120,12 +121,14 @@ def parse_markdown(path: Path, cues_path: Optional[Path] = None) -> ContentModel
         meta = _extract_metadata_comment(stripped)
         if meta:
             metadata[meta[0]] = meta[1]
+            last_nonempty_token = "meta"
             continue
         
         # Check for section separator
         if _is_section_separator(stripped):
             finalize_section()
             expecting_new_section = True
+            last_nonempty_token = "separator"
             continue
         
         # Check for heading
@@ -135,10 +138,20 @@ def parse_markdown(path: Path, cues_path: Optional[Path] = None) -> ContentModel
             if level == 1 and not doc_title:
                 # First H1 is document title
                 doc_title = title
+                last_nonempty_token = "h1"
                 continue
-            elif level == 2 and not doc_subtitle and not sections and not current_section and not expecting_new_section:
-                # H2 right after H1 might be subtitle (but not after separator)
+            elif (
+                level == 2
+                and not doc_subtitle
+                and not sections
+                and not current_section
+                and not expecting_new_section
+                and last_nonempty_token == "h1"
+                and not metadata
+            ):
+                # H2 is subtitle only when it appears immediately after H1.
                 doc_subtitle = title
+                last_nonempty_token = "h2_subtitle"
                 continue
             else:
                 # New section or subsection
@@ -151,6 +164,7 @@ def parse_markdown(path: Path, cues_path: Optional[Path] = None) -> ContentModel
                 else:
                     # Subsection - add as a heading bullet
                     current_section["bullets"].append(f"**{title}**")
+                last_nonempty_token = f"h{level}"
                 continue
         
         # Check for bullet
@@ -160,6 +174,7 @@ def parse_markdown(path: Path, cues_path: Optional[Path] = None) -> ContentModel
                 current_section = {"title": "Untitled", "bullets": [], "paragraphs": []}
                 expecting_new_section = False
             current_section["bullets"].append(bullet)
+            last_nonempty_token = "bullet"
             continue
         
         # Plain text paragraph
@@ -169,6 +184,7 @@ def parse_markdown(path: Path, cues_path: Optional[Path] = None) -> ContentModel
                 current_section = {"title": "Content", "bullets": [], "paragraphs": []}
                 expecting_new_section = False
             current_section["paragraphs"].append(stripped)
+            last_nonempty_token = "paragraph"
     
     # Finalize last section
     finalize_section()

@@ -8,8 +8,14 @@ from datetime import datetime
 from pathlib import Path
 
 from .config import load_config
+from .generate_pipeline import (
+    CombinedInputError,
+    build_deckir_from_content,
+    split_combined_markdown,
+)
 from .logging_utils import log_event
 from .models.deck_ir import DeckIR
+from .normalize.parser import parse_markdown
 from .render.renderer import Renderer
 from .validate.drift import validate_template_catalog
 from .validate.preflight import validate_and_remediate
@@ -210,6 +216,118 @@ def cmd_smoke(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_generate(args: argparse.Namespace) -> int:
+    """Generate deck from a combined markdown input and run pipeline."""
+    config = load_config(Path(args.project_root) if args.project_root else None)
+
+    errors = validate_template_catalog(
+        Path(config.template_path), Path(config.layout_catalog_path)
+    )
+    if errors:
+        for error in errors:
+            print(f"ERROR: {error}")
+        return 1
+
+    combined_input_path = Path(args.input)
+    if not combined_input_path.exists():
+        print(f"ERROR: Combined input file not found: {combined_input_path}")
+        return 1
+
+    run_id = args.run_id if args.run_id else _generate_run_id()
+    run_dir = Path(config.runs_dir) / run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
+    log_path = run_dir / "run_log.jsonl"
+
+    combined_text = combined_input_path.read_text(encoding="utf-8")
+    try:
+        content_text, cues_data = split_combined_markdown(combined_text)
+    except CombinedInputError as exc:
+        print(f"ERROR: {exc}")
+        return 1
+
+    content_path = run_dir / "content.md"
+    cues_path = run_dir / "cues.json"
+    content_path.write_text(content_text + "\n", encoding="utf-8")
+    with cues_path.open("w", encoding="utf-8") as handle:
+        json.dump(cues_data, handle, sort_keys=True, ensure_ascii=True, indent=2)
+        handle.write("\n")
+
+    if args.write_inputs:
+        inputs_dir = Path(config.inputs_dir)
+        inputs_dir.mkdir(parents=True, exist_ok=True)
+        (inputs_dir / "content.md").write_text(content_text + "\n", encoding="utf-8")
+        with (inputs_dir / "cues.json").open("w", encoding="utf-8") as handle:
+            json.dump(cues_data, handle, sort_keys=True, ensure_ascii=True, indent=2)
+            handle.write("\n")
+
+    content_model = parse_markdown(content_path, cues_path)
+    log_event(
+        log_path,
+        "NORMALIZE_DONE",
+        {
+            "sections_count": len(content_model.sections),
+            "cues_count": len(content_model.cues),
+            "source_hash": content_model.source_hash,
+        },
+    )
+
+    deckir_v1 = build_deckir_from_content(
+        content_model=content_model,
+        cues_data=cues_data,
+        layout_catalog_path=Path(config.layout_catalog_path),
+        run_id=run_id,
+        deck_id=combined_input_path.stem,
+    )
+    log_event(log_path, "PLAN_DONE", {"slides_count": len(deckir_v1.slides)})
+
+    deckir_v1_path = run_dir / "deckir_v1.json"
+    deckir_v1_path.write_text(deckir_v1.to_json(), encoding="utf-8")
+
+    deck_v1_1, validation_report = validate_and_remediate(
+        deckir_v1, Path(config.layout_catalog_path)
+    )
+    validation_report_path = run_dir / "validation_report.json"
+    validation_report_path.write_text(validation_report.to_json(), encoding="utf-8")
+    deckir_v1_1_path = run_dir / "deckir_v1_1.json"
+    deckir_v1_1_path.write_text(deck_v1_1.to_json(), encoding="utf-8")
+
+    log_event(
+        log_path,
+        "VALIDATE_DONE",
+        {
+            "violations_count": len(validation_report.violations),
+            "blocking_count": sum(
+                1 for violation in validation_report.violations if violation.severity == "BLOCKING"
+            ),
+        },
+    )
+
+    renderer = Renderer(
+        Path(config.template_path),
+        Path(config.layout_catalog_path),
+        Path(config.icons_json_path),
+    )
+    output_path = run_dir / "deck_v1.pptx"
+    render_map = renderer.render(deck_v1_1, output_path)
+    render_map_path = run_dir / "render_map.json"
+    render_map_path.write_text(render_map.to_json(), encoding="utf-8")
+
+    log_event(
+        log_path,
+        "RENDER_DONE",
+        {"output_path": str(output_path), "slides_rendered": len(render_map.entries)},
+    )
+
+    print("Generate pipeline complete.")
+    print(f"  Run ID: {run_id}")
+    print(f"  Combined input: {combined_input_path}")
+    print(f"  Split content: {content_path}")
+    print(f"  Split cues: {cues_path}")
+    print(f"  Output PPTX: {output_path}")
+    print(f"  Artifacts directory: {run_dir}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="PPT-Gen CLI - LLM-Assisted PPTX Generator")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -247,6 +365,28 @@ def build_parser() -> argparse.ArgumentParser:
         "--run-id", type=str, default=None, help="Run ID (default: auto-generated timestamp)"
     )
     smoke_parser.set_defaults(func=cmd_smoke)
+
+    # Generate command
+    generate_parser = subparsers.add_parser(
+        "generate",
+        help="Generate from combined markdown (content + cues) and run pipeline",
+    )
+    _add_common_args(generate_parser)
+    generate_parser.add_argument(
+        "--input",
+        type=str,
+        required=True,
+        help="Path to combined markdown input with '## Content' and '## Visualization Cues'",
+    )
+    generate_parser.add_argument(
+        "--run-id", type=str, default=None, help="Run ID (default: auto-generated timestamp)"
+    )
+    generate_parser.add_argument(
+        "--write-inputs",
+        action="store_true",
+        help="Also write split content.md/cues.json into inputs/",
+    )
+    generate_parser.set_defaults(func=cmd_generate)
 
     return parser
 

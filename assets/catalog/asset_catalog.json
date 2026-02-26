@@ -1,0 +1,2596 @@
+{
+  "assets": [
+    {
+      "asset_id": "icon_001",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_001.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_002",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_002.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_003",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_003.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_004",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_004.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_005",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_005.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_006",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_006.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_007",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_007.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_008",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_008.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_009",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_009.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_010",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_010.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_011",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_011.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_012",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_012.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_013",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_013.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_014",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_014.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_015",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_015.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_016",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_016.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_017",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_017.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_018",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_018.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_019",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_019.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_020",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_020.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_021",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_021.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_022",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_022.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_023",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_023.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_024",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_024.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_025",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_025.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_026",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_026.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_027",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_027.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_028",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_028.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_029",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_029.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_030",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_030.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_031",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_031.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_032",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_032.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_033",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_033.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_034",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_034.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_035",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_035.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_036",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_036.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_037",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_037.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_038",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_038.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_039",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_039.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_040",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_040.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_041",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_041.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_042",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_042.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_043",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_043.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_044",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_044.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_045",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_045.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_046",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_046.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_047",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_047.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_048",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_048.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_049",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_049.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_050",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_050.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_051",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_051.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_052",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_052.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_053",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_053.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_054",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_054.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_055",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_055.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_056",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_056.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_057",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_057.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_058",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_058.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_059",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_059.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_060",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_060.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_061",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_061.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_062",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_062.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_063",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_063.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_064",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_064.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_065",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_065.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_066",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_066.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_067",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_067.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_068",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_068.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_069",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_069.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_070",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_070.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_071",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_071.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_072",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_072.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_073",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_073.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_074",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_074.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_075",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_075.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_076",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_076.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_077",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_077.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_078",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_078.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_079",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_079.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_080",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_080.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_081",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_081.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_082",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_082.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_083",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_083.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_084",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_084.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_085",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_085.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_086",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_086.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_087",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_087.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_088",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_088.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_089",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_089.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_090",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_090.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_091",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_091.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_092",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_092.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_093",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_093.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_094",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_094.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_095",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_095.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_096",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_096.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_097",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_097.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_098",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_098.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_099",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_099.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_100",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_100.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_101",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_101.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_102",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_102.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_103",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_103.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_104",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_104.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_105",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_105.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_106",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_106.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_107",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_107.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_108",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_108.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_109",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_109.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_110",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_110.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_111",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_111.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_112",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_112.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_113",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_113.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_114",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_114.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_115",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_115.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_116",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_116.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_117",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_117.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_118",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_118.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_119",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_119.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_120",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_120.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_121",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_121.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_122",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_122.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_123",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_123.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_124",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_124.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_125",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_125.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_126",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_126.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_127",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_127.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_128",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_128.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_129",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_129.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_130",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_130.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_131",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_131.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_132",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_132.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_133",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_133.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_134",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_134.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_135",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_135.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_136",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_136.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_137",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_137.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_138",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_138.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_139",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_139.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_140",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_140.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_141",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_141.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_142",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_142.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_143",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_143.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_144",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_144.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_145",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_145.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_146",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_146.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_147",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_147.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_148",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_148.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_149",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_149.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_150",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_150.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_151",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_151.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_152",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_152.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_153",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_153.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_154",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_154.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_155",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_155.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_156",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_156.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_157",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_157.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_158",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_158.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_159",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_159.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_160",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_160.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_161",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_161.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_162",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_162.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_163",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_163.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_164",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_164.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_165",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_165.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_166",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_166.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_167",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_167.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_168",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_168.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_169",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_169.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_170",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_170.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_171",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_171.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_172",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_172.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_173",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_173.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_174",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_174.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_175",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_175.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_176",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_176.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_177",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_177.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_178",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_178.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_179",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_179.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_180",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_180.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_181",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_181.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_182",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_182.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_183",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_183.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_184",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_184.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_185",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_185.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_186",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_186.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_187",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_187.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_188",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_188.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_189",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_189.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_190",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_190.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_191",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_191.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_192",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_192.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_193",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_193.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_194",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_194.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_195",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_195.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_196",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_196.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_197",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_197.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_198",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_198.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_199",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_199.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_200",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_200.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_201",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_201.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_202",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_202.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_203",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_203.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_204",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_204.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_205",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_205.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_206",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_206.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_207",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_207.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_208",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_208.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_209",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_209.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_210",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_210.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_211",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_211.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_212",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_212.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "icon_213",
+      "asset_type": "icon",
+      "quality": "low",
+      "source_path": "icons/png/icon_213.png",
+      "synonyms": [],
+      "tags": []
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "isn",
+        "progress",
+        "progressisntstraight",
+        "straight"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_White.png",
+      "synonyms": [],
+      "tags": [
+        "isn",
+        "progress",
+        "progressisntstraight",
+        "straight"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "isn",
+        "progress",
+        "progressisntstraight",
+        "straight"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "isn",
+        "progress",
+        "progressisntstraight",
+        "straight"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "isn",
+        "progress",
+        "progressisntstraight",
+        "straight"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Unlock New Possibilities/MicrosoftTeams-image (56).png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Unlock New Possibilities/MicrosoftTeams-image (56).png",
+      "synonyms": [],
+      "tags": [
+        "56",
+        "microsoftteams",
+        "new",
+        "possibilities",
+        "unlock"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_White.png",
+      "synonyms": [],
+      "tags": [
+        "build",
+        "buildyournextdimension",
+        "dimension",
+        "next"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "build",
+        "buildyournextdimension",
+        "dimension",
+        "next"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "build",
+        "buildyournextdimension",
+        "dimension",
+        "next"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "build",
+        "buildyournextdimension",
+        "dimension",
+        "next"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "build",
+        "buildyournextdimension",
+        "dimension",
+        "next"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "innovation",
+        "liberate",
+        "liberateinnovation"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_White.png",
+      "synonyms": [],
+      "tags": [
+        "innovation",
+        "liberate",
+        "liberateinnovation"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "innovation",
+        "liberate",
+        "liberateinnovation"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "innovation",
+        "liberate",
+        "liberateinnovation"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "innovation",
+        "liberate",
+        "liberateinnovation"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "reality",
+        "transform",
+        "transformreality"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "reality",
+        "transform",
+        "transformreality"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "reality",
+        "transform",
+        "transformreality"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_White.png",
+      "synonyms": [],
+      "tags": [
+        "reality",
+        "transform",
+        "transformreality"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "reality",
+        "transform",
+        "transformreality"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_White.png",
+      "synonyms": [],
+      "tags": [
+        "growth",
+        "power",
+        "software",
+        "softwaretopowergrowth"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "growth",
+        "power",
+        "software",
+        "softwaretopowergrowth"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "growth",
+        "power",
+        "software",
+        "softwaretopowergrowth"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "growth",
+        "power",
+        "software",
+        "softwaretopowergrowth"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "growth",
+        "power",
+        "software",
+        "softwaretopowergrowth"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "outmaneuver",
+        "outmaneuvertherisks",
+        "risk"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_White.png",
+      "synonyms": [],
+      "tags": [
+        "outmaneuver",
+        "outmaneuvertherisks",
+        "risk"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "outmaneuver",
+        "outmaneuvertherisks",
+        "risk"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "outmaneuver",
+        "outmaneuvertherisks",
+        "risk"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "outmaneuver",
+        "outmaneuvertherisks",
+        "risk"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "assumptions",
+        "challangeassumptions",
+        "challenge"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "assumptions",
+        "challangeassumptions",
+        "challenge"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "assumptions",
+        "challangeassumptions",
+        "challenge"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_White.png",
+      "synonyms": [],
+      "tags": [
+        "assumptions",
+        "challangeassumptions",
+        "challenge"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "assumptions",
+        "challangeassumptions",
+        "challenge"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "barriers",
+        "break",
+        "breakdownbarriers"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "barriers",
+        "break",
+        "breakdownbarriers"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_White.png",
+      "synonyms": [],
+      "tags": [
+        "barriers",
+        "break",
+        "breakdownbarriers"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "barriers",
+        "break",
+        "breakdownbarriers"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "barriers",
+        "break",
+        "breakdownbarriers"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "engineer",
+        "future",
+        "is",
+        "thefutureiswhatyouengineer",
+        "what",
+        "you"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "engineer",
+        "future",
+        "is",
+        "thefutureiswhatyouengineer",
+        "what",
+        "you"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "engineer",
+        "future",
+        "is",
+        "thefutureiswhatyouengineer",
+        "what",
+        "you"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "engineer",
+        "future",
+        "is",
+        "thefutureiswhatyouengineer",
+        "what",
+        "you"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_White.png",
+      "synonyms": [],
+      "tags": [
+        "engineer",
+        "future",
+        "is",
+        "thefutureiswhatyouengineer",
+        "what",
+        "you"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "anewperspective",
+        "new",
+        "perspective"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_White.png",
+      "synonyms": [],
+      "tags": [
+        "anewperspective",
+        "new",
+        "perspective"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "anewperspective",
+        "new",
+        "perspective"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "anewperspective",
+        "new",
+        "perspective"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "anewperspective",
+        "new",
+        "perspective"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Yellow.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Yellow.png",
+      "synonyms": [],
+      "tags": [
+        "differently",
+        "see",
+        "seetheworlddifferently"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Pink.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Pink.png",
+      "synonyms": [],
+      "tags": [
+        "differently",
+        "see",
+        "seetheworlddifferently"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Teal.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Teal.png",
+      "synonyms": [],
+      "tags": [
+        "differently",
+        "see",
+        "seetheworlddifferently"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Purple.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Purple.png",
+      "synonyms": [],
+      "tags": [
+        "differently",
+        "see",
+        "seetheworlddifferently"
+      ]
+    },
+    {
+      "asset_id": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_White.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_White.png",
+      "synonyms": [],
+      "tags": [
+        "differently",
+        "see",
+        "seetheworlddifferently"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Tribal Mark A/Tribal Mark White Transparent.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Tribal Mark A/Tribal Mark White Transparent.png",
+      "synonyms": [],
+      "tags": [
+        "mark",
+        "tribal"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Tribal Mark A/Tribal Mark Black.jpg",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Tribal Mark A/Tribal Mark Black.jpg",
+      "synonyms": [],
+      "tags": [
+        "mark",
+        "tribal"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Tribal Mark A/Tribal Mark Black Transparent.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Tribal Mark A/Tribal Mark Black Transparent.png",
+      "synonyms": [],
+      "tags": [
+        "mark",
+        "tribal"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Tribal Mark A/Tribal Mark White.jpg",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Tribal Mark A/Tribal Mark White.jpg",
+      "synonyms": [],
+      "tags": [
+        "mark",
+        "tribal"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Primary Logos in white and black/Ascendion primary Black Transparent logo.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Primary Logos in white and black/Ascendion primary Black Transparent logo.png",
+      "synonyms": [],
+      "tags": [
+        "ascendion",
+        "in",
+        "primary"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Primary Logos in white and black/Ascendion_Primary_Logo_White_RGB.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Primary Logos in white and black/Ascendion_Primary_Logo_White_RGB.png",
+      "synonyms": [],
+      "tags": [
+        "ascendion",
+        "in",
+        "primary"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Primary Logos in white and black/Ascendion_Primary_Logo_Black_RGB.jpg",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Primary Logos in white and black/Ascendion_Primary_Logo_Black_RGB.jpg",
+      "synonyms": [],
+      "tags": [
+        "ascendion",
+        "in",
+        "primary"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Logo with tagline/Ascendion_Brandmark_T_Tagline_B-o-W_Big.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Logo with tagline/Ascendion_Brandmark_T_Tagline_B-o-W_Big.png",
+      "synonyms": [],
+      "tags": [
+        "ascendion",
+        "big",
+        "brandmark",
+        "tagline"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Logo with tagline/Ascendion_Brandmark_T_Tagline_W-o-B_Big.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Logo with tagline/Ascendion_Brandmark_T_Tagline_W-o-B_Big.png",
+      "synonyms": [],
+      "tags": [
+        "ascendion",
+        "big",
+        "brandmark",
+        "tagline"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Logo with tagline/Ascendion_Brandmark_Tagline_W-o-B_Big.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Logo with tagline/Ascendion_Brandmark_Tagline_W-o-B_Big.png",
+      "synonyms": [],
+      "tags": [
+        "ascendion",
+        "big",
+        "brandmark",
+        "tagline"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Logo with tagline/Ascendion_Brandmark_Tagline_B-o-W_Big.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Logo with tagline/Ascendion_Brandmark_Tagline_B-o-W_Big.png",
+      "synonyms": [],
+      "tags": [
+        "ascendion",
+        "big",
+        "brandmark",
+        "tagline"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Logo with tagline/Logo with centered tagline/Artboard 2.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Logo with tagline/Logo with centered tagline/Artboard 2.png",
+      "synonyms": [],
+      "tags": [
+        "centered",
+        "tagline"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Logo with tagline/Logo with centered tagline/Artboard 3.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Logo with tagline/Logo with centered tagline/Artboard 3.png",
+      "synonyms": [],
+      "tags": [
+        "centered",
+        "tagline"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Logo with tagline/Logo with centered tagline/Artboard 1.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Logo with tagline/Logo with centered tagline/Artboard 1.png",
+      "synonyms": [],
+      "tags": [
+        "centered",
+        "tagline"
+      ]
+    },
+    {
+      "asset_id": "Ascendion Logos/Logo with tagline/Logo with centered tagline/Artboard 4.png",
+      "asset_type": "image",
+      "quality": "medium",
+      "source_path": "Ascendion Logos/Logo with tagline/Logo with centered tagline/Artboard 4.png",
+      "synonyms": [],
+      "tags": [
+        "centered",
+        "tagline"
+      ]
+    }
+  ],
+  "summary": {
+    "assets_count": 284,
+    "generated_by": "scripts/build_asset_catalog.py",
+    "icon_count": 213,
+    "image_count": 71,
+    "low_quality_count": 213,
+    "version": "1.0"
+  }
+}

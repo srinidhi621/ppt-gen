@@ -63,7 +63,7 @@ ppt-gen/
 │   ├── validate/              # Template drift + preflight validation
 │   └── render/                # DeckIR → PPTX renderer
 │
-├── tests/                     # Test suite (46 tests)
+├── tests/                     # Test suite (50 tests)
 │
 ├── scripts/
 │   ├── inspect_template.py    # Template analysis tool
@@ -115,6 +115,15 @@ python -m src.cli render --deckir inputs/sample_deckir.json
 **Run smoke test (validate → preflight → render):**
 ```bash
 python -m src.cli smoke --deckir inputs/sample_deckir.json
+```
+
+**Generate from one combined markdown file (split → plan → validate → render):**
+```bash
+python -m src.cli generate --input inputs/combined_input.md --run-id my_test_run
+```
+Optional: also copy split files into `inputs/`:
+```bash
+python -m src.cli generate --input inputs/combined_input.md --write-inputs
 ```
 
 **Run tests:**

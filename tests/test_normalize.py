@@ -124,6 +124,27 @@ Another paragraph.
         self.assertEqual(len(model.sections), 1)
         self.assertEqual(len(model.sections[0].bullets), 2)
 
+    def test_h2_after_h1_is_not_swallowed_when_metadata_present(self) -> None:
+        content = """# Deck Title
+<!-- section_id: intro -->
+## Introduction
+- Bullet
+"""
+        model = parse_markdown_string(content)
+        self.assertEqual(len(model.sections), 1)
+        self.assertEqual(model.sections[0].title, "Introduction")
+
+    def test_h2_immediately_after_h1_still_behaves_as_subtitle(self) -> None:
+        content = """# Deck Title
+## Deck Subtitle
+---
+## First Slide
+- Bullet
+"""
+        model = parse_markdown_string(content)
+        self.assertEqual(len(model.sections), 1)
+        self.assertEqual(model.sections[0].title, "First Slide")
+
 
 if __name__ == "__main__":
     unittest.main()
