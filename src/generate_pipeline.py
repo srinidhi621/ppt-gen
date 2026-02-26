@@ -11,6 +11,8 @@ from .assets import ensure_asset_catalog, match_asset
 from .models.content import ContentModel, ContentSection
 from .models.deck_ir import AssetRef, DeckIR, DeckSlide, FieldValue
 
+RENDERABLE_IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".webp")
+
 
 class CombinedInputError(ValueError):
     """Raised when combined markdown input is invalid."""
@@ -43,7 +45,10 @@ def split_combined_markdown(markdown_text: str) -> Tuple[str, Dict[str, Any]]:
         elif current == "cues":
             cues_lines.append(line)
 
-    content_md = _normalize_content_markdown("\n".join(content_lines)).strip()
+    # Support plain content.md input by treating the entire file as content
+    # when explicit combined sections are absent.
+    raw_content = "\n".join(content_lines) if (content_lines or cues_lines) else markdown_text
+    content_md = _normalize_content_markdown(raw_content).strip()
     if not content_md:
         raise CombinedInputError(
             "Missing or empty content section in combined markdown input."
@@ -311,8 +316,16 @@ def _build_asset_refs(
     # Icon mapping is generic and metadata-driven; only map when catalog has meaningful tags.
     icon_hints = cue.get("icon_hints", [])
     if icon_hints and "ph_image" in field_keys:
+        renderable_icons = [
+            asset
+            for asset in assets
+            if asset.get("asset_type") == "icon"
+            and _is_renderable_source_path(str(asset.get("source_path", "")))
+        ]
         for hint in icon_hints:
-            matched_icon = match_asset(str(hint), assets, allowed_types=("icon",), min_score=1)
+            matched_icon = match_asset(
+                str(hint), renderable_icons, allowed_types=("icon",), min_score=1
+            )
             if matched_icon:
                 refs.append(
                     AssetRef(
@@ -324,3 +337,7 @@ def _build_asset_refs(
                 break
 
     return refs
+
+
+def _is_renderable_source_path(source_path: str) -> bool:
+    return source_path.lower().endswith(RENDERABLE_IMAGE_SUFFIXES)

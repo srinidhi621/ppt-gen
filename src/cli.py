@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from .generate_pipeline import (
     split_combined_markdown,
 )
 from .logging_utils import log_event
+from .llm import LLMClientError, PlannerError, create_llm_client, load_dotenv, plan_deck_with_llm
 from .models.deck_ir import DeckIR
 from .normalize.parser import parse_markdown
 from .render.renderer import Renderer
@@ -33,6 +35,23 @@ def _add_common_args(parser: argparse.ArgumentParser) -> None:
         default=None,
         help="Path to project root (default: auto-detect)",
     )
+
+
+def _resolve_usd_inr_rate() -> float:
+    raw = os.environ.get("USD_INR_RATE", "").strip()
+    if not raw:
+        return 83.0
+    try:
+        parsed = float(raw)
+    except ValueError:
+        return 83.0
+    return parsed if parsed > 0 else 83.0
+
+
+def _cost_inr(usd_cost: float | None, usd_inr_rate: float) -> float | None:
+    if usd_cost is None:
+        return None
+    return round(usd_cost * usd_inr_rate, 8)
 
 
 def cmd_validate(args: argparse.Namespace) -> int:
@@ -271,14 +290,82 @@ def cmd_generate(args: argparse.Namespace) -> int:
         },
     )
 
-    deckir_v1 = build_deckir_from_content(
-        content_model=content_model,
-        cues_data=cues_data,
-        layout_catalog_path=Path(config.layout_catalog_path),
-        run_id=run_id,
-        deck_id=combined_input_path.stem,
-    )
-    log_event(log_path, "PLAN_DONE", {"slides_count": len(deckir_v1.slides)})
+    planner_mode = "llm" if args.planner == "gemini" else args.planner
+    project_root = Path(config.project_root)
+    load_dotenv(project_root / ".env")
+    usd_inr_rate = _resolve_usd_inr_rate()
+    llm_usage_payload = None
+    if planner_mode == "llm":
+        llm_provider = args.llm_provider
+        model_name = args.llm_model or args.gemini_model
+        try:
+            client = create_llm_client(
+                provider=llm_provider,
+                model=model_name,
+                timeout_seconds=args.planner_timeout_seconds,
+            )
+            deckir_v1, planning_stats = plan_deck_with_llm(
+                client=client,
+                content_model=content_model,
+                cues_data=cues_data,
+                layout_catalog_path=Path(config.layout_catalog_path),
+                icons_json_path=Path(config.icons_json_path),
+                run_id=run_id,
+                deck_id=combined_input_path.stem,
+                max_retries=args.planner_retries,
+            )
+        except LLMClientError as exc:
+            print(f"ERROR: Failed to initialize LLM client: {exc}")
+            return 1
+        except PlannerError as exc:
+            print(f"ERROR: LLM planning failed: {exc}")
+            return 1
+
+        llm_usage_payload = planning_stats.to_dict()
+        llm_usage_payload["usd_inr_rate"] = usd_inr_rate
+        llm_usage_payload["estimated_cost_inr"] = _cost_inr(
+            planning_stats.estimated_cost_usd,
+            usd_inr_rate,
+        )
+        llm_usage_path = run_dir / "llm_usage.json"
+        llm_usage_path.write_text(
+            json.dumps(llm_usage_payload, sort_keys=True, ensure_ascii=True, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        log_event(
+            log_path,
+            "PLAN_DONE",
+            {
+                "slides_count": len(deckir_v1.slides),
+                "planner": "llm",
+                "provider": planning_stats.provider,
+                "model": planning_stats.model,
+                "attempts": planning_stats.attempts,
+                "prompt_tokens": planning_stats.prompt_tokens,
+                "completion_tokens": planning_stats.completion_tokens,
+                "total_tokens": planning_stats.total_tokens,
+                "estimated_cost_usd": planning_stats.estimated_cost_usd,
+                "estimated_cost_inr": llm_usage_payload["estimated_cost_inr"],
+                "usd_inr_rate": usd_inr_rate,
+                "llm_usage_path": str(llm_usage_path),
+            },
+        )
+    else:
+        deckir_v1 = build_deckir_from_content(
+            content_model=content_model,
+            cues_data=cues_data,
+            layout_catalog_path=Path(config.layout_catalog_path),
+            run_id=run_id,
+            deck_id=combined_input_path.stem,
+        )
+        log_event(
+            log_path,
+            "PLAN_DONE",
+            {
+                "slides_count": len(deckir_v1.slides),
+                "planner": "deterministic",
+            },
+        )
 
     deckir_v1_path = run_dir / "deckir_v1.json"
     deckir_v1_path.write_text(deckir_v1.to_json(), encoding="utf-8")
@@ -325,6 +412,21 @@ def cmd_generate(args: argparse.Namespace) -> int:
     print(f"  Split cues: {cues_path}")
     print(f"  Output PPTX: {output_path}")
     print(f"  Artifacts directory: {run_dir}")
+    if llm_usage_payload is not None:
+        print("  LLM usage:")
+        print(f"    Provider: {llm_usage_payload['provider']}")
+        print(f"    Model: {llm_usage_payload['model']}")
+        print(f"    Prompt tokens: {llm_usage_payload['prompt_tokens']}")
+        print(f"    Completion tokens: {llm_usage_payload['completion_tokens']}")
+        print(f"    Total tokens: {llm_usage_payload['total_tokens']}")
+        if llm_usage_payload["estimated_cost_usd"] is not None:
+            print(f"    Estimated cost (USD): ${llm_usage_payload['estimated_cost_usd']:.6f}")
+            print(f"    Estimated cost (INR): INR {llm_usage_payload['estimated_cost_inr']:.6f}")
+            print(f"    USD/INR rate: {llm_usage_payload['usd_inr_rate']:.4f}")
+        else:
+            print("    Estimated cost (USD): unavailable (no pricing profile configured)")
+            print("    Estimated cost (INR): unavailable (USD estimate missing)")
+        print(f"    Usage artifact: {run_dir / 'llm_usage.json'}")
     return 0
 
 
@@ -385,6 +487,42 @@ def build_parser() -> argparse.ArgumentParser:
         "--write-inputs",
         action="store_true",
         help="Also write split content.md/cues.json into inputs/",
+    )
+    generate_parser.add_argument(
+        "--planner",
+        choices=("deterministic", "llm", "gemini"),
+        default="deterministic",
+        help="Planning mode (default: deterministic). 'gemini' is kept as a legacy alias.",
+    )
+    generate_parser.add_argument(
+        "--llm-provider",
+        choices=("gemini", "azure_openai"),
+        default="gemini",
+        help="LLM provider when planner=llm (default: gemini)",
+    )
+    generate_parser.add_argument(
+        "--llm-model",
+        type=str,
+        default=None,
+        help="LLM model/deployment hint; provider-specific defaults apply when omitted",
+    )
+    generate_parser.add_argument(
+        "--gemini-model",
+        type=str,
+        default=None,
+        help="Deprecated alias for --llm-model when using Gemini",
+    )
+    generate_parser.add_argument(
+        "--planner-retries",
+        type=int,
+        default=2,
+        help="Number of retries for planner validation failures (default: 2)",
+    )
+    generate_parser.add_argument(
+        "--planner-timeout-seconds",
+        type=int,
+        default=120,
+        help="LLM planner request timeout in seconds (default: 120)",
     )
     generate_parser.set_defaults(func=cmd_generate)
 
