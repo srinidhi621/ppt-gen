@@ -1,0 +1,71 @@
+Sample slides: 
+
+
+Slide 1 — Executive Summary
+
+Charter currently uses rule-based SQL to detect and classify fiber cut incidents. 
+This approach is rigid, brittle, and resource-intensive. 
+We propose a phased transition to a semantic, ML-driven approach: Phase 1: Augment SQL rules with an ML classifier to handle text variations. 
+Phase 2: Operationalize into a pipeline with confidence scoring, dashboards, and reporting. 
+Business value: improved detection accuracy, reduced manual effort, faster time-to-insight. 
+Slide 3 — Current State
+Make this a horizontal conveyor-belt style pipeline with icons and distinct colors at each stage. Use progressively “cleaner” data visuals as you move right.
+
+Field Events / Remedy Tickets Icon: 📄 clipboard or 🛠️ field engineer 
+Label: Raw free-text entries, unstructured, ~8.3k tickets 
+SQL Rule Matching Icon: 🧩 SQL query symbol (or magnifying glass over code) 
+Label: Keyword-based filters: “fiber cut,” “span loss,” “splicing” 
+Binary Flags Icon: ✅/❌ toggle switches 
+Label: Flags like fiber_cut_flag, power_flag, vandalism_flag 
+Secondary Rules (Subtype Classification) Icon: branching tree 🌳 
+Label: Rules split fiber cuts into construction, vandalism, weather, etc. 
+Aggregated Outputs Icon: 📊 table or database 
+Label: Counts, summaries, timeline extracts 
+Tableau Dashboards Icon: 📈 dashboard 
+Label: Visualized as LOR timelines, fiber cut analysis 
+👉 Suggestion: Use a progressive color gradient left-to-right to show increasing refinement.
+Narrative under diagram:
+
+Remedy tickets ingested. 
+SQL rules match keywords like “fiber cut,” “splicing,” “span loss.” 
+Flags generated (fiber cut, vandalism, hardware, etc.). 
+Tableau dashboards show filtered tickets. 
+👉 Limitation: misses semantic variations (e.g., “fiber restoration in progress” vs. “splicing ongoing”), requires constant SQL edits.
+
+Slide 2 — Phase 1 (Pilot: Semantic Classifier)
+Objective: Prove that an ML classifier (BERT/DistilBERT tuned on historical tickets) can outperform SQL.
+Deliverables:
+
+Pre-processed corpus of historical Remedy tickets. 
+Fine-tuned semantic model with confidence scoring. 
+Comparison dashboard: SQL vs. ML detection rates. 
+Impact:
+
+Handles synonyms and variations. 
+Provides probabilistic scores (not binary). 
+Reduces false negatives, increases detection coverage. 
+📊 Visualization Idea: Side-by-side bar chart → SQL detection (rigid, 2.6k tickets) vs. ML detection (semantic, ~20–30% uplift).
+
+Slide 3 — Phase 2 (Operational Pipeline)
+Objective: Embed the model into Charter’s BI stack.
+Deliverables:
+
+Automated ingestion pipeline: Remedy → Preprocessing → Classifier → BI. 
+Confidence scoring exposed to Tableau/Power BI. 
+Business-friendly dashboards showing: volume, type (construction, vandalism, weather, etc.), time-to-repair. 
+Impact:
+
+Moves from manual SQL updates → automated semantic pipeline. 
+Supports near real-time updates. 
+Enables more granular cut classification (e.g., accident vs. weather vs. vandalism). 
+📊 Visualization Idea: Vertical flow with 5 layers (Data → Preprocessing → Model → Scoring → BI Dashboards).
+
+
+Slide 4 — Business Impact
+
+Improved accuracy: More fiber cut tickets captured, fewer misses. 
+Reduced manual effort: Less SQL tweaking, less analyst time. 
+Faster insights: Cuts detected and classified in near real-time. 
+Better decisions: Leadership gets visibility into patterns (region, root cause, time to repair). 
+
+
