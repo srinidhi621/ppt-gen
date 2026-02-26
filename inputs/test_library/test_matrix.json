@@ -1,0 +1,84 @@
+{
+  "library_version": "1.0",
+  "suite_id": "mcp_integration_preflight",
+  "description": "Comprehensive input library for internal assets, external provider icons, and architecture diagram requests prior to MCP wiring.",
+  "cases": [
+    {
+      "case_id": "internal_brand_logo_story",
+      "input_file": "inputs/test_library/cases/internal_brand_logo_story.combined.md",
+      "category": "internal_assets",
+      "expected_signals": {
+        "requires_image_binding": true,
+        "expected_internal_image_prefixes": [
+          "Ascendion Logos/",
+          "Icons and Dimensional Keywords/"
+        ],
+        "minimum_image_bound_slides": 2
+      }
+    },
+    {
+      "case_id": "internal_brand_campaign_assets",
+      "input_file": "inputs/test_library/cases/internal_brand_campaign_assets.combined.md",
+      "category": "internal_assets",
+      "expected_signals": {
+        "requires_image_binding": true,
+        "expected_internal_image_prefixes": [
+          "Icons and Dimensional Keywords/"
+        ],
+        "minimum_image_bound_slides": 3
+      }
+    },
+    {
+      "case_id": "external_provider_aws",
+      "input_file": "inputs/test_library/cases/external_provider_aws.combined.md",
+      "category": "external_assets",
+      "expected_signals": {
+        "requires_icon_binding": true,
+        "expected_icon_id_prefixes": [
+          "aws:"
+        ],
+        "minimum_icon_bound_slides": 3
+      }
+    },
+    {
+      "case_id": "external_provider_microsoft",
+      "input_file": "inputs/test_library/cases/external_provider_microsoft.combined.md",
+      "category": "external_assets",
+      "expected_signals": {
+        "requires_icon_binding": true,
+        "expected_icon_id_prefixes": [
+          "fluent:"
+        ],
+        "minimum_icon_bound_slides": 3
+      }
+    },
+    {
+      "case_id": "external_provider_hybrid_cloud",
+      "input_file": "inputs/test_library/cases/external_provider_hybrid_cloud.combined.md",
+      "category": "external_assets",
+      "expected_signals": {
+        "requires_icon_binding": true,
+        "expected_icon_id_prefixes": [
+          "aws:",
+          "fluent:"
+        ],
+        "minimum_icon_bound_slides": 4
+      }
+    },
+    {
+      "case_id": "architecture_diagram_batch",
+      "input_file": "inputs/test_library/cases/architecture_diagram_batch.combined.md",
+      "category": "diagram_mcp_readiness",
+      "expected_signals": {
+        "requires_diagram_requests": true,
+        "minimum_diagram_request_count": 3,
+        "diagram_types": [
+          "architecture_overview",
+          "data_flow",
+          "sequence"
+        ],
+        "intended_tool_contract": "render_drawio_diagrams_batch"
+      }
+    }
+  ]
+}

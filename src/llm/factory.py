@@ -29,12 +29,14 @@ def create_llm_client(
         endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT", "").strip()
         api_key = os.environ.get("AZURE_OPENAI_API_KEY", "").strip()
         deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT", "").strip()
+        if not deployment:
+            deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME", "").strip()
         if not endpoint or not api_key or not deployment:
             raise LLMClientError(
                 "Azure OpenAI requires AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_API_KEY, "
-                "and AZURE_OPENAI_DEPLOYMENT in environment."
+                "and AZURE_OPENAI_DEPLOYMENT (or AZURE_OPENAI_DEPLOYMENT_NAME) in environment."
             )
-        resolved_model = model or os.environ.get("AZURE_OPENAI_MODEL") or deployment
+        resolved_model = model or os.environ.get("AZURE_OPENAI_MODEL") or "gpt-5.2"
         api_version = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21")
         return AzureOpenAIClient(
             endpoint=endpoint,

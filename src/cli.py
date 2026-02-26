@@ -5,7 +5,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from datetime import datetime
+import time
+from datetime import UTC, datetime
 from pathlib import Path
 
 from .config import load_config
@@ -52,6 +53,79 @@ def _cost_inr(usd_cost: float | None, usd_inr_rate: float) -> float | None:
     if usd_cost is None:
         return None
     return round(usd_cost * usd_inr_rate, 8)
+
+
+def _append_run_metrics(
+    *,
+    project_root: Path,
+    run_id: str,
+    planner_mode: str,
+    provider: str,
+    model: str,
+    prompt_tokens: int | None,
+    completion_tokens: int | None,
+    total_tokens: int | None,
+    estimated_cost_usd: float | None,
+    estimated_cost_inr: float | None,
+    planner_latency_seconds: float | None,
+    total_latency_seconds: float,
+    output_pptx: Path,
+) -> Path:
+    metrics_path = project_root / "run_metrics.csv"
+    now_utc = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    headers = [
+        "timestamp_utc",
+        "run_id",
+        "planner_mode",
+        "provider",
+        "model",
+        "prompt_tokens",
+        "completion_tokens",
+        "total_tokens",
+        "estimated_cost_usd",
+        "estimated_cost_inr",
+        "planner_latency_seconds",
+        "total_latency_seconds",
+        "output_pptx",
+    ]
+    usd_str = f"{estimated_cost_usd:.2f}" if estimated_cost_usd is not None else "n/a"
+    inr_str = f"{estimated_cost_inr:.2f}" if estimated_cost_inr is not None else "n/a"
+    row = [
+        now_utc,
+        run_id,
+        planner_mode,
+        provider,
+        model,
+        str(prompt_tokens) if prompt_tokens is not None else "n/a",
+        str(completion_tokens) if completion_tokens is not None else "n/a",
+        str(total_tokens) if total_tokens is not None else "n/a",
+        usd_str,
+        inr_str,
+        str(planner_latency_seconds) if planner_latency_seconds is not None else "n/a",
+        str(round(total_latency_seconds, 3)),
+        str(output_pptx),
+    ]
+
+    header_line = ",".join(headers)
+    row_line = ",".join(_csv_cell(value) for value in row)
+    should_write_header = True
+    if metrics_path.exists():
+        first_line = metrics_path.read_text(encoding="utf-8").splitlines()
+        should_write_header = not first_line or first_line[0] != header_line
+
+    mode = "w" if should_write_header else "a"
+    with metrics_path.open(mode, encoding="utf-8") as handle:
+        if should_write_header:
+            handle.write(header_line + "\n")
+        handle.write(row_line + "\n")
+    return metrics_path
+
+
+def _csv_cell(value: str) -> str:
+    cleaned = value.replace("\n", " ").strip()
+    if "," in cleaned or '"' in cleaned:
+        return '"' + cleaned.replace('"', '""') + '"'
+    return cleaned
 
 
 def cmd_validate(args: argparse.Namespace) -> int:
@@ -237,6 +311,7 @@ def cmd_smoke(args: argparse.Namespace) -> int:
 
 def cmd_generate(args: argparse.Namespace) -> int:
     """Generate deck from a combined markdown input and run pipeline."""
+    total_start = time.perf_counter()
     config = load_config(Path(args.project_root) if args.project_root else None)
 
     errors = validate_template_catalog(
@@ -295,6 +370,7 @@ def cmd_generate(args: argparse.Namespace) -> int:
     load_dotenv(project_root / ".env")
     usd_inr_rate = _resolve_usd_inr_rate()
     llm_usage_payload = None
+    planner_latency_seconds: float | None = None
     if planner_mode == "llm":
         llm_provider = args.llm_provider
         model_name = args.llm_model or args.gemini_model
@@ -304,6 +380,7 @@ def cmd_generate(args: argparse.Namespace) -> int:
                 model=model_name,
                 timeout_seconds=args.planner_timeout_seconds,
             )
+            planner_start = time.perf_counter()
             deckir_v1, planning_stats = plan_deck_with_llm(
                 client=client,
                 content_model=content_model,
@@ -314,6 +391,7 @@ def cmd_generate(args: argparse.Namespace) -> int:
                 deck_id=combined_input_path.stem,
                 max_retries=args.planner_retries,
             )
+            planner_latency_seconds = round(time.perf_counter() - planner_start, 3)
         except LLMClientError as exc:
             print(f"ERROR: Failed to initialize LLM client: {exc}")
             return 1
@@ -347,6 +425,7 @@ def cmd_generate(args: argparse.Namespace) -> int:
                 "estimated_cost_usd": planning_stats.estimated_cost_usd,
                 "estimated_cost_inr": llm_usage_payload["estimated_cost_inr"],
                 "usd_inr_rate": usd_inr_rate,
+                "planner_latency_seconds": planner_latency_seconds,
                 "llm_usage_path": str(llm_usage_path),
             },
         )
@@ -405,6 +484,25 @@ def cmd_generate(args: argparse.Namespace) -> int:
         {"output_path": str(output_path), "slides_rendered": len(render_map.entries)},
     )
 
+    total_latency_seconds = round(time.perf_counter() - total_start, 3)
+    provider = llm_usage_payload["provider"] if llm_usage_payload is not None else "deterministic"
+    model = llm_usage_payload["model"] if llm_usage_payload is not None else "n/a"
+    metrics_path = _append_run_metrics(
+        project_root=project_root,
+        run_id=run_id,
+        planner_mode=planner_mode,
+        provider=provider,
+        model=model,
+        prompt_tokens=llm_usage_payload["prompt_tokens"] if llm_usage_payload is not None else None,
+        completion_tokens=llm_usage_payload["completion_tokens"] if llm_usage_payload is not None else None,
+        total_tokens=llm_usage_payload["total_tokens"] if llm_usage_payload is not None else None,
+        estimated_cost_usd=llm_usage_payload["estimated_cost_usd"] if llm_usage_payload is not None else None,
+        estimated_cost_inr=llm_usage_payload["estimated_cost_inr"] if llm_usage_payload is not None else None,
+        planner_latency_seconds=planner_latency_seconds,
+        total_latency_seconds=total_latency_seconds,
+        output_pptx=output_path,
+    )
+
     print("Generate pipeline complete.")
     print(f"  Run ID: {run_id}")
     print(f"  Combined input: {combined_input_path}")
@@ -412,6 +510,7 @@ def cmd_generate(args: argparse.Namespace) -> int:
     print(f"  Split cues: {cues_path}")
     print(f"  Output PPTX: {output_path}")
     print(f"  Artifacts directory: {run_dir}")
+    print(f"  Total latency (s): {total_latency_seconds:.3f}")
     if llm_usage_payload is not None:
         print("  LLM usage:")
         print(f"    Provider: {llm_usage_payload['provider']}")
@@ -419,6 +518,8 @@ def cmd_generate(args: argparse.Namespace) -> int:
         print(f"    Prompt tokens: {llm_usage_payload['prompt_tokens']}")
         print(f"    Completion tokens: {llm_usage_payload['completion_tokens']}")
         print(f"    Total tokens: {llm_usage_payload['total_tokens']}")
+        if planner_latency_seconds is not None:
+            print(f"    Planner latency (s): {planner_latency_seconds:.3f}")
         if llm_usage_payload["estimated_cost_usd"] is not None:
             print(f"    Estimated cost (USD): ${llm_usage_payload['estimated_cost_usd']:.6f}")
             print(f"    Estimated cost (INR): INR {llm_usage_payload['estimated_cost_inr']:.6f}")
@@ -427,6 +528,7 @@ def cmd_generate(args: argparse.Namespace) -> int:
             print("    Estimated cost (USD): unavailable (no pricing profile configured)")
             print("    Estimated cost (INR): unavailable (USD estimate missing)")
         print(f"    Usage artifact: {run_dir / 'llm_usage.json'}")
+    print(f"  Run metrics file: {metrics_path}")
     return 0
 
 
@@ -497,8 +599,8 @@ def build_parser() -> argparse.ArgumentParser:
     generate_parser.add_argument(
         "--llm-provider",
         choices=("gemini", "azure_openai"),
-        default="gemini",
-        help="LLM provider when planner=llm (default: gemini)",
+        default="azure_openai",
+        help="LLM provider when planner=llm (default: azure_openai)",
     )
     generate_parser.add_argument(
         "--llm-model",

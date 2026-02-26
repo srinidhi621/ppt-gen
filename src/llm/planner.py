@@ -1,18 +1,29 @@
-"""LLM planner using Gemini with strict DeckIR validation."""
+"""LLM planner with visual vocabulary and branded image resolution."""
 
 from __future__ import annotations
 
 import json
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from pydantic import ValidationError
 
-from ..assets import ensure_asset_catalog, match_asset
+from ..assets import (
+    ensure_asset_catalog,
+    load_branded_images_catalog,
+    load_visual_vocabulary,
+    match_asset,
+    resolve_branded_image,
+    resolve_visual_concept,
+    resolve_visual_concepts_for_text,
+)
 from ..models.content import ContentModel
 from ..models.deck_ir import AssetRef, DeckIR, DeckSlide
 from .base import LLMClient, LLMClientError, LLMUsage
+
+logger = logging.getLogger(__name__)
 
 
 class PlannerError(RuntimeError):
@@ -58,7 +69,11 @@ def plan_deck_with_llm(
     """Return schema-valid DeckIR and number of attempts used."""
     layout_catalog = _load_json(layout_catalog_path)
     icons_catalog = _load_json(icons_json_path)
-    system_prompt = _build_system_prompt(layout_catalog, icons_catalog)
+    assets_dir = layout_catalog_path.parents[1]
+    vocabulary = load_visual_vocabulary(assets_dir)
+    branded_catalog = load_branded_images_catalog(assets_dir)
+
+    system_prompt = _build_system_prompt(layout_catalog, vocabulary, branded_catalog)
     user_prompt = _build_user_prompt(
         content_model=content_model,
         cues_data=cues_data,
@@ -70,6 +85,7 @@ def plan_deck_with_llm(
     attempts = max_retries + 1
     errors: List[str] = []
     usage_records: List[LLMUsage] = []
+    project_root = layout_catalog_path.parents[1]
     for attempt in range(1, attempts + 1):
         try:
             response = client.generate_json(system_prompt=system_prompt, user_prompt=user_prompt)
@@ -78,9 +94,10 @@ def plan_deck_with_llm(
             candidate = response.data
             candidate = _sanitize_candidate(candidate)
             deck = DeckIR.model_validate(candidate)
-            project_root = layout_catalog_path.parents[1]
+            # Resolve concept-level asset refs to actual icon/image IDs
+            _resolve_concept_refs(deck, vocabulary, branded_catalog, project_root)
             _normalize_asset_refs(deck, layout_catalog, icons_catalog, project_root)
-            _fill_missing_visuals(deck, layout_catalog_path)
+            _fill_missing_visuals(deck, layout_catalog_path, cues_data, vocabulary, branded_catalog)
             _enforce_catalog_constraints(deck, layout_catalog, icons_catalog, project_root)
             return deck, _aggregate_planning_stats(client, attempt, usage_records)
         except (LLMClientError, ValidationError, ValueError) as exc:
@@ -153,8 +170,14 @@ def _sanitize_candidate(candidate: Dict[str, Any]) -> Dict[str, Any]:
         for slide in slides:
             if not isinstance(slide, dict):
                 continue
-            if isinstance(slide.get("constraints_override"), list):
+            constraints_override = slide.get("constraints_override")
+            if not isinstance(constraints_override, dict):
                 slide["constraints_override"] = None
+            speaker_notes = slide.get("speaker_notes")
+            if isinstance(speaker_notes, list):
+                slide["speaker_notes"] = "\n".join(str(item) for item in speaker_notes if item is not None)
+            elif speaker_notes is None:
+                slide["speaker_notes"] = ""
             fields = slide.get("fields")
             if isinstance(fields, dict):
                 normalized_fields: Dict[str, Any] = {}
@@ -191,6 +214,55 @@ def _allowed_icon_ids(icons_catalog: Dict[str, Any]) -> set[str]:
         if icon_id:
             out.add(str(icon_id))
     return out
+
+
+def _resolve_concept_refs(
+    deck: DeckIR,
+    vocabulary: Dict[str, Any],
+    branded_catalog: Dict[str, Any],
+    project_root: Path,
+) -> None:
+    """Resolve concept-level asset_refs from the LLM to actual icon/image IDs."""
+    branded_images = branded_catalog.get("images", {})
+
+    for slide in deck.slides:
+        resolved_refs: List[AssetRef] = []
+        for asset in slide.asset_refs:
+            if asset.asset_type == "icon":
+                # Try resolving as a concept name first
+                icon_id = resolve_visual_concept(asset.asset_id, vocabulary)
+                if icon_id:
+                    asset.asset_id = icon_id
+                    resolved_refs.append(asset)
+                else:
+                    # Keep as-is (might be a direct icon_id from the catalog)
+                    resolved_refs.append(asset)
+            elif asset.asset_type == "image":
+                # Try resolving as a branded image ID
+                if asset.asset_id in branded_images:
+                    entry = branded_images[asset.asset_id]
+                    color_pref = entry.get("color_preference", {})
+                    color = color_pref.get("light_theme", "Teal")
+                    paths = entry.get("paths", {})
+                    resolved_path = paths.get(color) or next(iter(paths.values()), None)
+                    if resolved_path:
+                        asset.asset_id = resolved_path
+                        resolved_refs.append(asset)
+                    else:
+                        logger.warning("Branded image %s has no paths", asset.asset_id)
+                elif _image_asset_exists(asset.asset_id, project_root):
+                    resolved_refs.append(asset)
+                else:
+                    # Try resolving the asset_id as a theme query
+                    path = resolve_branded_image(asset.asset_id, branded_catalog)
+                    if path:
+                        asset.asset_id = path
+                        resolved_refs.append(asset)
+                    else:
+                        logger.warning("Could not resolve image asset: %s", asset.asset_id)
+            else:
+                resolved_refs.append(asset)
+        slide.asset_refs = resolved_refs
 
 
 def _enforce_catalog_constraints(
@@ -261,38 +333,100 @@ def _image_asset_exists(asset_id: str, project_root: Path) -> bool:
     return under_assets.exists()
 
 
-def _build_system_prompt(layout_catalog: Dict[str, Any], icons_catalog: Dict[str, Any]) -> str:
-    allowed_layouts = []
+# ── Prompt builders ──────────────────────────────────────────────────────
+
+def _build_system_prompt(
+    layout_catalog: Dict[str, Any],
+    vocabulary: Dict[str, Any],
+    branded_catalog: Dict[str, Any],
+) -> str:
+    # Build layout info with image-capability flag
+    layout_info = []
     for layout in layout_catalog.get("layouts", []):
         layout_id = layout.get("layout_id")
         if not layout_id:
             continue
         field_keys = []
-        for field in layout.get("fields", []):
-            field_key = field.get("field_key")
-            if field_key:
-                field_keys.append(field_key)
-        allowed_layouts.append({"layout_id": layout_id, "field_keys": field_keys})
+        has_image = False
+        for f in layout.get("fields", []):
+            fk = f.get("field_key")
+            if fk:
+                field_keys.append(fk)
+                if fk.startswith("ph_image"):
+                    has_image = True
+        constraints = layout.get("constraints", {})
+        layout_info.append({
+            "layout_id": layout_id,
+            "field_keys": field_keys,
+            "has_ph_image": has_image,
+            "max_bullets": constraints.get("max_bullets", 7),
+            "max_total_body_chars": constraints.get("max_total_body_chars", 500),
+        })
 
-    icon_ids = sorted(list(_allowed_icon_ids(icons_catalog)))
-    # Keep prompt bounded.
-    icon_ids_preview = icon_ids[:400]
+    # Build compact vocabulary summary (concept: domains)
+    vocab_summary = {}
+    for concept, entry in vocabulary.get("concepts", {}).items():
+        vocab_summary[concept] = entry.get("domains", [])
+
+    # Build branded image summary (id: theme)
+    branded_summary = {}
+    for img_id, entry in branded_catalog.get("images", {}).items():
+        branded_summary[img_id] = entry.get("theme", "")
 
     return (
-        "You are a deck planner. Output ONLY valid JSON object for DeckIR.\n"
-        "No markdown, no explanations.\n"
-        "Use only the allowed layouts/fields and icon IDs.\n"
-        "Prefer concise bullets to avoid overflow.\n"
-        "Use one slide per section from input; do not invent extra slides.\n"
-        "For each slide, choose a layout that matches content density:\n"
-        "- few points -> title/statement layouts\n"
-        "- list-heavy sections -> one_content/two_content/three_content\n"
-        "- process sections -> agenda/timeline-like layouts if available\n"
-        "Only emit asset_refs when the chosen layout has an image placeholder field key.\n"
-        "For image placeholders, prefer icon asset refs unless there is a clear concrete image cue.\n"
-        "If uncertain, choose layout_id 'one_content_light'.\n\n"
-        f"Allowed layouts and field keys:\n{json.dumps(allowed_layouts, ensure_ascii=True)}\n\n"
-        f"Allowed icon_ids (subset):\n{json.dumps(icon_ids_preview, ensure_ascii=True)}\n"
+        "You are a deck planner. Output ONLY a valid JSON object for DeckIR.\n"
+        "No markdown fences, no explanations, no comments — pure JSON only.\n\n"
+        "=== LAYOUTS ===\n"
+        f"{json.dumps(layout_info, ensure_ascii=True)}\n\n"
+        "=== VISUAL VOCABULARY (icon concepts) ===\n"
+        "For asset_refs with icons, set asset_type='icon' and asset_id to a CONCEPT NAME from this list.\n"
+        "The pipeline resolves concepts to actual icons. Do NOT use raw icon_ids.\n"
+        f"{json.dumps(vocab_summary, ensure_ascii=True)}\n\n"
+        "=== BRANDED IMAGES (for title/section slides) ===\n"
+        "For branded hero images, set asset_type='image' and asset_id to a BRANDED IMAGE ID from this list.\n"
+        "Use these on title_image_light and section_break_light layouts.\n"
+        f"{json.dumps(branded_summary, ensure_ascii=True)}\n\n"
+        "=== RULES ===\n"
+        "1. One slide per content section. Do not invent extra slides.\n"
+        "2. Choose layout based on content density:\n"
+        "   - Title/opening -> title_image_light or section_break_light (with branded image)\n"
+        "   - Few bullets -> content_image_light (with icon concept)\n"
+        "   - Dense content -> one_content_light, two_content_light\n"
+        "   - Process/agenda -> agenda_light or three_content_light\n"
+        "   - Statement -> statement_light\n"
+        "3. HARD RULE: Every slide whose layout has_ph_image=true MUST have at least one asset_ref\n"
+        "   targeting ph_image. Do NOT leave image placeholders empty.\n"
+        "4. For icon concepts, pick the concept that best matches the slide's topic.\n"
+        "5. For section breaks and title slides, prefer a branded image over an icon.\n"
+        "6. Keep bullets concise. Respect max_bullets and max_total_body_chars limits.\n"
+        "7. Move overflow detail to speaker_notes.\n"
+        "8. Honor layout_hint from cues when the hint is a valid layout_id.\n"
+        "9. Honor icon_hints from cues by selecting the matching concept.\n\n"
+        "=== WORKED EXAMPLES ===\n"
+        '{\n'
+        '  "slide_id": "opening",\n'
+        '  "layout_id": "title_image_light",\n'
+        '  "fields": {"ph_title": "Legacy System Navigator", "ph_body": "Modernization roadmap for enterprise systems"},\n'
+        '  "speaker_notes": "",\n'
+        '  "asset_refs": [{"asset_type": "image", "asset_id": "transform_reality", "target_field_key": "ph_image"}],\n'
+        '  "constraints_override": null\n'
+        '}\n\n'
+        '{\n'
+        '  "slide_id": "data_integration",\n'
+        '  "layout_id": "content_image_light",\n'
+        '  "fields": {"ph_title": "Data Integration Strategy", "ph_body": ["Unified data layer", "Real-time sync", "API-first approach"]},\n'
+        '  "speaker_notes": "Additional technical details...",\n'
+        '  "asset_refs": [{"asset_type": "icon", "asset_id": "integration", "target_field_key": "ph_image"}],\n'
+        '  "constraints_override": null\n'
+        '}\n\n'
+        '{\n'
+        '  "slide_id": "risk_governance",\n'
+        '  "layout_id": "content_image_light",\n'
+        '  "fields": {"ph_title": "Risk & Governance", "ph_body": ["Compliance framework", "Audit trail", "Access controls"]},\n'
+        '  "speaker_notes": "",\n'
+        '  "asset_refs": [{"asset_type": "icon", "asset_id": "governance", "target_field_key": "ph_image"}],\n'
+        '  "constraints_override": null\n'
+        '}\n'
     )
 
 
@@ -305,7 +439,9 @@ def _build_user_prompt(
     template_id: str,
 ) -> str:
     content_json = content_model.to_json()
-    cues_json = json.dumps(cues_data, sort_keys=True, ensure_ascii=True)
+
+    # Format cues prominently so the LLM can use them for visual decisions
+    cues_block = _format_cues_for_prompt(cues_data)
 
     return (
         "Build DeckIR JSON with this exact top-level schema:\n"
@@ -317,55 +453,135 @@ def _build_user_prompt(
         "Rules:\n"
         "- Keep slide_id stable and slug-like, ideally derived from section_id.\n"
         "- Keep key business points on slide and move overflow detail into speaker_notes.\n"
-        "- If a section contains explicit layout hints, honor them when valid.\n\n"
+        "- If a section contains explicit layout hints, honor them when valid.\n"
+        "- Use the visualization cues below to drive layout and visual choices for each section.\n"
+        "- For layouts with ph_image, you MUST include an asset_ref. Use icon concepts or branded image IDs.\n\n"
         f"Required deck_id: {deck_id}\n"
         f"Required run_id: {run_id}\n"
         f"Required template_id: {template_id}\n\n"
         f"ContentModel:\n{content_json}\n\n"
-        f"Cues:\n{cues_json}\n"
+        "=== VISUALIZATION CUES (use these to drive layout and visual choices) ===\n"
+        f"{cues_block}\n"
     )
 
 
-def _fill_missing_visuals(deck: DeckIR, layout_catalog_path: Path) -> None:
-    """Deterministic visual search to fill absent asset refs."""
+def _format_cues_for_prompt(cues_data: Dict[str, Any]) -> str:
+    """Format cues into a clear, readable block for the LLM."""
+    cues_list = cues_data.get("cues", [])
+    if not cues_list:
+        return "No visualization cues provided."
+
+    lines: List[str] = []
+    for cue in cues_list:
+        if not isinstance(cue, dict):
+            continue
+        section_id = cue.get("section_id", "unknown")
+        layout_hint = cue.get("layout_hint", "")
+        icon_hints = cue.get("icon_hints", [])
+        image_hint = cue.get("image_hint", "")
+        notes = cue.get("notes", "")
+
+        lines.append(f"Section: {section_id}")
+        if layout_hint:
+            lines.append(f"  layout_hint: {layout_hint}")
+        if icon_hints:
+            lines.append(f"  icon_hints: {', '.join(str(h) for h in icon_hints)}")
+        if image_hint:
+            lines.append(f"  image_hint: {image_hint}")
+        if notes:
+            lines.append(f"  notes: {notes}")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+# ── Visual fill (safety net) ────────────────────────────────────────────
+
+def _fill_missing_visuals(
+    deck: DeckIR,
+    layout_catalog_path: Path,
+    cues_data: Dict[str, Any] | None = None,
+    vocabulary: Dict[str, Any] | None = None,
+    branded_catalog: Dict[str, Any] | None = None,
+) -> None:
+    """Deterministic visual fill for slides missing asset_refs on ph_image."""
     with layout_catalog_path.open("r", encoding="utf-8") as handle:
         layout_catalog = json.load(handle)
     layouts = {entry["layout_id"]: entry for entry in layout_catalog.get("layouts", [])}
     assets_dir = layout_catalog_path.parents[1]
-    asset_catalog = ensure_asset_catalog(assets_dir)
-    assets = asset_catalog.get("assets", [])
+
+    if vocabulary is None:
+        vocabulary = load_visual_vocabulary(assets_dir)
+    if branded_catalog is None:
+        branded_catalog = load_branded_images_catalog(assets_dir)
+
+    # Build cues lookup
+    cues_by_section: Dict[str, Dict[str, Any]] = {}
+    if cues_data:
+        for cue in cues_data.get("cues", []):
+            if isinstance(cue, dict) and cue.get("section_id"):
+                cues_by_section[cue["section_id"]] = cue
 
     for slide in deck.slides:
         layout = layouts.get(slide.layout_id, {})
         field_keys = [f.get("field_key") for f in layout.get("fields", []) if f.get("field_key")]
         image_fields = sorted([key for key in field_keys if key.startswith("ph_image")])
         if not image_fields:
+            # Strip any asset_refs for layouts without image placeholders
             slide.asset_refs = []
             continue
         if slide.asset_refs:
             continue
 
+        target_field = image_fields[0]
+
+        # 1. Try cue icon_hints via vocabulary
+        cue = cues_by_section.get(slide.slide_id, {})
+        icon_hints = cue.get("icon_hints", [])
+        for hint in icon_hints:
+            icon_id = resolve_visual_concepts_for_text(str(hint), vocabulary)
+            if icon_id:
+                slide.asset_refs = [AssetRef(asset_type="icon", asset_id=icon_id, target_field_key=target_field)]
+                break
+        if slide.asset_refs:
+            continue
+
+        # 2. Try cue image_hint via branded catalog
+        image_hint = cue.get("image_hint", "")
+        if image_hint:
+            path = resolve_branded_image(str(image_hint), branded_catalog)
+            if path:
+                slide.asset_refs = [AssetRef(asset_type="image", asset_id=path, target_field_key=target_field)]
+                continue
+
+        # 3. Fall back: extract keywords from slide content -> vocabulary
         search_text = _slide_search_text(slide)
+        icon_id = resolve_visual_concepts_for_text(search_text, vocabulary)
+        if icon_id:
+            slide.asset_refs = [AssetRef(asset_type="icon", asset_id=icon_id, target_field_key=target_field)]
+            continue
+
+        # 4. For section_break / title_image layouts, try branded image by content theme
+        if slide.layout_id in ("section_break_light", "title_image_light"):
+            path = resolve_branded_image(search_text, branded_catalog)
+            if path:
+                slide.asset_refs = [AssetRef(asset_type="image", asset_id=path, target_field_key=target_field)]
+                continue
+
+        # 5. Last resort: token-overlap match against full asset catalog
+        asset_catalog = ensure_asset_catalog(assets_dir)
+        assets = asset_catalog.get("assets", [])
         icon_match = match_asset(search_text, assets, allowed_types=("icon",), min_score=1)
         if icon_match:
-            slide.asset_refs = [
-                AssetRef(
-                    asset_type="icon",
-                    asset_id=str(icon_match["asset_id"]),
-                    target_field_key=image_fields[0],
-                )
-            ]
+            slide.asset_refs = [AssetRef(asset_type="icon", asset_id=str(icon_match["asset_id"]), target_field_key=target_field)]
             continue
 
         image_match = match_asset(search_text, assets, allowed_types=("image",), min_score=1)
         if image_match:
-            slide.asset_refs = [
-                AssetRef(
-                    asset_type="image",
-                    asset_id=str(image_match["asset_id"]),
-                    target_field_key=image_fields[0],
-                )
-            ]
+            slide.asset_refs = [AssetRef(asset_type="image", asset_id=str(image_match["asset_id"]), target_field_key=target_field)]
+            continue
+
+        logger.warning("VISUAL_CUE_UNRESOLVED slide=%s search=%s", slide.slide_id, search_text[:100])
 
 
 def _slide_search_text(slide: DeckSlide) -> str:

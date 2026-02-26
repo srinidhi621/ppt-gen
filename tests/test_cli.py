@@ -74,6 +74,10 @@ class TestCLI(unittest.TestCase):
         args = parser.parse_args(["smoke"])
         self.assertEqual(args.command, "smoke")
 
+        args = parser.parse_args(["generate", "--input", "inputs/content.md", "--planner", "llm"])
+        self.assertEqual(args.command, "generate")
+        self.assertEqual(args.llm_provider, "azure_openai")
+
 
 class TestSmokeIntegration(unittest.TestCase):
     """Integration test for the full smoke pipeline."""

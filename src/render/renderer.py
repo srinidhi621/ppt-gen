@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from pptx import Presentation
 
@@ -12,6 +13,36 @@ from ..models.deck_ir import DeckIR
 from ..models.render_map import RenderMap, RenderMapEntry
 from ..validate.drift import _read_alt_text
 from pptx.oxml.ns import qn
+
+RENDERABLE_IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
+
+# Regex for parsing Markdown inline formatting into (text, bold, italic) spans.
+_MD_INLINE_RE = re.compile(
+    r"\*\*\*(.+?)\*\*\*"   # ***bold+italic***
+    r"|\*\*(.+?)\*\*"      # **bold**
+    r"|\*(.+?)\*"          # *italic*
+    r"|([^*]+)"            # plain text
+    r"|(\*)"               # lone asterisk
+)
+
+
+def parse_markdown_runs(text: str) -> List[Tuple[str, bool, bool]]:
+    """Parse Markdown inline formatting into a list of (text, bold, italic) tuples."""
+    if "**" not in text and "*" not in text:
+        return [(text, False, False)]
+    runs: List[Tuple[str, bool, bool]] = []
+    for m in _MD_INLINE_RE.finditer(text):
+        if m.group(1) is not None:
+            runs.append((m.group(1), True, True))
+        elif m.group(2) is not None:
+            runs.append((m.group(2), True, False))
+        elif m.group(3) is not None:
+            runs.append((m.group(3), False, True))
+        elif m.group(4) is not None:
+            runs.append((m.group(4), False, False))
+        elif m.group(5) is not None:
+            runs.append((m.group(5), False, False))
+    return runs
 
 
 class Renderer:
@@ -104,10 +135,26 @@ class Renderer:
                     if idx == 0
                     else text_frame.add_paragraph()
                 )
-                paragraph.text = str(item)
                 paragraph.level = 0
+                self._set_paragraph_runs(paragraph, str(item))
         else:
-            text_frame.text = str(value)
+            paragraph = text_frame.paragraphs[0]
+            self._set_paragraph_runs(paragraph, str(value))
+
+    @staticmethod
+    def _set_paragraph_runs(paragraph, text: str) -> None:
+        """Replace paragraph content with Markdown-formatted runs."""
+        # Clear existing runs
+        for run in list(paragraph.runs):
+            run._r.getparent().remove(run._r)
+        runs = parse_markdown_runs(text)
+        for run_text, bold, italic in runs:
+            r = paragraph.add_run()
+            r.text = run_text
+            if bold:
+                r.font.bold = True
+            if italic:
+                r.font.italic = True
 
     def _apply_image(self, slide, shape, asset_path: Path) -> None:
         try:
@@ -180,7 +227,10 @@ class Renderer:
                 svg_path = icon.get("svg_path")
                 if not icon_id or not pack or not svg_path:
                     continue
-                icon_index[str(icon_id)] = f"assets/external_assets/{pack}/{svg_path}"
+                # Prefer local PNG mapping when present; fall back to external SVG only if missing.
+                icon_index.setdefault(
+                    str(icon_id), f"assets/external_assets/{pack}/{svg_path}"
+                )
 
         return icon_index
 
@@ -194,6 +244,11 @@ class Renderer:
             project_root = self.template_path.parents[2]
             candidate = project_root / source_path
             if candidate.exists():
+                if candidate.suffix.lower() not in RENDERABLE_IMAGE_SUFFIXES:
+                    raise ValueError(
+                        f"Unsupported icon format for PowerPoint render: {candidate.suffix} "
+                        f"(icon_id={asset_ref.asset_id}). Use PNG/JPG/WebP in MVP."
+                    )
                 return candidate
             raise FileNotFoundError(f"Missing icon asset file: {candidate}")
         asset_path = Path(asset_ref.asset_id)

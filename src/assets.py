@@ -19,6 +19,7 @@ STOP_WORDS = {
     "a",
     "an",
 }
+RENDERABLE_IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
 
 
 def load_asset_catalog(catalog_path: Path) -> Dict[str, Any]:
@@ -80,9 +81,11 @@ def match_asset(
 def build_asset_catalog(assets_dir: Path) -> Dict[str, Any]:
     icons_json = assets_dir / "icons" / "icons.json"
     external_registry = assets_dir / "external_assets" / "registry.manifest.json"
+    icon_assets = _merge_icon_assets(
+        _icon_entries(icons_json), _external_icon_entries(external_registry)
+    )
     assets: List[Dict[str, Any]] = []
-    assets.extend(_icon_entries(icons_json))
-    assets.extend(_external_icon_entries(external_registry))
+    assets.extend(icon_assets)
     assets.extend(_image_entries(assets_dir))
     return {
         "summary": {
@@ -120,6 +123,132 @@ def _icon_entries(icons_json_path: Path) -> List[Dict[str, Any]]:
             }
         )
     return out
+
+
+def _merge_icon_assets(
+    primary_icons: List[Dict[str, Any]], fallback_icons: List[Dict[str, Any]]
+) -> List[Dict[str, Any]]:
+    """
+    Merge icon entries by asset_id, preferring renderable image paths from primary metadata.
+    """
+    merged: Dict[str, Dict[str, Any]] = {}
+    for icon in fallback_icons:
+        merged[str(icon.get("asset_id", ""))] = icon
+
+    for icon in primary_icons:
+        asset_id = str(icon.get("asset_id", ""))
+        if not asset_id:
+            continue
+        existing = merged.get(asset_id)
+        if existing is None:
+            merged[asset_id] = icon
+            continue
+
+        new_path = str(icon.get("source_path", "")).lower()
+        old_path = str(existing.get("source_path", "")).lower()
+        if _is_renderable_path(new_path) and not _is_renderable_path(old_path):
+            merged[asset_id] = icon
+            continue
+        if old_path and not new_path:
+            continue
+        merged[asset_id] = icon
+
+    return sorted(merged.values(), key=lambda item: str(item.get("asset_id", "")))
+
+
+def load_visual_vocabulary(assets_dir: Path) -> Dict[str, Any]:
+    """Load the visual vocabulary catalog."""
+    vocab_path = assets_dir / "catalog" / "visual_vocabulary.json"
+    if not vocab_path.exists():
+        return {"concepts": {}}
+    return json.loads(vocab_path.read_text(encoding="utf-8"))
+
+
+def resolve_visual_concept(concept: str, vocabulary: Dict[str, Any]) -> str | None:
+    """Resolve a concept name to the preferred icon_id, falling back to alternatives."""
+    concepts = vocabulary.get("concepts", {})
+    entry = concepts.get(concept.lower().strip())
+    if not entry:
+        return None
+    return entry.get("preferred") or (entry.get("alt", [None])[0])
+
+
+def resolve_visual_concepts_for_text(
+    text: str, vocabulary: Dict[str, Any]
+) -> str | None:
+    """Tokenize text and match tokens against concept names and domain keywords.
+
+    Returns the best icon_id or None.
+    """
+    tokens = _tokenize(text)
+    if not tokens:
+        return None
+
+    concepts = vocabulary.get("concepts", {})
+
+    # Build reverse index: domain keyword -> concept name
+    domain_to_concept: Dict[str, str] = {}
+    for concept_name, entry in concepts.items():
+        for domain in entry.get("domains", []):
+            domain_key = domain.lower().replace("-", "").replace("_", "")
+            domain_to_concept.setdefault(domain_key, concept_name)
+
+    # Direct concept name match (best)
+    for token in tokens:
+        normalized = token.lower().replace("-", "").replace("_", "")
+        if normalized in concepts:
+            return resolve_visual_concept(normalized, vocabulary)
+
+    # Domain keyword match
+    for token in tokens:
+        normalized = token.lower().replace("-", "").replace("_", "")
+        matched_concept = domain_to_concept.get(normalized)
+        if matched_concept:
+            return resolve_visual_concept(matched_concept, vocabulary)
+
+    return None
+
+
+def load_branded_images_catalog(assets_dir: Path) -> Dict[str, Any]:
+    """Load the branded image catalog."""
+    catalog_path = assets_dir / "catalog" / "branded_images.json"
+    if not catalog_path.exists():
+        return {"images": {}}
+    return json.loads(catalog_path.read_text(encoding="utf-8"))
+
+
+def resolve_branded_image(
+    context_text: str, catalog: Dict[str, Any], theme: str = "light"
+) -> str | None:
+    """Match context text against image themes and return the best image path."""
+    tokens = _tokenize(context_text)
+    if not tokens:
+        return None
+
+    images = catalog.get("images", {})
+    best_id = None
+    best_score = 0
+
+    for image_id, entry in images.items():
+        theme_text = str(entry.get("theme", ""))
+        theme_tokens = _tokenize(theme_text)
+        score = len(tokens & theme_tokens)
+        if score > best_score:
+            best_score = score
+            best_id = image_id
+
+    if best_id is None or best_score < 1:
+        return None
+
+    entry = images[best_id]
+    color_pref = entry.get("color_preference", {})
+    color = color_pref.get(f"{theme}_theme", "Teal")
+    paths = entry.get("paths", {})
+    return paths.get(color) or next(iter(paths.values()), None)
+
+
+def _is_renderable_path(source_path: str) -> bool:
+    return Path(source_path).suffix.lower() in RENDERABLE_IMAGE_SUFFIXES
 
 
 def _external_icon_entries(registry_manifest_path: Path) -> List[Dict[str, Any]]:

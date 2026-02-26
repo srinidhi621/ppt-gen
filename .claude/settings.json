@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source .venv/bin/activate*)",
+      "Bash(source .env*)",
+      "Bash(python -m pytest*)",
+      "Bash(python -m src.cli*)",
+      "Bash(python scripts/*)",
+      "Bash(ls *)",
+      "Bash(mkdir *)"
+    ],
+    "deny": []
+  }
+}
