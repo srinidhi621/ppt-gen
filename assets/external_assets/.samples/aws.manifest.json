@@ -1,0 +1,26 @@
+{
+  "pack": "aws",
+  "pack_version": "Icon-package_01302026",
+  "license": {
+    "type": "AWS brand assets",
+    "source": "https://aws.amazon.com/architecture/icons/",
+    "notes": "Treat as AWS brand/trademark-governed assets; avoid modifying logos/marks."
+  },
+  "source": {
+    "download_urls": [
+      "https://d1.awsstatic.com/onedam/marketing-channels/website/aws/en_US/architecture/approved/architecture-icons/Icon-package_01302026.31b40d126ed27079b708594940ad577a86150582.zip"
+    ],
+    "pinned": true
+  },
+  "icons": [
+    {
+      "id": "aws:compute_ec2_amazon-ec2-instance",
+      "name": "amazon-ec2-instance",
+      "svg_path": "svg/aws/compute/ec2/amazon-ec2-instance.svg",
+      "tags": ["aws", "cloud", "architecture", "provider_icon", "compute", "ec2", "amazon", "instance"],
+      "categories": ["compute", "ec2"],
+      "aliases": [],
+      "search_text": "amazon-ec2-instance aws cloud architecture provider_icon compute ec2 amazon instance"
+    }
+  ]
+}
