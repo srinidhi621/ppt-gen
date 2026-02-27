@@ -397,19 +397,21 @@ def _build_system_prompt(
         "=== RULES ===\n"
         "1. One slide per content section. Do not invent extra slides.\n"
         "2. Choose layout based on content density:\n"
-        "   - Title/opening -> title_image_light or section_break_light (with branded image)\n"
-        "   - Few bullets -> content_image_light (with icon concept)\n"
+        "   - Title/opening -> section_break_light (with branded image)\n"
+        "   - Few bullets -> content_image_light (prefer image when cues are rich)\n"
         "   - Dense content -> one_content_light, two_content_light\n"
         "   - Process/agenda -> agenda_light or three_content_light\n"
         "   - Statement -> statement_light\n"
         "3. HARD RULE: Every slide whose layout has_ph_image=true MUST have at least one asset_ref\n"
         "   targeting ph_image. Do NOT leave image placeholders empty.\n"
-        "4. For icon concepts, pick the concept that best matches the slide's topic.\n"
-        "5. For section breaks and title slides, prefer a branded image over an icon.\n"
-        "6. Keep bullets concise. Respect max_bullets and max_total_body_chars limits.\n"
-        "7. Move overflow detail to speaker_notes.\n"
-        "8. Honor layout_hint from cues when the hint is a valid layout_id.\n"
-        "9. Honor icon_hints from cues by selecting the matching concept.\n\n"
+        "4. Prefer image-capable layouts when cues include image_hint, multiple icon_hints,\n"
+        "   or notes requesting diagram/screenshot/composite visuals.\n"
+        "5. For icon concepts, pick the concept that best matches the slide's topic.\n"
+        "6. For section breaks and cue-rich slides, prefer a branded image over an icon.\n"
+        "7. Keep bullets concise. Respect max_bullets and max_total_body_chars limits.\n"
+        "8. Move overflow detail to speaker_notes.\n"
+        "9. Honor layout_hint from cues when the hint is a valid layout_id.\n"
+        "10. Honor icon_hints from cues by selecting the matching concept.\n\n"
         "=== WORKED EXAMPLES ===\n"
         '{\n'
         '  "slide_id": "opening",\n'
@@ -527,6 +529,42 @@ def _format_cues_for_prompt(cues_data: Dict[str, Any]) -> str:
 
 # ── Visual fill (safety net) ────────────────────────────────────────────
 
+_LAYOUT_IMAGE_UPGRADE_MAP = {
+    "title_image_light": "section_break_light",
+    "header_only_light": "section_break_light",
+    "one_content_light": "content_image_light",
+    "agenda_light": "content_image_light",
+    "statement_light": "content_image_light",
+    "boilerplate_light": "content_image_light",
+    "three_content_light": "content_image_light",
+    "four_content_light": "content_image_light",
+    "two_content_light": "two_content_image_light",
+}
+
+_RICH_VISUAL_HINT_KEYWORDS = {
+    "composite",
+    "screenshot",
+    "diagram",
+    "network",
+    "map",
+    "entity",
+    "heatmap",
+    "chat",
+    "ui",
+    "artifact",
+    "badge",
+    "workflow",
+}
+
+_BRANDED_IMAGE_FALLBACKS = [
+    ({"risk", "governance", "compliance", "security", "audit"}, "outmaneuver_risk"),
+    ({"xray", "analysis", "insight", "map", "entity", "network", "assessment"}, "see_differently"),
+    ({"navigator", "roadmap", "timeline", "phases", "journey"}, "progress_isnt_straight"),
+    ({"legacy", "modernization", "transform", "migration", "upgrade", "replatform"}, "transform_reality"),
+    ({"innovation", "opportunity", "unlock", "possibilities"}, "unlock_new_possibilities"),
+]
+
+
 def _fill_missing_visuals(
     deck: DeckIR,
     layout_catalog_path: Path,
@@ -534,7 +572,7 @@ def _fill_missing_visuals(
     vocabulary: Dict[str, Any] | None = None,
     branded_catalog: Dict[str, Any] | None = None,
 ) -> None:
-    """Deterministic visual fill for slides missing asset_refs on ph_image."""
+    """Deterministic visual fill with cue-driven relayout for stronger visual storytelling."""
     with layout_catalog_path.open("r", encoding="utf-8") as handle:
         layout_catalog = json.load(handle)
     layouts = {entry["layout_id"]: entry for entry in layout_catalog.get("layouts", [])}
@@ -552,66 +590,420 @@ def _fill_missing_visuals(
             if isinstance(cue, dict) and cue.get("section_id"):
                 cues_by_section[cue["section_id"]] = cue
 
-    for slide in deck.slides:
+    _upgrade_layouts_for_visual_story(deck, layouts, cues_by_section)
+
+    asset_catalog: Dict[str, Any] | None = None
+    image_usage: Dict[str, int] = {}
+    for idx, slide in enumerate(deck.slides):
+        cue = cues_by_section.get(slide.slide_id, {})
         layout = layouts.get(slide.layout_id, {})
         field_keys = [f.get("field_key") for f in layout.get("fields", []) if f.get("field_key")]
         image_fields = sorted([key for key in field_keys if key.startswith("ph_image")])
         if not image_fields:
-            # Strip any asset_refs for layouts without image placeholders
             slide.asset_refs = []
-            continue
-        if slide.asset_refs:
             continue
 
         target_field = image_fields[0]
+        prefer_image = _prefer_image_visual(slide, cue, slide_index=idx)
 
-        # 1. Try cue icon_hints via vocabulary
-        cue = cues_by_section.get(slide.slide_id, {})
+        if slide.asset_refs:
+            slide.asset_refs = _retarget_asset_refs(slide.asset_refs, image_fields, target_field)
+            if prefer_image and _all_icon_refs(slide.asset_refs):
+                image_path = _select_branded_visual_path(slide, cue, branded_catalog)
+                if image_path:
+                    image_path = _choose_balanced_image_path(image_path, branded_catalog, image_usage)
+                    slide.asset_refs = [
+                        AssetRef(
+                            asset_type="image",
+                            asset_id=image_path,
+                            target_field_key=target_field,
+                        )
+                    ]
+                    image_usage[image_path] = image_usage.get(image_path, 0) + 1
+            continue
+
+        search_text = _compose_visual_search_text(slide, cue)
+
+        # 1) For rich cues/hero slides, prefer branded image first.
+        if prefer_image:
+            image_path = _select_branded_visual_path(slide, cue, branded_catalog)
+            if image_path:
+                image_path = _choose_balanced_image_path(image_path, branded_catalog, image_usage)
+                slide.asset_refs = [
+                    AssetRef(
+                        asset_type="image",
+                        asset_id=image_path,
+                        target_field_key=target_field,
+                    )
+                ]
+                image_usage[image_path] = image_usage.get(image_path, 0) + 1
+                continue
+
+        # 2) Try cue icon_hints via visual vocabulary.
         icon_hints = cue.get("icon_hints", [])
         for hint in icon_hints:
             icon_id = resolve_visual_concepts_for_text(str(hint), vocabulary)
             if icon_id:
-                slide.asset_refs = [AssetRef(asset_type="icon", asset_id=icon_id, target_field_key=target_field)]
+                slide.asset_refs = [
+                    AssetRef(
+                        asset_type="icon",
+                        asset_id=icon_id,
+                        target_field_key=target_field,
+                    )
+                ]
                 break
         if slide.asset_refs:
             continue
 
-        # 2. Try cue image_hint via branded catalog
+        # 3) Try cue image_hint via branded catalog.
         image_hint = cue.get("image_hint", "")
         if image_hint:
             path = resolve_branded_image(str(image_hint), branded_catalog)
             if path:
-                slide.asset_refs = [AssetRef(asset_type="image", asset_id=path, target_field_key=target_field)]
+                path = _choose_balanced_image_path(path, branded_catalog, image_usage)
+                slide.asset_refs = [
+                    AssetRef(
+                        asset_type="image",
+                        asset_id=path,
+                        target_field_key=target_field,
+                    )
+                ]
+                image_usage[path] = image_usage.get(path, 0) + 1
                 continue
 
-        # 3. Fall back: extract keywords from slide content -> vocabulary
-        search_text = _slide_search_text(slide)
+        # 4) Fall back to slide text -> visual vocabulary.
         icon_id = resolve_visual_concepts_for_text(search_text, vocabulary)
         if icon_id:
-            slide.asset_refs = [AssetRef(asset_type="icon", asset_id=icon_id, target_field_key=target_field)]
+            slide.asset_refs = [
+                AssetRef(
+                    asset_type="icon",
+                    asset_id=icon_id,
+                    target_field_key=target_field,
+                )
+            ]
             continue
 
-        # 4. For section_break / title_image layouts, try branded image by content theme
-        if slide.layout_id in ("section_break_light", "title_image_light"):
-            path = resolve_branded_image(search_text, branded_catalog)
+        # 5) Section break slides should still try branded image.
+        if slide.layout_id == "section_break_light":
+            path = _select_branded_visual_path(slide, cue, branded_catalog)
             if path:
-                slide.asset_refs = [AssetRef(asset_type="image", asset_id=path, target_field_key=target_field)]
+                path = _choose_balanced_image_path(path, branded_catalog, image_usage)
+                slide.asset_refs = [
+                    AssetRef(
+                        asset_type="image",
+                        asset_id=path,
+                        target_field_key=target_field,
+                    )
+                ]
+                image_usage[path] = image_usage.get(path, 0) + 1
                 continue
 
-        # 5. Last resort: token-overlap match against full asset catalog
-        asset_catalog = ensure_asset_catalog(assets_dir)
+        # 6) Last resort: token-overlap match against full asset catalog.
+        if asset_catalog is None:
+            asset_catalog = ensure_asset_catalog(assets_dir)
         assets = asset_catalog.get("assets", [])
-        icon_match = match_asset(search_text, assets, allowed_types=("icon",), min_score=1)
-        if icon_match:
-            slide.asset_refs = [AssetRef(asset_type="icon", asset_id=str(icon_match["asset_id"]), target_field_key=target_field)]
-            continue
 
         image_match = match_asset(search_text, assets, allowed_types=("image",), min_score=1)
         if image_match:
-            slide.asset_refs = [AssetRef(asset_type="image", asset_id=str(image_match["asset_id"]), target_field_key=target_field)]
+            slide.asset_refs = [
+                AssetRef(
+                    asset_type="image",
+                    asset_id=str(image_match["asset_id"]),
+                    target_field_key=target_field,
+                )
+            ]
+            image_id = str(image_match["asset_id"])
+            image_usage[image_id] = image_usage.get(image_id, 0) + 1
             continue
 
-        logger.warning("VISUAL_CUE_UNRESOLVED slide=%s search=%s", slide.slide_id, search_text[:100])
+        icon_match = match_asset(search_text, assets, allowed_types=("icon",), min_score=1)
+        if icon_match:
+            slide.asset_refs = [
+                AssetRef(
+                    asset_type="icon",
+                    asset_id=str(icon_match["asset_id"]),
+                    target_field_key=target_field,
+                )
+            ]
+            continue
+
+        logger.warning("VISUAL_CUE_UNRESOLVED slide=%s search=%s", slide.slide_id, search_text[:120])
+
+
+def _upgrade_layouts_for_visual_story(
+    deck: DeckIR,
+    layouts: Dict[str, Dict[str, Any]],
+    cues_by_section: Dict[str, Dict[str, Any]],
+) -> None:
+    """Upgrade non-image layouts to image-capable siblings when cues indicate visual need."""
+    for idx, slide in enumerate(deck.slides):
+        cue = cues_by_section.get(slide.slide_id, {})
+        if not _should_upgrade_layout(slide, cue, slide_index=idx):
+            continue
+
+        target_layout = _LAYOUT_IMAGE_UPGRADE_MAP.get(slide.layout_id)
+        if not target_layout or target_layout == slide.layout_id:
+            continue
+        if target_layout not in layouts:
+            continue
+
+        old_layout = slide.layout_id
+        old_fields = dict(slide.fields)
+        slide.layout_id = target_layout
+        slide.fields, overflow_notes = _remap_fields_for_layout_upgrade(old_fields, target_layout)
+        if overflow_notes:
+            _append_speaker_notes(
+                slide,
+                [f"[Layout upgrade {old_layout}->{target_layout}] {line}" for line in overflow_notes],
+            )
+
+
+def _should_upgrade_layout(slide: DeckSlide, cue: Dict[str, Any], *, slide_index: int) -> bool:
+    if slide.layout_id not in _LAYOUT_IMAGE_UPGRADE_MAP:
+        return False
+    if slide_index == 0:
+        return True
+    icon_hints = cue.get("icon_hints", [])
+    if icon_hints:
+        return True
+    image_hint = str(cue.get("image_hint", "")).strip().lower()
+    if image_hint:
+        return True
+    notes = str(cue.get("notes", "")).strip().lower()
+    return any(token in notes for token in _RICH_VISUAL_HINT_KEYWORDS)
+
+
+def _remap_fields_for_layout_upgrade(
+    old_fields: Dict[str, Any],
+    target_layout: str,
+) -> tuple[Dict[str, Any], List[str]]:
+    title = _extract_title_field(old_fields)
+    body_items = _extract_body_items(old_fields)
+    overflow_notes: List[str] = []
+
+    if target_layout == "section_break_light":
+        if body_items:
+            overflow_notes.append("Moved subtitle/body details to speaker notes.")
+            overflow_notes.extend(body_items)
+        return {"ph_title": title}, overflow_notes
+
+    if target_layout == "two_content_image_light":
+        left = _to_list(old_fields.get("ph_body_left"))
+        right = _to_list(old_fields.get("ph_body_right"))
+        if not left and not right:
+            midpoint = max(1, len(body_items) // 2)
+            left = body_items[:midpoint]
+            right = body_items[midpoint:]
+        if not left:
+            left = body_items[:1]
+        if not right:
+            right = body_items[1:] if len(body_items) > 1 else []
+        return {
+            "ph_title": title,
+            "ph_body_left": left,
+            "ph_body_right": right,
+        }, overflow_notes
+
+    # content_image_light default mapping
+    body_value: Any = body_items if body_items else []
+    return {
+        "ph_title": title,
+        "ph_body": body_value,
+    }, overflow_notes
+
+
+def _extract_title_field(fields: Dict[str, Any]) -> str:
+    for key in ("ph_title", "ph_subtitle"):
+        value = fields.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    body_items = _extract_body_items(fields)
+    if body_items:
+        return body_items[0][:90]
+    return "Untitled"
+
+
+def _extract_body_items(fields: Dict[str, Any]) -> List[str]:
+    items: List[str] = []
+    body_keys = [
+        "ph_body",
+        "ph_body_left",
+        "ph_body_right",
+        "ph_col1",
+        "ph_col2",
+        "ph_col3",
+        "ph_col4",
+    ]
+    for key in body_keys:
+        items.extend(_to_list(fields.get(key)))
+    subtitle = fields.get("ph_subtitle")
+    if isinstance(subtitle, str) and subtitle.strip():
+        items.append(subtitle.strip())
+    return [item for item in items if item]
+
+
+def _to_list(value: Any) -> List[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    if isinstance(value, str):
+        cleaned = value.strip()
+        return [cleaned] if cleaned else []
+    return []
+
+
+def _append_speaker_notes(slide: DeckSlide, lines: List[str]) -> None:
+    if not lines:
+        return
+    original = slide.speaker_notes
+    if isinstance(original, dict):
+        note_text = json.dumps(original, sort_keys=True, ensure_ascii=True)
+    else:
+        note_text = str(original or "")
+    extra = "\n".join(lines)
+    if note_text.strip():
+        slide.speaker_notes = note_text.rstrip() + "\n\n---\n" + extra
+    else:
+        slide.speaker_notes = extra
+
+
+def _retarget_asset_refs(
+    refs: List[AssetRef],
+    image_fields: List[str],
+    default_target: str,
+) -> List[AssetRef]:
+    normalized: List[AssetRef] = []
+    seen_targets: set[str] = set()
+    for ref in refs:
+        target = ref.target_field_key or default_target
+        if target not in image_fields:
+            target = default_target
+        ref.target_field_key = target
+        if target in seen_targets:
+            continue
+        seen_targets.add(target)
+        normalized.append(ref)
+    return normalized
+
+
+def _all_icon_refs(refs: List[AssetRef]) -> bool:
+    return bool(refs) and all(ref.asset_type == "icon" for ref in refs)
+
+
+def _prefer_image_visual(slide: DeckSlide, cue: Dict[str, Any], *, slide_index: int) -> bool:
+    if slide_index == 0:
+        return True
+    if slide.layout_id == "section_break_light":
+        return True
+    image_hint = str(cue.get("image_hint", "")).strip()
+    if image_hint:
+        return True
+    icon_hints = cue.get("icon_hints", [])
+    if len(icon_hints) >= 3:
+        return True
+    notes = str(cue.get("notes", "")).lower()
+    if any(token in notes for token in _RICH_VISUAL_HINT_KEYWORDS):
+        return True
+    return False
+
+
+def _select_branded_visual_path(
+    slide: DeckSlide,
+    cue: Dict[str, Any],
+    branded_catalog: Dict[str, Any],
+) -> str | None:
+    search_parts: List[str] = []
+    image_hint = str(cue.get("image_hint", "")).strip()
+    notes = str(cue.get("notes", "")).strip()
+    icon_hints = cue.get("icon_hints", [])
+    if image_hint:
+        search_parts.append(image_hint)
+    if notes:
+        search_parts.append(notes)
+    if icon_hints:
+        search_parts.append(" ".join(str(item) for item in icon_hints))
+    search_parts.append(_slide_search_text(slide))
+
+    for part in search_parts:
+        path = resolve_branded_image(part, branded_catalog)
+        if path:
+            return path
+
+    fallback_id = _fallback_branded_image_id(" ".join(search_parts), branded_catalog)
+    if fallback_id:
+        return _resolve_branded_path_by_id(fallback_id, branded_catalog)
+    return None
+
+
+def _fallback_branded_image_id(text: str, branded_catalog: Dict[str, Any]) -> str | None:
+    tokens = set(part.lower() for part in _slide_search_text_tokens(text))
+    images = branded_catalog.get("images", {})
+    for keyword_set, image_id in _BRANDED_IMAGE_FALLBACKS:
+        if image_id not in images:
+            continue
+        if tokens & keyword_set:
+            return image_id
+    # deterministic default for generic modernization decks
+    if "transform_reality" in images:
+        return "transform_reality"
+    if "see_differently" in images:
+        return "see_differently"
+    return next(iter(images.keys()), None)
+
+
+def _resolve_branded_path_by_id(image_id: str, branded_catalog: Dict[str, Any]) -> str | None:
+    images = branded_catalog.get("images", {})
+    entry = images.get(image_id)
+    if not isinstance(entry, dict):
+        return None
+    color_pref = entry.get("color_preference", {})
+    preferred = color_pref.get("light_theme", "Teal")
+    paths = entry.get("paths", {})
+    if preferred in paths:
+        return str(paths[preferred])
+    if paths:
+        return str(next(iter(paths.values())))
+    return None
+
+
+def _choose_balanced_image_path(
+    preferred_path: str,
+    branded_catalog: Dict[str, Any],
+    usage: Dict[str, int],
+) -> str:
+    """Limit repetitive branded image reuse by picking least-used alternatives."""
+    preferred_count = usage.get(preferred_path, 0)
+    if preferred_count < 2:
+        return preferred_path
+
+    candidates = []
+    for image_id in sorted(branded_catalog.get("images", {}).keys()):
+        path = _resolve_branded_path_by_id(image_id, branded_catalog)
+        if not path:
+            continue
+        candidates.append(path)
+    if not candidates:
+        return preferred_path
+
+    ranked = sorted(candidates, key=lambda path: (usage.get(path, 0), path))
+    return ranked[0]
+
+
+def _compose_visual_search_text(slide: DeckSlide, cue: Dict[str, Any]) -> str:
+    parts = [_slide_search_text(slide)]
+    image_hint = str(cue.get("image_hint", "")).strip()
+    notes = str(cue.get("notes", "")).strip()
+    icon_hints = cue.get("icon_hints", [])
+    if image_hint:
+        parts.append(image_hint)
+    if notes:
+        parts.append(notes)
+    if icon_hints:
+        parts.append(" ".join(str(item) for item in icon_hints))
+    return " | ".join(part for part in parts if part)
+
+
+def _slide_search_text_tokens(text: str) -> List[str]:
+    return [token.lower() for token in text.replace("-", " ").replace("_", " ").split()]
 
 
 def _slide_search_text(slide: DeckSlide) -> str:

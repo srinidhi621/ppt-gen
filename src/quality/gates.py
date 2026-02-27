@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -18,6 +19,8 @@ def summarize_composition_spec(spec: Dict[str, Any]) -> Dict[str, int]:
     hero_icon_count = 0
     text_overflow_actions = 0
     slides_with_notes_additions = 0
+    slides_with_image_assets = 0
+    total_image_assets = 0
 
     for slide in slides:
         visual_blocks = slide.get("visual_blocks", []) or []
@@ -29,14 +32,20 @@ def summarize_composition_spec(spec: Dict[str, Any]) -> Dict[str, int]:
         total_visual_blocks += len(visual_blocks)
         slides_with_notes_additions += 1 if notes_additions else 0
 
+        has_image_asset = False
         for visual in visual_blocks:
             asset_ref = visual.get("asset_ref", {}) if isinstance(visual, dict) else {}
+            if isinstance(asset_ref, dict) and asset_ref.get("asset_type") == "image":
+                total_image_assets += 1
+                has_image_asset = True
             if (
                 visual.get("role") == "hero"
                 and isinstance(asset_ref, dict)
                 and asset_ref.get("asset_type") == "icon"
             ):
                 hero_icon_count += 1
+        if has_image_asset:
+            slides_with_image_assets += 1
 
         for block in text_blocks:
             action = block.get("overflow_action") if isinstance(block, dict) else "none"
@@ -50,6 +59,8 @@ def summarize_composition_spec(spec: Dict[str, Any]) -> Dict[str, int]:
         "hero_icon_count": hero_icon_count,
         "text_overflow_actions": text_overflow_actions,
         "slides_with_notes_additions": slides_with_notes_additions,
+        "slides_with_image_assets": slides_with_image_assets,
+        "total_image_assets": total_image_assets,
     }
 
 
@@ -162,6 +173,48 @@ def evaluate_v2_quality_gates(
                 "slide_id": leak["slide_id"],
                 "message": f"Rendered text contains markdown marker: {leak['snippet']}",
                 "details": leak,
+            }
+        )
+
+    # Gate 5: deck-level visual density must be high enough to look intentional.
+    composition_metrics = summarize_composition_spec(composition_spec_v2)
+    slides_total = max(1, int(composition_metrics.get("slides_total", 0)))
+    slides_with_visuals = int(composition_metrics.get("slides_with_visuals", 0))
+    min_visual_slides = max(1, math.ceil(slides_total * 0.5))
+    checks["min_visual_density"] = {
+        "pass": slides_with_visuals >= min_visual_slides,
+        "slides_with_visuals": slides_with_visuals,
+        "min_required": min_visual_slides,
+    }
+    if slides_with_visuals < min_visual_slides:
+        issues.append(
+            {
+                "gate": "min_visual_density",
+                "slide_id": "deck",
+                "message": (
+                    f"Deck visual density too low: {slides_with_visuals}/{slides_total} "
+                    f"(minimum {min_visual_slides})."
+                ),
+            }
+        )
+
+    # Gate 6: require material use of image assets (not icon-only visuals).
+    slides_with_image_assets = int(composition_metrics.get("slides_with_image_assets", 0))
+    min_image_slides = max(1, math.ceil(slides_total * 0.2))
+    checks["min_image_asset_presence"] = {
+        "pass": slides_with_image_assets >= min_image_slides,
+        "slides_with_image_assets": slides_with_image_assets,
+        "min_required": min_image_slides,
+    }
+    if slides_with_image_assets < min_image_slides:
+        issues.append(
+            {
+                "gate": "min_image_asset_presence",
+                "slide_id": "deck",
+                "message": (
+                    f"Deck image usage too low: {slides_with_image_assets}/{slides_total} slides "
+                    f"with image assets (minimum {min_image_slides})."
+                ),
             }
         )
 
