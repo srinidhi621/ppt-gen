@@ -1,4 +1,7 @@
-# diagrams-map-approach.md
+# diagram-MCP-spec.md
+> Status (2026-02-27): Supplemental research note. Not part of the current production pipeline.
+> Current pipeline contracts are defined in `SPEC.md`.
+
 **Goal:** Fully headless, deterministic diagram generation for an automated PPT deck pipeline.  
 **Constraints:**  
 - No human review, no editor UI, no “open diagram in draw.io” step  
@@ -208,4 +211,3 @@ This reduces “diagram spaghetti” and keeps outputs stable across runs.
 - Store XML + PNG(embedded XML) as artifacts  [oai_citation:19‡draw.io](https://www.drawio.com/blog/xml-in-png?utm_source=chatgpt.com)
 
 **Do NOT rely on official draw.io MCP editor workflow** for production automation.  [oai_citation:20‡GitHub](https://github.com/jgraph/drawio-mcp?utm_source=chatgpt.com)
-
