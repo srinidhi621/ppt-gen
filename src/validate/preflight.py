@@ -324,3 +324,27 @@ def validate_and_remediate(
     
     report = ValidationReport(violations=all_violations)
     return remediated_deck, report
+
+
+def validate_deck(deck: DeckIR, layout_catalog_path: Path) -> ValidationReport:
+    """Validate DeckIR without applying remediation."""
+    layout_catalog = _load_layout_catalog(layout_catalog_path)
+    all_violations: List[ValidationViolation] = []
+
+    for slide in deck.slides:
+        layout_entry = layout_catalog.get(slide.layout_id)
+        if not layout_entry:
+            all_violations.append(
+                ValidationViolation(
+                    slide_id=slide.slide_id,
+                    layout_id=slide.layout_id,
+                    field_key=None,
+                    violation_type="BODY_TOO_DENSE",
+                    severity="BLOCKING",
+                    recommended_action=f"Unknown layout_id: {slide.layout_id}",
+                )
+            )
+            continue
+        all_violations.extend(_validate_slide(slide, layout_entry))
+
+    return ValidationReport(violations=all_violations)

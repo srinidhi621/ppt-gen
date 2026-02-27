@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from .config import load_config
+from .compose import build_composition_spec
 from .generate_pipeline import (
     CombinedInputError,
     build_deckir_from_content,
@@ -33,7 +34,7 @@ from .normalize.parser import parse_markdown
 from .render.renderer import Renderer
 from .review import ReviewAutomationError, collect_review_images, export_slides_to_images
 from .validate.drift import validate_template_catalog
-from .validate.preflight import validate_and_remediate
+from .validate.preflight import validate_and_remediate, validate_deck
 
 
 def _generate_run_id() -> str:
@@ -150,22 +151,6 @@ def _write_json(path: Path, payload: Any) -> None:
 
 def _to_payload(deck: DeckIR) -> Dict[str, Any]:
     return json.loads(deck.to_json())
-
-
-def _build_composition_snapshot(deck: DeckIR, stage: str) -> Dict[str, Any]:
-    return {
-        "version": "0.1",
-        "stage": stage,
-        "slides": [
-            {
-                "slide_id": slide.slide_id,
-                "layout_id": slide.layout_id,
-                "field_keys": sorted(slide.fields.keys()),
-                "asset_refs": [ref.to_dict() for ref in slide.asset_refs],
-            }
-            for slide in deck.slides
-        ],
-    }
 
 
 def _build_capability_manifest(config, cues_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -741,9 +726,20 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
     deck_v1_1, validation_v1 = validate_and_remediate(
         planner_deck_v1, Path(config.layout_catalog_path)
     )
+    validation_v1_post = validate_deck(deck_v1_1, Path(config.layout_catalog_path))
     _write_json(run_dir / "deckir_v1_1.json", _to_payload(deck_v1_1))
     _write_json(run_dir / "validation_report_v1.json", json.loads(validation_v1.to_json()))
-    composition_spec_v1 = _build_composition_snapshot(deck_v1_1, "v1")
+    _write_json(
+        run_dir / "validation_report_v1_post.json",
+        json.loads(validation_v1_post.to_json()),
+    )
+    composition_spec_v1 = build_composition_spec(
+        deck_before=planner_deck_v1,
+        deck_after=deck_v1_1,
+        before_report=validation_v1,
+        after_report=validation_v1_post,
+        stage="v1",
+    ).to_dict()
     _write_json(run_dir / "composition_spec_v1.json", composition_spec_v1)
     log_event(
         log_path,
@@ -917,9 +913,20 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
     deck_v2_1, validation_v2 = validate_and_remediate(
         planner_deck_v2, Path(config.layout_catalog_path)
     )
+    validation_v2_post = validate_deck(deck_v2_1, Path(config.layout_catalog_path))
     _write_json(run_dir / "deckir_v2_1.json", _to_payload(deck_v2_1))
     _write_json(run_dir / "validation_report_v2.json", json.loads(validation_v2.to_json()))
-    composition_spec_v2 = _build_composition_snapshot(deck_v2_1, "v2")
+    _write_json(
+        run_dir / "validation_report_v2_post.json",
+        json.loads(validation_v2_post.to_json()),
+    )
+    composition_spec_v2 = build_composition_spec(
+        deck_before=planner_deck_v2,
+        deck_after=deck_v2_1,
+        before_report=validation_v2,
+        after_report=validation_v2_post,
+        stage="v2",
+    ).to_dict()
     _write_json(run_dir / "composition_spec_v2.json", composition_spec_v2)
     log_event(
         log_path,
