@@ -1,0 +1,1145 @@
+{
+  "version": "1.0",
+  "concepts": {
+    "security": {
+      "preferred": "lucide:shield",
+      "alt": ["tabler:shield-lock", "lucide:shield-check"],
+      "domains": ["governance", "compliance", "protection", "access"]
+    },
+    "shield": {
+      "preferred": "lucide:shield-check",
+      "alt": ["tabler:shield-lock", "lucide:shield-alert"],
+      "domains": ["protection", "defense", "safety", "firewall"]
+    },
+    "lock": {
+      "preferred": "lucide:lock",
+      "alt": ["tabler:lock", "lucide:lock-keyhole"],
+      "domains": ["authentication", "secure", "private", "encrypted"]
+    },
+    "key": {
+      "preferred": "lucide:key",
+      "alt": ["tabler:key", "lucide:key-round"],
+      "domains": ["access", "credentials", "token", "secret"]
+    },
+    "audit": {
+      "preferred": "lucide:clipboard-list",
+      "alt": ["tabler:clipboard-list", "lucide:list-checks"],
+      "domains": ["compliance", "review", "inspection", "assessment"]
+    },
+    "compliance": {
+      "preferred": "lucide:shield-check",
+      "alt": ["tabler:shield-lock", "lucide:check-check"],
+      "domains": ["regulation", "governance", "standard", "policy"]
+    },
+    "encryption": {
+      "preferred": "lucide:lock-keyhole",
+      "alt": ["tabler:lock", "lucide:key-round"],
+      "domains": ["cipher", "cryptography", "secure", "tls"]
+    },
+    "privacy": {
+      "preferred": "lucide:eye-off",
+      "alt": ["tabler:lock", "lucide:shield"],
+      "domains": ["confidential", "gdpr", "personal", "data-protection"]
+    },
+    "access-control": {
+      "preferred": "lucide:fingerprint",
+      "alt": ["tabler:lock", "lucide:key"],
+      "domains": ["rbac", "permission", "identity", "iam"]
+    },
+    "data": {
+      "preferred": "lucide:database",
+      "alt": ["tabler:database", "lucide:hard-drive"],
+      "domains": ["storage", "records", "information", "warehouse"]
+    },
+    "database": {
+      "preferred": "lucide:database",
+      "alt": ["tabler:database", "lucide:database-zap"],
+      "domains": ["sql", "nosql", "store", "repository"]
+    },
+    "analytics": {
+      "preferred": "lucide:bar-chart-3",
+      "alt": ["tabler:chart-bar", "lucide:chart-column-increasing"],
+      "domains": ["data", "bi", "reporting", "insights"]
+    },
+    "chart": {
+      "preferred": "lucide:chart-line",
+      "alt": ["tabler:chart-line", "lucide:chart-bar-increasing"],
+      "domains": ["graph", "visualization", "trend", "plot"]
+    },
+    "graph": {
+      "preferred": "lucide:chart-spline",
+      "alt": ["tabler:chart-line", "lucide:chart-area"],
+      "domains": ["visualization", "trend", "plot", "curve"]
+    },
+    "dashboard": {
+      "preferred": "lucide:layout-dashboard",
+      "alt": ["tabler:chart-bar", "lucide:gauge"],
+      "domains": ["monitoring", "overview", "kpi", "panel"]
+    },
+    "metrics": {
+      "preferred": "lucide:gauge",
+      "alt": ["tabler:gauge", "lucide:activity"],
+      "domains": ["kpi", "measurement", "telemetry", "indicator"]
+    },
+    "report": {
+      "preferred": "lucide:file-chart-column",
+      "alt": ["tabler:file-text", "lucide:file-text"],
+      "domains": ["document", "summary", "findings", "output"]
+    },
+    "visualization": {
+      "preferred": "lucide:chart-pie",
+      "alt": ["tabler:chart-pie", "lucide:chart-scatter"],
+      "domains": ["visual", "infographic", "data-viz", "display"]
+    },
+    "cloud": {
+      "preferred": "lucide:cloud",
+      "alt": ["tabler:cloud-computing", "lucide:cloud-cog"],
+      "domains": ["saas", "paas", "iaas", "hosting"]
+    },
+    "server": {
+      "preferred": "lucide:server",
+      "alt": ["tabler:server", "lucide:server-cog"],
+      "domains": ["hosting", "backend", "infrastructure", "compute"]
+    },
+    "network": {
+      "preferred": "lucide:network",
+      "alt": ["tabler:api", "lucide:waypoints"],
+      "domains": ["connectivity", "topology", "mesh", "routing"]
+    },
+    "api": {
+      "preferred": "lucide:webhook",
+      "alt": ["tabler:api", "lucide:plug"],
+      "domains": ["endpoint", "rest", "graphql", "interface"]
+    },
+    "gateway": {
+      "preferred": "lucide:router",
+      "alt": ["tabler:api", "lucide:network"],
+      "domains": ["proxy", "ingress", "load-balancer", "entry"]
+    },
+    "compute": {
+      "preferred": "lucide:cpu",
+      "alt": ["tabler:server", "lucide:microchip"],
+      "domains": ["processing", "execution", "runtime", "virtual-machine"]
+    },
+    "storage": {
+      "preferred": "lucide:hard-drive",
+      "alt": ["tabler:database", "lucide:database"],
+      "domains": ["disk", "blob", "s3", "persistence"]
+    },
+    "container": {
+      "preferred": "lucide:container",
+      "alt": ["lucide:box", "lucide:package"],
+      "domains": ["docker", "kubernetes", "pod", "orchestration"]
+    },
+    "kubernetes": {
+      "preferred": "lucide:boxes",
+      "alt": ["lucide:container", "tabler:server"],
+      "domains": ["k8s", "orchestration", "pod", "cluster"]
+    },
+    "timeline": {
+      "preferred": "lucide:calendar-clock",
+      "alt": ["tabler:timeline", "lucide:clock"],
+      "domains": ["planning", "roadmap", "schedule", "milestones"]
+    },
+    "workflow": {
+      "preferred": "lucide:workflow",
+      "alt": ["tabler:timeline", "lucide:waypoints"],
+      "domains": ["process", "pipeline", "automation", "flow"]
+    },
+    "process": {
+      "preferred": "lucide:waypoints",
+      "alt": ["lucide:workflow", "tabler:timeline"],
+      "domains": ["steps", "procedure", "method", "sequence"]
+    },
+    "pipeline": {
+      "preferred": "lucide:workflow",
+      "alt": ["lucide:waypoints", "tabler:timeline"],
+      "domains": ["cicd", "deployment", "build", "stage"]
+    },
+    "automation": {
+      "preferred": "lucide:bot",
+      "alt": ["tabler:robot", "lucide:workflow"],
+      "domains": ["rpa", "scripting", "automate", "scheduler"]
+    },
+    "integration": {
+      "preferred": "lucide:plug",
+      "alt": ["tabler:plug", "lucide:link"],
+      "domains": ["connect", "interface", "middleware", "bridge"]
+    },
+    "sync": {
+      "preferred": "lucide:refresh-cw",
+      "alt": ["tabler:refresh", "lucide:repeat"],
+      "domains": ["synchronize", "replicate", "update", "mirror"]
+    },
+    "schedule": {
+      "preferred": "lucide:calendar-clock",
+      "alt": ["tabler:calendar", "lucide:timer"],
+      "domains": ["plan", "agenda", "booking", "appointment"]
+    },
+    "growth": {
+      "preferred": "lucide:trending-up",
+      "alt": ["tabler:chart-line", "lucide:chart-bar-increasing"],
+      "domains": ["increase", "expansion", "revenue", "progress"]
+    },
+    "money": {
+      "preferred": "lucide:coins",
+      "alt": ["tabler:coin", "lucide:dollar-sign"],
+      "domains": ["finance", "payment", "budget", "funding"]
+    },
+    "savings": {
+      "preferred": "lucide:piggy-bank",
+      "alt": ["tabler:cash", "lucide:coins"],
+      "domains": ["cost-reduction", "efficiency", "budget", "frugal"]
+    },
+    "roi": {
+      "preferred": "lucide:trending-up",
+      "alt": ["tabler:chart-bar", "lucide:badge-dollar-sign"],
+      "domains": ["return", "investment", "value", "payoff"]
+    },
+    "efficiency": {
+      "preferred": "lucide:gauge",
+      "alt": ["tabler:gauge", "lucide:zap"],
+      "domains": ["productivity", "throughput", "optimization", "lean"]
+    },
+    "speed": {
+      "preferred": "lucide:zap",
+      "alt": ["tabler:bolt", "lucide:gauge"],
+      "domains": ["fast", "performance", "latency", "quick"]
+    },
+    "performance": {
+      "preferred": "lucide:activity",
+      "alt": ["tabler:gauge", "lucide:gauge"],
+      "domains": ["throughput", "optimization", "benchmark", "load"]
+    },
+    "scale": {
+      "preferred": "lucide:scaling",
+      "alt": ["tabler:scale", "lucide:expand"],
+      "domains": ["scalability", "horizontal", "vertical", "elasticity"]
+    },
+    "revenue": {
+      "preferred": "lucide:badge-dollar-sign",
+      "alt": ["tabler:currency-dollar", "lucide:trending-up"],
+      "domains": ["income", "sales", "profit", "earnings"]
+    },
+    "cost": {
+      "preferred": "lucide:receipt",
+      "alt": ["tabler:cash", "lucide:coins"],
+      "domains": ["expense", "budget", "pricing", "spend"]
+    },
+    "team": {
+      "preferred": "lucide:users",
+      "alt": ["tabler:users-group", "lucide:users-round"],
+      "domains": ["group", "squad", "crew", "staff"]
+    },
+    "people": {
+      "preferred": "lucide:users",
+      "alt": ["tabler:users-group", "lucide:person-standing"],
+      "domains": ["human", "workforce", "personnel", "headcount"]
+    },
+    "user": {
+      "preferred": "lucide:user",
+      "alt": ["tabler:user-check", "lucide:user-round"],
+      "domains": ["account", "profile", "persona", "customer"]
+    },
+    "collaboration": {
+      "preferred": "lucide:handshake",
+      "alt": ["lucide:heart-handshake", "tabler:users-group"],
+      "domains": ["teamwork", "partnership", "cooperation", "co-create"]
+    },
+    "onboarding": {
+      "preferred": "lucide:user-plus",
+      "alt": ["tabler:user-check", "lucide:log-in"],
+      "domains": ["welcome", "setup", "getting-started", "ramp-up"]
+    },
+    "training": {
+      "preferred": "lucide:graduation-cap",
+      "alt": ["lucide:book-open", "tabler:award"],
+      "domains": ["learning", "education", "course", "certification"]
+    },
+    "stakeholder": {
+      "preferred": "lucide:contact-round",
+      "alt": ["lucide:users", "tabler:users-group"],
+      "domains": ["sponsor", "executive", "decision-maker", "board"]
+    },
+    "organization": {
+      "preferred": "lucide:building",
+      "alt": ["tabler:building", "lucide:building-2"],
+      "domains": ["company", "enterprise", "firm", "corporation"]
+    },
+    "ai": {
+      "preferred": "lucide:brain-circuit",
+      "alt": ["tabler:ai", "lucide:brain"],
+      "domains": ["artificial-intelligence", "machine-learning", "neural", "llm"]
+    },
+    "ml": {
+      "preferred": "lucide:brain",
+      "alt": ["tabler:brain", "tabler:ai"],
+      "domains": ["machine-learning", "model", "prediction", "training"]
+    },
+    "algorithm": {
+      "preferred": "lucide:brain-cog",
+      "alt": ["tabler:brain", "lucide:cpu"],
+      "domains": ["logic", "computation", "heuristic", "formula"]
+    },
+    "code": {
+      "preferred": "lucide:code",
+      "alt": ["tabler:code", "lucide:code-xml"],
+      "domains": ["programming", "development", "source", "script"]
+    },
+    "software": {
+      "preferred": "lucide:app-window",
+      "alt": ["lucide:code", "tabler:code"],
+      "domains": ["application", "program", "system", "platform"]
+    },
+    "engineering": {
+      "preferred": "lucide:wrench",
+      "alt": ["tabler:tool", "lucide:settings"],
+      "domains": ["development", "build", "implementation", "tooling"]
+    },
+    "architecture": {
+      "preferred": "lucide:layers",
+      "alt": ["lucide:blocks", "lucide:component"],
+      "domains": ["design", "structure", "system-design", "blueprint"]
+    },
+    "microservices": {
+      "preferred": "lucide:blocks",
+      "alt": ["lucide:component", "lucide:boxes"],
+      "domains": ["service", "distributed", "modular", "decoupled"]
+    },
+    "chat": {
+      "preferred": "lucide:message-circle",
+      "alt": ["tabler:message", "lucide:message-square"],
+      "domains": ["conversation", "im", "messaging", "dialog"]
+    },
+    "message": {
+      "preferred": "lucide:message-square",
+      "alt": ["tabler:message", "tabler:mail"],
+      "domains": ["notification", "chat", "communication", "text"]
+    },
+    "notification": {
+      "preferred": "lucide:bell",
+      "alt": ["tabler:bell", "lucide:bell-ring"],
+      "domains": ["alert", "push", "reminder", "notice"]
+    },
+    "alert": {
+      "preferred": "lucide:circle-alert",
+      "alt": ["tabler:alert-circle", "lucide:triangle-alert"],
+      "domains": ["warning", "attention", "urgent", "critical"]
+    },
+    "email": {
+      "preferred": "lucide:mail",
+      "alt": ["tabler:mail", "lucide:mail-open"],
+      "domains": ["inbox", "smtp", "correspondence", "newsletter"]
+    },
+    "announcement": {
+      "preferred": "lucide:megaphone",
+      "alt": ["lucide:bell-ring", "tabler:bell"],
+      "domains": ["broadcast", "news", "update", "publish"]
+    },
+    "search": {
+      "preferred": "lucide:search",
+      "alt": ["tabler:search", "lucide:search-code"],
+      "domains": ["find", "lookup", "query", "discover"]
+    },
+    "navigate": {
+      "preferred": "lucide:compass",
+      "alt": ["tabler:map", "lucide:navigation"],
+      "domains": ["direction", "guidance", "wayfinding", "route"]
+    },
+    "explore": {
+      "preferred": "lucide:binoculars",
+      "alt": ["lucide:compass", "tabler:world"],
+      "domains": ["discover", "investigate", "research", "survey"]
+    },
+    "discover": {
+      "preferred": "lucide:search",
+      "alt": ["lucide:binoculars", "lucide:scan-search"],
+      "domains": ["explore", "find", "uncover", "detect"]
+    },
+    "map": {
+      "preferred": "lucide:map",
+      "alt": ["tabler:map", "lucide:map-pinned"],
+      "domains": ["geography", "location", "territory", "region"]
+    },
+    "rocket": {
+      "preferred": "lucide:rocket",
+      "alt": ["tabler:rocket", "lucide:zap"],
+      "domains": ["launch", "startup", "deploy", "accelerate"]
+    },
+    "launch": {
+      "preferred": "lucide:rocket",
+      "alt": ["tabler:rocket", "lucide:plane-takeoff"],
+      "domains": ["release", "deploy", "go-live", "ship"]
+    },
+    "target": {
+      "preferred": "lucide:target",
+      "alt": ["tabler:target", "lucide:crosshair"],
+      "domains": ["goal", "objective", "aim", "focus"]
+    },
+    "goal": {
+      "preferred": "lucide:goal",
+      "alt": ["lucide:target", "tabler:target"],
+      "domains": ["objective", "milestone", "kpi", "outcome"]
+    },
+    "warning": {
+      "preferred": "lucide:triangle-alert",
+      "alt": ["tabler:alert-triangle", "lucide:circle-alert"],
+      "domains": ["caution", "danger", "hazard", "notice"]
+    },
+    "risk": {
+      "preferred": "lucide:shield-alert",
+      "alt": ["tabler:alert-triangle", "lucide:triangle-alert"],
+      "domains": ["threat", "vulnerability", "exposure", "mitigation"]
+    },
+    "error": {
+      "preferred": "lucide:circle-x",
+      "alt": ["tabler:alert-circle", "lucide:bug"],
+      "domains": ["failure", "exception", "crash", "fault"]
+    },
+    "bug": {
+      "preferred": "lucide:bug",
+      "alt": ["tabler:bug", "lucide:bug-play"],
+      "domains": ["defect", "issue", "debug", "fix"]
+    },
+    "danger": {
+      "preferred": "lucide:triangle-alert",
+      "alt": ["lucide:skull", "tabler:alert-triangle"],
+      "domains": ["hazard", "critical", "severe", "emergency"]
+    },
+    "innovation": {
+      "preferred": "lucide:lightbulb",
+      "alt": ["tabler:bulb", "lucide:sparkles"],
+      "domains": ["idea", "creativity", "invention", "novel"]
+    },
+    "idea": {
+      "preferred": "lucide:lightbulb",
+      "alt": ["tabler:bulb", "lucide:sparkle"],
+      "domains": ["concept", "thought", "inspiration", "brainstorm"]
+    },
+    "lightbulb": {
+      "preferred": "lucide:lightbulb",
+      "alt": ["tabler:bulb", "lucide:sparkle"],
+      "domains": ["innovation", "idea", "insight", "eureka"]
+    },
+    "spark": {
+      "preferred": "lucide:sparkles",
+      "alt": ["lucide:zap", "tabler:bolt"],
+      "domains": ["inspiration", "magic", "energy", "catalyst"]
+    },
+    "transform": {
+      "preferred": "lucide:shuffle",
+      "alt": ["tabler:arrows-shuffle", "lucide:repeat"],
+      "domains": ["change", "convert", "modernize", "evolve"]
+    },
+    "create": {
+      "preferred": "lucide:plus",
+      "alt": ["lucide:sparkles", "lucide:pen"],
+      "domains": ["build", "new", "generate", "produce"]
+    },
+    "build": {
+      "preferred": "lucide:construction",
+      "alt": ["lucide:wrench", "tabler:tool"],
+      "domains": ["construct", "develop", "assemble", "implement"]
+    },
+    "design": {
+      "preferred": "lucide:pen-tool",
+      "alt": ["lucide:palette", "lucide:paintbrush"],
+      "domains": ["ux", "ui", "creative", "layout"]
+    },
+    "document": {
+      "preferred": "lucide:file-text",
+      "alt": ["tabler:file-text", "lucide:file"],
+      "domains": ["doc", "paper", "record", "artifact"]
+    },
+    "file": {
+      "preferred": "lucide:file",
+      "alt": ["tabler:file-text", "lucide:file-text"],
+      "domains": ["document", "attachment", "upload", "download"]
+    },
+    "folder": {
+      "preferred": "lucide:folder",
+      "alt": ["lucide:folder-open", "lucide:folders"],
+      "domains": ["directory", "collection", "organize", "category"]
+    },
+    "checklist": {
+      "preferred": "lucide:list-checks",
+      "alt": ["tabler:clipboard-list", "lucide:clipboard-check"],
+      "domains": ["todo", "tasks", "requirements", "acceptance"]
+    },
+    "list": {
+      "preferred": "lucide:list",
+      "alt": ["lucide:list-ordered", "tabler:clipboard-list"],
+      "domains": ["items", "inventory", "enumeration", "catalog"]
+    },
+    "clipboard": {
+      "preferred": "lucide:clipboard",
+      "alt": ["tabler:clipboard-list", "lucide:clipboard-list"],
+      "domains": ["copy", "paste", "buffer", "notes"]
+    },
+    "note": {
+      "preferred": "lucide:sticky-note",
+      "alt": ["lucide:notebook", "lucide:notepad-text"],
+      "domains": ["memo", "annotation", "comment", "remark"]
+    },
+    "settings": {
+      "preferred": "lucide:settings",
+      "alt": ["tabler:settings", "lucide:settings-2"],
+      "domains": ["configuration", "preferences", "options", "admin"]
+    },
+    "tool": {
+      "preferred": "lucide:wrench",
+      "alt": ["tabler:tool", "lucide:hammer"],
+      "domains": ["utility", "instrument", "maintenance", "repair"]
+    },
+    "monitor": {
+      "preferred": "lucide:monitor",
+      "alt": ["lucide:monitor-check", "lucide:activity"],
+      "domains": ["observability", "screen", "display", "watch"]
+    },
+    "laptop": {
+      "preferred": "lucide:laptop",
+      "alt": ["lucide:laptop-minimal", "lucide:monitor"],
+      "domains": ["computer", "device", "workstation", "portable"]
+    },
+    "mobile": {
+      "preferred": "lucide:smartphone",
+      "alt": ["lucide:tablet", "tabler:device-mobile-message"],
+      "domains": ["phone", "app", "responsive", "ios"]
+    },
+    "link": {
+      "preferred": "lucide:link",
+      "alt": ["lucide:link-2", "lucide:unlink"],
+      "domains": ["url", "connection", "reference", "hyperlink"]
+    },
+    "globe": {
+      "preferred": "lucide:globe",
+      "alt": ["tabler:world", "lucide:earth"],
+      "domains": ["world", "global", "international", "web"]
+    },
+    "git": {
+      "preferred": "lucide:git-branch",
+      "alt": ["tabler:git-branch", "lucide:git-merge"],
+      "domains": ["version-control", "branch", "commit", "repository"]
+    },
+    "deploy": {
+      "preferred": "lucide:rocket",
+      "alt": ["lucide:cloud-upload", "tabler:rocket"],
+      "domains": ["release", "ship", "publish", "rollout"]
+    },
+    "test": {
+      "preferred": "lucide:test-tube",
+      "alt": ["lucide:flask-conical", "lucide:microscope"],
+      "domains": ["testing", "qa", "validation", "verify"]
+    },
+    "refresh": {
+      "preferred": "lucide:refresh-cw",
+      "alt": ["tabler:refresh", "lucide:rotate-cw"],
+      "domains": ["reload", "update", "retry", "reset"]
+    },
+    "download": {
+      "preferred": "lucide:download",
+      "alt": ["lucide:cloud-download", "lucide:arrow-down-to-line"],
+      "domains": ["fetch", "pull", "retrieve", "import"]
+    },
+    "upload": {
+      "preferred": "lucide:upload",
+      "alt": ["lucide:cloud-upload", "lucide:arrow-up-from-line"],
+      "domains": ["push", "send", "export", "publish"]
+    },
+    "clock": {
+      "preferred": "lucide:clock",
+      "alt": ["tabler:calendar", "lucide:timer"],
+      "domains": ["time", "duration", "deadline", "hours"]
+    },
+    "calendar": {
+      "preferred": "lucide:calendar",
+      "alt": ["tabler:calendar", "lucide:calendar-days"],
+      "domains": ["date", "schedule", "booking", "event"]
+    },
+    "award": {
+      "preferred": "lucide:award",
+      "alt": ["tabler:award", "lucide:trophy"],
+      "domains": ["achievement", "recognition", "prize", "honor"]
+    },
+    "trophy": {
+      "preferred": "lucide:trophy",
+      "alt": ["tabler:trophy", "lucide:medal"],
+      "domains": ["winner", "champion", "best", "first-place"]
+    },
+    "star": {
+      "preferred": "lucide:star",
+      "alt": ["tabler:award", "lucide:sparkle"],
+      "domains": ["favorite", "rating", "quality", "featured"]
+    },
+    "heart": {
+      "preferred": "lucide:heart",
+      "alt": ["lucide:heart-handshake", "lucide:hand-heart"],
+      "domains": ["love", "care", "favorite", "wellbeing"]
+    },
+    "education": {
+      "preferred": "lucide:graduation-cap",
+      "alt": ["lucide:book-open", "lucide:library"],
+      "domains": ["learning", "school", "university", "academic"]
+    },
+    "book": {
+      "preferred": "lucide:book-open",
+      "alt": ["lucide:library", "lucide:book-text"],
+      "domains": ["documentation", "knowledge", "reading", "manual"]
+    },
+    "presentation": {
+      "preferred": "lucide:presentation",
+      "alt": ["lucide:projector", "lucide:monitor"],
+      "domains": ["slide", "deck", "pitch", "demo"]
+    },
+    "kanban": {
+      "preferred": "lucide:kanban",
+      "alt": ["lucide:columns-3", "lucide:layout-grid"],
+      "domains": ["board", "agile", "scrum", "sprint"]
+    },
+    "flag": {
+      "preferred": "lucide:flag",
+      "alt": ["lucide:milestone", "lucide:signpost"],
+      "domains": ["milestone", "marker", "checkpoint", "landmark"]
+    },
+    "migration": {
+      "preferred": "lucide:arrow-right-left",
+      "alt": ["lucide:shuffle", "tabler:arrows-shuffle"],
+      "domains": ["move", "transfer", "port", "upgrade"]
+    },
+    "modernization": {
+      "preferred": "lucide:sparkles",
+      "alt": ["lucide:refresh-cw", "lucide:zap"],
+      "domains": ["upgrade", "transformation", "renewal", "replatform"]
+    },
+    "legacy": {
+      "preferred": "lucide:archive",
+      "alt": ["lucide:history", "lucide:database"],
+      "domains": ["old", "heritage", "mainframe", "outdated"]
+    },
+    "strategy": {
+      "preferred": "lucide:compass",
+      "alt": ["lucide:target", "tabler:target"],
+      "domains": ["plan", "roadmap", "vision", "direction"]
+    },
+    "roadmap": {
+      "preferred": "lucide:map",
+      "alt": ["tabler:timeline", "lucide:route"],
+      "domains": ["plan", "timeline", "milestones", "phases"]
+    },
+    "phase": {
+      "preferred": "lucide:milestone",
+      "alt": ["tabler:timeline", "lucide:flag"],
+      "domains": ["stage", "step", "iteration", "sprint"]
+    },
+    "agile": {
+      "preferred": "lucide:kanban",
+      "alt": ["lucide:iteration-cw", "lucide:repeat"],
+      "domains": ["scrum", "sprint", "backlog", "velocity"]
+    },
+    "devops": {
+      "preferred": "lucide:workflow",
+      "alt": ["lucide:git-merge", "tabler:git-merge"],
+      "domains": ["cicd", "deployment", "infrastructure", "sre"]
+    },
+    "observability": {
+      "preferred": "lucide:eye",
+      "alt": ["lucide:scan", "lucide:activity"],
+      "domains": ["monitoring", "logging", "tracing", "apm"]
+    },
+    "logging": {
+      "preferred": "lucide:scroll-text",
+      "alt": ["lucide:file-text", "lucide:logs"],
+      "domains": ["log", "trace", "audit-trail", "event"]
+    },
+    "testing": {
+      "preferred": "lucide:test-tubes",
+      "alt": ["lucide:flask-conical", "lucide:microscope"],
+      "domains": ["qa", "unit-test", "integration-test", "validation"]
+    },
+    "quality": {
+      "preferred": "lucide:badge-check",
+      "alt": ["lucide:shield-check", "tabler:award"],
+      "domains": ["assurance", "standard", "certification", "excellence"]
+    },
+    "customer": {
+      "preferred": "lucide:user-round",
+      "alt": ["lucide:contact-round", "tabler:user-check"],
+      "domains": ["client", "consumer", "buyer", "end-user"]
+    },
+    "support": {
+      "preferred": "lucide:headset",
+      "alt": ["lucide:life-buoy", "lucide:hand-helping"],
+      "domains": ["help", "service", "assistance", "desk"]
+    },
+    "feedback": {
+      "preferred": "lucide:message-circle",
+      "alt": ["lucide:thumbs-up", "tabler:message"],
+      "domains": ["review", "comment", "response", "input"]
+    },
+    "partnership": {
+      "preferred": "lucide:handshake",
+      "alt": ["lucide:heart-handshake", "lucide:users"],
+      "domains": ["alliance", "collaboration", "joint-venture", "co-create"]
+    },
+    "supply-chain": {
+      "preferred": "lucide:truck",
+      "alt": ["lucide:package", "lucide:warehouse"],
+      "domains": ["logistics", "distribution", "inventory", "fulfillment"]
+    },
+    "warehouse": {
+      "preferred": "lucide:warehouse",
+      "alt": ["lucide:building", "lucide:package"],
+      "domains": ["storage", "inventory", "logistics", "depot"]
+    },
+    "product": {
+      "preferred": "lucide:package",
+      "alt": ["lucide:box", "lucide:shopping-bag"],
+      "domains": ["feature", "offering", "deliverable", "sku"]
+    },
+    "config": {
+      "preferred": "lucide:settings",
+      "alt": ["lucide:sliders-horizontal", "tabler:settings"],
+      "domains": ["configuration", "tuning", "parameter", "yaml"]
+    },
+    "filter": {
+      "preferred": "lucide:filter",
+      "alt": ["lucide:sliders-horizontal", "lucide:search"],
+      "domains": ["sort", "refine", "narrow", "criteria"]
+    },
+    "share": {
+      "preferred": "lucide:share-2",
+      "alt": ["lucide:share", "lucide:send"],
+      "domains": ["distribute", "send", "forward", "export"]
+    },
+    "save": {
+      "preferred": "lucide:save",
+      "alt": ["lucide:download", "lucide:hard-drive"],
+      "domains": ["persist", "store", "backup", "archive"]
+    },
+    "delete": {
+      "preferred": "lucide:trash-2",
+      "alt": ["lucide:trash", "lucide:x"],
+      "domains": ["remove", "destroy", "purge", "clean"]
+    },
+    "protect": {
+      "preferred": "lucide:shield",
+      "alt": ["lucide:shield-check", "tabler:shield-lock"],
+      "domains": ["guard", "defend", "secure", "safeguard"]
+    },
+    "digital-transformation": {
+      "preferred": "lucide:sparkles",
+      "alt": ["lucide:zap", "lucide:rocket"],
+      "domains": ["modernization", "digitization", "innovation", "disruption"]
+    },
+    "sustainability": {
+      "preferred": "lucide:leaf",
+      "alt": ["lucide:sprout", "lucide:recycle"],
+      "domains": ["green", "eco", "environment", "renewable"]
+    },
+    "energy": {
+      "preferred": "lucide:zap",
+      "alt": ["tabler:bolt", "lucide:battery-charging"],
+      "domains": ["power", "electricity", "battery", "charge"]
+    },
+    "health": {
+      "preferred": "lucide:heart-pulse",
+      "alt": ["lucide:stethoscope", "lucide:activity"],
+      "domains": ["medical", "healthcare", "wellness", "clinical"]
+    },
+    "finance": {
+      "preferred": "lucide:coins",
+      "alt": ["tabler:currency-dollar", "lucide:banknote"],
+      "domains": ["banking", "fintech", "accounting", "treasury"]
+    },
+    "payment": {
+      "preferred": "lucide:credit-card",
+      "alt": ["lucide:banknote", "tabler:cash"],
+      "domains": ["transaction", "checkout", "billing", "invoice"]
+    },
+    "ecommerce": {
+      "preferred": "lucide:shopping-cart",
+      "alt": ["lucide:store", "lucide:shopping-bag"],
+      "domains": ["retail", "marketplace", "storefront", "catalog"]
+    },
+    "manufacturing": {
+      "preferred": "lucide:factory",
+      "alt": ["lucide:construction", "lucide:wrench"],
+      "domains": ["production", "assembly", "industrial", "plant"]
+    },
+    "iot": {
+      "preferred": "lucide:circuit-board",
+      "alt": ["lucide:cpu", "lucide:antenna"],
+      "domains": ["sensor", "device", "embedded", "smart"]
+    },
+    "blockchain": {
+      "preferred": "lucide:blocks",
+      "alt": ["lucide:link", "lucide:lock"],
+      "domains": ["crypto", "distributed-ledger", "web3", "smart-contract"]
+    },
+    "identity": {
+      "preferred": "lucide:fingerprint",
+      "alt": ["lucide:id-card", "lucide:scan-face"],
+      "domains": ["authentication", "sso", "oauth", "biometric"]
+    },
+    "access": {
+      "preferred": "lucide:key-round",
+      "alt": ["lucide:door-open", "lucide:lock-open"],
+      "domains": ["permission", "authorization", "entry", "gate"]
+    },
+    "backup": {
+      "preferred": "lucide:database-backup",
+      "alt": ["lucide:hard-drive", "lucide:save"],
+      "domains": ["recovery", "snapshot", "restore", "redundancy"]
+    },
+    "disaster-recovery": {
+      "preferred": "lucide:shield-alert",
+      "alt": ["lucide:database-backup", "lucide:hard-drive"],
+      "domains": ["dr", "failover", "resilience", "continuity"]
+    },
+    "reliability": {
+      "preferred": "lucide:shield-check",
+      "alt": ["lucide:check-check", "tabler:shield-lock"],
+      "domains": ["uptime", "sla", "availability", "stable"]
+    },
+    "documentation": {
+      "preferred": "lucide:book-open",
+      "alt": ["lucide:file-text", "lucide:notebook"],
+      "domains": ["docs", "wiki", "manual", "knowledge-base"]
+    },
+    "analysis": {
+      "preferred": "lucide:microscope",
+      "alt": ["lucide:scan-search", "lucide:chart-line"],
+      "domains": ["examine", "investigate", "assess", "evaluate"]
+    },
+    "insight": {
+      "preferred": "lucide:eye",
+      "alt": ["lucide:lightbulb", "lucide:sparkle"],
+      "domains": ["discovery", "finding", "intelligence", "understanding"]
+    },
+    "optimization": {
+      "preferred": "lucide:sliders-horizontal",
+      "alt": ["lucide:gauge", "lucide:settings"],
+      "domains": ["tuning", "improve", "enhance", "refine"]
+    },
+    "decision": {
+      "preferred": "lucide:git-fork",
+      "alt": ["lucide:split", "lucide:scale"],
+      "domains": ["choice", "branch", "fork", "option"]
+    },
+    "approval": {
+      "preferred": "lucide:check-check",
+      "alt": ["lucide:badge-check", "lucide:thumbs-up"],
+      "domains": ["sign-off", "consent", "authorize", "accept"]
+    },
+    "governance": {
+      "preferred": "lucide:gavel",
+      "alt": ["lucide:shield-check", "lucide:scale"],
+      "domains": ["policy", "regulation", "oversight", "compliance"]
+    },
+    "platform": {
+      "preferred": "lucide:layers",
+      "alt": ["lucide:blocks", "lucide:component"],
+      "domains": ["foundation", "framework", "infrastructure", "base"]
+    },
+    "framework": {
+      "preferred": "lucide:component",
+      "alt": ["lucide:blocks", "lucide:layers"],
+      "domains": ["library", "sdk", "toolkit", "abstraction"]
+    },
+    "enterprise": {
+      "preferred": "lucide:building-2",
+      "alt": ["lucide:building", "tabler:building"],
+      "domains": ["corporate", "business", "large-scale", "fortune-500"]
+    },
+    "startup": {
+      "preferred": "lucide:rocket",
+      "alt": ["lucide:sparkles", "lucide:zap"],
+      "domains": ["founder", "venture", "mvp", "growth"]
+    },
+    "benchmark": {
+      "preferred": "lucide:timer",
+      "alt": ["lucide:gauge", "lucide:chart-bar-increasing"],
+      "domains": ["baseline", "comparison", "standard", "measure"]
+    },
+    "rollout": {
+      "preferred": "lucide:rocket",
+      "alt": ["lucide:flag", "lucide:milestone"],
+      "domains": ["deployment", "release", "launch", "go-live"]
+    },
+    "transition": {
+      "preferred": "lucide:arrow-right-left",
+      "alt": ["lucide:shuffle", "lucide:repeat"],
+      "domains": ["migration", "changeover", "switch", "cutover"]
+    },
+    "decommission": {
+      "preferred": "lucide:power-off",
+      "alt": ["lucide:trash-2", "lucide:archive"],
+      "domains": ["retire", "sunset", "end-of-life", "shutdown"]
+    },
+    "assessment": {
+      "preferred": "lucide:clipboard-check",
+      "alt": ["lucide:list-checks", "lucide:microscope"],
+      "domains": ["evaluation", "audit", "review", "survey"]
+    },
+    "complexity": {
+      "preferred": "lucide:waypoints",
+      "alt": ["lucide:network", "lucide:brain-cog"],
+      "domains": ["complicated", "intertwined", "tangled", "intricate"]
+    },
+    "simplify": {
+      "preferred": "lucide:minimize-2",
+      "alt": ["lucide:scissors", "lucide:filter"],
+      "domains": ["streamline", "reduce", "declutter", "clean"]
+    },
+    "matrix": {
+      "preferred": "lucide:grid-3x3",
+      "alt": ["lucide:table", "lucide:layout-grid"],
+      "domains": ["grid", "table", "comparison", "framework"]
+    },
+    "hierarchy": {
+      "preferred": "lucide:list-tree",
+      "alt": ["lucide:folder-tree", "lucide:layers"],
+      "domains": ["tree", "org-chart", "structure", "levels"]
+    },
+    "comparison": {
+      "preferred": "lucide:columns-2",
+      "alt": ["lucide:split", "lucide:diff"],
+      "domains": ["versus", "contrast", "side-by-side", "evaluate"]
+    },
+    "sign-off": {
+      "preferred": "lucide:signature",
+      "alt": ["lucide:check-check", "lucide:badge-check"],
+      "domains": ["approval", "authorize", "confirm", "endorse"]
+    },
+    "vision": {
+      "preferred": "lucide:eye",
+      "alt": ["lucide:telescope", "lucide:binoculars"],
+      "domains": ["future", "foresight", "perspective", "outlook"]
+    },
+    "value": {
+      "preferred": "lucide:gem",
+      "alt": ["lucide:badge-dollar-sign", "lucide:trending-up"],
+      "domains": ["benefit", "worth", "impact", "outcome"]
+    },
+    "impact": {
+      "preferred": "lucide:zap",
+      "alt": ["lucide:trending-up", "lucide:target"],
+      "domains": ["effect", "result", "influence", "outcome"]
+    },
+    "scope": {
+      "preferred": "lucide:scan",
+      "alt": ["lucide:maximize", "lucide:crosshair"],
+      "domains": ["boundary", "range", "extent", "coverage"]
+    },
+    "handoff": {
+      "preferred": "lucide:hand-helping",
+      "alt": ["lucide:arrow-right", "lucide:send"],
+      "domains": ["transfer", "transition", "delegate", "pass"]
+    },
+    "priority": {
+      "preferred": "lucide:signal-high",
+      "alt": ["lucide:flag", "lucide:circle-alert"],
+      "domains": ["urgent", "important", "critical", "rank"]
+    },
+    "capacity": {
+      "preferred": "lucide:battery-medium",
+      "alt": ["lucide:gauge", "lucide:hard-drive"],
+      "domains": ["bandwidth", "throughput", "headroom", "utilization"]
+    },
+    "debt": {
+      "preferred": "lucide:construction",
+      "alt": ["lucide:wrench", "lucide:bug"],
+      "domains": ["technical-debt", "refactor", "maintenance", "cleanup"]
+    },
+    "dependency": {
+      "preferred": "lucide:link",
+      "alt": ["lucide:waypoints", "lucide:network"],
+      "domains": ["coupling", "prerequisite", "blocker", "upstream"]
+    },
+    "inventory": {
+      "preferred": "lucide:clipboard-list",
+      "alt": ["lucide:list", "lucide:package"],
+      "domains": ["catalog", "registry", "asset", "stock"]
+    },
+    "pattern": {
+      "preferred": "lucide:grid-2x2",
+      "alt": ["lucide:component", "lucide:puzzle"],
+      "domains": ["template", "blueprint", "standard", "recipe"]
+    },
+    "event": {
+      "preferred": "lucide:calendar",
+      "alt": ["lucide:bell", "lucide:flag"],
+      "domains": ["trigger", "webhook", "signal", "occurrence"]
+    },
+    "streaming": {
+      "preferred": "lucide:radio",
+      "alt": ["lucide:rss", "lucide:activity"],
+      "domains": ["real-time", "kafka", "pubsub", "event-driven"]
+    },
+    "batch": {
+      "preferred": "lucide:layers-3",
+      "alt": ["lucide:list", "lucide:package"],
+      "domains": ["bulk", "job", "scheduled", "etl"]
+    },
+    "cache": {
+      "preferred": "lucide:database-zap",
+      "alt": ["lucide:zap", "lucide:hard-drive"],
+      "domains": ["redis", "memcache", "fast-lookup", "hot-data"]
+    },
+    "debug": {
+      "preferred": "lucide:bug-play",
+      "alt": ["lucide:bug", "tabler:bug"],
+      "domains": ["troubleshoot", "diagnose", "trace", "inspect"]
+    },
+    "lifecycle": {
+      "preferred": "lucide:recycle",
+      "alt": ["lucide:repeat", "lucide:refresh-cw"],
+      "domains": ["cycle", "sdlc", "phase", "iteration"]
+    },
+    "talent": {
+      "preferred": "lucide:user-round",
+      "alt": ["lucide:users", "lucide:graduation-cap"],
+      "domains": ["hiring", "recruitment", "skills", "workforce"]
+    },
+    "diversity": {
+      "preferred": "lucide:users-round",
+      "alt": ["lucide:users", "lucide:globe"],
+      "domains": ["inclusion", "equity", "belonging", "culture"]
+    },
+    "communication": {
+      "preferred": "lucide:message-circle",
+      "alt": ["lucide:phone", "tabler:message"],
+      "domains": ["chat", "discussion", "dialog", "conversation"]
+    },
+    "meeting": {
+      "preferred": "lucide:video",
+      "alt": ["lucide:users", "lucide:calendar"],
+      "domains": ["conference", "standup", "sync", "huddle"]
+    },
+    "review": {
+      "preferred": "lucide:eye",
+      "alt": ["lucide:scan", "lucide:clipboard-check"],
+      "domains": ["inspect", "assess", "evaluate", "peer-review"]
+    },
+    "release": {
+      "preferred": "lucide:tag",
+      "alt": ["lucide:rocket", "lucide:flag"],
+      "domains": ["version", "publish", "deploy", "ship"]
+    },
+    "versioning": {
+      "preferred": "lucide:git-branch",
+      "alt": ["lucide:tag", "tabler:git-branch"],
+      "domains": ["version", "semver", "changelog", "history"]
+    },
+    "authentication": {
+      "preferred": "lucide:fingerprint",
+      "alt": ["lucide:lock", "lucide:key"],
+      "domains": ["login", "sso", "oauth", "mfa"]
+    },
+    "authorization": {
+      "preferred": "lucide:key-round",
+      "alt": ["lucide:shield-check", "lucide:lock"],
+      "domains": ["permission", "rbac", "policy", "acl"]
+    },
+    "token": {
+      "preferred": "lucide:key",
+      "alt": ["lucide:badge-check", "lucide:lock-keyhole"],
+      "domains": ["jwt", "oauth-token", "api-key", "credential"]
+    },
+    "certificate": {
+      "preferred": "lucide:badge-check",
+      "alt": ["lucide:shield-check", "lucide:award"],
+      "domains": ["ssl", "tls", "x509", "pki"]
+    },
+    "scanning": {
+      "preferred": "lucide:scan",
+      "alt": ["lucide:scan-search", "lucide:qr-code"],
+      "domains": ["detection", "vulnerability-scan", "sast", "dast"]
+    },
+    "open-source": {
+      "preferred": "lucide:github",
+      "alt": ["lucide:globe", "lucide:code"],
+      "domains": ["oss", "community", "public", "repository"]
+    },
+    "documentation-api": {
+      "preferred": "lucide:file-code",
+      "alt": ["lucide:code-xml", "lucide:webhook"],
+      "domains": ["swagger", "openapi", "spec", "reference"]
+    },
+    "sla": {
+      "preferred": "lucide:timer",
+      "alt": ["lucide:shield-check", "lucide:gauge"],
+      "domains": ["uptime", "availability", "response-time", "agreement"]
+    },
+    "incident": {
+      "preferred": "lucide:siren",
+      "alt": ["lucide:circle-alert", "lucide:triangle-alert"],
+      "domains": ["outage", "failure", "pager", "escalation"]
+    },
+    "remediation": {
+      "preferred": "lucide:wrench",
+      "alt": ["lucide:bandage", "lucide:shield-check"],
+      "domains": ["fix", "patch", "resolve", "mitigate"]
+    },
+    "compliance-check": {
+      "preferred": "lucide:clipboard-check",
+      "alt": ["lucide:shield-check", "lucide:list-checks"],
+      "domains": ["audit", "regulation", "policy-check", "standard"]
+    },
+    "data-flow": {
+      "preferred": "lucide:workflow",
+      "alt": ["lucide:waypoints", "lucide:arrow-right-left"],
+      "domains": ["etl", "pipeline", "stream", "transfer"]
+    },
+    "microservice": {
+      "preferred": "lucide:component",
+      "alt": ["lucide:blocks", "lucide:puzzle"],
+      "domains": ["service", "api", "modular", "distributed"]
+    },
+    "monolith": {
+      "preferred": "lucide:box",
+      "alt": ["lucide:cuboid", "lucide:building"],
+      "domains": ["legacy", "coupled", "single-unit", "traditional"]
+    },
+    "terraform": {
+      "preferred": "lucide:blocks",
+      "alt": ["lucide:code", "lucide:layers"],
+      "domains": ["iac", "infrastructure-as-code", "provisioning", "cloudformation"]
+    },
+    "ci-cd": {
+      "preferred": "lucide:workflow",
+      "alt": ["lucide:git-merge", "lucide:rocket"],
+      "domains": ["continuous-integration", "continuous-delivery", "jenkins", "github-actions"]
+    },
+    "data-lake": {
+      "preferred": "lucide:database",
+      "alt": ["lucide:waves", "lucide:hard-drive"],
+      "domains": ["big-data", "hadoop", "parquet", "raw-data"]
+    },
+    "machine-learning": {
+      "preferred": "lucide:brain",
+      "alt": ["tabler:ai", "lucide:brain-circuit"],
+      "domains": ["model-training", "prediction", "deep-learning", "neural-network"]
+    },
+    "generative-ai": {
+      "preferred": "lucide:sparkles",
+      "alt": ["lucide:brain-circuit", "tabler:ai"],
+      "domains": ["genai", "llm", "copilot", "chatbot"]
+    },
+    "responsible-ai": {
+      "preferred": "lucide:shield-check",
+      "alt": ["lucide:scale", "lucide:gavel"],
+      "domains": ["ethics", "fairness", "bias", "transparency"]
+    },
+    "experience": {
+      "preferred": "lucide:smile",
+      "alt": ["lucide:user-round", "lucide:heart"],
+      "domains": ["ux", "cx", "satisfaction", "delight"]
+    },
+    "conversion": {
+      "preferred": "lucide:arrow-right",
+      "alt": ["lucide:shuffle", "lucide:repeat"],
+      "domains": ["transform", "translate", "migrate", "adapt"]
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "version": "1.0",
+  "images": {
+    "a_new_perspective": {
+      "id": "a_new_perspective",
+      "theme": "perspective, insight, vision, fresh-thinking, new-approach, viewpoint, rethink, reframe",
+      "use_on": ["title_image_light", "section_break_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Teal.png",
+        "White": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_White.png",
+        "Yellow": "Icons and Dimensional Keywords/A New Perspective/Pt_ANewPerspective_Yellow.png"
+      }
+    },
+    "break_barriers": {
+      "id": "break_barriers",
+      "theme": "overcoming-challenges, disruption, problems, obstacles, breakthrough, barriers, blockers, legacy-challenges",
+      "use_on": ["title_image_light", "section_break_light", "content_image_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Teal.png",
+        "White": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_White.png",
+        "Yellow": "Icons and Dimensional Keywords/Break Barriers/Pt_BreakDownBarriers_Yellow.png"
+      }
+    },
+    "build_next_dimension": {
+      "id": "build_next_dimension",
+      "theme": "building, platform, technology, engineering, construction, foundation, architecture, next-generation",
+      "use_on": ["title_image_light", "section_break_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Teal.png",
+        "White": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_White.png",
+        "Yellow": "Icons and Dimensional Keywords/Build Next Dimension/Pt_BuildYourNextDimension_Yellow.png"
+      }
+    },
+    "challenge_assumptions": {
+      "id": "challenge_assumptions",
+      "theme": "questioning, critical-thinking, assumptions, rethinking, paradigm-shift, unconventional, contrarian",
+      "use_on": ["title_image_light", "section_break_light"],
+      "color_preference": {"light_theme": "Purple", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Teal.png",
+        "White": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_White.png",
+        "Yellow": "Icons and Dimensional Keywords/Challenge Assumptions/Pt_ChallangeAssumptions_Yellow.png"
+      }
+    },
+    "liberate_innovation": {
+      "id": "liberate_innovation",
+      "theme": "innovation, solutions, opportunities, capabilities, creativity, freedom, unlock, ideation",
+      "use_on": ["title_image_light", "section_break_light", "content_image_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Teal.png",
+        "White": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_White.png",
+        "Yellow": "Icons and Dimensional Keywords/Liberate Innovation/Pt_LiberateInnovation_Yellow.png"
+      }
+    },
+    "outmaneuver_risk": {
+      "id": "outmaneuver_risk",
+      "theme": "risk-management, security, governance, compliance, mitigation, protection, resilience, threat",
+      "use_on": ["title_image_light", "section_break_light", "content_image_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Teal.png",
+        "White": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_White.png",
+        "Yellow": "Icons and Dimensional Keywords/Outmaneuver Risk/Pt_OutmaneuverTheRisks_Yellow.png"
+      }
+    },
+    "progress_isnt_straight": {
+      "id": "progress_isnt_straight",
+      "theme": "progress, journey, roadmap, agile, iterative, evolution, timeline, milestones, phases",
+      "use_on": ["title_image_light", "section_break_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Teal.png",
+        "White": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_White.png",
+        "Yellow": "Icons and Dimensional Keywords/Progress Isn't Straight/Pt_ProgressIsntStraight_Yellow.png"
+      }
+    },
+    "see_differently": {
+      "id": "see_differently",
+      "theme": "vision, insight, discovery, analysis, observation, perspective, see-differently, new-lens",
+      "use_on": ["title_image_light", "section_break_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Teal.png",
+        "White": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_White.png",
+        "Yellow": "Icons and Dimensional Keywords/See Differently/Pt_SeeTheWorldDifferently_Yellow.png"
+      }
+    },
+    "software_to_power_growth": {
+      "id": "software_to_power_growth",
+      "theme": "platform, technology, engineering, software, building, development, growth, scale, digital",
+      "use_on": ["title_image_light", "section_break_light", "content_image_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Teal.png",
+        "White": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_White.png",
+        "Yellow": "Icons and Dimensional Keywords/Software To Power Growth/Pt_SoftwareToPowerGrowth_Yellow.png"
+      }
+    },
+    "the_future_is_what_you_engineer": {
+      "id": "the_future_is_what_you_engineer",
+      "theme": "future, engineering, vision, strategy, roadmap, innovation, transformation, digital-transformation",
+      "use_on": ["title_image_light", "section_break_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Teal.png",
+        "White": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_White.png",
+        "Yellow": "Icons and Dimensional Keywords/The Future Is What You Engineer/Pt_TheFutureIsWhatYouEngineer_Yellow.png"
+      }
+    },
+    "transform_reality": {
+      "id": "transform_reality",
+      "theme": "modernization, digital-transformation, change, transformation, migration, replatform, upgrade, evolve",
+      "use_on": ["title_image_light", "section_break_light", "content_image_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Pink": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Pink.png",
+        "Purple": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Purple.png",
+        "Teal": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Teal.png",
+        "White": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_White.png",
+        "Yellow": "Icons and Dimensional Keywords/Transform Reality/PT_TransformReality_Yellow.png"
+      }
+    },
+    "unlock_new_possibilities": {
+      "id": "unlock_new_possibilities",
+      "theme": "innovation, solutions, opportunities, unlock, potential, capabilities, possibilities, new-horizons",
+      "use_on": ["title_image_light", "section_break_light", "content_image_light"],
+      "color_preference": {"light_theme": "Teal", "dark_theme": "White"},
+      "paths": {
+        "Teal": "Icons and Dimensional Keywords/Unlock New Possibilities/MicrosoftTeams-image (56).png"
+      }
+    }
+  }
+}

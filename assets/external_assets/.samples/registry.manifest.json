@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-02-26T00:00:00+00:00",
+  "packs": ["tabler", "lucide", "fluent", "aws"],
+  "icons": [
+    {
+      "id": "aws:compute_ec2_amazon-ec2-instance",
+      "pack": "aws",
+      "pack_version": "Icon-package_01302026",
+      "name": "amazon-ec2-instance",
+      "svg_path": "svg/aws/compute/ec2/amazon-ec2-instance.svg",
+      "tags": ["aws", "cloud", "architecture", "provider_icon", "compute", "ec2", "amazon", "instance"],
+      "categories": ["compute", "ec2"],
+      "aliases": [],
+      "search_text": "amazon-ec2-instance aws cloud architecture provider_icon compute ec2 amazon instance"
+    },
+    {
+      "id": "fluent:document",
+      "pack": "fluent",
+      "pack_version": "1.2.38",
+      "name": "document",
+      "svg_path": "svg/fluent/document.svg",
+      "tags": ["document", "file", "enterprise", "icon"],
+      "categories": ["files"],
+      "aliases": [],
+      "search_text": "document file enterprise icon files"
+    },
+    {
+      "id": "lucide:server",
+      "pack": "lucide",
+      "pack_version": "1.2.5",
+      "name": "server",
+      "svg_path": "svg/lucide/server.svg",
+      "tags": ["server", "infrastructure", "enterprise", "icon"],
+      "categories": ["devices"],
+      "aliases": [],
+      "search_text": "server infrastructure enterprise icon devices"
+    },
+    {
+      "id": "tabler:briefcase",
+      "pack": "tabler",
+      "pack_version": "1.2.17",
+      "name": "briefcase",
+      "svg_path": "svg/tabler/briefcase.svg",
+      "tags": ["briefcase", "enterprise", "icon"],
+      "categories": ["business"],
+      "aliases": [],
+      "search_text": "briefcase enterprise icon business"
+    },
+    {
+      "id": "tabler:cloud",
+      "pack": "tabler",
+      "pack_version": "1.2.17",
+      "name": "cloud",
+      "svg_path": "svg/tabler/cloud.svg",
+      "tags": ["cloud", "enterprise", "icon"],
+      "categories": ["weather"],
+      "aliases": [],
+      "search_text": "cloud enterprise icon weather"
+    }
+  ]
+}

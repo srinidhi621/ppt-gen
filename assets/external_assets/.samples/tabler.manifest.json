@@ -1,0 +1,37 @@
+{
+  "pack": "tabler",
+  "pack_version": "1.2.17",
+  "license": {
+    "type": "MIT",
+    "source": "https://github.com/tabler/tabler-icons/blob/master/LICENSE",
+    "notes": "Sample manifest fixture only."
+  },
+  "source": {
+    "download_urls": [
+      "https://unpkg.com/@iconify-json/tabler@1.2.17/icons.json",
+      "https://unpkg.com/@iconify-json/tabler@1.2.17/info.json",
+      "https://unpkg.com/@iconify-json/tabler@1.2.17/metadata.json"
+    ],
+    "pinned": true
+  },
+  "icons": [
+    {
+      "id": "tabler:briefcase",
+      "name": "briefcase",
+      "svg_path": "svg/tabler/briefcase.svg",
+      "tags": ["briefcase", "enterprise", "icon"],
+      "categories": ["business"],
+      "aliases": [],
+      "search_text": "briefcase enterprise icon business"
+    },
+    {
+      "id": "tabler:cloud",
+      "name": "cloud",
+      "svg_path": "svg/tabler/cloud.svg",
+      "tags": ["cloud", "enterprise", "icon"],
+      "categories": ["weather"],
+      "aliases": [],
+      "search_text": "cloud enterprise icon weather"
+    }
+  ]
+}

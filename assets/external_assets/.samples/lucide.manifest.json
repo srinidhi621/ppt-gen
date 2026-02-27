@@ -1,0 +1,28 @@
+{
+  "pack": "lucide",
+  "pack_version": "1.2.5",
+  "license": {
+    "type": "ISC",
+    "source": "https://github.com/lucide-icons/lucide/blob/main/LICENSE",
+    "notes": "Sample manifest fixture only."
+  },
+  "source": {
+    "download_urls": [
+      "https://unpkg.com/@iconify-json/lucide@1.2.5/icons.json",
+      "https://unpkg.com/@iconify-json/lucide@1.2.5/info.json",
+      "https://unpkg.com/@iconify-json/lucide@1.2.5/metadata.json"
+    ],
+    "pinned": true
+  },
+  "icons": [
+    {
+      "id": "lucide:server",
+      "name": "server",
+      "svg_path": "svg/lucide/server.svg",
+      "tags": ["server", "infrastructure", "enterprise", "icon"],
+      "categories": ["devices"],
+      "aliases": [],
+      "search_text": "server infrastructure enterprise icon devices"
+    }
+  ]
+}

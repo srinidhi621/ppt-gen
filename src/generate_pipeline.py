@@ -7,9 +7,18 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-from .assets import ensure_asset_catalog, match_asset
+from .assets import (
+    ensure_asset_catalog,
+    load_branded_images_catalog,
+    load_visual_vocabulary,
+    match_asset,
+    resolve_branded_image,
+    resolve_visual_concepts_for_text,
+)
 from .models.content import ContentModel, ContentSection
 from .models.deck_ir import AssetRef, DeckIR, DeckSlide, FieldValue
+
+RENDERABLE_IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".webp")
 
 
 class CombinedInputError(ValueError):
@@ -43,7 +52,10 @@ def split_combined_markdown(markdown_text: str) -> Tuple[str, Dict[str, Any]]:
         elif current == "cues":
             cues_lines.append(line)
 
-    content_md = _normalize_content_markdown("\n".join(content_lines)).strip()
+    # Support plain content.md input by treating the entire file as content
+    # when explicit combined sections are absent.
+    raw_content = "\n".join(content_lines) if (content_lines or cues_lines) else markdown_text
+    content_md = _normalize_content_markdown(raw_content).strip()
     if not content_md:
         raise CombinedInputError(
             "Missing or empty content section in combined markdown input."
@@ -164,6 +176,9 @@ def build_deckir_from_content(
     layouts = {entry["layout_id"]: entry for entry in catalog.get("layouts", [])}
     asset_catalog = _load_or_build_asset_catalog(layout_catalog_path)
     assets = asset_catalog.get("assets", [])
+    assets_dir = layout_catalog_path.parents[1]
+    vocabulary = load_visual_vocabulary(assets_dir)
+    branded_catalog = load_branded_images_catalog(assets_dir)
 
     cues_by_section = {
         cue.get("section_id"): cue
@@ -188,6 +203,8 @@ def build_deckir_from_content(
             cue=cue,
             layout_entry=layout_entry,
             assets=assets,
+            vocabulary=vocabulary,
+            branded_catalog=branded_catalog,
         )
 
         slides.append(
@@ -282,45 +299,71 @@ def _build_asset_refs(
     cue: Dict[str, Any],
     layout_entry: Dict[str, Any],
     assets: List[Dict[str, Any]],
+    vocabulary: Dict[str, Any] | None = None,
+    branded_catalog: Dict[str, Any] | None = None,
 ) -> List[AssetRef]:
     field_keys = {field.get("field_key") for field in layout_entry.get("fields", [])}
+    if "ph_image" not in field_keys:
+        return []
+
     refs: List[AssetRef] = []
+    layout_id = layout_entry.get("layout_id", "")
 
-    image_hint = str(cue.get("image_hint") or "").strip()
-    cue_notes = str(cue.get("notes") or "").strip()
-    semantic_context = " | ".join(
-        part for part in (image_hint, cue_notes, section.title) if part
-    )
-
-    if semantic_context and "ph_image" in field_keys:
-        matched_image = match_asset(
-            semantic_context,
-            assets,
-            allowed_types=("image",),
-            min_score=1,
-        )
-        if matched_image:
-            refs.append(
-                AssetRef(
-                    asset_type="image",
-                    asset_id=str(matched_image["asset_id"]),
-                    target_field_key="ph_image",
-                )
-            )
-
-    # Icon mapping is generic and metadata-driven; only map when catalog has meaningful tags.
+    # 1. Try icon_hints via visual vocabulary
     icon_hints = cue.get("icon_hints", [])
-    if icon_hints and "ph_image" in field_keys:
+    if vocabulary and icon_hints:
         for hint in icon_hints:
-            matched_icon = match_asset(str(hint), assets, allowed_types=("icon",), min_score=1)
-            if matched_icon:
-                refs.append(
-                    AssetRef(
-                        asset_type="icon",
-                        asset_id=str(matched_icon["asset_id"]),
-                        target_field_key="ph_image",
-                    )
-                )
-                break
+            icon_id = resolve_visual_concepts_for_text(str(hint), vocabulary)
+            if icon_id:
+                refs.append(AssetRef(asset_type="icon", asset_id=icon_id, target_field_key="ph_image"))
+                return refs
+
+    # 2. Try image_hint via branded catalog
+    image_hint = str(cue.get("image_hint") or "").strip()
+    if branded_catalog and image_hint:
+        path = resolve_branded_image(image_hint, branded_catalog)
+        if path:
+            refs.append(AssetRef(asset_type="image", asset_id=path, target_field_key="ph_image"))
+            return refs
+
+    # 3. Try content keywords via vocabulary
+    if vocabulary:
+        search_text = f"{section.title} {' '.join(str(b) for b in section.bullets)}"
+        icon_id = resolve_visual_concepts_for_text(search_text, vocabulary)
+        if icon_id:
+            refs.append(AssetRef(asset_type="icon", asset_id=icon_id, target_field_key="ph_image"))
+            return refs
+
+    # 4. For section/title layouts, try branded image by theme
+    if branded_catalog and layout_id in ("section_break_light", "title_image_light"):
+        path = resolve_branded_image(section.title, branded_catalog)
+        if path:
+            refs.append(AssetRef(asset_type="image", asset_id=path, target_field_key="ph_image"))
+            return refs
+
+    # 5. Fallback: token-overlap match
+    semantic_context = " | ".join(
+        part for part in (image_hint, str(cue.get("notes", "")), section.title) if part
+    )
+    if semantic_context:
+        matched_image = match_asset(semantic_context, assets, allowed_types=("image",), min_score=1)
+        if matched_image:
+            refs.append(AssetRef(asset_type="image", asset_id=str(matched_image["asset_id"]), target_field_key="ph_image"))
+            return refs
+
+    renderable_icons = [
+        asset for asset in assets
+        if asset.get("asset_type") == "icon"
+        and _is_renderable_source_path(str(asset.get("source_path", "")))
+    ]
+    for hint in icon_hints:
+        matched_icon = match_asset(str(hint), renderable_icons, allowed_types=("icon",), min_score=1)
+        if matched_icon:
+            refs.append(AssetRef(asset_type="icon", asset_id=str(matched_icon["asset_id"]), target_field_key="ph_image"))
+            return refs
 
     return refs
+
+
+def _is_renderable_source_path(source_path: str) -> bool:
+    return source_path.lower().endswith(RENDERABLE_IMAGE_SUFFIXES)

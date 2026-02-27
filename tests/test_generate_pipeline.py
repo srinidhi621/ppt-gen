@@ -5,9 +5,11 @@ from pathlib import Path
 
 from src.generate_pipeline import (
     CombinedInputError,
+    _build_asset_refs,
     build_deckir_from_content,
     split_combined_markdown,
 )
+from src.models.content import ContentSection
 from src.normalize.parser import parse_markdown_string
 
 
@@ -68,6 +70,17 @@ Visualization Cues
         self.assertIn("- Point one", content_md)
         self.assertIn("---", content_md)
         self.assertEqual(cues["cues"][0]["section_id"], "first_slide")
+
+    def test_split_accepts_plain_content_markdown_without_combined_sections(self) -> None:
+        plain_content = """# Deck Title
+
+---
+## Slide One
+- Point one
+"""
+        content_md, cues = split_combined_markdown(plain_content)
+        self.assertIn("## Slide One", content_md)
+        self.assertEqual(cues, {"cues": []})
 
 
 class TestBuildDeckFromContent(unittest.TestCase):
@@ -133,6 +146,48 @@ class TestBuildDeckFromContent(unittest.TestCase):
         self.assertGreaterEqual(len(deck.slides[0].asset_refs), 1)
         self.assertEqual(deck.slides[0].asset_refs[0].asset_type, "image")
         self.assertEqual(deck.slides[0].asset_refs[0].target_field_key, "ph_image")
+
+    def test_build_asset_refs_skips_non_renderable_icon_assets(self) -> None:
+        section = ContentSection(
+            section_id="section_icon",
+            title="Section With Icon",
+            paragraphs=[],
+            bullets=["Point"],
+        )
+        cue = {"icon_hints": ["cloud"]}
+        layout_entry = {
+            "fields": [
+                {"field_key": "ph_title"},
+                {"field_key": "ph_body"},
+                {"field_key": "ph_image"},
+            ]
+        }
+        assets = [
+            {
+                "asset_type": "icon",
+                "asset_id": "tabler:cloud",
+                "source_path": "external_assets/tabler/svg/cloud.svg",
+                "tags": ["cloud"],
+                "synonyms": [],
+            },
+            {
+                "asset_type": "icon",
+                "asset_id": "icon_001",
+                "source_path": "icons/png/icon_001.png",
+                "tags": ["cloud"],
+                "synonyms": [],
+            },
+        ]
+
+        refs = _build_asset_refs(
+            section=section,
+            cue=cue,
+            layout_entry=layout_entry,
+            assets=assets,
+        )
+        self.assertEqual(len(refs), 1)
+        self.assertEqual(refs[0].asset_type, "icon")
+        self.assertEqual(refs[0].asset_id, "icon_001")
 
 
 if __name__ == "__main__":

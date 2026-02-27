@@ -1,0 +1,28 @@
+{
+  "pack": "fluent",
+  "pack_version": "1.2.38",
+  "license": {
+    "type": "MIT (MS)",
+    "source": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE",
+    "notes": "Sample manifest fixture only."
+  },
+  "source": {
+    "download_urls": [
+      "https://unpkg.com/@iconify-json/fluent@1.2.38/icons.json",
+      "https://unpkg.com/@iconify-json/fluent@1.2.38/info.json",
+      "https://unpkg.com/@iconify-json/fluent@1.2.38/metadata.json"
+    ],
+    "pinned": true
+  },
+  "icons": [
+    {
+      "id": "fluent:document",
+      "name": "document",
+      "svg_path": "svg/fluent/document.svg",
+      "tags": ["document", "file", "enterprise", "icon"],
+      "categories": ["files"],
+      "aliases": [],
+      "search_text": "document file enterprise icon files"
+    }
+  ]
+}
