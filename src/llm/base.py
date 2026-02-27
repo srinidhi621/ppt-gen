@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Dict, Optional, Protocol
 
 
@@ -44,3 +45,8 @@ class LLMClient(Protocol):
 
     def generate_json(self, system_prompt: str, user_prompt: str) -> LLMResponse:
         """Generate a JSON object from prompts."""
+
+    def generate_json_with_images(
+        self, system_prompt: str, user_prompt: str, image_paths: list[Path]
+    ) -> LLMResponse:
+        """Generate a JSON object from prompts and local image paths."""

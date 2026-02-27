@@ -65,6 +65,10 @@ def plan_deck_with_llm(
     deck_id: str,
     template_id: str = "corp_deck_2025",
     max_retries: int = 2,
+    review_feedback: Dict[str, Any] | None = None,
+    prior_planner_output: Dict[str, Any] | None = None,
+    diagnose_report: Dict[str, Any] | None = None,
+    composition_spec: Dict[str, Any] | None = None,
 ) -> Tuple[DeckIR, PlanningStats]:
     """Return schema-valid DeckIR and number of attempts used."""
     layout_catalog = _load_json(layout_catalog_path)
@@ -80,6 +84,10 @@ def plan_deck_with_llm(
         run_id=run_id,
         deck_id=deck_id,
         template_id=template_id,
+        review_feedback=review_feedback,
+        prior_planner_output=prior_planner_output,
+        diagnose_report=diagnose_report,
+        composition_spec=composition_spec,
     )
 
     attempts = max_retries + 1
@@ -437,13 +445,17 @@ def _build_user_prompt(
     run_id: str,
     deck_id: str,
     template_id: str,
+    review_feedback: Dict[str, Any] | None = None,
+    prior_planner_output: Dict[str, Any] | None = None,
+    diagnose_report: Dict[str, Any] | None = None,
+    composition_spec: Dict[str, Any] | None = None,
 ) -> str:
     content_json = content_model.to_json()
 
     # Format cues prominently so the LLM can use them for visual decisions
     cues_block = _format_cues_for_prompt(cues_data)
 
-    return (
+    base = (
         "Build DeckIR JSON with this exact top-level schema:\n"
         "{deck_id, run_id, template_id, title, subtitle, global_constraints, slides}\n"
         "Each slide must include: slide_id, layout_id, fields, speaker_notes, asset_refs, constraints_override.\n"
@@ -462,6 +474,24 @@ def _build_user_prompt(
         f"ContentModel:\n{content_json}\n\n"
         "=== VISUALIZATION CUES (use these to drive layout and visual choices) ===\n"
         f"{cues_block}\n"
+    )
+    if review_feedback is None:
+        return base
+    return (
+        base
+        + "\n=== REWORK MODE (PLANNER V2) ===\n"
+        "This is a rework pass after rendered output review.\n"
+        "Treat REVIEW_FEEDBACK as high-priority deltas while preserving the original ask.\n"
+        "Do not discard good slides; only revise where justified by findings.\n"
+        "Stay strictly within known layout/asset constraints.\n\n"
+        "=== PRIOR PLANNER OUTPUT V1 ===\n"
+        f"{json.dumps(prior_planner_output or {}, ensure_ascii=True)}\n\n"
+        "=== COMPOSITION SPEC V1 ===\n"
+        f"{json.dumps(composition_spec or {}, ensure_ascii=True)}\n\n"
+        "=== DIAGNOSE REPORT V1 ===\n"
+        f"{json.dumps(diagnose_report or {}, ensure_ascii=True)}\n\n"
+        "=== REVIEW FEEDBACK V1 ===\n"
+        f"{json.dumps(review_feedback, ensure_ascii=True)}\n"
     )
 
 

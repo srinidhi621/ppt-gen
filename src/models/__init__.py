@@ -8,6 +8,7 @@ from .validation import ValidationReport, ValidationViolation
 from .critique import CritiqueReport, CritiqueFinding
 from .patch import PatchSet, Patch
 from .render_map import RenderMap, RenderMapEntry
+from .review import ReviewFeedback, ReviewFinding, ReviewChangeRequest
 
 __all__ = [
     "Config",
@@ -26,4 +27,7 @@ __all__ = [
     "Patch",
     "RenderMap",
     "RenderMapEntry",
+    "ReviewFeedback",
+    "ReviewFinding",
+    "ReviewChangeRequest",
 ]

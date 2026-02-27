@@ -6,6 +6,7 @@ from .env import load_dotenv
 from .factory import create_llm_client
 from .gemini_client import GeminiClient
 from .planner import PlannerError, PlanningStats, plan_deck_with_gemini, plan_deck_with_llm
+from .reviewer import ReviewStats, ReviewerError, review_rendered_deck_with_llm
 
 __all__ = [
     "create_llm_client",
@@ -20,4 +21,7 @@ __all__ = [
     "load_dotenv",
     "plan_deck_with_gemini",
     "plan_deck_with_llm",
+    "ReviewStats",
+    "ReviewerError",
+    "review_rendered_deck_with_llm",
 ]
