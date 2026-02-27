@@ -99,16 +99,21 @@ def _build_text_blocks(
 
 def _build_visual_blocks(slide: DeckSlide) -> List[CompositionVisualBlock]:
     blocks: List[CompositionVisualBlock] = []
+    archetype = _infer_archetype(slide.layout_id)
     for idx, asset in enumerate(slide.asset_refs):
-        role = _infer_visual_role(layout_id=slide.layout_id, visual_index=idx)
-        placement = _infer_placement_mode(asset_type=asset.asset_type, role=role)
+        role, placement, size_cap = _infer_visual_policy(
+            archetype=archetype,
+            layout_id=slide.layout_id,
+            asset_type=asset.asset_type,
+            visual_index=idx,
+        )
         blocks.append(
             CompositionVisualBlock(
                 target_field_key=asset.target_field_key or "ph_image",
                 asset_ref=asset,
                 role=role,
                 placement_mode=placement,
-                size_cap_pct=_infer_size_cap(role, placement),
+                size_cap_pct=size_cap,
             )
         )
     return blocks
@@ -180,38 +185,57 @@ def _infer_archetype(layout_id: str) -> str:
     return "content"
 
 
-def _infer_visual_role(*, layout_id: str, visual_index: int) -> VisualRole:
-    if visual_index == 0:
-        if "section_break" in layout_id or layout_id.startswith("title_"):
-            return "hero"
-        return "primary"
-    if visual_index == 1:
-        return "secondary"
-    return "accent"
+def _infer_visual_policy(
+    *,
+    archetype: str,
+    layout_id: str,
+    asset_type: str,
+    visual_index: int,
+) -> tuple[VisualRole, PlacementMode, float | None]:
+    is_image = asset_type == "image"
 
+    if archetype == "section_break":
+        if is_image and visual_index == 0:
+            return ("hero", "fill", None)
+        if is_image:
+            return ("secondary", "contain", 0.18)
+        if visual_index == 0:
+            return ("secondary", "centered_icon", 0.2)
+        return ("accent", "grid", 0.1)
 
-def _infer_placement_mode(*, asset_type: str, role: VisualRole) -> PlacementMode:
-    if asset_type == "icon":
-        if role == "hero":
-            return "contain"
-        if role == "accent":
-            return "grid"
-        return "centered_icon"
-    if role == "hero":
-        return "fill"
-    return "contain"
+    if archetype == "visual_story":
+        if is_image and visual_index == 0:
+            return ("primary", "contain", 0.32)
+        if is_image:
+            return ("secondary", "contain", 0.18)
+        if visual_index == 0:
+            return ("secondary", "centered_icon", 0.16)
+        return ("accent", "grid", 0.1)
 
+    if archetype == "comparison":
+        if is_image and visual_index == 0:
+            return ("primary", "contain", 0.2)
+        if is_image:
+            return ("secondary", "contain", 0.14)
+        if visual_index == 0:
+            return ("accent", "centered_icon", 0.12)
+        return ("accent", "grid", 0.08)
 
-def _infer_size_cap(role: VisualRole, placement_mode: PlacementMode) -> float | None:
-    if placement_mode == "fill":
-        return None
-    if role == "primary":
-        return 0.22
-    if role == "secondary":
-        return 0.16
-    if role == "accent":
-        return 0.1
-    return 0.28
+    if archetype == "closing":
+        if is_image and visual_index == 0:
+            return ("primary", "contain", 0.24)
+        if is_image:
+            return ("secondary", "contain", 0.14)
+        return ("accent", "centered_icon", 0.1)
+
+    # content/default
+    if is_image and visual_index == 0:
+        return ("primary", "contain", 0.2)
+    if is_image:
+        return ("secondary", "contain", 0.14)
+    if visual_index == 0 and "image" in layout_id:
+        return ("secondary", "centered_icon", 0.14)
+    return ("accent", "centered_icon", 0.1)
 
 
 def _extract_notes_additions(slide_before: DeckSlide, slide_after: DeckSlide) -> List[str]:

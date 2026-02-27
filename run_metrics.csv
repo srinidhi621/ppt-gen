@@ -8,3 +8,4 @@ timestamp_utc,run_id,planner_mode,provider,model,prompt_tokens,completion_tokens
 2026-02-26T18:32:06Z,visual_polish_hybrid,llm,azure_openai,gpt-5.2,6499,913,7412,0.02,2.00,11.626,12.215,/Users/Srinidhi/my_projects/ppt-gen/runs/visual_polish_hybrid/deck_v1.pptx
 2026-02-26T18:45:26Z,visual_polish_legacy_final,llm,azure_openai,gpt-5.2,9174,2151,11325,0.05,3.83,20.938,21.526,/Users/Srinidhi/my_projects/ppt-gen/runs/visual_polish_legacy_final/deck_v1.pptx
 2026-02-27T10:57:11Z,e2e_full_libreoffice_20260227,llm_auto_loop,azure_openai,gpt-5.2,68735,7392,76127,0.22,18.57,n/a,145.045,/Users/Srinidhi/my_projects/ppt-gen/runs/e2e_full_libreoffice_20260227/deck_v2.pptx
+2026-02-27T12:11:57Z,e2e_quality_gates_20260227,llm_auto_loop,azure_openai,gpt-5.2,74535,7456,81991,0.23,19.49,n/a,130.28,/Users/Srinidhi/my_projects/ppt-gen/runs/e2e_quality_gates_20260227/deck_v2.pptx

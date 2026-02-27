@@ -110,7 +110,7 @@ class TestCompositionSpecBuilder(unittest.TestCase):
 
         self.assertEqual(len(slide.visual_blocks), 1)
         visual = slide.visual_blocks[0]
-        self.assertEqual(visual.role, "primary")
+        self.assertEqual(visual.role, "accent")
         self.assertEqual(visual.placement_mode, "centered_icon")
 
 
