@@ -13,6 +13,7 @@ from src.validate.preflight import (
     _shorten_bullet,
     _truncate_text,
     validate_and_remediate,
+    validate_deck,
 )
 
 
@@ -209,6 +210,30 @@ class TestPreflightValidation(unittest.TestCase):
         # Should flag unknown layout as blocking
         blocking = [v for v in report.violations if v.severity == "BLOCKING"]
         self.assertGreater(len(blocking), 0)
+
+    def test_validate_deck_runs_post_remediation_check(self) -> None:
+        deck = DeckIR(
+            deck_id="test",
+            run_id="test_run",
+            template_id="template",
+            title="Title",
+            slides=[
+                DeckSlide(
+                    slide_id="s1",
+                    layout_id="one_content_light",
+                    fields={
+                        "ph_title": "Title",
+                        "ph_body": ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9"],
+                    },
+                )
+            ],
+        )
+        remediated, pre_report = validate_and_remediate(deck, self.catalog_path)
+        post_report = validate_deck(remediated, self.catalog_path)
+
+        self.assertGreater(len(pre_report.violations), 0)
+        blocking_post = [v for v in post_report.violations if v.severity == "BLOCKING"]
+        self.assertEqual(len(blocking_post), 0)
 
 
 if __name__ == "__main__":

@@ -9,6 +9,13 @@ from .critique import CritiqueReport, CritiqueFinding
 from .patch import PatchSet, Patch
 from .render_map import RenderMap, RenderMapEntry
 from .review import ReviewFeedback, ReviewFinding, ReviewChangeRequest
+from .composition import (
+    CompositionSpec,
+    CompositionSlide,
+    CompositionTextBlock,
+    CompositionVisualBlock,
+    CompositionFitDiagnostics,
+)
 
 __all__ = [
     "Config",
@@ -30,4 +37,9 @@ __all__ = [
     "ReviewFeedback",
     "ReviewFinding",
     "ReviewChangeRequest",
+    "CompositionSpec",
+    "CompositionSlide",
+    "CompositionTextBlock",
+    "CompositionVisualBlock",
+    "CompositionFitDiagnostics",
 ]

@@ -1,192 +1,111 @@
-# PPT-Gen: LLM-Assisted PowerPoint Generator
+# PPT-Gen: LLM-Assisted PPTX Generator
 
-A programmable system that generates **tasteful, on-brand, editable PPTX presentations** using an LLM for planning and `python-pptx` for deterministic rendering.
+PPT-Gen generates editable PowerPoint decks from combined content + visual cues using:
+- `python-pptx` for deterministic rendering
+- template-first layout binding via placeholder alt-text (`field_key`)
+- LLM planning and one-loop multimodal review/rework
+- hard preflight fit checks to prevent overflow
 
-## Overview
+## Current Status
 
-PPT-Gen takes:
-- A **corporate PowerPoint template** (theme + masters + curated layouts)
-- An **icon pack** (PNG format)
-- **Written content** (Markdown)
-- **Visualization cues** (structured hints)
+Implemented:
+- one-loop automated pipeline (`generate-auto`)
+- planner V1 -> render V1 -> diagnose + slide images -> multimodal review -> planner V2 -> render V2
+- deterministic composition artifacts (`composition_spec_v1.json`, `composition_spec_v2.json`)
+- V2 quality gates with hard fail mode
+- automated slide image conversion (`soffice` + `pdftoppm`)
 
-...and generates professional presentations by:
-1. Using an LLM for **planning** (slide outline, layout selection, concise bullets, icon selection)
-2. Using deterministic logic for **fit validation** (preventing text overflow)
-3. Using `python-pptx` as a **deterministic renderer**
-4. Optionally iterating via a **vision-based critique loop** for quality refinement
+Known gap:
+- composition polish is still below target quality for consulting-style decks.
+- visual coverage is now enforced, but visual storytelling quality still needs stronger per-slide composition logic.
 
-## Key Features
+## Architecture (Implemented)
 
-- **Template-first rendering**: Preserves corporate theme, fonts, colors, and master slide formatting
-- **Placeholder binding via Alt-Text**: Deterministic mapping of content to template placeholders
-- **Preflight validation**: Prevents text overflow before rendering (no "auto-fit" assumptions)
-- **Pressure valve mechanism**: Excess content moves to speaker notes rather than shrinking text
-- **Vision critique loop**: Optional LLM-powered review to catch visual issues
+Pipeline:
+1. Normalize combined markdown into `content.md` + `cues.json`
+2. Planner V1 (LLM) -> `planner_deckir_v1.json`
+3. Deterministic compose/validate/render V1
+4. Diagnose V1 + slide image export
+5. Multimodal review (LLM) -> `review_feedback_v1.json`
+6. Planner rework V2 (LLM) -> `planner_deckir_v2.json`
+7. Deterministic compose/validate/render V2
+8. Diagnose V2 + quality gates -> stop
 
-## Project Status
-
-| Phase | Task | Status |
-|-------|------|--------|
-| 0.1 | Template selection | ✅ Done |
-| 0.2 | SVG → PNG icon conversion | ✅ Done |
-| 0.3 | Directory structure | ✅ Done |
-| 0.4 | Template analysis | ✅ Done |
-| 0.5 | Alt-Text placeholder tagging | ✅ Done |
-| 0.6 | Layout catalog generation | ✅ Done |
-| 1.x | MVP Pipeline | ✅ Done |
-| 2.x | LLM Planning + Review Loop | ⏳ Pending |
-
-## Repository Structure
-
-```
-ppt-gen/
-├── SPEC.md                    # Contract specification
-├── PLAN.md                    # Implementation plan
-├── AGENTS.md                  # Agent operating guide
-│
-├── assets/
-│   ├── template/
-│   │   └── template.pptx      # Corporate template (118 layouts, 387 placeholders)
-│   ├── icons/
-│   │   ├── icons.json         # Icon metadata (213 icons)
-│   │   └── png/               # 512x512 PNG icons
-│   └── layout/
-│       └── layout_catalog.json  # Layout definitions (12 MVP layouts)
-│
-├── src/                       # Source code
-│   ├── cli.py                 # CLI entry point (validate, render, smoke)
-│   ├── config.py              # Configuration loader
-│   ├── logging_utils.py       # Structured JSONL logging
-│   ├── models/                # Pydantic data models
-│   ├── normalize/             # Markdown → ContentModel parser
-│   ├── validate/              # Template drift + preflight validation
-│   └── render/                # DeckIR → PPTX renderer
-│
-├── tests/                     # Test suite (50 tests)
-│
-├── scripts/
-│   ├── inspect_template.py    # Template analysis tool
-│   ├── convert_svg_to_png.py  # SVG to PNG converter
-│   └── add_alt_text.py        # Automated alt-text assignment
-│
-├── inputs/                    # Runtime inputs
-│   ├── content.md
-│   ├── cues.json
-│   └── sample_deckir.json     # Sample DeckIR for smoke tests
-│
-└── runs/<run_id>/             # Output artifacts
-```
-
-## Quick Start
-
-### Prerequisites
+## Requirements
 
 - Python 3.10+
-- PowerPoint (for manual review/export)
+- Virtualenv `.venv`
+- LLM credentials in `.env` (Azure OpenAI or Gemini)
+- System binaries for automated review images:
+  - LibreOffice (`soffice`)
+  - Poppler (`pdftoppm`)
 
-### Setup
+## Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/srinidhi621/ppt-gen.git
-cd ppt-gen
-
-# Create virtual environment
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-
-# Install dependencies
-pip install python-pptx
+pip install -r requirements.txt
 ```
 
-### CLI Commands
+macOS binaries:
 
-**Validate template against layout catalog:**
+```bash
+brew install --cask libreoffice
+brew install poppler
+```
+
+## CLI
+
+Validate template/catalog:
+
 ```bash
 python -m src.cli validate
 ```
 
-**Render a DeckIR JSON to PPTX:**
+Render DeckIR:
+
 ```bash
 python -m src.cli render --deckir inputs/sample_deckir.json
 ```
 
-**Run smoke test (validate → preflight → render):**
+Smoke test:
+
 ```bash
 python -m src.cli smoke --deckir inputs/sample_deckir.json
 ```
 
-**Generate from one combined markdown file (split → plan → validate → render):**
+Single-pass generation:
+
 ```bash
-python -m src.cli generate --input inputs/combined_input.md --run-id my_test_run
-```
-Optional: also copy split files into `inputs/`:
-```bash
-python -m src.cli generate --input inputs/combined_input.md --write-inputs
+python -m src.cli generate --input inputs/legacy-system-navigator.combined.md --run-id run_single
 ```
 
-**Run tests:**
+Full automated one-loop run:
+
 ```bash
-python -m pytest tests/ -v
+source .venv/bin/activate
+set -a && source .env && set +a
+python -m src.cli generate-auto \
+  --input inputs/legacy-system-navigator.combined.md \
+  --run-id run_auto
 ```
 
-### Utility Scripts
+## Run Artifacts
 
-**Analyze template:**
-```bash
-python scripts/inspect_template.py assets/template/template.pptx
-```
-
-**Add alt-text to placeholders (if needed):**
-```bash
-python scripts/add_alt_text.py              # Apply to all layouts
-python scripts/add_alt_text.py --dry-run    # Preview without changes
-python scripts/add_alt_text.py --mvp-only   # Only MVP layouts
-```
-
-## Architecture
-
-### Pipeline Layers
-
-1. **Layer 0: Config** - Load template paths, model config, defaults
-2. **Layer 1: Normalize** - Parse Markdown into ContentModel
-3. **Layer 2: Plan** - LLM generates DeckIR (intermediate representation)
-4. **Layer 3: Validate** - Preflight fit checks + remediation
-5. **Layer 4: Render** - python-pptx generates PPTX
-6. **Layer 5: Review** - Manual slide image export
-7. **Layer 6: Critique** - Vision model produces CritiqueReport
-8. **Layer 7: Patch** - Apply fixes and re-render
-
-### Field Key Convention
-
-Placeholders are bound via alt-text with canonical `field_key` values:
-
-| Placeholder Type | Single | Multiple |
-|-----------------|--------|----------|
-| Title | `ph_title` | — |
-| Subtitle | `ph_subtitle` | — |
-| Body/Content | `ph_body` | `ph_body_left`, `ph_body_right` or `ph_col1`, `ph_col2`, ... |
-| Image | `ph_image` | `ph_image_left`, `ph_image_right` or `ph_image_1`, `ph_image_2`, ... |
+Each run writes to `runs/<run_id>/`, including:
+- planner artifacts (`planner_deckir_v1.json`, `planner_deckir_v2.json`)
+- remediated decks (`deckir_v1_1.json`, `deckir_v2_1.json`)
+- PPTX outputs (`deck_v1.pptx`, `deck_v2.pptx`)
+- diagnose outputs (`diagnose_report_v1.json`, `diagnose_report_v2.json`)
+- composition specs (`composition_spec_v1.json`, `composition_spec_v2.json`)
+- quality gate report (`quality_gates_v2.json`)
+- run summary (`run_summary.json`)
+- structured logs (`run_log.jsonl`)
 
 ## Documentation
 
-- [SPEC.md](SPEC.md) - Full technical specification and data contracts
-- [PLAN.md](PLAN.md) - Implementation plan with task tracking
-- [AGENTS.md](AGENTS.md) - Operating guide for AI coding agents
+- [SPEC.md](SPEC.md): contracts and architecture
+- [PLAN.md](PLAN.md): execution plan and next priorities
+- [AGENTS.md](AGENTS.md): operating guide for coding agents
 
-## Design Principles
-
-1. **No auto-layout assumptions**: python-pptx doesn't auto-fit text, so we validate before rendering
-2. **Template fidelity**: Rely on PowerPoint template styling, avoid manual font/color overrides
-3. **Deterministic rendering**: Same DeckIR + template = same output
-4. **Graceful degradation**: Overflow goes to speaker notes, not tiny unreadable text
-5. **Fail fast**: Validate template/catalog match at startup
-
-## License
-
-Private project - All rights reserved.
-
-## Author
-
-Srinidhi (srinidhi621@gmail.com)

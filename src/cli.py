@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from .config import load_config
+from .compose import build_composition_spec
 from .generate_pipeline import (
     CombinedInputError,
     build_deckir_from_content,
@@ -30,10 +31,11 @@ from .llm import (
 )
 from .models.deck_ir import DeckIR
 from .normalize.parser import parse_markdown
+from .quality import evaluate_v2_quality_gates, summarize_composition_spec
 from .render.renderer import Renderer
 from .review import ReviewAutomationError, collect_review_images, export_slides_to_images
 from .validate.drift import validate_template_catalog
-from .validate.preflight import validate_and_remediate
+from .validate.preflight import validate_and_remediate, validate_deck
 
 
 def _generate_run_id() -> str:
@@ -150,22 +152,6 @@ def _write_json(path: Path, payload: Any) -> None:
 
 def _to_payload(deck: DeckIR) -> Dict[str, Any]:
     return json.loads(deck.to_json())
-
-
-def _build_composition_snapshot(deck: DeckIR, stage: str) -> Dict[str, Any]:
-    return {
-        "version": "0.1",
-        "stage": stage,
-        "slides": [
-            {
-                "slide_id": slide.slide_id,
-                "layout_id": slide.layout_id,
-                "field_keys": sorted(slide.fields.keys()),
-                "asset_refs": [ref.to_dict() for ref in slide.asset_refs],
-            }
-            for slide in deck.slides
-        ],
-    }
 
 
 def _build_capability_manifest(config, cues_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -741,9 +727,20 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
     deck_v1_1, validation_v1 = validate_and_remediate(
         planner_deck_v1, Path(config.layout_catalog_path)
     )
+    validation_v1_post = validate_deck(deck_v1_1, Path(config.layout_catalog_path))
     _write_json(run_dir / "deckir_v1_1.json", _to_payload(deck_v1_1))
     _write_json(run_dir / "validation_report_v1.json", json.loads(validation_v1.to_json()))
-    composition_spec_v1 = _build_composition_snapshot(deck_v1_1, "v1")
+    _write_json(
+        run_dir / "validation_report_v1_post.json",
+        json.loads(validation_v1_post.to_json()),
+    )
+    composition_spec_v1 = build_composition_spec(
+        deck_before=planner_deck_v1,
+        deck_after=deck_v1_1,
+        before_report=validation_v1,
+        after_report=validation_v1_post,
+        stage="v1",
+    ).to_dict()
     _write_json(run_dir / "composition_spec_v1.json", composition_spec_v1)
     log_event(
         log_path,
@@ -815,6 +812,15 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
         "DIAGNOSE_V1_DONE",
         diagnose_report_v1.get("summary", {}),
     )
+    v1_gate = {
+        "status": "PASS",
+        "checks": {
+            "v1_render_present": output_v1.exists(),
+            "review_images_complete": len(image_paths) == len(render_map_v1.entries),
+            "diagnose_report_present": diagnose_report_v1_path.exists(),
+        },
+    }
+    log_event(log_path, "QUALITY_GATES_V1", v1_gate)
 
     # Multimodal review call
     review_model = args.review_model or planner_model
@@ -917,9 +923,20 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
     deck_v2_1, validation_v2 = validate_and_remediate(
         planner_deck_v2, Path(config.layout_catalog_path)
     )
+    validation_v2_post = validate_deck(deck_v2_1, Path(config.layout_catalog_path))
     _write_json(run_dir / "deckir_v2_1.json", _to_payload(deck_v2_1))
     _write_json(run_dir / "validation_report_v2.json", json.loads(validation_v2.to_json()))
-    composition_spec_v2 = _build_composition_snapshot(deck_v2_1, "v2")
+    _write_json(
+        run_dir / "validation_report_v2_post.json",
+        json.loads(validation_v2_post.to_json()),
+    )
+    composition_spec_v2 = build_composition_spec(
+        deck_before=planner_deck_v2,
+        deck_after=deck_v2_1,
+        before_report=validation_v2,
+        after_report=validation_v2_post,
+        stage="v2",
+    ).to_dict()
     _write_json(run_dir / "composition_spec_v2.json", composition_spec_v2)
     log_event(
         log_path,
@@ -958,12 +975,32 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
         diagnose_report_v2.get("summary", {}),
     )
 
+    quality_gates_v2 = evaluate_v2_quality_gates(
+        deck_v2=deck_v2_1,
+        validation_v2_post=validation_v2_post,
+        diagnose_report_v2=diagnose_report_v2,
+        composition_spec_v2=composition_spec_v2,
+        image_capable_layouts=capability_manifest.get("image_capable_layouts", []),
+        run_log_path=log_path,
+    )
+    _write_json(run_dir / "quality_gates_v2.json", quality_gates_v2)
+    log_event(log_path, "QUALITY_GATES_V2", quality_gates_v2)
+
     summary_v1 = diagnose_report_v1.get("summary", {})
     summary_v2 = diagnose_report_v2.get("summary", {})
+    composition_metrics_v1 = summarize_composition_spec(composition_spec_v1)
+    composition_metrics_v2 = summarize_composition_spec(composition_spec_v2)
     run_summary = {
         "run_id": run_id,
-        "v1": summary_v1,
-        "v2": summary_v2,
+        "quality_gates_v2": quality_gates_v2,
+        "v1": {
+            "diagnose": summary_v1,
+            "composition": composition_metrics_v1,
+        },
+        "v2": {
+            "diagnose": summary_v2,
+            "composition": composition_metrics_v2,
+        },
         "delta": {
             "overflow_slides": int(summary_v2.get("slides_with_text_overflow", 0))
             - int(summary_v1.get("slides_with_text_overflow", 0)),
@@ -971,16 +1008,34 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
             - int(summary_v1.get("total_image_gap", 0)),
             "total_images_rendered": int(summary_v2.get("total_images_rendered", 0))
             - int(summary_v1.get("total_images_rendered", 0)),
+            "slides_with_visuals": int(composition_metrics_v2.get("slides_with_visuals", 0))
+            - int(composition_metrics_v1.get("slides_with_visuals", 0)),
+            "total_visual_blocks": int(composition_metrics_v2.get("total_visual_blocks", 0))
+            - int(composition_metrics_v1.get("total_visual_blocks", 0)),
+            "hero_icon_count": int(composition_metrics_v2.get("hero_icon_count", 0))
+            - int(composition_metrics_v1.get("hero_icon_count", 0)),
         },
     }
     _write_json(run_dir / "run_summary.json", run_summary)
-    log_event(log_path, "RUN_COMPLETE", run_summary)
+
+    quality_ok = quality_gates_v2.get("status") == "PASS"
+    if quality_ok:
+        log_event(log_path, "RUN_COMPLETE", run_summary)
+    else:
+        log_event(
+            log_path,
+            "RUN_FAILED_QUALITY_GATES",
+            {
+                "issues_count": len(quality_gates_v2.get("issues", [])),
+                "run_summary_path": str(run_dir / "run_summary.json"),
+            },
+        )
 
     total_latency_seconds = round(time.perf_counter() - total_start, 3)
     metrics_path = _append_run_metrics(
         project_root=project_root,
         run_id=run_id,
-        planner_mode="llm_auto_loop",
+        planner_mode="llm_auto_loop" if quality_ok else "llm_auto_loop_failed_gate",
         provider=plan_stats_v2.provider,
         model=plan_stats_v2.model,
         prompt_tokens=(
@@ -1010,6 +1065,19 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
         output_pptx=output_v2,
     )
 
+    if not quality_ok:
+        issues = quality_gates_v2.get("issues", [])
+        print("ERROR: Automated one-loop pipeline failed V2 quality gates.")
+        print(f"  Run ID: {run_id}")
+        print(f"  V2 PPTX: {output_v2}")
+        print(f"  Quality gate report: {run_dir / 'quality_gates_v2.json'}")
+        print(f"  Issues: {len(issues)}")
+        for idx, issue in enumerate(issues[:5], start=1):
+            print(f"    {idx}. [{issue.get('gate')}] {issue.get('message')}")
+        print(f"  Run summary: {run_dir / 'run_summary.json'}")
+        print(f"  Run metrics file: {metrics_path}")
+        return 1
+
     print("Automated one-loop pipeline complete.")
     print(f"  Run ID: {run_id}")
     print(f"  Input: {combined_input_path}")
@@ -1022,6 +1090,11 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
         f"  Overflow slides V1->V2: "
         f"{summary_v1.get('slides_with_text_overflow', 'n/a')} -> "
         f"{summary_v2.get('slides_with_text_overflow', 'n/a')}"
+    )
+    print(
+        f"  Slides with visuals V1->V2: "
+        f"{composition_metrics_v1.get('slides_with_visuals', 'n/a')} -> "
+        f"{composition_metrics_v2.get('slides_with_visuals', 'n/a')}"
     )
     print(f"  Run metrics file: {metrics_path}")
     return 0
