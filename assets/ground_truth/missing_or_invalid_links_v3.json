@@ -1,0 +1,89 @@
+{
+  "schema": "ground_truth_missing_or_invalid_links_v3",
+  "version": "1.0.0",
+  "generated_at_utc": "2026-03-03T16:10:13+00:00",
+  "source_reports": [
+    "assets/ground_truth/external_download_report_v2.json",
+    "assets/ground_truth/external_download_report_v3.json"
+  ],
+  "total_issues": 7,
+  "tasks": [
+    {
+      "batch": "external_links3",
+      "index": 1,
+      "title": "AI Strategy and Roadmap \u2013 Presentation Template (Read-Only)",
+      "url": "https://sieber-partners.squarespace.com/s/06-AI-Strategy-and-Roadmap-Presentation-Template-Read-Only.pdf",
+      "category_hint": "opportunity_assessment",
+      "issue_type": "download_failed",
+      "error_or_status": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "recommended_action": "replace_with_direct_file_url_or_alternate_source",
+      "priority": "high"
+    },
+    {
+      "batch": "external_links3",
+      "index": 2,
+      "title": "Portfolio Management (Georgia Technology Summit 2016) \u2013 Prioritization, benefits, ROI criteria",
+      "url": "https://gta.georgia.gov/sites/gta.georgia.gov/files/event_docs/technology_summit_2016/Portfolio%20Management%20George%20Starr%20.pptx",
+      "category_hint": "opportunity_assessment",
+      "issue_type": "download_failed",
+      "error_or_status": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "recommended_action": "replace_with_direct_file_url_or_alternate_source",
+      "priority": "high"
+    },
+    {
+      "batch": "external_links3",
+      "index": 3,
+      "title": "Florida PALM \u2013 Executive Steering Committee Meeting Presentation (01/27/2021)",
+      "url": "https://myfloridacfo.com/docs-sf/florida-palm-libraries/governance/fy-20-21/presentation-for-january-27-2021-executive-steering-committee-meeting.pdf?sfvrsn=a9193070_8",
+      "category_hint": "executive_steering_update",
+      "issue_type": "download_failed",
+      "error_or_status": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "recommended_action": "replace_with_direct_file_url_or_alternate_source",
+      "priority": "high"
+    },
+    {
+      "batch": "external_links3",
+      "index": 4,
+      "title": "CalACES Project Steering Committee Master Deck (04/18/2019) \u2013 Steering pack baseline (PPTX)",
+      "url": "https://www.calsaws.org/wp-content/uploads/2019/07/18-1-CalACES-PSC-Master-Deck-04-18-19_FINAL.pptx",
+      "category_hint": "executive_steering_update",
+      "issue_type": "download_failed",
+      "error_or_status": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "recommended_action": "replace_with_direct_file_url_or_alternate_source",
+      "priority": "high"
+    },
+    {
+      "batch": "external_links3",
+      "index": 5,
+      "title": "BCG \u2013 How to Create a Transformation That Lasts (layout PDF)",
+      "url": "https://web-assets.bcg.com/39/56/e1ab30d14aa9b81ae250551144a3/how-to-create-a-transformation-that-lasts-layout-jan-2024.pdf",
+      "category_hint": "business_case_roi",
+      "issue_type": "download_failed",
+      "error_or_status": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "recommended_action": "replace_with_direct_file_url_or_alternate_source",
+      "priority": "high"
+    },
+    {
+      "batch": "external_links3",
+      "index": 6,
+      "title": "Smartsheet \u2013 HR Business Case Template (PowerPoint)",
+      "url": "https://www.smartsheet.com/sites/default/files/2025-09/IC-HR-Business-Case-Template_Powerpoint.pptx?srsltid=AfmBOornu6QipfFTSLdbC3yz85sgoqPBzLWTe9Dn5MROh3mca3GKWbWv",
+      "category_hint": "business_case_roi",
+      "issue_type": "download_failed",
+      "error_or_status": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "recommended_action": "replace_with_direct_file_url_or_alternate_source",
+      "priority": "high"
+    },
+    {
+      "batch": "external_links2",
+      "index": 2,
+      "title": "The State of AI in 2025: Agents, innovation, and transformation",
+      "url": "https://www.mckinsey.com/~/media/mckinsey/business%20functions/quantumblack/our%20insights/the%20state%20of%20ai/november%202025/the-state-of-ai-2025-agents-innovation_cmyk-v1.pdf",
+      "category_hint": "ai_strategy",
+      "issue_type": "download_failed",
+      "error_or_status": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "recommended_action": "replace_with_direct_file_url_or_alternate_source",
+      "priority": "high"
+    }
+  ]
+}

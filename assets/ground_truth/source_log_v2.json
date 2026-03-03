@@ -1,7 +1,7 @@
 {
   "schema": "ground_truth_source_log_v2",
   "version": "1.0.0",
-  "generated_at_utc": "2026-03-03T15:56:52+00:00",
+  "generated_at_utc": "2026-03-03T16:10:13+00:00",
   "generated_from": "assets/ground_truth/external_links2.json",
   "normalized_file": "assets/ground_truth/external_links2_normalized.json",
   "sources": [
@@ -580,6 +580,26 @@
       "ingest_status": "candidate",
       "shortlist_candidate": false,
       "source_file": "assets/ground_truth/external_links2.json"
+    },
+    {
+      "source_id": "ext2_retry_002",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "The State of AI in 2025: Agents, innovation, and transformation",
+      "url": "https://www.mckinsey.com/~/media/mckinsey/business%20functions/quantumblack/our%20insights/the%20state%20of%20ai/november%202025/the-state-of-ai-2025-agents-innovation_cmyk-v1.pdf",
+      "publisher": null,
+      "year": null,
+      "format": "pdf",
+      "categories": [
+        "ai_strategy"
+      ],
+      "average_quality": null,
+      "usage_rights": "reference_only",
+      "confidentiality_class": "public",
+      "ingest_status": "failed",
+      "shortlist_candidate": true,
+      "source_file": "assets/ground_truth/external_links2_normalized.json",
+      "notes": "Added during batch-2 timeout retry reconciliation from external_download_report_v2 index 2."
     }
   ]
 }

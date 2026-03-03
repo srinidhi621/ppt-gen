@@ -1,7 +1,7 @@
 {
   "schema": "ground_truth_external_download_report_v2",
   "version": "1.0.0",
-  "generated_at_utc": "2026-03-03T16:00:19+00:00",
+  "generated_at_utc": "2026-03-03T16:10:13+00:00",
   "source_file": "assets/ground_truth/external_links2_normalized.json",
   "target_dir": "assets/ground_truth/external_inbox",
   "total_shortlist": 11,
@@ -31,7 +31,7 @@
       "url": "https://www.mckinsey.com/~/media/mckinsey/business%20functions/quantumblack/our%20insights/the%20state%20of%20ai/november%202025/the-state-of-ai-2025-agents-innovation_cmyk-v1.pdf",
       "category_hint": "ai_strategy",
       "status": "failed",
-      "error": "The read operation timed out"
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
     },
     {
       "batch": "external_links2",

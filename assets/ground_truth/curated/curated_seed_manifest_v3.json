@@ -1,0 +1,8 @@
+{
+  "schema": "ground_truth_curated_seed_manifest_v3",
+  "version": "1.0.0",
+  "generated_at_utc": "2026-03-03T16:10:13+00:00",
+  "source_report": "assets/ground_truth/external_download_report_v3.json",
+  "curated_count": 0,
+  "entries": []
+}
