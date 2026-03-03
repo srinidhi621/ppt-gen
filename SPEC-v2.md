@@ -262,6 +262,125 @@ Loop policy remains one review loop maximum.
 
 ---
 
+## 4.1 Deck Blueprint Library Contract (New)
+
+The system must support blueprint-guided planning for common AI consulting deck types.  
+Blueprints define expected narrative structure and required slide roles before layout selection.
+
+Required blueprint IDs:
+1. `proposal_rfp`
+2. `solution_approach`
+3. `case_study`
+4. `gtm_offering`
+5. `ai_strategy`
+6. `opportunity_assessment`
+7. `business_case_roi`
+8. `responsible_ai_governance`
+9. `data_ai_platform_blueprint`
+10. `executive_steering_update`
+
+Minimum blueprint contract per type:
+- `blueprint_id`
+- `required_sections[]`
+- `optional_sections[]`
+- `target_slide_range`
+- `required_archetypes[]`
+- `required_evidence_types[]`
+
+Canonical section expectations:
+- `proposal_rfp`: executive summary, client context/problem, proposed solution, delivery plan, team/governance, risks/assumptions, commercials, proof points, next steps.
+- `solution_approach`: objectives/scope, current state, design principles, target-state architecture, prioritized use cases, phased implementation, dependencies/risks, success metrics.
+- `case_study`: client context, challenge, intervention, implementation highlights, measurable outcomes, lessons learned, repeatable pattern.
+- `gtm_offering`: market opportunity, ICP, value proposition, offer/package, pricing model, channel and sales motion, launch plan, pipeline KPIs.
+- `ai_strategy`: ambition and value thesis, value pools, use-case portfolio, operating model, data/platform foundation, governance/risk, talent/change, roadmap, investment case.
+
+---
+
+## 4.2 Reusable Slide Archetype Library Contract (New)
+
+A shared archetype library must be used across all blueprint types to avoid one-off slide logic.
+
+Minimum archetype set:
+- `title_section_break`
+- `executive_summary`
+- `problem_statement`
+- `current_vs_target_state`
+- `use_case_prioritization_matrix`
+- `capability_heatmap`
+- `architecture_diagram`
+- `process_flow`
+- `roadmap_workplan`
+- `governance_raci`
+- `risk_issue_matrix`
+- `kpi_dashboard`
+- `value_waterfall_roi`
+- `team_roles`
+- `pricing_options`
+- `case_study_problem_solution_impact`
+- `decision_next_steps`
+
+Archetype contract:
+- `archetype_id`
+- `intent_tags[]`
+- `content_schema`
+- `visual_schema`
+- `layout_affinity[]`
+- `quality_checks[]`
+
+---
+
+## 4.3 Ground-Truth Corpus Contract (New)
+
+Ground truth is a curated, annotated reference corpus used as the north star for both planning and quality gates.
+
+Required artifacts:
+- `assets/ground_truth/deck_blueprints_v1.json`
+- `assets/ground_truth/slide_archetypes_v1.json`
+- `assets/ground_truth/quality_rubric_v1.json`
+- `assets/ground_truth/ground_truth_manifest_v1.json`
+- `assets/ground_truth/annotations/*.json`
+- `assets/ground_truth/reference_slides/*.png` (and source metadata)
+
+Annotation requirements per reference slide:
+- `blueprint_id`
+- `archetype_id`
+- `story_role` (opening/problem/analysis/recommendation/close)
+- `content_structure` (headline, evidence blocks, takeaway line)
+- `visual_structure` (chart/diagram/image/table/icon mix)
+- `hierarchy_signals` (typography contrast, focal order)
+- `density_metrics` (text load, whitespace ratio, visual coverage)
+- `quality_scores` (1-5) across rubric dimensions
+
+Rubric dimensions (minimum):
+1. Message clarity
+2. Narrative role fit
+3. Evidence quality and specificity
+4. Visual hierarchy and scanability
+5. Layout balance and spacing discipline
+6. Visual relevance and non-repetition
+
+Only slides with average score `>= 4.0/5.0` can be included as north-star references.
+
+---
+
+## 4.4 First-Slide Validation Protocol (New)
+
+No broad feature expansion is allowed until one archetype can pass ground-truth validation end-to-end.
+
+Pilot protocol:
+1. Select one blueprint + one archetype pair (initial recommendation: `proposal_rfp` + `executive_summary`).
+2. Generate a single-slide output via full deterministic pipeline.
+3. Validate against:
+- archetype structural checks;
+- rubric score thresholds;
+- existing hard safety gates (overflow/markdown/style constraints).
+4. Persist a comparison artifact:
+- `runs/<run_id>/ground_truth_eval_v1.json`
+
+This gate is required before implementing additional archetypes/components.
+
+---
+
 ## 5) DeckIR v2 Contract
 
 ## 5.1 Schema Versioning
@@ -366,6 +485,10 @@ Components may use only tokenized style values; no arbitrary local styling.
 - `assets/catalog/planner_policy_v1.json`
 - `assets/catalog/template_style_baselines_v1.json`
 - `assets/benchmarks/benchmark_manifest_v1.json`
+- `assets/ground_truth/deck_blueprints_v1.json`
+- `assets/ground_truth/slide_archetypes_v1.json`
+- `assets/ground_truth/quality_rubric_v1.json`
+- `assets/ground_truth/ground_truth_manifest_v1.json`
 
 ## 8.2 Selection Rules
 - Intent-first matching (`diagram_map`, `icon_cluster`, `hero_image`, etc.)
@@ -396,6 +519,8 @@ New gates:
 - `asset_diversity`
 - `mixed_mode_style_consistency`
 - `component_payload_limits_respected`
+- `ground_truth_archetype_alignment`
+- `ground_truth_quality_floor`
 
 Any blocking gate failure marks run as failed quality.
 
@@ -420,6 +545,11 @@ Any blocking gate failure marks run as failed quality.
 ## 10.4 Schema Compatibility Tests
 - Golden IR fixtures for `2.0.x`
 - Reader behavior for older compatible minor versions
+
+## 10.5 Ground-Truth Evaluation Tests
+- Annotation schema validation tests
+- Rubric scorer determinism tests
+- Archetype alignment tests for pilot slide generation
 
 ---
 
@@ -471,38 +601,44 @@ When a component fails render:
 
 ## 14) Execution Plan and Timeline (Revised)
 
-A 10-week timeline is optimistic for AI-agent-only implementation if polished components are in scope. Revised baseline: **12–14 weeks**.
+A 10-week timeline is optimistic for AI-agent-only implementation if polished components are in scope.  
+Revised baseline with ground-truth buildout: **13–15 weeks**.
 
-## Phase 0 (Week 1)
+## Phase G (Week 1)
+- Ground-truth acquisition and curation kickoff (internal + external references)
+- Blueprint/archetype/rubric schema finalization
+- Exit: approved `ground_truth_manifest_v1.json` and pilot archetype selection
+
+## Phase 0 (Week 2)
 - DeckIR v2 schema + versioning
 - Theme extraction + token map
 - Exit: schema fixtures and extractor tests green
 
-## Phase 1 (Weeks 2–3)
+## Phase 1 (Weeks 3–4)
 - Bounded layout solver + exhaustive unit tests
 - Exit: all solver invariants pass
 
-## Phase 2 (Weeks 4–6)
+## Phase 2 (Weeks 5–7)
 - MVP component library implementation
 - Component payload validators + caps/remediation
 - Exit: handcrafted benchmark decks meet non-overlap + overflow constraints
 
-## Phase 3 (Weeks 7–8)
+## Phase 3 (Weeks 8–9)
 - Two-pass planner integration with selected LLM backend (API or self-hosted)
 - Deterministic routing checks and retry handling
 - Exit: mixed `template_native/composed` decks generated reliably
 
-## Phase 4 (Weeks 9–10)
+## Phase 4 (Weeks 10–11)
 - Review loop tuning + expanded quality gates
 - Visual regression heuristics + benchmark run suite
 - Exit: V2 wins on benchmark KPIs vs V1
 
-## Phase 5 (Weeks 11–12)
+## Phase 5 (Weeks 12–13)
 - FastAPI endpoints + async workers + preview cache
 - Slide-edit rerender workflow
 - Exit: end-to-end web flow operational at target p50 latencies
 
-## Buffer (Weeks 13–14)
+## Buffer (Weeks 14–15)
 - performance hardening, bug backlog, polish pass
 
 ---
@@ -516,7 +652,8 @@ V2 is accepted when all are true:
 4. Asset diversity gates pass consistently across benchmark runs.
 5. Mixed-mode deck style consistency gate passes.
 6. Template swap changes deck branding without code changes.
-7. End-to-end pipeline artifacts/logging contracts remain intact.
+7. Ground-truth quality-floor gates pass for pilot archetypes.
+8. End-to-end pipeline artifacts/logging contracts remain intact.
 
 ---
 
