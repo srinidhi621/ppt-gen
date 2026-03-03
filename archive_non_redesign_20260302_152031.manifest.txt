@@ -1,0 +1,13 @@
+# Archived on Mon Mar  2 15:20:31 IST 2026
+# Repo: /Users/Srinidhi/my_projects/ppt-gen
+# Paths:
+runs
+.venv
+.pytest_cache
+.claude
+.DS_Store
+CLAUDE.md
+SPEC.md
+diagram-MCP-spec.md
+lessons_learned.md
+run_metrics.csv

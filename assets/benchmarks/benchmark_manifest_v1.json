@@ -1,0 +1,25 @@
+{
+  "schema": "benchmark_manifest_v1",
+  "version": "1.0.0",
+  "decks": [
+    {
+      "benchmark_id": "legacy_navigator",
+      "input_path": "inputs/legacy-system-navigator.combined.md",
+      "category": "technical_story",
+      "target_slide_range": [12, 18]
+    },
+    {
+      "benchmark_id": "content_default",
+      "input_path": "inputs/content.md",
+      "category": "general_business",
+      "target_slide_range": [8, 14]
+    }
+  ],
+  "kpi_targets": {
+    "blocking_overflow": 0,
+    "min_visual_density": 0.6,
+    "min_unique_visual_assets_per_10_slides": 6,
+    "max_single_image_reuse": 2,
+    "min_layout_variety": 3
+  }
+}

@@ -4,6 +4,34 @@
 
 Move from "mechanically valid decks" to "consulting-grade visual storytelling" while keeping the current deterministic one-loop architecture.
 
+## 0.1) Progress Snapshot (`2026-03-02`)
+
+Completed in this branch:
+1. Added optional metadata loaders in `src/assets.py`:
+- `load_component_catalog`
+- `load_planner_policy`
+2. Wired planner prompt to metadata + policy in `src/llm/planner.py`:
+- component metadata section
+- visual planning policy section
+- policy-driven diversity/routing targets in prompt rules
+3. Added new planning/support catalogs:
+- `assets/catalog/component_catalog_v1.json`
+- `assets/catalog/component_examples_v1.json`
+- `assets/catalog/planner_policy_v1.json`
+- `assets/catalog/template_style_baselines_v1.json`
+4. Added benchmark seed manifest:
+- `assets/benchmarks/benchmark_manifest_v1.json`
+5. Added regression tests for metadata and planner prompt wiring:
+- `tests/test_assets_metadata.py`
+- `tests/test_planner_prompt_metadata.py`
+6. Added DeckIR v2 fixture scaffold:
+- `tests/fixtures/deckir_v2/README.md`
+
+In progress / not yet complete:
+1. Diversity constraints are currently prompt-guided; deterministic post-plan enforcement is still pending.
+2. KPI expansion is not yet fully emitted into `quality_gates_v2.json` and `run_summary.json`.
+3. Component metadata is not yet used by renderer/composer runtime logic.
+
 ## 1) Current Diagnosis
 
 Working:
@@ -118,10 +146,11 @@ Exit criteria:
 
 ## 3) Immediate Next Implementation Slice
 
-1. Implement Phase A cue-intent model.
-2. Implement Phase B diversity constraints and scoring penalties.
-3. Add KPI fields to `quality_gates_v2.json` and `run_summary.json`.
-4. Re-run benchmark deck and inspect deltas.
+1. Add deterministic post-planner diversity checks (reuse caps, adjacent icon-concept reuse, min unique assets).
+2. Persist benchmark/KPI outputs into `quality_gates_v2.json` and `run_summary.json`.
+3. Start deterministic cue-intent tagging in composition artifacts for traceability.
+4. Add initial DeckIR v2 JSON fixtures (minimal, mixed-mode, overflow-case) and schema-compatibility tests.
+5. Re-run benchmark manifest decks and compare V1/V2 deltas.
 
 ## 4) Definition of Done (Quality Recovery)
 
@@ -130,4 +159,3 @@ Done when:
 2. Visual intent is explicit and traceable per slide.
 3. Asset selection is diverse and context-appropriate.
 4. V2 materially improves story clarity and visual polish over V1 on benchmark runs.
-

@@ -6,11 +6,11 @@ This repo builds an automated PPTX generation system using:
 - LLM planning + one multimodal review loop
 - deterministic validation, composition metadata, and quality gates
 
-Agent rule: do not invent new architecture without updating `SPEC.md` and `PLAN.md`.
+Agent rule: do not invent new architecture without updating `SPEC-v2.md` and `PLAN.md`.
 
 ## 0) Source of Truth Artifacts
 
-- `SPEC.md` — architecture + contracts
+- `SPEC-v2.md` — architecture + contracts
 - `PLAN.md` — active execution plan
 - `README.md` — user-facing usage and setup
 - `assets/template/template.pptx`
@@ -19,8 +19,22 @@ Agent rule: do not invent new architecture without updating `SPEC.md` and `PLAN.
 - `assets/catalog/asset_catalog.json`
 - `assets/catalog/visual_vocabulary.json`
 - `assets/catalog/branded_images.json`
+- `assets/catalog/component_catalog_v1.json`
+- `assets/catalog/component_examples_v1.json`
+- `assets/catalog/planner_policy_v1.json`
+- `assets/catalog/template_style_baselines_v1.json`
+- `assets/benchmarks/benchmark_manifest_v1.json`
 - `inputs/`
 - `runs/<run_id>/`
+
+## 0.1) Progress Snapshot (`2026-03-02`)
+
+Recently landed:
+- planner metadata loaders for component catalog + policy
+- planner prompt sections for component guidance and diversity policy constraints
+- benchmark manifest seed and planner metadata catalogs
+- tests for metadata loading + planner prompt metadata wiring
+- DeckIR v2 fixture directory scaffold
 
 ## 1) Non-Negotiable Constraints
 
@@ -123,4 +137,3 @@ Current focus is composition quality recovery:
 - improve cue-to-visual intent mapping
 - reduce repetitive visual asset usage
 - increase slide-level narrative polish and hierarchy quality
-

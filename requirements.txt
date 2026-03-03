@@ -5,6 +5,9 @@ pydantic
 # Used by scripts/convert_svg_to_png.py
 CairoSVG
 
+# Test dependencies
+pytest
+
 # System binaries required for automated review image export (non-pip):
 # - LibreOffice (`soffice`)
 # - Poppler (`pdftoppm`)

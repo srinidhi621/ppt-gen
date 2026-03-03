@@ -14,10 +14,26 @@ Implemented:
 - deterministic composition artifacts (`composition_spec_v1.json`, `composition_spec_v2.json`)
 - V2 quality gates with hard fail mode
 - automated slide image conversion (`soffice` + `pdftoppm`)
+- planner metadata/policy ingestion for stronger visual routing + diversity constraints
 
 Known gap:
 - composition polish is still below target quality for consulting-style decks.
 - visual coverage is now enforced, but visual storytelling quality still needs stronger per-slide composition logic.
+
+Latest progress (`2026-03-02`):
+- Added planner metadata catalogs:
+  - `assets/catalog/component_catalog_v1.json`
+  - `assets/catalog/component_examples_v1.json`
+  - `assets/catalog/planner_policy_v1.json`
+  - `assets/catalog/template_style_baselines_v1.json`
+- Added benchmark manifest: `assets/benchmarks/benchmark_manifest_v1.json`
+- Wired planner prompt to component metadata + policy constraints via:
+  - `src/assets.py` (`load_component_catalog`, `load_planner_policy`)
+  - `src/llm/planner.py` (`_build_system_prompt` policy sections/rules)
+- Added tests:
+  - `tests/test_assets_metadata.py`
+  - `tests/test_planner_prompt_metadata.py`
+- Added DeckIR v2 fixture scaffold: `tests/fixtures/deckir_v2/README.md`
 
 ## Architecture (Implemented)
 
@@ -105,7 +121,6 @@ Each run writes to `runs/<run_id>/`, including:
 
 ## Documentation
 
-- [SPEC.md](SPEC.md): contracts and architecture
+- [SPEC-v2.md](SPEC-v2.md): architecture and V2 contracts
 - [PLAN.md](PLAN.md): execution plan and next priorities
 - [AGENTS.md](AGENTS.md): operating guide for coding agents
-

@@ -164,6 +164,35 @@ def load_visual_vocabulary(assets_dir: Path) -> Dict[str, Any]:
     return json.loads(vocab_path.read_text(encoding="utf-8"))
 
 
+def load_component_catalog(assets_dir: Path) -> Dict[str, Any]:
+    """Load component metadata used to guide planner visual choices."""
+    catalog_path = assets_dir / "catalog" / "component_catalog_v1.json"
+    if not catalog_path.exists():
+        return {"components": [], "planner_hints": {}}
+    return json.loads(catalog_path.read_text(encoding="utf-8"))
+
+
+def load_planner_policy(assets_dir: Path) -> Dict[str, Any]:
+    """Load planner policy constraints for visual routing/diversity."""
+    policy_path = assets_dir / "catalog" / "planner_policy_v1.json"
+    if not policy_path.exists():
+        return {
+            "asset_diversity": {
+                "min_unique_visual_assets_per_10_slides": 4,
+                "max_reuse_per_branded_image": 2,
+                "max_adjacent_reuse_same_icon_concept": 1,
+                "target_visualized_slides_ratio": 0.7,
+            },
+            "routing_guidance": {
+                "prefer_image_layout_when_cues_present": True,
+                "force_image_on_section_break": True,
+                "avoid_single_layout_streak_over": 3,
+            },
+            "prompt_directives": [],
+        }
+    return json.loads(policy_path.read_text(encoding="utf-8"))
+
+
 def resolve_visual_concept(concept: str, vocabulary: Dict[str, Any]) -> str | None:
     """Resolve a concept name to the preferred icon_id, falling back to alternatives."""
     concepts = vocabulary.get("concepts", {})

@@ -12,7 +12,9 @@ from pydantic import ValidationError
 
 from ..assets import (
     ensure_asset_catalog,
+    load_component_catalog,
     load_branded_images_catalog,
+    load_planner_policy,
     load_visual_vocabulary,
     match_asset,
     resolve_branded_image,
@@ -76,8 +78,16 @@ def plan_deck_with_llm(
     assets_dir = layout_catalog_path.parents[1]
     vocabulary = load_visual_vocabulary(assets_dir)
     branded_catalog = load_branded_images_catalog(assets_dir)
+    component_catalog = load_component_catalog(assets_dir)
+    planner_policy = load_planner_policy(assets_dir)
 
-    system_prompt = _build_system_prompt(layout_catalog, vocabulary, branded_catalog)
+    system_prompt = _build_system_prompt(
+        layout_catalog,
+        vocabulary,
+        branded_catalog,
+        component_catalog,
+        planner_policy,
+    )
     user_prompt = _build_user_prompt(
         content_model=content_model,
         cues_data=cues_data,
@@ -347,6 +357,8 @@ def _build_system_prompt(
     layout_catalog: Dict[str, Any],
     vocabulary: Dict[str, Any],
     branded_catalog: Dict[str, Any],
+    component_catalog: Dict[str, Any],
+    planner_policy: Dict[str, Any],
 ) -> str:
     # Build layout info with image-capability flag
     layout_info = []
@@ -381,6 +393,33 @@ def _build_system_prompt(
     for img_id, entry in branded_catalog.get("images", {}).items():
         branded_summary[img_id] = entry.get("theme", "")
 
+    # Build component summary for visual planning guidance
+    component_summary = []
+    for component in component_catalog.get("components", []):
+        if not isinstance(component, dict):
+            continue
+        component_id = component.get("component_id")
+        if not component_id:
+            continue
+        component_summary.append(
+            {
+                "component_id": component_id,
+                "purpose": component.get("purpose", ""),
+                "use_when": component.get("use_when", []),
+                "max_items": component.get("max_items", {}),
+            }
+        )
+    component_summary = sorted(component_summary, key=lambda entry: str(entry["component_id"]))
+
+    asset_diversity = planner_policy.get("asset_diversity", {})
+    routing_guidance = planner_policy.get("routing_guidance", {})
+    prompt_directives = planner_policy.get("prompt_directives", [])
+
+    max_reuse_per_image = int(asset_diversity.get("max_reuse_per_branded_image", 2))
+    min_unique_visual_assets = int(asset_diversity.get("min_unique_visual_assets_per_10_slides", 4))
+    max_adjacent_icon_reuse = int(asset_diversity.get("max_adjacent_reuse_same_icon_concept", 1))
+    target_visualized_ratio = float(asset_diversity.get("target_visualized_slides_ratio", 0.7))
+
     return (
         "You are a deck planner. Output ONLY a valid JSON object for DeckIR.\n"
         "No markdown fences, no explanations, no comments — pure JSON only.\n\n"
@@ -394,6 +433,11 @@ def _build_system_prompt(
         "For branded hero images, set asset_type='image' and asset_id to a BRANDED IMAGE ID from this list.\n"
         "Use these on title_image_light and section_break_light layouts.\n"
         f"{json.dumps(branded_summary, ensure_ascii=True)}\n\n"
+        "=== COMPONENT METADATA (visual planning hints) ===\n"
+        "Use this to vary visual structure and avoid repetitive icon-only slides.\n"
+        f"{json.dumps(component_summary, ensure_ascii=True)}\n\n"
+        "=== VISUAL PLANNING POLICY ===\n"
+        f"{json.dumps({'asset_diversity': asset_diversity, 'routing_guidance': routing_guidance, 'prompt_directives': prompt_directives}, ensure_ascii=True)}\n\n"
         "=== RULES ===\n"
         "1. One slide per content section. Do not invent extra slides.\n"
         "2. Choose layout based on content density:\n"
@@ -408,10 +452,14 @@ def _build_system_prompt(
         "   or notes requesting diagram/screenshot/composite visuals.\n"
         "5. For icon concepts, pick the concept that best matches the slide's topic.\n"
         "6. For section breaks and cue-rich slides, prefer a branded image over an icon.\n"
-        "7. Keep bullets concise. Respect max_bullets and max_total_body_chars limits.\n"
-        "8. Move overflow detail to speaker_notes.\n"
-        "9. Honor layout_hint from cues when the hint is a valid layout_id.\n"
-        "10. Honor icon_hints from cues by selecting the matching concept.\n\n"
+        f"7. Across the deck, target >= {min_unique_visual_assets} unique visual assets per 10 slides.\n"
+        f"8. Do not reuse a branded image more than {max_reuse_per_image} times.\n"
+        f"9. Do not reuse the same icon concept on adjacent cue-rich slides (max adjacent reuse={max_adjacent_icon_reuse}).\n"
+        f"10. Aim for visualized slide ratio >= {target_visualized_ratio:.2f} where layouts support ph_image.\n"
+        "11. Keep bullets concise. Respect max_bullets and max_total_body_chars limits.\n"
+        "12. Move overflow detail to speaker_notes.\n"
+        "13. Honor layout_hint from cues when the hint is a valid layout_id.\n"
+        "14. Honor icon_hints from cues by selecting the matching concept.\n\n"
         "=== WORKED EXAMPLES ===\n"
         '{\n'
         '  "slide_id": "opening",\n'

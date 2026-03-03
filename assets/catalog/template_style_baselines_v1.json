@@ -1,0 +1,22 @@
+{
+  "schema": "template_style_baselines_v1",
+  "version": "1.0.0",
+  "templates": {
+    "corp_deck_2025": {
+      "title_band_ratio": {"min": 0.12, "max": 0.22},
+      "body_margin_in": {"min": 0.35, "max": 0.8},
+      "spacing_scale_in": {
+        "xs": 0.08,
+        "sm": 0.14,
+        "md": 0.24,
+        "lg": 0.36
+      },
+      "typography": {
+        "title_pt": {"min": 30, "max": 44},
+        "heading_pt": {"min": 20, "max": 32},
+        "body_pt": {"min": 12, "max": 18},
+        "caption_pt": {"min": 10, "max": 12}
+      }
+    }
+  }
+}
