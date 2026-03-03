@@ -1,0 +1,336 @@
+{
+  "search_summary": {
+    "date_utc": "2026-03-03",
+    "queries_used": [
+      "filetype:pptx \"maturity assessment\" \"AI\" deck",
+      "filetype:pdf \"AI maturity\" assessment findings heatmap slide deck",
+      "filetype:pptx \"steering committee\" status update deck",
+      "filetype:pdf \"executive steering committee\" meeting presentation project status risks issues decisions budget",
+      "filetype:pptx \"business case\" \"payback\" \"value\" \"assumptions\" presentation template",
+      "filetype:pptx \"Project Steering Committee\" \"Master Deck\" status risks budget",
+      "filetype:pptx \"cost benefit\" \"business case\" template pptx",
+      "filetype:pdf \"transformation\" validate business case ROI pdf"
+    ],
+    "gaps_targeted": [
+      "opportunity_assessment",
+      "executive_steering_update",
+      "business_case_roi"
+    ],
+    "limitations": [
+      "High-polish AI opportunity assessment readouts are often published as templates or proposal decks rather than real client deliverables.",
+      "Many executive steering/status packs in the public domain skew public-sector (strong governance artifacts, less design polish than top consulting).",
+      "Some highly polished ROI materials are published as slide-style PDFs (reports laid out like decks) rather than PPTX."
+    ]
+  },
+  "longlist": [
+    {
+      "title": "AI Strategy and Roadmap – Presentation Template (Read-Only)",
+      "url": "https://sieber-partners.squarespace.com/s/06-AI-Strategy-and-Roadmap-Presentation-Template-Read-Only.pdf",
+      "publisher": "Sieber Partners",
+      "year": "2025",
+      "format": "pdf",
+      "category": "opportunity_assessment",
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.5
+      },
+      "downloadable": true,
+      "why_relevant": "Directly matches the gap: capability heatmaps, maturity dimensions, gap-to-initiative logic, and roadmap scaffolding in a consulting-style narrative.",
+      "license_or_usage_notes": "Public template; reuse rights not explicit. Safest: reference-only patterns (structure/layout) and recreate original content."
+    },
+    {
+      "title": "Artificial Intelligence (AI) Consultancy Services RFP #2025-023 – Proposal Deck (Centroid)",
+      "url": "https://txshare.org/getattachment/b9d378be-adb7-446d-b43b-a1c7998c74fe/9-Texas-Centroid-Proposal-Deck-vFinal.pdf?lang=en-US",
+      "publisher": "Centroid (Texas DIR TXShare attachment)",
+      "year": "2024",
+      "format": "pdf",
+      "category": "opportunity_assessment",
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "downloadable": true,
+      "why_relevant": "RFP response structure with assessment-to-plan flow: AI maturity plan, support model, and roadmap patterns that map cleanly to opportunity sizing and prioritization.",
+      "license_or_usage_notes": "Public procurement attachment; likely reference-only. Avoid copying any proprietary phrasing; extract structural patterns."
+    },
+    {
+      "title": "Portfolio Management (Georgia Technology Summit 2016) – Prioritization, benefits, ROI criteria",
+      "url": "https://gta.georgia.gov/sites/gta.georgia.gov/files/event_docs/technology_summit_2016/Portfolio%20Management%20George%20Starr%20.pptx",
+      "publisher": "Georgia Technology Authority",
+      "year": "2016",
+      "format": "pptx",
+      "category": "opportunity_assessment",
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 5,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "downloadable": true,
+      "why_relevant": "Strong opportunity/portfolio assessment mechanics: criteria stacks (benefits/revenue/cost/risks/strategy alignment) and decision frameworks suitable for AI initiative portfolios.",
+      "license_or_usage_notes": "Public government presentation; reuse typically permitted with attribution, but verify site terms. Reference-only acceptable."
+    },
+    {
+      "title": "SGN’s Digitalisation Strategy (includes data maturity assessment + roadmap framing)",
+      "url": "https://www.sgn.co.uk/sites/default/files/media-entities/documents/2020-12/SGN-Digitalisation-Strategy-December-2020.pdf",
+      "publisher": "SGN",
+      "year": "2020",
+      "format": "pdf",
+      "category": "opportunity_assessment",
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "downloadable": true,
+      "why_relevant": "Useful assessment readout style: maturity baseline tied to transformation priorities and staged roadmap, with credible utility-sector governance tone.",
+      "license_or_usage_notes": "Corporate publication; treat as reference-only unless explicit reuse rights are provided."
+    },
+    {
+      "title": "Florida PALM – Executive Steering Committee Meeting Presentation (01/27/2021)",
+      "url": "https://myfloridacfo.com/docs-sf/florida-palm-libraries/governance/fy-20-21/presentation-for-january-27-2021-executive-steering-committee-meeting.pdf?sfvrsn=a9193070_8",
+      "publisher": "Florida Department of Financial Services (Florida PALM)",
+      "year": "2021",
+      "format": "pdf",
+      "category": "executive_steering_update",
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 5,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "downloadable": true,
+      "why_relevant": "Excellent steering cadence pack structure: budget/spend plan tables, scope/schedule checkpoints, testing results, risks/issues, and explicit go/no-go framing.",
+      "license_or_usage_notes": "Public government material; generally reusable with attribution, but confirm site terms. Reference-only is safe."
+    },
+    {
+      "title": "Florida PALM – Executive Steering Committee Meeting Presentation (05/26/2021)",
+      "url": "https://myfloridacfo.com/docs-sf/florida-palm-libraries/governance/fy-20-21/esc-presentation-05262021.pdf?sfvrsn=142d4dd_2",
+      "publisher": "Florida Department of Financial Services (Florida PALM)",
+      "year": "2021",
+      "format": "pdf",
+      "category": "executive_steering_update",
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 5,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "downloadable": true,
+      "why_relevant": "Steering update with a strong readiness assessment pattern (AIRI): People/Process/Technology/PM grouped indicators and explicit mitigation discussions.",
+      "license_or_usage_notes": "Public government material; reference-only acceptable."
+    },
+    {
+      "title": "AHCA FX Program – Executive Steering Committee Presentation (07/30/2021)",
+      "url": "https://ahca.myflorida.com/content/download/6196/file/210730_FX_ESC_Presentation.pdf",
+      "publisher": "Florida Agency for Health Care Administration (AHCA)",
+      "year": "2021",
+      "format": "pdf",
+      "category": "executive_steering_update",
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 5,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "downloadable": true,
+      "why_relevant": "Program governance update with spend plan, status updates, and decision-ready framing typical of enterprise steering packs.",
+      "license_or_usage_notes": "Public government material; reference-only acceptable."
+    },
+    {
+      "title": "CalACES Project Steering Committee Master Deck (04/18/2019) – Steering pack baseline (PPTX)",
+      "url": "https://www.calsaws.org/wp-content/uploads/2019/07/18-1-CalACES-PSC-Master-Deck-04-18-19_FINAL.pptx",
+      "publisher": "CalSAWS / CalACES",
+      "year": "2019",
+      "format": "pptx",
+      "category": "executive_steering_update",
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "downloadable": true,
+      "why_relevant": "A true master steering deck with repeatable sections; useful as ground truth for cadence, agenda, decisions, action items, and status reporting mechanics.",
+      "license_or_usage_notes": "Public program materials; confirm site reuse terms. Reference-only safe."
+    },
+    {
+      "title": "PPM Implementation – Business Case Template (PPTX)",
+      "url": "https://nonsuch.co/wp-content/uploads/documents/ppm-implementation-business-case-template.pptx",
+      "publisher": "Nonsuch (PowaPlanner)",
+      "year": "2025",
+      "format": "pptx",
+      "category": "business_case_roi",
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "downloadable": true,
+      "why_relevant": "Business case scaffolding with benefits, costs, and governance artifacts; strong for ROI storyline plus implementation justification slides.",
+      "license_or_usage_notes": "Public template; reuse rights not explicit. Reference-only patterns recommended."
+    },
+    {
+      "title": "Smartsheet – HR Business Case Template (PowerPoint)",
+      "url": "https://www.smartsheet.com/sites/default/files/2025-09/IC-HR-Business-Case-Template_Powerpoint.pptx?srsltid=AfmBOornu6QipfFTSLdbC3yz85sgoqPBzLWTe9Dn5MROh3mca3GKWbWv",
+      "publisher": "Smartsheet",
+      "year": "2025",
+      "format": "pptx",
+      "category": "business_case_roi",
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 5,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "downloadable": true,
+      "why_relevant": "Clean business case sequencing (problem → options → recommendation → cost-benefit/financial justification → risks) with consistent slide system.",
+      "license_or_usage_notes": "Template licensing varies; check Smartsheet terms before reuse. Reference-only safe."
+    },
+    {
+      "title": "Building a Business Case – EnergyCAP proposal template (PPTX)",
+      "url": "https://313940.fs1.hubspotusercontent-na1.net/hubfs/313940/Building-a-Business-Case-EnergyCAP-proposal-template.pptx",
+      "publisher": "EnergyCAP",
+      "year": "2024",
+      "format": "pptx",
+      "category": "business_case_roi",
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "downloadable": true,
+      "why_relevant": "Practical ROI justification patterns: cost-benefit framing, prioritization for maximum ROI, and proposal-style financial narrative blocks.",
+      "license_or_usage_notes": "Vendor template distributed via HubSpot; reuse rights unclear. Reference-only patterns recommended."
+    },
+    {
+      "title": "BCG – How to Create a Transformation That Lasts (layout PDF)",
+      "url": "https://web-assets.bcg.com/39/56/e1ab30d14aa9b81ae250551144a3/how-to-create-a-transformation-that-lasts-layout-jan-2024.pdf",
+      "publisher": "Boston Consulting Group",
+      "year": "2024",
+      "format": "pdf",
+      "category": "business_case_roi",
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 5,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.7
+      },
+      "downloadable": true,
+      "why_relevant": "Top-tier consulting polish and explicit business-case validation logic; strong patterns for ROI gates, transformation stages, and exec-ready framing.",
+      "license_or_usage_notes": "BCG content is copyrighted; reference-only and do not reproduce text verbatim."
+    }
+  ],
+  "shortlist": [
+    {
+      "title": "AI Strategy and Roadmap – Presentation Template (Read-Only)",
+      "url": "https://sieber-partners.squarespace.com/s/06-AI-Strategy-and-Roadmap-Presentation-Template-Read-Only.pdf",
+      "category": "opportunity_assessment",
+      "why_north_star_quality": [
+        "content structure reason: explicitly operationalizes assessment → gap heatmap → prioritized initiatives → roadmap, which is the core opportunity-assessment arc",
+        "visual design reason: consistent consulting-style slide grid, crisp hierarchy, and reusable blocks for heatmaps/matrices",
+        "evidence framing reason: forces defensible prioritization logic (low maturity + high priority) and ties recommendations to capability dimensions"
+      ],
+      "risks_or_caveats": "Template provenance/licensing not explicit; safest to treat as reference-only and recreate from scratch."
+    },
+    {
+      "title": "Portfolio Management (Georgia Technology Summit 2016) – Prioritization, benefits, ROI criteria",
+      "url": "https://gta.georgia.gov/sites/gta.georgia.gov/files/event_docs/technology_summit_2016/Portfolio%20Management%20George%20Starr%20.pptx",
+      "category": "opportunity_assessment",
+      "why_north_star_quality": [
+        "content structure reason: provides a complete portfolio decision framework (benefits, costs, risks, strategy alignment) that maps to AI initiative pipelines",
+        "visual design reason: simple but consistent charting/criteria visuals that are easy to adapt into a polished consulting system",
+        "evidence framing reason: encourages multi-criteria scoring and explicit tradeoffs instead of vibe-based prioritization"
+      ],
+      "risks_or_caveats": "Older deck and not ‘premium’ brand typography; still excellent as ground-truth mechanics for prioritization."
+    },
+    {
+      "title": "Florida PALM – Executive Steering Committee Meeting Presentation (01/27/2021)",
+      "url": "https://myfloridacfo.com/docs-sf/florida-palm-libraries/governance/fy-20-21/presentation-for-january-27-2021-executive-steering-committee-meeting.pdf?sfvrsn=a9193070_8",
+      "category": "executive_steering_update",
+      "why_north_star_quality": [
+        "content structure reason: near-ideal steering cadence pack sequence (budget → scope → schedule → testing/results → issues/risks → go/no-go decisions)",
+        "visual design reason: uses stable reporting artifacts (spend tables, milestone views, readiness/checkpoint slides) that work under time pressure",
+        "evidence framing reason: embeds objective measures (test execution, defect status, schedule checkpoints) rather than narrative-only status"
+      ],
+      "risks_or_caveats": "Public-sector visual style is functional vs premium; use as structure/evidence standard and re-skin for consulting polish."
+    },
+    {
+      "title": "CalACES Project Steering Committee Master Deck (04/18/2019) – Steering pack baseline (PPTX)",
+      "url": "https://www.calsaws.org/wp-content/uploads/2019/07/18-1-CalACES-PSC-Master-Deck-04-18-19_FINAL.pptx",
+      "category": "executive_steering_update",
+      "why_north_star_quality": [
+        "content structure reason: a true master deck with repeatable meeting sections and governance rhythms you can mirror (agenda, actions, decisions, status)",
+        "visual design reason: consistent slide system across a large pack, useful for building a corpus of ‘status pack primitives’",
+        "evidence framing reason: emphasizes program governance artifacts and operational reporting cadence rather than one-off storytelling"
+      ],
+      "risks_or_caveats": "May include program-specific jargon; focus on reusable patterns and abstract the content."
+    },
+    {
+      "title": "BCG – How to Create a Transformation That Lasts (layout PDF)",
+      "url": "https://web-assets.bcg.com/39/56/e1ab30d14aa9b81ae250551144a3/how-to-create-a-transformation-that-lasts-layout-jan-2024.pdf",
+      "category": "business_case_roi",
+      "why_north_star_quality": [
+        "content structure reason: explicitly frames transformation stages with business case validation gates, making ROI a first-class narrative element",
+        "visual design reason: BCG-level layout discipline, headline logic, and section architecture that translates directly to consulting decks",
+        "evidence framing reason: treats ROI as a hypothesis to validate with operational levers and measurement, not as a single spreadsheet outcome"
+      ],
+      "risks_or_caveats": "Copyrighted; use as reference-only for structure and visual system—do not lift text."
+    },
+    {
+      "title": "Smartsheet – HR Business Case Template (PowerPoint)",
+      "url": "https://www.smartsheet.com/sites/default/files/2025-09/IC-HR-Business-Case-Template_Powerpoint.pptx?srsltid=AfmBOornu6QipfFTSLdbC3yz85sgoqPBzLWTe9Dn5MROh3mca3GKWbWv",
+      "category": "business_case_roi",
+      "why_north_star_quality": [
+        "content structure reason: clean business case arc with explicit options, recommendation, financial justification, and risk framing",
+        "visual design reason: consistent template system that is easy to upgrade into a consulting-grade theme while preserving slide mechanics",
+        "evidence framing reason: forces cost-benefit and justification sections that can be populated with assumptions and sensitivity analysis"
+      ],
+      "risks_or_caveats": "Template licensing varies; treat as reference-only unless your usage aligns with Smartsheet terms."
+    }
+  ]
+}
+

@@ -1,0 +1,831 @@
+{
+  "schema": "ground_truth_raw_manifest_v2",
+  "version": "1.0.0",
+  "generated_at_utc": "2026-03-03T15:56:52+00:00",
+  "generated_from": "assets/ground_truth/external_links2.json",
+  "normalized_file": "assets/ground_truth/external_links2_normalized.json",
+  "counts": {
+    "external_longlist_recovered": 29,
+    "external_shortlist_recovered": 11,
+    "external_candidates_written": 29
+  },
+  "search_summary": {
+    "date_utc": "2026-03-03T12:00:00Z",
+    "queries_used": [],
+    "source_types": [],
+    "limitations": [
+      "Heavily sanitized data in public strategy case studies limits complete visibility into actual proprietary mathematical model configurations.",
+      "Exact proposal pricing structures and deeply proprietary architectural data diagrams are frequently redacted in government public records."
+    ]
+  },
+  "external_candidates": [
+    {
+      "candidate_id": "ext2_001",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "AI Unlocked: Value Creation with AI",
+      "url": "https://www.bcg.com/assets/2024/executive-perspectives-value-creation-with-ai-17dec.pdf",
+      "publisher": "Boston Consulting Group",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "business_case_roi",
+        "case_study"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 5,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 5,
+        "average": 4.83
+      },
+      "why_relevant": "Incredible example of top-bar functional navigation. Highly disciplined visual tracking of ROI metrics across diverse industry use cases.",
+      "license_or_usage_notes": "Copyright BCG. Highly sanitized public data.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": true
+    },
+    {
+      "candidate_id": "ext2_002",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Nebraska DHHS Technical Proposal (Redacted)",
+      "url": "https://das.nebraska.gov/materiel/purchasing/122125%20(O3)/Deloitte%20Bid/122125%20O3%20Deloitte%20File%207%20of%209%20Corp%20Experience%20and%20Tech%20Response%20(Redacted).pdf",
+      "publisher": "Deloitte Consulting LLP",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "proposal_rfp",
+        "data_ai_platform_blueprint"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 5,
+        "visual_non_repetition": 3,
+        "average": 4.17
+      },
+      "why_relevant": "Demonstrates elite government procurement structure, blending global capability with local presence and proprietary software branding.",
+      "license_or_usage_notes": "Public record via State of Nebraska. Contains redacted proprietary information.",
+      "usage_rights": "public_reference",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_003",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Market Insights AI Report: Building an Action Plan",
+      "url": "https://www.aha.org/system/files/media/file/2025/01/Market_Insights_AI_Report-2025.pdf",
+      "publisher": "Bain & Company / AHA",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "solution_approach",
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.17
+      },
+      "why_relevant": "Exceptional structuring of transformation into People, Process, and Technology pillars with 9 foundational blocks. Superb maturity tables.",
+      "license_or_usage_notes": "Copyright American Hospital Association.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": true
+    },
+    {
+      "candidate_id": "ext2_004",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Future of Sales with AI",
+      "url": "https://www.bcg.com/assets/2024/executive-perspectives-future-of-sales-with-ai-5aug.pdf",
+      "publisher": "Boston Consulting Group",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "gtm_offering",
+        "ai_strategy"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 5,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.5
+      },
+      "why_relevant": "Outlines the 10/20/70 rule of transformation and models future workforce redeployment percentages perfectly.",
+      "license_or_usage_notes": "Copyright BCG.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": true
+    },
+    {
+      "candidate_id": "ext2_005",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "AI Governance using Informatica CDGC",
+      "url": "https://www.informatica.com/content/dam/informatica-cxp/techtuesdays-slides-pdf/AI%20Governance%20using%20Informatica%20CDGC.pdf",
+      "publisher": "Informatica",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "responsible_ai_governance",
+        "data_ai_platform_blueprint"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 3,
+        "visual_non_repetition": 4,
+        "average": 3.83
+      },
+      "why_relevant": "Provides a clean, pragmatic 4-pillar model (Observe, Inventory, Deliver, Control) for navigating complex legislation like the EU AI Act.",
+      "license_or_usage_notes": "Corporate webinar materials.",
+      "usage_rights": "unclear",
+      "downloadable": true,
+      "shortlist_candidate": true
+    },
+    {
+      "candidate_id": "ext2_006",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "NCDOT Data Governance Presentation",
+      "url": "https://connect.ncdot.gov/projects/Value-Management/CLEAR-Program/Video/Data%20Governance%20Presentation.pdf",
+      "publisher": "North Carolina DOT",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "executive_steering_update",
+        "responsible_ai_governance"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.17
+      },
+      "why_relevant": "Excellent visualization of governance hierarchy pyramids and linear workflows for cross-functional steering committees.",
+      "license_or_usage_notes": "Public sector document.",
+      "usage_rights": "unclear",
+      "downloadable": true,
+      "shortlist_candidate": true
+    },
+    {
+      "candidate_id": "ext2_007",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Powered Finance CFO Deck",
+      "url": "https://assets.kpmg.com/content/dam/kpmg/ke/pdf/thought-leaderships/2025/Powered-Finance-CFO-deck.pdf",
+      "publisher": "KPMG",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "business_case_roi",
+        "executive_steering_update"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 3,
+        "average": 4.0
+      },
+      "why_relevant": "Strong conceptual categorization dividing AI ROI into strictly defined Top-Line and Bottom-Line impacts.",
+      "license_or_usage_notes": "Copyright KPMG.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": true
+    },
+    {
+      "candidate_id": "ext2_008",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Is Your Data Ready to Power AI Reinvention?",
+      "url": "https://www.accenture.com/content/dam/accenture/final/accenture-com/document-3/Accenture-Is-Your-Data-Ready-To-Power-AI-Reinvention-Report.pdf",
+      "publisher": "Accenture",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "data_ai_platform_blueprint",
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 5,
+        "average": 4.5
+      },
+      "why_relevant": "Advanced visualization of the 'Cloud Continuum' and complex data architecture mapping for GenAI integration.",
+      "license_or_usage_notes": "Copyright Accenture.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": true
+    },
+    {
+      "candidate_id": "ext2_009",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "OMNIA Partners RFP Response",
+      "url": "https://www.omniapartners.com/suppliers-files/A-D/Accenture/Contract_Documents/159587/Accenture_Response.pdf",
+      "publisher": "Accenture",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "proposal_rfp",
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 3,
+        "average": 3.83
+      },
+      "why_relevant": "Demonstrates the power of naming conventions in proposals and strategic ecosystem partnering (NVIDIA).",
+      "license_or_usage_notes": "Public procurement record.",
+      "usage_rights": "unclear",
+      "downloadable": true,
+      "shortlist_candidate": true
+    },
+    {
+      "candidate_id": "ext2_010",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "AI-Powered R&D Executive Perspective",
+      "url": "https://www.bcg.com/assets/2025/executive-perspectives-ai-powered-r-and-d-14feb.pdf",
+      "publisher": "Boston Consulting Group",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "solution_approach",
+        "case_study"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 5,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 5,
+        "visual_non_repetition": 5,
+        "average": 5.0
+      },
+      "why_relevant": "Exceptional architectural mapping showing the decoupling of core legacy IT layers from agile AI layers.",
+      "license_or_usage_notes": "Copyright BCG.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": true
+    },
+    {
+      "candidate_id": "ext2_011",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "CGI AI Advisory Executive Brief",
+      "url": "https://www.cgi.com/sites/default/files/2024-07/ai_advisory_executive_brief_2024.pdf",
+      "publisher": "CGI",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 3,
+        "visual_non_repetition": 3,
+        "average": 3.67
+      },
+      "why_relevant": "Short, pragmatic visual approach to conducting AI workflow readiness assessments.",
+      "license_or_usage_notes": "Copyright CGI.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_012",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Building Effective Enterprise Agents",
+      "url": "https://www.bcg.com/assets/2025/building-effective-enterprise-agents.pdf",
+      "publisher": "Boston Consulting Group",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "ai_strategy",
+        "data_ai_platform_blueprint"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.17
+      },
+      "why_relevant": "Specifically addresses the implementation challenges of connecting AI agents to legacy tech stacks and messy data.",
+      "license_or_usage_notes": "Copyright BCG.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_013",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "AI in Action: Beyond the Hype in TMT",
+      "url": "https://www.mckinsey.com/~/media/mckinsey/industries/technology%20media%20and%20telecommunications/high%20tech/our%20insights/beyond%20the%20hype%20capturing%20the%20potential%20of%20ai%20and%20gen%20ai%20in%20tmt/beyond-the-hype-capturing-the-potential-of-ai-and-gen-ai-in-tmt.pdf",
+      "publisher": "McKinsey & Company",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "opportunity_assessment",
+        "ai_strategy"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 5,
+        "visual_non_repetition": 3,
+        "average": 4.0
+      },
+      "why_relevant": "Strong quantitative breakdowns of engineering productivity gains and software engineering skill shifts.",
+      "license_or_usage_notes": "Copyright McKinsey.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_014",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Accelerating Intelligent Automation in Insurance",
+      "url": "https://www.accenture.com/content/dam/accenture/final/a-com-migration/pdf/pdf-148/Accenture-Accelerating-Intelligent-Automation-Insurance.pdf",
+      "publisher": "Accenture",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "case_study",
+        "business_case_roi"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 3,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 3,
+        "average": 3.67
+      },
+      "why_relevant": "Detailed RPA/AI flow mapping for procurement and back-office automation.",
+      "license_or_usage_notes": "Copyright Accenture.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_015",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Zero to AI Governance",
+      "url": "https://www.soa.org/48e9da/globalassets/assets/files/resources/research-report/2026/ait170-ai-bulletin-january-2026.pdf",
+      "publisher": "Society of Actuaries / Deloitte",
+      "year": "2026",
+      "format": "pdf",
+      "categories": [
+        "responsible_ai_governance"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 3,
+        "layout_consistency": 4,
+        "evidence_quality": 5,
+        "visual_non_repetition": 3,
+        "average": 3.83
+      },
+      "why_relevant": "High evidentiary standard regarding the intersection of actuarial compliance standards and ethical AI deployments.",
+      "license_or_usage_notes": "Industry bulletin.",
+      "usage_rights": "unclear",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_016",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "How AI Offerings are Reshaping Sales",
+      "url": "https://www.teneo.com/app/uploads/2025/07/How-AI-Offerings-are-Reshaping-Sales-and-Marketing-Models.pdf",
+      "publisher": "Teneo",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "gtm_offering",
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 3,
+        "layout_consistency": 4,
+        "evidence_quality": 3,
+        "visual_non_repetition": 3,
+        "average": 3.5
+      },
+      "why_relevant": "Strong narrative around the evolution of commercial models and re-alignment of incentives across sales cycles.",
+      "license_or_usage_notes": "Copyright Teneo.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_017",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "AI in the Nordic Businesses",
+      "url": "https://www.mckinsey.com/~/media/mckinsey/featured%20insights/artificial%20intelligence/how%20artificial%20intelligence%20will%20transform%20nordic%20businesses/how-artificial-intelligence-will-transform-nordic-businesses.pdf",
+      "publisher": "McKinsey",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 3,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 3,
+        "average": 3.67
+      },
+      "why_relevant": "Classic McKinsey top-down logic tree on whether to be a fast-follower or aggressive early adopter of AI.",
+      "license_or_usage_notes": "Copyright McKinsey.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_018",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "NicheRMS System RFP Response",
+      "url": "https://pub-chulavista.escribemeetings.com/filestream.ashx?DocumentId=33773",
+      "publisher": "Winbourne Consulting",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "proposal_rfp",
+        "executive_steering_update"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 3,
+        "layout_consistency": 4,
+        "evidence_quality": 3,
+        "visual_non_repetition": 3,
+        "average": 3.5
+      },
+      "why_relevant": "Excellent functional template for project management oversight and risk mitigation in a municipal tech implementation.",
+      "license_or_usage_notes": "Public City of Chula Vista record.",
+      "usage_rights": "unclear",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_019",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Future of Procurement with AI",
+      "url": "https://www.bcg.com/assets/2025/executive-perspectives-future-of-procurement-with-ai-27feb.pdf",
+      "publisher": "Boston Consulting Group",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "opportunity_assessment",
+        "business_case_roi"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.5
+      },
+      "why_relevant": "Highly structured maturity scale mapping procurement pain points to specific AI tool sets.",
+      "license_or_usage_notes": "Copyright BCG.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": true
+    },
+    {
+      "candidate_id": "ext2_020",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "AI Agents for Finance",
+      "url": "https://houseblend.io/articles/pdfs/ai-agents-finance-cfo-guide-2026.pdf",
+      "publisher": "Deloitte (Cited by Houseblend)",
+      "year": "2026",
+      "format": "pdf",
+      "categories": [
+        "ai_strategy",
+        "responsible_ai_governance"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 3,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 3,
+        "average": 3.67
+      },
+      "why_relevant": "Presents a strong argument for upskilling and the strict regulatory frameworks required when AI informs decisions.",
+      "license_or_usage_notes": "Industry aggregator report.",
+      "usage_rights": "unclear",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_021",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "AI Customer Service Transformation",
+      "url": "https://web-assets.bcg.com/pdf-src/prod-live/new-frontier-customer-service-transformation.pdf",
+      "publisher": "Boston Consulting Group",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "case_study",
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.33
+      },
+      "why_relevant": "Detailed explanation of how to expose tacit human knowledge to AI agents, moving beyond basic API structures.",
+      "license_or_usage_notes": "Copyright BCG.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_022",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "AI in Luxury: The Quiet Revolution",
+      "url": "https://www.comitecolbert.com/app/uploads/2025/01/bain-report-luxury-and-technology-artificial-intelligence-the-quiet-revolution.pdf",
+      "publisher": "Bain & Company",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "ai_strategy",
+        "case_study"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.17
+      },
+      "why_relevant": "Excellent framing of GenAI integration into highly creative workflows without diluting brand equity.",
+      "license_or_usage_notes": "Copyright Bain.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_023",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Accenture Technology Vision 2025",
+      "url": "https://www.accenture.com/content/dam/accenture/final/accenture-com/document-3/Accenture-Tech-Vision-2025.pdf",
+      "publisher": "Accenture",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "ai_strategy",
+        "data_ai_platform_blueprint"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.5
+      },
+      "why_relevant": "Beautifully crafted visual arguments regarding the lack of standard blueprints for AI governance.",
+      "license_or_usage_notes": "Copyright Accenture.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_024",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "DigitalXelerate Roadmap",
+      "url": "https://www.valtech.com/globalassets/00-global/02-images/11-landing-pages/2025/accelerate-your-ai-journey-with-digitalxelerate/digitalxelerate.pdf",
+      "publisher": "Valtech",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "business_case_roi",
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 3,
+        "visual_non_repetition": 3,
+        "average": 3.67
+      },
+      "why_relevant": "A clean, concise 4-week execution plan template culminating in an executive-ready business case.",
+      "license_or_usage_notes": "Copyright Valtech.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_025",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "AI Executive Steering DC Courts",
+      "url": "https://www.dccourts.gov/sites/default/files/DC-AI-Strategic-Planning-Roadmap-Final-Report.pdf",
+      "publisher": "DC Courts / NCSC",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "executive_steering_update",
+        "responsible_ai_governance"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 3,
+        "visual_hierarchy": 3,
+        "layout_consistency": 4,
+        "evidence_quality": 3,
+        "visual_non_repetition": 3,
+        "average": 3.33
+      },
+      "why_relevant": "Shows how maturity models are practically applied to brief non-technical governmental steering committees.",
+      "license_or_usage_notes": "Public record document.",
+      "usage_rights": "public_reference",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_026",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "West Virginia OT Assessment Consulting",
+      "url": "https://www.state.wv.us/admin/purchase/Bids/FY2023/B_0231_RFP_OOT2200000002_01.pdf",
+      "publisher": "Deloitte",
+      "year": "2022",
+      "format": "pdf",
+      "categories": [
+        "proposal_rfp",
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 3,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 3,
+        "average": 3.67
+      },
+      "why_relevant": "Good structural reference for proposing Application Portfolio Strategy tools to evaluate legacy architectures.",
+      "license_or_usage_notes": "Public record document.",
+      "usage_rights": "public_reference",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_027",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Art of Practical AI Adoption",
+      "url": "https://rsmus.com/content/dam/rsm/events/2023/wc_art_of_practical_adopting_ai.pdf",
+      "publisher": "RSM",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "opportunity_assessment",
+        "business_case_roi"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 3,
+        "visual_non_repetition": 3,
+        "average": 3.67
+      },
+      "why_relevant": "Provides an excellent visual matrix breaking down AI Execution services by phase.",
+      "license_or_usage_notes": "Copyright RSM.",
+      "usage_rights": "reference_only",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_028",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Rezolve AI Investor Presentation",
+      "url": "https://rezolve.com/wp-content/uploads/2025/01/Rezolve-Ai-Investor-Presentation-Retail-25-01-21.pdf",
+      "publisher": "Rezolve Ai",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "gtm_offering",
+        "data_ai_platform_blueprint"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 3,
+        "visual_non_repetition": 4,
+        "average": 3.83
+      },
+      "why_relevant": "Strong SaaS architectural flow mapping showing microservices and scalable cloud-agnostic design.",
+      "license_or_usage_notes": "Investor relations deck.",
+      "usage_rights": "unclear",
+      "downloadable": true,
+      "shortlist_candidate": false
+    },
+    {
+      "candidate_id": "ext2_029",
+      "origin": "external",
+      "batch": "external_links2",
+      "title": "Integrating GenAI into Marketing Workflows",
+      "url": "https://www.calstatela.edu/sites/default/files/Integrating%20Generative%20Ai%20Into%20Team-Based%20Marketing%20Workflows.pdf",
+      "publisher": "Academic Review",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 3,
+        "visual_hierarchy": 2,
+        "layout_consistency": 4,
+        "evidence_quality": 5,
+        "visual_non_repetition": 2,
+        "average": 3.33
+      },
+      "why_relevant": "Introduces the AI Collaboration Maturity Model, mapping the 4 progressive stages of team-based AI adoption.",
+      "license_or_usage_notes": "Academic paper formatting.",
+      "usage_rights": "unclear",
+      "downloadable": true,
+      "shortlist_candidate": false
+    }
+  ]
+}
