@@ -1,0 +1,29 @@
+{
+  "schema": "ground_truth_missing_or_invalid_links_v1",
+  "version": "1.0.0",
+  "generated_at_utc": "2026-03-03T14:24:50+00:00",
+  "source_report": "assets/ground_truth/external_download_report_v1.json",
+  "total_issues": 2,
+  "tasks": [
+    {
+      "index": 6,
+      "title": "Analysys Mason \u2013 AI and Data Platforms: Worldwide Market Shares 2024 (PPTX)",
+      "url": "https://www.analysysmason.com/contentassets/e884f8f984b848708b9187b44ca1373d/analysys_mason_ai_data_platforms_shares_dec2025_rma14.pptx",
+      "category_hint": "opportunity_assessment",
+      "issue_type": "invalid_file_type",
+      "error_or_status": "invalid_or_unknown",
+      "recommended_action": "replace_with_direct_file_url_or_alternate_source",
+      "priority": "high"
+    },
+    {
+      "index": 11,
+      "title": "Florida PALM \u2013 Executive Steering Committee Meeting Presentation (09/27/2023)",
+      "url": "https://myfloridacfo.com/docs-sf/florida-palm-libraries/governance/fy-23-24/presentation-09272023.pdf?sfvrsn=b40f0033_2",
+      "category_hint": "executive_steering_update",
+      "issue_type": "failed_download",
+      "error_or_status": "url_error:[Errno 60] Operation timed out",
+      "recommended_action": "manual_download_and_place_in_external_inbox",
+      "priority": "high"
+    }
+  ]
+}

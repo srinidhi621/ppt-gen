@@ -1,0 +1,909 @@
+{
+  "search_summary": {
+    "date_utc": "2026-03-03",
+    "queries_used": [
+      "site:slideshare.net \"AI strategy\" deck pdf consulting",
+      "\"responsible AI\" governance slide deck pdf",
+      "\"executive steering committee\" update slide deck template pdf",
+      "\"data platform\" blueprint slide deck pdf pptx",
+      "filetype:pdf \"RFP\" \"proposal\" \"slide deck\"",
+      "site:aws.amazon.com filetype:pdf re:Invent deck data platform architecture",
+      "site:databricks.com filetype:pdf \"lakehouse\" presentation deck",
+      "filetype:pptx Deloitte \"AI strategy\"",
+      "filetype:pdf Accenture \"responsible AI\" slide deck",
+      "filetype:pdf \"executive steering committee\" slide deck update status report",
+      "filetype:pdf Databricks customer story slide deck"
+    ],
+    "source_types": [
+      "Vendor conference decks (AWS/Microsoft/Databricks/ThoughtSpot)",
+      "Consulting / strategy firm reports in slide-like PDF format (Accenture/Capgemini/Analysys Mason)",
+      "Public-sector steering committee update decks (open government PDFs)",
+      "Open templates used in procurement / proposals / executive updates (Smartsheet and public RFP templates)",
+      "Standards / governance guides (ASEAN)"
+    ],
+    "limitations": [
+      "Top-tier consulting firms (McKinsey/BCG/Bain) rarely publish complete client-ready decks; closest proxies are investor briefings, webinar decks, and slide-like reports.",
+      "Some links are hosted behind CDNs or portals that may change; verify availability when building the corpus.",
+      "Several high-polish items are not pure PPTX but slide-like PDFs; mapped as acceptable 'slide-by-slide reports'.",
+      "Reuse rights vary widely; many vendor decks are 'all rights reserved' and suitable for reference, not redistribution."
+    ]
+  },
+  "longlist": [
+    {
+      "title": "AIM312-S Accenture Public Service (AWS Summit DC 2024) – Generative AI governance and operating model",
+      "url": "https://d1.awsstatic.com/events/Summits/dcsummit2024/AIM312-S_Accenture_PublicService_E1_DCSummit_20240626.pptx.pdf",
+      "publisher": "AWS / Accenture",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "responsible_ai_governance",
+        "ai_strategy",
+        "solution_approach",
+        "executive_steering_update"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.5
+      },
+      "why_relevant": "Consulting-style storyline (why/what/how), crisp governance constructs, strong slide discipline from a major summit template.",
+      "license_or_usage_notes": "Likely all-rights-reserved conference material; use as reference only.",
+      "downloadable": true
+    },
+    {
+      "title": "Databricks Reference Architecture (Databricks on AWS) – Lakehouse platform blueprint",
+      "url": "https://docs.databricks.com/_extras/documents/reference-architecture-databricks-on-aws.pdf",
+      "publisher": "Databricks",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "data_ai_platform_blueprint",
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.5
+      },
+      "why_relevant": "A clean, system-level reference architecture slide with strong layering and component taxonomy.",
+      "license_or_usage_notes": "Vendor reference architecture; reference use recommended.",
+      "downloadable": true
+    },
+    {
+      "title": "Advanced Data Engineering with Databricks (training deck) – End-to-end lakehouse patterns",
+      "url": "https://community.databricks.com/tmcxu86974/attachments/tmcxu86974/databricks-community-events/161/1/advanced-data-engineering-with-databricks.pdf",
+      "publisher": "Databricks",
+      "year": "2022",
+      "format": "pdf",
+      "categories": [
+        "solution_approach",
+        "data_ai_platform_blueprint"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Good slide mechanics for platform principles, pipeline patterns, and operational considerations in a consistent visual system.",
+      "license_or_usage_notes": "All rights reserved (Databricks). Reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "AWS Cloud Adoption Framework for Artificial Intelligence (CAF for AI)",
+      "url": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf",
+      "publisher": "Amazon Web Services",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "ai_strategy",
+        "solution_approach",
+        "responsible_ai_governance"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "why_relevant": "Executive-ready operating model framing with repeatable domains, stakeholder mapping, and capability structure.",
+      "license_or_usage_notes": "AWS whitepaper PDF; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "AWS Cloud Center of Excellence (CCoE) – Operating model guide (slide-like PDF)",
+      "url": "https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/cloud-center-of-excellence/cloud-center-of-excellence.pdf",
+      "publisher": "Amazon Web Services",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "solution_approach",
+        "executive_steering_update",
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Strong blueprint for governance, roles, cadence, and metrics—useful for steering updates and transformation governance slides.",
+      "license_or_usage_notes": "AWS Prescriptive Guidance; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "AWS Well-Architected Framework (2022-03-31)",
+      "url": "https://docs.aws.amazon.com/pdfs/wellarchitected/2022-03-31/framework/wellarchitected-framework-2022-03-31.pdf",
+      "publisher": "Amazon Web Services",
+      "year": "2022",
+      "format": "pdf",
+      "categories": [
+        "solution_approach",
+        "responsible_ai_governance",
+        "data_ai_platform_blueprint"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 5,
+        "visual_non_repetition": 4,
+        "average": 4.5
+      },
+      "why_relevant": "Gold-standard evidence and structured best practices; useful for embedding credible pillars/checklists into consulting decks.",
+      "license_or_usage_notes": "AWS documentation; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "Reducing the Scope of Impact with Cell-Based Architecture (AWS Well-Architected)",
+      "url": "https://docs.aws.amazon.com/pdfs/wellarchitected/latest/reducing-scope-of-impact-with-cell-based-architecture/reducing-scope-of-impact-with-cell-based-architecture.pdf",
+      "publisher": "Amazon Web Services",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "solution_approach",
+        "data_ai_platform_blueprint"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Reusable architecture pattern story (problem → pattern → control/data planes) that maps well to platform blueprint slides.",
+      "license_or_usage_notes": "AWS documentation; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "Modernization: Assessing Applications (AWS Prescriptive Guidance)",
+      "url": "https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/modernization-assessing-applications/modernization-assessing-applications.pdf",
+      "publisher": "Amazon Web Services",
+      "year": "2020",
+      "format": "pdf",
+      "categories": [
+        "opportunity_assessment",
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Solid assessment framework content to lift into opportunity assessment and roadmap decks.",
+      "license_or_usage_notes": "AWS guidance; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "Microsoft 365 Security Compass – Presentation",
+      "url": "https://learn.microsoft.com/en-us/microsoft-365/downloads/security-compass-presentation.pdf",
+      "publisher": "Microsoft",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "solution_approach",
+        "responsible_ai_governance",
+        "executive_steering_update"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "why_relevant": "Excellent Microsoft-grade slide craft: crisp hierarchy, strong iconography, and modular story blocks.",
+      "license_or_usage_notes": "Microsoft content; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "Power Platform in a Modern Data Platform Architecture (Fabric / OneLake reference architecture)",
+      "url": "https://static1.squarespace.com/static/648503938f362142f5170391/t/6654c48ca5a4dc3b65775102/1716831377338/MSFT_20240521_White%2BPaper%2B-%2BPower%2BPlatform%2Bin%2Ba%2BModern%2BData%2BPlatform%2BArchitecture.pdf",
+      "publisher": "Microsoft ecosystem (white paper)",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "data_ai_platform_blueprint",
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "High utility architecture diagramming style for data neighborhoods, integration edges, and governance boundaries.",
+      "license_or_usage_notes": "Check reuse rights on the hosted PDF; reference use recommended.",
+      "downloadable": true
+    },
+    {
+      "title": "The Art of Practical AI: Transforming Customer Experiences (Microsoft) – Customer stories slide deck",
+      "url": "https://info.microsoft.com/rs/157-GQE-382/images/EN-CNTNT-SlideDeck-SRGCM14132.pdf?version=0",
+      "publisher": "Microsoft",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "case_study",
+        "ai_strategy",
+        "business_case_roi"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.5
+      },
+      "why_relevant": "Slide-by-slide customer narrative with outcomes framing; good for case-study story structure and value articulation.",
+      "license_or_usage_notes": "Microsoft marketing content; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "Accenture Investor Briefing: Driving the Reinvention Ahead (client value narrative + proof points)",
+      "url": "https://investor.accenture.com/~/media/Files/A/Accenture-IR-V3/events-and-presentations/accenture-investor-briefing-driving-the-reinvention-ahead-for-our-clients.pdf",
+      "publisher": "Accenture",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "gtm_offering",
+        "ai_strategy",
+        "business_case_roi",
+        "executive_steering_update"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 5,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.7
+      },
+      "why_relevant": "Very high polish: tight narrative, quantified market framing, disciplined visual system; strong GTM/positioning patterns.",
+      "license_or_usage_notes": "Investor relations material; reference use is typically fine, but verify if redistributing.",
+      "downloadable": true
+    },
+    {
+      "title": "Accenture – AI: Built to Scale (report with consulting-grade story blocks)",
+      "url": "https://www.accenture.com/content/dam/accenture/final/a-com-migration/thought-leadership-assets/accenture-built-to-scale-pdf-report.pdf",
+      "publisher": "Accenture",
+      "year": "2022",
+      "format": "pdf",
+      "categories": [
+        "ai_strategy",
+        "solution_approach",
+        "business_case_roi",
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 5,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "why_relevant": "Reusable executive storyline templates: maturity, operating model, and scaling patterns with credible framing.",
+      "license_or_usage_notes": "Accenture thought leadership; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "Accenture – A New Era of Generative AI for Everyone",
+      "url": "https://www.accenture.com/content/dam/accenture/final/accenture-com/document/Accenture-A-New-Era-of-Generative-AI-for-Everyone.pdf",
+      "publisher": "Accenture",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "ai_strategy",
+        "gtm_offering",
+        "responsible_ai_governance"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "why_relevant": "Good example of GenAI framing, value pathways, and responsible AI narrative blocks.",
+      "license_or_usage_notes": "Accenture thought leadership; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "Accenture – Accelerating the UK’s Generative AI Reinvention",
+      "url": "https://www.accenture.com/content/dam/accenture/final/accenture-com/document-3/Accenture-Accelerating-The-UKs-Generative-AI-Reinvention.pdf",
+      "publisher": "Accenture",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "ai_strategy",
+        "business_case_roi",
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Strong macro-to-micro storyline: economic value thesis, adoption barriers, and policy/industry action patterns.",
+      "license_or_usage_notes": "Accenture thought leadership; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "Capgemini – Data-powered Innovation Review (Wave 11)",
+      "url": "https://www.capgemini.com/wp-content/uploads/2025/12/Data-powered_Innovation_Review_Wave_11.pdf",
+      "publisher": "Capgemini",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "gtm_offering",
+        "ai_strategy",
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "why_relevant": "High design polish and consistent editorial system; good for visual language, sectioning, and narrative pacing.",
+      "license_or_usage_notes": "Capgemini publication; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "Analysys Mason – AI and Data Platforms: Worldwide Market Shares 2024 (PPTX)",
+      "url": "https://www.analysysmason.com/contentassets/e884f8f984b848708b9187b44ca1373d/analysys_mason_ai_data_platforms_shares_dec2025_rma14.pptx",
+      "publisher": "Analysys Mason",
+      "year": "2025",
+      "format": "pptx",
+      "categories": [
+        "opportunity_assessment",
+        "business_case_roi",
+        "ai_strategy"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 5,
+        "visual_non_repetition": 4,
+        "average": 4.5
+      },
+      "why_relevant": "Great example of evidence-driven market framing, chart rigor, and clean slide design for exec decisioning.",
+      "license_or_usage_notes": "Analyst research; reuse may be restricted—treat as reference, not distributable.",
+      "downloadable": true
+    },
+    {
+      "title": "ASEAN Guide on AI Governance and Ethics",
+      "url": "https://asean.org/wp-content/uploads/2024/02/ASEAN-Guide-on-AI-Governance-and-Ethics_beautified_201223_v2.pdf",
+      "publisher": "ASEAN",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "responsible_ai_governance",
+        "ai_strategy"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 5,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "why_relevant": "Credible governance baseline; useful for governance pillars, policy checklists, and regional framing in exec decks.",
+      "license_or_usage_notes": "Public policy document; verify attribution requirements.",
+      "downloadable": true
+    },
+    {
+      "title": "Accountable AI Workshop Slides (CIPL Executive Retreat – 2018)",
+      "url": "https://www.informationpolicycentre.com/uploads/5/7/1/0/57104281/cipl_executive_retreat_-_accountable_ai_workshop_slides.pdf",
+      "publisher": "CIPL / Information Policy Centre",
+      "year": "2018",
+      "format": "pdf",
+      "categories": [
+        "responsible_ai_governance",
+        "executive_steering_update"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 5,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Strong governance content primitives (accountability, fairness, oversight) in workshop-friendly slide format.",
+      "license_or_usage_notes": "Likely reuse-limited; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "VAST Data – The VAST AI Operating System (AIOS) whitepaper (platform architecture story)",
+      "url": "https://www.vastdata.com/whitepaper.pdf",
+      "publisher": "VAST Data",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "data_ai_platform_blueprint",
+        "gtm_offering",
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "why_relevant": "Good example of vendor platform positioning + reference architecture visuals, helpful for blueprint slide patterns.",
+      "license_or_usage_notes": "Vendor content; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "Maximizing Synergies between Informatica and Databricks (webinar deck)",
+      "url": "https://www.informatica.com/content/dam/informatica-cxp/techtuesdays-slides-pdf/Maximizing%20Synergies%20between%20Informatica%20and%20Databricks.pdf",
+      "publisher": "Informatica",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "solution_approach",
+        "gtm_offering",
+        "data_ai_platform_blueprint"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Partner integration storyline, common in proposals; good patterns for 'why together' and reference architecture integration.",
+      "license_or_usage_notes": "Vendor webinar slides; reference use.",
+      "downloadable": true
+    },
+    {
+      "title": "ThoughtSpot – How to create a data-driven organization (PPTX)",
+      "url": "https://media.thoughtspot.com/pdf/How-to-create-a-data-driven-organization-with-Live-Analytics-from-ThoughtSpot.pptx",
+      "publisher": "ThoughtSpot",
+      "year": "2024",
+      "format": "other",
+      "categories": [
+        "ai_strategy",
+        "gtm_offering",
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 5,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.3
+      },
+      "why_relevant": "Clean PPTX mechanics + organizational analytics operating model patterns applicable to AI/data transformation decks.",
+      "license_or_usage_notes": "Vendor PPTX; verify reuse.",
+      "downloadable": true
+    },
+    {
+      "title": "Snowflake Partner Case Study – NEXT GENERATION BI WITH CLOUD DATA WAREHOUSE (Vattenfall)",
+      "url": "https://community.snowflake.com/resource/1636619798000/SnowcaseUtilitiesInitionsNextGenBISAPSolutionSheet",
+      "publisher": "Snowflake community / partner content",
+      "year": "2024",
+      "format": "pdf",
+      "categories": [
+        "case_study",
+        "solution_approach",
+        "business_case_roi"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.0
+      },
+      "why_relevant": "Compact case study with problem → platform → benefits; useful as a reusable one-pager slide pattern.",
+      "license_or_usage_notes": "Community-hosted asset; check terms before reuse.",
+      "downloadable": true
+    },
+    {
+      "title": "Smartsheet – Project Kickoff Presentation Template (PPTX)",
+      "url": "https://www.smartsheet.com/sites/default/files/2023-08/IC-Project-Kickoff-Presentation-11817_PowerPoint.pptx?srsltid=AfmBOorwGfyt6PnANVUtZYv1w3ML9lE_Y0rlN5kfxVDA8ALqWHI6InrD",
+      "publisher": "Smartsheet",
+      "year": "2023",
+      "format": "pptx",
+      "categories": [
+        "proposal_rfp",
+        "executive_steering_update",
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Strong baseline for consulting-style delivery governance decks: scope, approach, milestones, roles, reporting cadence.",
+      "license_or_usage_notes": "Template; review Smartsheet licensing for redistribution.",
+      "downloadable": true
+    },
+    {
+      "title": "UNHCR RFP 1007 – Bidders Conference Slide Deck (procurement structure exemplar)",
+      "url": "https://www.unhcr.org/sites/default/files/2025-03/unhcr-rfp-1007-bidders-conference-slide-deck.pdf",
+      "publisher": "UNHCR",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "proposal_rfp",
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.0
+      },
+      "why_relevant": "Good procurement evaluation + submission mechanics; useful for structuring RFP response sections and compliance slides.",
+      "license_or_usage_notes": "Public procurement material; reuse likely permissible with attribution—verify.",
+      "downloadable": true
+    },
+    {
+      "title": "DC DGS – Pre-Proposal Presentation (RFP) (public procurement deck format)",
+      "url": "https://dgs.dc.gov/sites/default/files/dc/sites/dgs/publication/attachments/Exhibit%20B%20-%20DCAM-21-NC-RFP-0004%20-%20PP%20Presentation.pdf",
+      "publisher": "Government of the District of Columbia (DGS)",
+      "year": "2020",
+      "format": "pdf",
+      "categories": [
+        "proposal_rfp"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.0
+      },
+      "why_relevant": "Provides a realistic RFP deck skeleton: rules, Q&A, submission mechanics, and compliance expectations.",
+      "license_or_usage_notes": "Public procurement deck; reuse likely permissible with attribution—verify.",
+      "downloadable": true
+    },
+    {
+      "title": "Remade Institute – RFP PowerPoint Template (PPTX) (proposal structure)",
+      "url": "https://remadeinstitute.org/wp-content/uploads/2024/01/RFP-23-01PowerPointTemplate.pptx",
+      "publisher": "REMADE Institute",
+      "year": "2024",
+      "format": "pptx",
+      "categories": [
+        "proposal_rfp",
+        "solution_approach"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "A clean proposal template with credible sections for approach, milestones, deliverables, and evaluation alignment.",
+      "license_or_usage_notes": "Template; verify licensing for reuse.",
+      "downloadable": true
+    },
+    {
+      "title": "MNsure Board of Directors Meeting Slide Deck (03/19/2025) – includes IT & Executive Steering Committee update",
+      "url": "https://www.mnsure.org/assets/bd-2025-03-19-deck_tcm34-673471.pdf",
+      "publisher": "MNsure (State of Minnesota)",
+      "year": "2025",
+      "format": "pdf",
+      "categories": [
+        "executive_steering_update"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 5,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Real-world steering update deck with metrics and status sections; good for governance reporting patterns and board-level framing.",
+      "license_or_usage_notes": "Public board materials; verify reuse terms.",
+      "downloadable": true
+    },
+    {
+      "title": "Florida PALM – Executive Steering Committee Meeting Presentation (09/27/2023) – budget and spend-plan reporting",
+      "url": "https://myfloridacfo.com/docs-sf/florida-palm-libraries/governance/fy-23-24/presentation-09272023.pdf?sfvrsn=b40f0033_2",
+      "publisher": "Florida Department of Financial Services (Florida PALM)",
+      "year": "2023",
+      "format": "pdf",
+      "categories": [
+        "executive_steering_update",
+        "business_case_roi"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 4,
+        "evidence_quality": 5,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Great for steering updates that must show budget burn, spend plan, and execution status without fluff.",
+      "license_or_usage_notes": "Public government material; reuse likely permissible with attribution—verify.",
+      "downloadable": true
+    },
+    {
+      "title": "Washington State – FY25 Pitch Deck Template 2.0 (public sector investment case deck)",
+      "url": "https://watech.wa.gov/sites/default/files/2024-09/FY25_pitch_deck_template_2.0_published.pptx",
+      "publisher": "WaTech (Washington State)",
+      "year": "2024",
+      "format": "pptx",
+      "categories": [
+        "business_case_roi",
+        "proposal_rfp",
+        "opportunity_assessment"
+      ],
+      "quality_scores": {
+        "message_clarity": 4,
+        "narrative_flow": 4,
+        "visual_hierarchy": 4,
+        "layout_consistency": 5,
+        "evidence_quality": 4,
+        "visual_non_repetition": 4,
+        "average": 4.2
+      },
+      "why_relevant": "Template forces crisp ROI, readiness, and implementation plan—useful for business case and investment committee decks.",
+      "license_or_usage_notes": "Government-published template; verify reuse terms.",
+      "downloadable": true
+    }
+  ],
+  "shortlist": [
+    {
+      "title": "Accenture Investor Briefing: Driving the Reinvention Ahead",
+      "url": "https://investor.accenture.com/~/media/Files/A/Accenture-IR-V3/events-and-presentations/accenture-investor-briefing-driving-the-reinvention-ahead-for-our-clients.pdf",
+      "best_fit_categories": [
+        "gtm_offering",
+        "business_case_roi",
+        "executive_steering_update"
+      ],
+      "what_to_learn": [
+        "story structure pattern: market thesis → differentiated capabilities → proof points → operating model implications",
+        "visual composition pattern: consistent headline + subhead + quantified callouts, disciplined whitespace, repeatable slide grids",
+        "evidence presentation pattern: market sizing + pipeline metrics + case snippets framed as outcomes"
+      ],
+      "risks_or_caveats": "Investor-relations framing can skew optimistic; treat quantified claims as illustrative unless you can corroborate."
+    },
+    {
+      "title": "AIM312-S Accenture Public Service (AWS Summit DC 2024) – GenAI governance",
+      "url": "https://d1.awsstatic.com/events/Summits/dcsummit2024/AIM312-S_Accenture_PublicService_E1_DCSummit_20240626.pptx.pdf",
+      "best_fit_categories": [
+        "responsible_ai_governance",
+        "solution_approach"
+      ],
+      "what_to_learn": [
+        "story structure pattern: risk framing → governance pillars → roles/RACI → operating cadence",
+        "visual composition pattern: summit-grade templates with strong hierarchy, icon discipline, and modular blocks",
+        "evidence presentation pattern: governance recommendations anchored to frameworks and implementation steps"
+      ],
+      "risks_or_caveats": "Conference decks sometimes omit hard numbers; treat as pattern reference rather than evidence source."
+    },
+    {
+      "title": "Databricks Reference Architecture (Databricks on AWS)",
+      "url": "https://docs.databricks.com/_extras/documents/reference-architecture-databricks-on-aws.pdf",
+      "best_fit_categories": [
+        "data_ai_platform_blueprint"
+      ],
+      "what_to_learn": [
+        "story structure pattern: layered platform map with clear domains (ingest → store → govern → serve → consume)",
+        "visual composition pattern: component taxonomy that reads cleanly at exec distance",
+        "evidence presentation pattern: architecture as evidence—capability coverage demonstrated by mapped services"
+      ],
+      "risks_or_caveats": "Vendor-centric; adapt to neutral language if you want a cloud-agnostic blueprint."
+    },
+    {
+      "title": "AWS Cloud Adoption Framework for Artificial Intelligence (CAF for AI)",
+      "url": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf",
+      "best_fit_categories": [
+        "ai_strategy",
+        "solution_approach"
+      ],
+      "what_to_learn": [
+        "story structure pattern: operating model domains + stakeholder alignment + capability roadmap",
+        "visual composition pattern: framework-driven slide primitives you can reuse as 'pillars' slides",
+        "evidence presentation pattern: credibility via structured practices and cross-links to prescriptive guidance"
+      ],
+      "risks_or_caveats": "More framework than execution details; pair with a delivery plan deck when building proposals."
+    },
+    {
+      "title": "Microsoft – The Art of Practical AI: Transforming Customer Experiences (customer stories deck)",
+      "url": "https://info.microsoft.com/rs/157-GQE-382/images/EN-CNTNT-SlideDeck-SRGCM14132.pdf?version=0",
+      "best_fit_categories": [
+        "case_study",
+        "business_case_roi"
+      ],
+      "what_to_learn": [
+        "story structure pattern: customer barrier → AI solution → adoption enablers → outcomes",
+        "visual composition pattern: case-study slide rhythm (context, challenge, solution, impact) with consistent scaffolding",
+        "evidence presentation pattern: outcome claims presented as business metrics and operational improvements"
+      ],
+      "risks_or_caveats": "Marketing-led storytelling; validate outcome numbers if you reuse as evidence."
+    },
+    {
+      "title": "Analysys Mason – AI and Data Platforms: Worldwide Market Shares 2024 (PPTX)",
+      "url": "https://www.analysysmason.com/contentassets/e884f8f984b848708b9187b44ca1373d/analysys_mason_ai_data_platforms_shares_dec2025_rma14.pptx",
+      "best_fit_categories": [
+        "opportunity_assessment",
+        "business_case_roi"
+      ],
+      "what_to_learn": [
+        "story structure pattern: market landscape → segmentation → winners/losers → implication slide",
+        "visual composition pattern: chart-first storytelling with clean annotation and minimal decoration",
+        "evidence presentation pattern: credible third-party analyst charts to anchor executive decisions"
+      ],
+      "risks_or_caveats": "Analyst IP usually has strict reuse terms; treat as internal reference unless licensed."
+    },
+    {
+      "title": "ASEAN Guide on AI Governance and Ethics",
+      "url": "https://asean.org/wp-content/uploads/2024/02/ASEAN-Guide-on-AI-Governance-and-Ethics_beautified_201223_v2.pdf",
+      "best_fit_categories": [
+        "responsible_ai_governance"
+      ],
+      "what_to_learn": [
+        "story structure pattern: governance principles → national-level recommendations → organizational controls",
+        "visual composition pattern: policy-doc sections that can be reframed into deck-friendly pillars",
+        "evidence presentation pattern: authoritative guidance as defensible governance baseline"
+      ],
+      "risks_or_caveats": "Policy tone can be heavy; translate into a lighter exec narrative for consulting decks."
+    },
+    {
+      "title": "Smartsheet – Project Kickoff Presentation Template (PPTX)",
+      "url": "https://www.smartsheet.com/sites/default/files/2023-08/IC-Project-Kickoff-Presentation-11817_PowerPoint.pptx?srsltid=AfmBOorwGfyt6PnANVUtZYv1w3ML9lE_Y0rlN5kfxVDA8ALqWHI6InrD",
+      "best_fit_categories": [
+        "proposal_rfp",
+        "solution_approach"
+      ],
+      "what_to_learn": [
+        "story structure pattern: scope → approach → phases → roles → reporting",
+        "visual composition pattern: straightforward, client-safe layout scaffolding and agenda discipline",
+        "evidence presentation pattern: delivery governance presented as timelines and RACI blocks"
+      ],
+      "risks_or_caveats": "Template feel; you will need to elevate typography and visual system to reach McKinsey-level polish."
+    },
+    {
+      "title": "Remade Institute – RFP PowerPoint Template (PPTX)",
+      "url": "https://remadeinstitute.org/wp-content/uploads/2024/01/RFP-23-01PowerPointTemplate.pptx",
+      "best_fit_categories": [
+        "proposal_rfp"
+      ],
+      "what_to_learn": [
+        "story structure pattern: compliance sections → technical approach → milestones → team → budget framing",
+        "visual composition pattern: proposal template scaffolding with consistent sectioning",
+        "evidence presentation pattern: use of structured prompts that force measurable deliverables"
+      ],
+      "risks_or_caveats": "Design may be utilitarian; treat as structural ground truth rather than visual gold standard."
+    },
+    {
+      "title": "UNHCR RFP 1007 – Bidders Conference Slide Deck",
+      "url": "https://www.unhcr.org/sites/default/files/2025-03/unhcr-rfp-1007-bidders-conference-slide-deck.pdf",
+      "best_fit_categories": [
+        "proposal_rfp"
+      ],
+      "what_to_learn": [
+        "story structure pattern: evaluation criteria → submission mechanics → timelines → Q&A norms",
+        "visual composition pattern: how procurement decks prioritize clarity and compliance over decoration",
+        "evidence presentation pattern: explicit scoring and gates you can mirror in your response deck"
+      ],
+      "risks_or_caveats": "Not visually premium; its value is in procurement structure and compliance patterns."
+    },
+    {
+      "title": "Florida PALM – Executive Steering Committee Meeting Presentation (09/27/2023)",
+      "url": "https://myfloridacfo.com/docs-sf/florida-palm-libraries/governance/fy-23-24/presentation-09272023.pdf?sfvrsn=b40f0033_2",
+      "best_fit_categories": [
+        "executive_steering_update"
+      ],
+      "what_to_learn": [
+        "story structure pattern: budget → progress → risks/issues → next steps",
+        "visual composition pattern: board-ready tables and spend-plan visuals that stay readable",
+        "evidence presentation pattern: financial execution evidence shown with simple, stable reporting artifacts"
+      ],
+      "risks_or_caveats": "Public-sector style can be dense; improve by adding executive synthesis and fewer tables per slide."
+    },
+    {
+      "title": "Wildcard: Microsoft 365 Security Compass – Presentation",
+      "url": "https://learn.microsoft.com/en-us/microsoft-365/downloads/security-compass-presentation.pdf",
+      "best_fit_categories": [
+        "solution_approach",
+        "responsible_ai_governance"
+      ],
+      "what_to_learn": [
+        "story structure pattern: security posture → guiding principles → architecture patterns → operational practices",
+        "visual composition pattern: Microsoft-grade hierarchy, iconography, and clean section banners",
+        "evidence presentation pattern: mapping guidance to architecture references as credibility anchors"
+      ],
+      "risks_or_caveats": "Security-specific; adapt patterns to AI governance and data platform context."
+    }
+  ]
+}
+

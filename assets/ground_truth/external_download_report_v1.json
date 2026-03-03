@@ -1,0 +1,191 @@
+{
+  "schema": "ground_truth_external_download_report_v1",
+  "version": "1.0.0",
+  "generated_at_utc": "2026-03-03T14:14:59+00:00",
+  "source_file": "assets/ground_truth/external_links.json",
+  "target_dir": "assets/ground_truth/external_inbox",
+  "total_shortlist": 12,
+  "downloaded_count": 11,
+  "failed_count": 1,
+  "results": [
+    {
+      "index": 1,
+      "title": "Accenture Investor Briefing: Driving the Reinvention Ahead",
+      "url": "https://investor.accenture.com/~/media/Files/A/Accenture-IR-V3/events-and-presentations/accenture-investor-briefing-driving-the-reinvention-ahead-for-our-clients.pdf",
+      "category_hint": "gtm_offering",
+      "status": "downloaded",
+      "error": "http_403",
+      "saved_as": "assets/ground_truth/external_inbox/01_gtm_offering_accenture_investor_briefing_driving_the_reinvention_ahead.pdf",
+      "bytes": 1092045,
+      "content_type": "application/pdf (retry via curl)",
+      "retry_recovered": true,
+      "post_validation": {
+        "status": "valid_pdf",
+        "file_signature": "PDF document, version 1.7, 13 pages"
+      }
+    },
+    {
+      "index": 2,
+      "title": "AIM312-S Accenture Public Service (AWS Summit DC 2024) \u2013 GenAI governance",
+      "url": "https://d1.awsstatic.com/events/Summits/dcsummit2024/AIM312-S_Accenture_PublicService_E1_DCSummit_20240626.pptx.pdf",
+      "category_hint": "responsible_ai_governance",
+      "status": "downloaded",
+      "final_url": "https://d1.awsstatic.com/events/Summits/dcsummit2024/AIM312-S_Accenture_PublicService_E1_DCSummit_20240626.pptx.pdf",
+      "content_type": "application/pdf",
+      "bytes": 1068580,
+      "saved_as": "assets/ground_truth/external_inbox/02_responsible_ai_governance_aim312_s_accenture_public_service_aws_summit_dc_2024_genai_governance.pdf",
+      "post_validation": {
+        "status": "valid_pdf",
+        "file_signature": "PDF document, version 1.7, 12 pages"
+      }
+    },
+    {
+      "index": 3,
+      "title": "Databricks Reference Architecture (Databricks on AWS)",
+      "url": "https://docs.databricks.com/_extras/documents/reference-architecture-databricks-on-aws.pdf",
+      "category_hint": "data_ai_platform_blueprint",
+      "status": "downloaded",
+      "final_url": "https://docs.databricks.com/_extras/documents/reference-architecture-databricks-on-aws.pdf",
+      "content_type": "application/pdf",
+      "bytes": 288345,
+      "saved_as": "assets/ground_truth/external_inbox/03_data_ai_platform_blueprint_databricks_reference_architecture_databricks_on_aws.pdf",
+      "post_validation": {
+        "status": "valid_pdf",
+        "file_signature": "PDF document, version 1.4, 1 pages"
+      }
+    },
+    {
+      "index": 4,
+      "title": "AWS Cloud Adoption Framework for Artificial Intelligence (CAF for AI)",
+      "url": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf",
+      "category_hint": "ai_strategy",
+      "status": "downloaded",
+      "final_url": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf",
+      "content_type": "application/pdf",
+      "bytes": 897103,
+      "saved_as": "assets/ground_truth/external_inbox/04_ai_strategy_aws_cloud_adoption_framework_for_artificial_intelligence_caf_for_ai.pdf",
+      "post_validation": {
+        "status": "valid_pdf",
+        "file_signature": "PDF document, version 1.4, 4 pages"
+      }
+    },
+    {
+      "index": 5,
+      "title": "Microsoft \u2013 The Art of Practical AI: Transforming Customer Experiences (customer stories deck)",
+      "url": "https://info.microsoft.com/rs/157-GQE-382/images/EN-CNTNT-SlideDeck-SRGCM14132.pdf?version=0",
+      "category_hint": "case_study",
+      "status": "downloaded",
+      "final_url": "https://info.microsoft.com/rs/157-GQE-382/images/EN-CNTNT-SlideDeck-SRGCM14132.pdf?version=0",
+      "content_type": "application/pdf",
+      "bytes": 9893882,
+      "saved_as": "assets/ground_truth/external_inbox/05_case_study_microsoft_the_art_of_practical_ai_transforming_customer_experiences_customer_sto.pdf",
+      "post_validation": {
+        "status": "valid_pdf",
+        "file_signature": "PDF document, version 1.7"
+      }
+    },
+    {
+      "index": 6,
+      "title": "Analysys Mason \u2013 AI and Data Platforms: Worldwide Market Shares 2024 (PPTX)",
+      "url": "https://www.analysysmason.com/contentassets/e884f8f984b848708b9187b44ca1373d/analysys_mason_ai_data_platforms_shares_dec2025_rma14.pptx",
+      "category_hint": "opportunity_assessment",
+      "status": "downloaded",
+      "final_url": "https://www.analysysmason.com/",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 62714,
+      "saved_as": "assets/ground_truth/external_inbox/06_opportunity_assessment_analysys_mason_ai_and_data_platforms_worldwide_market_shares_2024_pptx.html",
+      "post_validation": {
+        "status": "invalid_or_unknown",
+        "file_signature": "HTML document text, Unicode text, UTF-8 text, with very long lines (3691), with CRLF, LF line terminators"
+      }
+    },
+    {
+      "index": 7,
+      "title": "ASEAN Guide on AI Governance and Ethics",
+      "url": "https://asean.org/wp-content/uploads/2024/02/ASEAN-Guide-on-AI-Governance-and-Ethics_beautified_201223_v2.pdf",
+      "category_hint": "responsible_ai_governance",
+      "status": "downloaded",
+      "final_url": "https://asean.org/wp-content/uploads/2024/02/ASEAN-Guide-on-AI-Governance-and-Ethics_beautified_201223_v2.pdf",
+      "content_type": "application/pdf",
+      "bytes": 4233765,
+      "saved_as": "assets/ground_truth/external_inbox/07_responsible_ai_governance_asean_guide_on_ai_governance_and_ethics.pdf",
+      "post_validation": {
+        "status": "valid_pdf",
+        "file_signature": "PDF document, version 1.7, 87 pages"
+      }
+    },
+    {
+      "index": 8,
+      "title": "Smartsheet \u2013 Project Kickoff Presentation Template (PPTX)",
+      "url": "https://www.smartsheet.com/sites/default/files/2023-08/IC-Project-Kickoff-Presentation-11817_PowerPoint.pptx?srsltid=AfmBOorwGfyt6PnANVUtZYv1w3ML9lE_Y0rlN5kfxVDA8ALqWHI6InrD",
+      "category_hint": "proposal_rfp",
+      "status": "downloaded",
+      "final_url": "https://www.smartsheet.com/sites/default/files/2023-08/IC-Project-Kickoff-Presentation-11817_PowerPoint.pptx?srsltid=AfmBOorwGfyt6PnANVUtZYv1w3ML9lE_Y0rlN5kfxVDA8ALqWHI6InrD",
+      "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "bytes": 255235,
+      "saved_as": "assets/ground_truth/external_inbox/08_proposal_rfp_smartsheet_project_kickoff_presentation_template_pptx.pptx",
+      "post_validation": {
+        "status": "valid_pptx",
+        "file_signature": "Microsoft PowerPoint 2007+"
+      }
+    },
+    {
+      "index": 9,
+      "title": "Remade Institute \u2013 RFP PowerPoint Template (PPTX)",
+      "url": "https://remadeinstitute.org/wp-content/uploads/2024/01/RFP-23-01PowerPointTemplate.pptx",
+      "category_hint": "proposal_rfp",
+      "status": "downloaded",
+      "final_url": "https://remadeinstitute.org/wp-content/uploads/2024/01/RFP-23-01PowerPointTemplate.pptx",
+      "content_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "bytes": 1509336,
+      "saved_as": "assets/ground_truth/external_inbox/09_proposal_rfp_remade_institute_rfp_powerpoint_template_pptx.pptx",
+      "post_validation": {
+        "status": "valid_pptx",
+        "file_signature": "Microsoft PowerPoint 2007+"
+      }
+    },
+    {
+      "index": 10,
+      "title": "UNHCR RFP 1007 \u2013 Bidders Conference Slide Deck",
+      "url": "https://www.unhcr.org/sites/default/files/2025-03/unhcr-rfp-1007-bidders-conference-slide-deck.pdf",
+      "category_hint": "proposal_rfp",
+      "status": "downloaded",
+      "final_url": "https://www.unhcr.org/sites/default/files/2025-03/unhcr-rfp-1007-bidders-conference-slide-deck.pdf",
+      "content_type": "application/pdf",
+      "bytes": 630571,
+      "saved_as": "assets/ground_truth/external_inbox/10_proposal_rfp_unhcr_rfp_1007_bidders_conference_slide_deck.pdf",
+      "post_validation": {
+        "status": "valid_pdf",
+        "file_signature": "PDF document, version 1.7, 6 pages"
+      }
+    },
+    {
+      "index": 11,
+      "title": "Florida PALM \u2013 Executive Steering Committee Meeting Presentation (09/27/2023)",
+      "url": "https://myfloridacfo.com/docs-sf/florida-palm-libraries/governance/fy-23-24/presentation-09272023.pdf?sfvrsn=b40f0033_2",
+      "category_hint": "executive_steering_update",
+      "status": "failed",
+      "error": "url_error:[Errno 60] Operation timed out"
+    },
+    {
+      "index": 12,
+      "title": "Wildcard: Microsoft 365 Security Compass \u2013 Presentation",
+      "url": "https://learn.microsoft.com/en-us/microsoft-365/downloads/security-compass-presentation.pdf",
+      "category_hint": "solution_approach",
+      "status": "downloaded",
+      "final_url": "https://learn.microsoft.com/en-us/microsoft-365/downloads/security-compass-presentation.pdf",
+      "content_type": "application/pdf",
+      "bytes": 19909332,
+      "saved_as": "assets/ground_truth/external_inbox/12_solution_approach_wildcard_microsoft_365_security_compass_presentation.pdf",
+      "post_validation": {
+        "status": "valid_pdf",
+        "file_signature": "PDF document, version 1.7, 111 pages"
+      }
+    }
+  ],
+  "post_validation": {
+    "valid_downloads": 10,
+    "invalid_downloads": 1,
+    "notes": "Accenture URL recovered via retry. Florida PALM URL still timed out from this environment."
+  }
+}

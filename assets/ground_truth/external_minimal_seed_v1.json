@@ -1,0 +1,192 @@
+{
+  "schema": "ground_truth_external_minimal_seed_v1",
+  "version": "1.0.0",
+  "generated_at_utc": "2026-03-03T14:10:18+00:00",
+  "generated_from": "assets/ground_truth/external_links.json",
+  "selection_policy": {
+    "target_size": 8,
+    "minimum_average_quality": 4.0,
+    "goal": "Maximize category coverage with a minimal, high-signal seed set before broader ingestion."
+  },
+  "selected_decks": [
+    {
+      "seed_id": "external_seed_01",
+      "title": "Accenture Investor Briefing: Driving the Reinvention Ahead",
+      "url": "https://investor.accenture.com/~/media/Files/A/Accenture-IR-V3/events-and-presentations/accenture-investor-briefing-driving-the-reinvention-ahead-for-our-clients.pdf",
+      "publisher": "Accenture",
+      "year": "2023",
+      "format": "pdf",
+      "best_fit_categories": [
+        "gtm_offering",
+        "business_case_roi",
+        "executive_steering_update"
+      ],
+      "average_quality": 4.7,
+      "why_selected": "Category coverage and quality >= 4.0 with reusable structure/visual patterns.",
+      "what_to_learn": [
+        "story structure pattern: market thesis \u2192 differentiated capabilities \u2192 proof points \u2192 operating model implications",
+        "visual composition pattern: consistent headline + subhead + quantified callouts, disciplined whitespace, repeatable slide grids",
+        "evidence presentation pattern: market sizing + pipeline metrics + case snippets framed as outcomes"
+      ],
+      "license_or_usage_notes": "Investor relations material; reference use is typically fine, but verify if redistributing."
+    },
+    {
+      "seed_id": "external_seed_02",
+      "title": "AIM312-S Accenture Public Service (AWS Summit DC 2024) \u2013 GenAI governance",
+      "url": "https://d1.awsstatic.com/events/Summits/dcsummit2024/AIM312-S_Accenture_PublicService_E1_DCSummit_20240626.pptx.pdf",
+      "publisher": "AWS / Accenture",
+      "year": "2024",
+      "format": "pdf",
+      "best_fit_categories": [
+        "responsible_ai_governance",
+        "solution_approach"
+      ],
+      "average_quality": 4.5,
+      "why_selected": "Category coverage and quality >= 4.0 with reusable structure/visual patterns.",
+      "what_to_learn": [
+        "story structure pattern: risk framing \u2192 governance pillars \u2192 roles/RACI \u2192 operating cadence",
+        "visual composition pattern: summit-grade templates with strong hierarchy, icon discipline, and modular blocks",
+        "evidence presentation pattern: governance recommendations anchored to frameworks and implementation steps"
+      ],
+      "license_or_usage_notes": "Likely all-rights-reserved conference material; use as reference only."
+    },
+    {
+      "seed_id": "external_seed_03",
+      "title": "Databricks Reference Architecture (Databricks on AWS)",
+      "url": "https://docs.databricks.com/_extras/documents/reference-architecture-databricks-on-aws.pdf",
+      "publisher": "Databricks",
+      "year": "2023",
+      "format": "pdf",
+      "best_fit_categories": [
+        "data_ai_platform_blueprint"
+      ],
+      "average_quality": 4.5,
+      "why_selected": "Category coverage and quality >= 4.0 with reusable structure/visual patterns.",
+      "what_to_learn": [
+        "story structure pattern: layered platform map with clear domains (ingest \u2192 store \u2192 govern \u2192 serve \u2192 consume)",
+        "visual composition pattern: component taxonomy that reads cleanly at exec distance",
+        "evidence presentation pattern: architecture as evidence\u2014capability coverage demonstrated by mapped services"
+      ],
+      "license_or_usage_notes": "Vendor reference architecture; reference use recommended."
+    },
+    {
+      "seed_id": "external_seed_04",
+      "title": "AWS Cloud Adoption Framework for Artificial Intelligence (CAF for AI)",
+      "url": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf",
+      "publisher": "Amazon Web Services",
+      "year": "2023",
+      "format": "pdf",
+      "best_fit_categories": [
+        "ai_strategy",
+        "solution_approach"
+      ],
+      "average_quality": 4.3,
+      "why_selected": "Category coverage and quality >= 4.0 with reusable structure/visual patterns.",
+      "what_to_learn": [
+        "story structure pattern: operating model domains + stakeholder alignment + capability roadmap",
+        "visual composition pattern: framework-driven slide primitives you can reuse as 'pillars' slides",
+        "evidence presentation pattern: credibility via structured practices and cross-links to prescriptive guidance"
+      ],
+      "license_or_usage_notes": "AWS whitepaper PDF; reference use."
+    },
+    {
+      "seed_id": "external_seed_05",
+      "title": "Microsoft \u2013 The Art of Practical AI: Transforming Customer Experiences (customer stories deck)",
+      "url": "https://info.microsoft.com/rs/157-GQE-382/images/EN-CNTNT-SlideDeck-SRGCM14132.pdf?version=0",
+      "publisher": "Microsoft",
+      "year": "2025",
+      "format": "pdf",
+      "best_fit_categories": [
+        "case_study",
+        "business_case_roi"
+      ],
+      "average_quality": 4.5,
+      "why_selected": "Category coverage and quality >= 4.0 with reusable structure/visual patterns.",
+      "what_to_learn": [
+        "story structure pattern: customer barrier \u2192 AI solution \u2192 adoption enablers \u2192 outcomes",
+        "visual composition pattern: case-study slide rhythm (context, challenge, solution, impact) with consistent scaffolding",
+        "evidence presentation pattern: outcome claims presented as business metrics and operational improvements"
+      ],
+      "license_or_usage_notes": "Microsoft marketing content; reference use."
+    },
+    {
+      "seed_id": "external_seed_06",
+      "title": "Smartsheet \u2013 Project Kickoff Presentation Template (PPTX)",
+      "url": "https://www.smartsheet.com/sites/default/files/2023-08/IC-Project-Kickoff-Presentation-11817_PowerPoint.pptx?srsltid=AfmBOorwGfyt6PnANVUtZYv1w3ML9lE_Y0rlN5kfxVDA8ALqWHI6InrD",
+      "publisher": "Smartsheet",
+      "year": "2023",
+      "format": "pptx",
+      "best_fit_categories": [
+        "proposal_rfp",
+        "solution_approach"
+      ],
+      "average_quality": 4.2,
+      "why_selected": "Category coverage and quality >= 4.0 with reusable structure/visual patterns.",
+      "what_to_learn": [
+        "story structure pattern: scope \u2192 approach \u2192 phases \u2192 roles \u2192 reporting",
+        "visual composition pattern: straightforward, client-safe layout scaffolding and agenda discipline",
+        "evidence presentation pattern: delivery governance presented as timelines and RACI blocks"
+      ],
+      "license_or_usage_notes": "Template; review Smartsheet licensing for redistribution."
+    },
+    {
+      "seed_id": "external_seed_07",
+      "title": "Remade Institute \u2013 RFP PowerPoint Template (PPTX)",
+      "url": "https://remadeinstitute.org/wp-content/uploads/2024/01/RFP-23-01PowerPointTemplate.pptx",
+      "publisher": "REMADE Institute",
+      "year": "2024",
+      "format": "pptx",
+      "best_fit_categories": [
+        "proposal_rfp"
+      ],
+      "average_quality": 4.2,
+      "why_selected": "Category coverage and quality >= 4.0 with reusable structure/visual patterns.",
+      "what_to_learn": [
+        "story structure pattern: compliance sections \u2192 technical approach \u2192 milestones \u2192 team \u2192 budget framing",
+        "visual composition pattern: proposal template scaffolding with consistent sectioning",
+        "evidence presentation pattern: use of structured prompts that force measurable deliverables"
+      ],
+      "license_or_usage_notes": "Template; verify licensing for reuse."
+    },
+    {
+      "seed_id": "external_seed_08",
+      "title": "Florida PALM \u2013 Executive Steering Committee Meeting Presentation (09/27/2023)",
+      "url": "https://myfloridacfo.com/docs-sf/florida-palm-libraries/governance/fy-23-24/presentation-09272023.pdf?sfvrsn=b40f0033_2",
+      "publisher": "Florida Department of Financial Services (Florida PALM)",
+      "year": "2023",
+      "format": "pdf",
+      "best_fit_categories": [
+        "executive_steering_update"
+      ],
+      "average_quality": 4.2,
+      "why_selected": "Category coverage and quality >= 4.0 with reusable structure/visual patterns.",
+      "what_to_learn": [
+        "story structure pattern: budget \u2192 progress \u2192 risks/issues \u2192 next steps",
+        "visual composition pattern: board-ready tables and spend-plan visuals that stay readable",
+        "evidence presentation pattern: financial execution evidence shown with simple, stable reporting artifacts"
+      ],
+      "license_or_usage_notes": "Public government material; reuse likely permissible with attribution\u2014verify."
+    }
+  ],
+  "category_coverage": {
+    "proposal_rfp": 2,
+    "solution_approach": 3,
+    "case_study": 1,
+    "gtm_offering": 1,
+    "ai_strategy": 1,
+    "opportunity_assessment": 0,
+    "business_case_roi": 2,
+    "responsible_ai_governance": 1,
+    "data_ai_platform_blueprint": 1,
+    "executive_steering_update": 2
+  },
+  "known_gaps": [
+    "opportunity_assessment"
+  ],
+  "next_fill_candidates": [
+    {
+      "category": "opportunity_assessment",
+      "candidate_title": "Analysys Mason \u2013 AI and Data Platforms: Worldwide Market Shares 2024 (PPTX)"
+    }
+  ]
+}
