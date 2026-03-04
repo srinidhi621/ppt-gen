@@ -72,6 +72,10 @@ def evaluate_v2_quality_gates(
     composition_spec_v2: Dict[str, Any],
     image_capable_layouts: List[str],
     run_log_path: Path,
+    intent_briefs: List[Dict[str, Any]] | None = None,
+    structure_plans: List[Dict[str, Any]] | None = None,
+    visual_realization_plans: List[Dict[str, Any]] | None = None,
+    planning_validation: Dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
     """Evaluate final V2 quality gates and return structured results."""
     issues: List[Dict[str, Any]] = []
@@ -218,6 +222,33 @@ def evaluate_v2_quality_gates(
             }
         )
 
+    # Gate 7: message contracts must be present and pre-validated when planning artifacts are provided.
+    message_gate_payload = _evaluate_message_gate(
+        deck=deck_v2,
+        intent_briefs=intent_briefs or [],
+        planning_validation=planning_validation or {},
+    )
+    checks["message_contract_alignment"] = message_gate_payload["check"]
+    issues.extend(message_gate_payload["issues"])
+
+    # Gate 8: planned structure should align with selected layouts.
+    structure_gate_payload = _evaluate_structure_gate(
+        deck=deck_v2,
+        structure_plans=structure_plans or [],
+    )
+    checks["structure_layout_alignment"] = structure_gate_payload["check"]
+    issues.extend(structure_gate_payload["issues"])
+
+    # Gate 9: visual primitive plan should align with rendered composition.
+    visual_gate_payload = _evaluate_visual_gate(
+        deck=deck_v2,
+        composition_spec=composition_spec_v2,
+        visual_realization_plans=visual_realization_plans or [],
+        image_capable_layouts=image_capable_layouts,
+    )
+    checks["visual_primitive_policy"] = visual_gate_payload["check"]
+    issues.extend(visual_gate_payload["issues"])
+
     status = "PASS" if all(value.get("pass") for value in checks.values()) else "FAIL"
     return {"status": status, "checks": checks, "issues": issues}
 
@@ -278,6 +309,200 @@ def _collect_hero_icon_violations(composition_spec: Dict[str, Any]) -> List[Dict
                 }
             )
     return violations
+
+
+def _evaluate_message_gate(
+    *,
+    deck: DeckIR,
+    intent_briefs: List[Dict[str, Any]],
+    planning_validation: Dict[str, Any],
+) -> Dict[str, Any]:
+    if not intent_briefs:
+        return {"check": {"pass": True, "coverage": "not_provided"}, "issues": []}
+
+    issues: List[Dict[str, Any]] = []
+    planning_status = str(planning_validation.get("status", "PASS"))
+    if planning_status == "FAIL":
+        issues.append(
+            {
+                "gate": "message_contract_alignment",
+                "slide_id": "deck",
+                "message": "Planning validation reported FAIL for message/structure/visual guardrails.",
+            }
+        )
+
+    matched = 0
+    for slide, intent in _pair_slides_with_plans(deck.slides, intent_briefs):
+        if intent is None:
+            issues.append(
+                {
+                    "gate": "message_contract_alignment",
+                    "slide_id": slide.slide_id,
+                    "message": "No intent brief available for slide.",
+                }
+            )
+            continue
+        matched += 1
+        required_fields = intent.get("required_fields", [])
+        for field_name in required_fields:
+            if str(intent.get(field_name, "")).strip():
+                continue
+            issues.append(
+                {
+                    "gate": "message_contract_alignment",
+                    "slide_id": slide.slide_id,
+                    "message": f"Intent brief missing required field '{field_name}'.",
+                    "details": {"section_id": intent.get("section_id")},
+                }
+            )
+        title_text = str(slide.fields.get("ph_title", "")).strip()
+        if not title_text:
+            issues.append(
+                {
+                    "gate": "message_contract_alignment",
+                    "slide_id": slide.slide_id,
+                    "message": "Slide title is empty; bottom-line headline is required.",
+                }
+            )
+
+    pass_check = not any(issue.get("gate") == "message_contract_alignment" for issue in issues)
+    return {
+        "check": {
+            "pass": pass_check,
+            "slides": len(deck.slides),
+            "intent_briefs": len(intent_briefs),
+            "matched": matched,
+            "planning_status": planning_status,
+        },
+        "issues": issues,
+    }
+
+
+def _evaluate_structure_gate(
+    *,
+    deck: DeckIR,
+    structure_plans: List[Dict[str, Any]],
+) -> Dict[str, Any]:
+    if not structure_plans:
+        return {"check": {"pass": True, "coverage": "not_provided"}, "issues": []}
+
+    issues: List[Dict[str, Any]] = []
+    matched = 0
+    for slide, plan in _pair_slides_with_plans(deck.slides, structure_plans):
+        if plan is None:
+            issues.append(
+                {
+                    "gate": "structure_layout_alignment",
+                    "slide_id": slide.slide_id,
+                    "message": "No structure plan available for slide.",
+                }
+            )
+            continue
+        matched += 1
+        layout_candidates = [str(item) for item in plan.get("layout_candidate_ids", []) if str(item).strip()]
+        if layout_candidates and slide.layout_id not in layout_candidates:
+            issues.append(
+                {
+                    "gate": "structure_layout_alignment",
+                    "slide_id": slide.slide_id,
+                    "message": (
+                        f"Selected layout '{slide.layout_id}' not in structure layout candidates: "
+                        f"{', '.join(layout_candidates)}."
+                    ),
+                    "details": {"section_id": plan.get("section_id")},
+                }
+            )
+
+    pass_check = not any(issue.get("gate") == "structure_layout_alignment" for issue in issues)
+    return {
+        "check": {
+            "pass": pass_check,
+            "slides": len(deck.slides),
+            "structure_plans": len(structure_plans),
+            "matched": matched,
+        },
+        "issues": issues,
+    }
+
+
+def _evaluate_visual_gate(
+    *,
+    deck: DeckIR,
+    composition_spec: Dict[str, Any],
+    visual_realization_plans: List[Dict[str, Any]],
+    image_capable_layouts: List[str],
+) -> Dict[str, Any]:
+    if not visual_realization_plans:
+        return {"check": {"pass": True, "coverage": "not_provided"}, "issues": []}
+
+    issues: List[Dict[str, Any]] = []
+    composition_by_slide = {
+        str(slide.get("slide_id", "")): slide
+        for slide in composition_spec.get("slides", [])
+        if isinstance(slide, dict) and str(slide.get("slide_id", "")).strip()
+    }
+    matched = 0
+    for slide, plan in _pair_slides_with_plans(deck.slides, visual_realization_plans):
+        if plan is None:
+            issues.append(
+                {
+                    "gate": "visual_primitive_policy",
+                    "slide_id": slide.slide_id,
+                    "message": "No visual realization plan available for slide.",
+                }
+            )
+            continue
+        matched += 1
+        primitive_set = [str(item) for item in plan.get("primitive_set", []) if str(item).strip()]
+        if not primitive_set:
+            issues.append(
+                {
+                    "gate": "visual_primitive_policy",
+                    "slide_id": slide.slide_id,
+                    "message": "Visual realization plan primitive_set is empty.",
+                }
+            )
+            continue
+        composition_slide = composition_by_slide.get(slide.slide_id, {})
+        visual_blocks = composition_slide.get("visual_blocks", [])
+        if slide.layout_id in image_capable_layouts and not visual_blocks:
+            issues.append(
+                {
+                    "gate": "visual_primitive_policy",
+                    "slide_id": slide.slide_id,
+                    "message": "Image-capable slide has no visual blocks after composition.",
+                }
+            )
+
+    pass_check = not any(issue.get("gate") == "visual_primitive_policy" for issue in issues)
+    return {
+        "check": {
+            "pass": pass_check,
+            "slides": len(deck.slides),
+            "visual_plans": len(visual_realization_plans),
+            "matched": matched,
+        },
+        "issues": issues,
+    }
+
+
+def _pair_slides_with_plans(
+    slides: List[Any], plans: List[Dict[str, Any]]
+) -> List[tuple[Any, Dict[str, Any] | None]]:
+    plans_by_section = {}
+    for plan in plans:
+        section_id = str(plan.get("section_id", "")).strip()
+        if section_id:
+            plans_by_section[section_id] = plan
+    out: List[tuple[Any, Dict[str, Any] | None]] = []
+    for idx, slide in enumerate(slides):
+        direct = plans_by_section.get(slide.slide_id)
+        if direct is not None:
+            out.append((slide, direct))
+            continue
+        indexed = plans[idx] if idx < len(plans) else None
+        out.append((slide, indexed))
+    return out
 
 
 def _collect_markdown_leaks(diagnose_report: Dict[str, Any]) -> List[Dict[str, Any]]:

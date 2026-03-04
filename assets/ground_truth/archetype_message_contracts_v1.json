@@ -1,0 +1,68 @@
+{
+  "version": "1.0",
+  "archetypes": [
+    {
+      "archetype_id": "rfp_response",
+      "keywords": ["rfp", "proposal", "response", "scope", "commercials", "team", "next steps", "solution"],
+      "required_fields": ["core_theme", "bottom_line", "audience_takeaway", "speaker_intent"],
+      "default_narrative_pattern": "claim_support",
+      "density_budget": {"max_words": 85, "max_blocks": 4, "max_bullets": 4},
+      "layout_preferences": ["statement_light", "one_content_light", "content_image_light"],
+      "speaker_intent_template": "Drive confidence in the proposal outcome: {bottom_line}"
+    },
+    {
+      "archetype_id": "solution_approach",
+      "keywords": ["solution", "approach", "architecture", "implementation", "delivery", "design", "target state"],
+      "required_fields": ["core_theme", "bottom_line", "audience_takeaway", "speaker_intent"],
+      "default_narrative_pattern": "problem_solution",
+      "density_budget": {"max_words": 90, "max_blocks": 4, "max_bullets": 5},
+      "layout_preferences": ["two_content_light", "content_image_light", "one_content_light"],
+      "speaker_intent_template": "Clarify how execution will work end-to-end: {bottom_line}"
+    },
+    {
+      "archetype_id": "strategy",
+      "keywords": ["strategy", "north star", "vision", "thesis", "priorities", "bets", "roadmap"],
+      "required_fields": ["core_theme", "bottom_line", "audience_takeaway", "speaker_intent"],
+      "default_narrative_pattern": "problem_solution",
+      "density_budget": {"max_words": 80, "max_blocks": 4, "max_bullets": 4},
+      "layout_preferences": ["statement_light", "two_content_light", "content_image_light"],
+      "speaker_intent_template": "Align leadership on strategic direction: {bottom_line}"
+    },
+    {
+      "archetype_id": "qbr",
+      "keywords": ["qbr", "quarter", "kpi", "performance", "pipeline", "targets", "variance"],
+      "required_fields": ["core_theme", "bottom_line", "audience_takeaway", "speaker_intent"],
+      "default_narrative_pattern": "kpi_summary",
+      "density_budget": {"max_words": 75, "max_blocks": 4, "max_bullets": 4},
+      "layout_preferences": ["two_content_light", "content_image_light", "one_content_light"],
+      "speaker_intent_template": "Communicate quarterly performance and required actions: {bottom_line}"
+    },
+    {
+      "archetype_id": "case_study",
+      "keywords": ["case study", "client", "challenge", "impact", "outcome", "results", "lessons"],
+      "required_fields": ["core_theme", "bottom_line", "audience_takeaway", "speaker_intent"],
+      "default_narrative_pattern": "claim_support",
+      "density_budget": {"max_words": 85, "max_blocks": 4, "max_bullets": 5},
+      "layout_preferences": ["content_image_light", "one_content_light", "two_content_light"],
+      "speaker_intent_template": "Prove outcomes with evidence: {bottom_line}"
+    },
+    {
+      "archetype_id": "gtm_offering",
+      "keywords": ["gtm", "go to market", "offering", "packaging", "pricing", "channels", "launch"],
+      "required_fields": ["core_theme", "bottom_line", "audience_takeaway", "speaker_intent"],
+      "default_narrative_pattern": "option_matrix",
+      "density_budget": {"max_words": 85, "max_blocks": 4, "max_bullets": 5},
+      "layout_preferences": ["two_content_light", "four_content_light", "content_image_light"],
+      "speaker_intent_template": "Position the offering for market adoption: {bottom_line}"
+    },
+    {
+      "archetype_id": "general_story",
+      "keywords": [],
+      "required_fields": ["core_theme", "bottom_line", "audience_takeaway", "speaker_intent"],
+      "default_narrative_pattern": "claim_support",
+      "density_budget": {"max_words": 90, "max_blocks": 4, "max_bullets": 5},
+      "layout_preferences": ["statement_light", "one_content_light", "content_image_light"],
+      "speaker_intent_template": "Land the key message clearly: {bottom_line}"
+    }
+  ]
+}

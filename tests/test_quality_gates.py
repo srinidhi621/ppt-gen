@@ -169,6 +169,54 @@ class TestQualityGates(unittest.TestCase):
         self.assertFalse(report["checks"]["no_icon_hero_stretch"]["pass"])
         self.assertFalse(report["checks"]["no_markdown_marker_leak"]["pass"])
 
+    def test_quality_gates_fail_on_structure_layout_mismatch(self) -> None:
+        deck = DeckIR(
+            deck_id="d1",
+            run_id="r1",
+            template_id="t1",
+            title="Deck",
+            slides=[
+                DeckSlide(
+                    slide_id="s1",
+                    layout_id="one_content_light",
+                    fields={"ph_title": "Title", "ph_body": ["Point"]},
+                    asset_refs=[],
+                )
+            ],
+        )
+        validation_post = ValidationReport(violations=[])
+        diagnose = {"slides": [{"deckir_slide_id": "s1", "actual_images": 0}]}
+        composition = {"slides": [{"slide_id": "s1", "visual_blocks": []}]}
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            log_path = Path(temp_dir) / "run_log.jsonl"
+            report = evaluate_v2_quality_gates(
+                deck_v2=deck,
+                validation_v2_post=validation_post,
+                diagnose_report_v2=diagnose,
+                composition_spec_v2=composition,
+                image_capable_layouts=[],
+                run_log_path=log_path,
+                intent_briefs=[
+                    {
+                        "section_id": "s1",
+                        "required_fields": ["core_theme", "bottom_line"],
+                        "core_theme": "Theme",
+                        "bottom_line": "Bottom line",
+                    }
+                ],
+                structure_plans=[
+                    {
+                        "section_id": "s1",
+                        "layout_candidate_ids": ["content_image_light"],
+                    }
+                ],
+                visual_realization_plans=[{"section_id": "s1", "primitive_set": ["shape_cluster"]}],
+                planning_validation={"status": "PASS"},
+            )
+        self.assertEqual(report["status"], "FAIL")
+        self.assertFalse(report["checks"]["structure_layout_alignment"]["pass"])
+
 
 if __name__ == "__main__":
     unittest.main()

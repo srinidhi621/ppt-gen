@@ -16,6 +16,19 @@ from .composition import (
     CompositionVisualBlock,
     CompositionFitDiagnostics,
 )
+from .planning import (
+    DeckLinkage,
+    SlideIntentBrief,
+    StructureInformationBlock,
+    EvidenceRequirement,
+    DensityBudget,
+    SlideStructurePlan,
+    VisualBinding,
+    VisualRealizationPlan,
+    PlanningValidationIssue,
+    PlanningValidationReport,
+    PlanningBundle,
+)
 
 __all__ = [
     "Config",
@@ -42,4 +55,15 @@ __all__ = [
     "CompositionTextBlock",
     "CompositionVisualBlock",
     "CompositionFitDiagnostics",
+    "DeckLinkage",
+    "SlideIntentBrief",
+    "StructureInformationBlock",
+    "EvidenceRequirement",
+    "DensityBudget",
+    "SlideStructurePlan",
+    "VisualBinding",
+    "VisualRealizationPlan",
+    "PlanningValidationIssue",
+    "PlanningValidationReport",
+    "PlanningBundle",
 ]

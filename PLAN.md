@@ -26,7 +26,7 @@ Primary failure to avoid:
 
 ---
 
-## 2) Baseline (As of 2026-03-03)
+## 2) Baseline (As of 2026-03-04)
 
 Already in place:
 1. One-loop `generate-auto` pipeline (V1 review V2).
@@ -34,12 +34,26 @@ Already in place:
 3. Review image export (`soffice` + `pdftoppm`).
 4. Prompt-level planner metadata wiring (`component_catalog_v1`, `planner_policy_v1`).
 5. Initial metadata tests for loader and prompt sections.
+6. Deterministic planning guardrails before LLM planning:
+- `intent_briefs_v1.json`
+- `structure_plans_v1.json`
+- `visual_realization_plan_v1.json`
+- `planning_validation_v1.json`
+7. Archetype-specific message contracts and visual primitive policy catalogs:
+- `assets/ground_truth/archetype_message_contracts_v1.json`
+- `assets/catalog/visual_primitive_policy_v1.json`
+8. V2 quality gates now enforce:
+- message contract alignment
+- structure layout alignment
+- visual primitive policy alignment
 
 Current weaknesses:
 1. Quality still inconsistent despite technical correctness.
 2. Diversity and intent logic are not fully deterministic.
 3. KPI reporting is incomplete for benchmark-driven decisions.
 4. No formal ground-truth corpus yet.
+5. Archetype inference is still heuristic and needs benchmark-backed calibration.
+6. Visual realization currently plans primitives but does not yet render richer native charts/tables/shapes beyond current template path.
 
 ---
 
@@ -188,7 +202,8 @@ Statuses: `planned | in_progress | complete | blocked`
 | GT1 | Codify blueprints/archetypes/rubric | planned | schema-valid annotations |
 | GT2 | First-slide validator pilot | planned | ground_truth_eval artifact |
 | GT3 | Benchmark pack v1 | planned | versioned benchmark manifest |
-| S0 | KPI scaffold into run artifacts | planned | KPI block in run summary/gates |
+| S0 | KPI scaffold into run artifacts | in_progress | KPI block in run summary/gates |
+| S0.5 | Message -> Structure -> Primitive guardrails | complete | planning artifacts + gate enforcement |
 | S1 | Deterministic asset diversity enforcement | planned | tests + enforced remediation traces |
 | S2 | Deterministic cue intent classifier | planned | intents persisted in artifacts |
 | S3 | Intent-to-layout routing guard | planned | routing mismatch class reduced |
@@ -342,4 +357,3 @@ Done when:
 3. Deck quality improvements are measurable against baseline.
 4. Pipeline remains deterministic and artifact-complete.
 5. Codebase is free from significant dead/experimental paths.
-

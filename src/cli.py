@@ -31,6 +31,7 @@ from .llm import (
 )
 from .models.deck_ir import DeckIR
 from .normalize.parser import parse_markdown
+from .planning import build_planning_bundle
 from .quality import evaluate_v2_quality_gates, summarize_composition_spec
 from .render.renderer import Renderer
 from .review import ReviewAutomationError, collect_review_images, export_slides_to_images
@@ -664,12 +665,59 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
         },
     )
 
+    planning_bundle = build_planning_bundle(
+        content_model=content_model,
+        cues_data=cues_data,
+        layout_catalog_path=Path(config.layout_catalog_path),
+        assets_dir=Path(config.assets_dir),
+    )
+    intent_briefs_payload = [brief.to_dict() for brief in planning_bundle.intent_briefs]
+    structure_plans_payload = [plan.to_dict() for plan in planning_bundle.structure_plans]
+    visual_plans_payload = [plan.to_dict() for plan in planning_bundle.visual_realization_plans]
+    planning_validation_payload = planning_bundle.validation.to_dict()
+    _write_json(run_dir / "intent_briefs_v1.json", intent_briefs_payload)
+    _write_json(run_dir / "structure_plans_v1.json", structure_plans_payload)
+    _write_json(run_dir / "visual_realization_plan_v1.json", visual_plans_payload)
+    _write_json(run_dir / "planning_validation_v1.json", planning_validation_payload)
+    log_event(
+        log_path,
+        "PLANNING_GUARDRAILS_DONE",
+        {
+            "status": planning_bundle.validation.status,
+            "issue_count": len(planning_bundle.validation.issues),
+            "blocking_count": sum(
+                1 for issue in planning_bundle.validation.issues if issue.severity == "BLOCKING"
+            ),
+        },
+    )
+    if planning_bundle.validation.status != "PASS":
+        print("ERROR: Planning guardrails failed before LLM planning.")
+        print(f"  Run ID: {run_id}")
+        print(f"  Validation artifact: {run_dir / 'planning_validation_v1.json'}")
+        blocking_issues = [
+            issue for issue in planning_bundle.validation.issues if issue.severity == "BLOCKING"
+        ]
+        for idx, issue in enumerate(blocking_issues[:5], start=1):
+            print(f"    {idx}. [{issue.stage}] {issue.message}")
+        return 1
+
     load_dotenv(project_root / ".env")
     usd_inr_rate = _resolve_usd_inr_rate()
     deck_id = combined_input_path.stem
     capability_manifest = _build_capability_manifest(config, cues_data)
-    _write_json(run_dir / "planner_context.json", capability_manifest)
-    log_event(log_path, "PLANNER_CONTEXT_DONE", capability_manifest)
+    planner_context_payload = {
+        "capability_manifest": capability_manifest,
+        "planning_guardrails": planning_bundle.planner_context,
+    }
+    _write_json(run_dir / "planner_context.json", planner_context_payload)
+    log_event(
+        log_path,
+        "PLANNER_CONTEXT_DONE",
+        {
+            **capability_manifest,
+            "planning_guardrails_status": planning_bundle.validation.status,
+        },
+    )
 
     planner_model = args.llm_model or args.gemini_model
     try:
@@ -694,6 +742,7 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
             run_id=run_id,
             deck_id=deck_id,
             max_retries=args.planner_retries,
+            planning_context=planning_bundle.planner_context,
         )
         plan_v1_latency = round(time.perf_counter() - plan_v1_start, 3)
     except PlannerError as exc:
@@ -890,6 +939,7 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
             prior_planner_output=planner_deck_v1_payload,
             diagnose_report=diagnose_report_v1,
             composition_spec=composition_spec_v1,
+            planning_context=planning_bundle.planner_context,
         )
         plan_v2_latency = round(time.perf_counter() - plan_v2_start, 3)
     except PlannerError as exc:
@@ -982,6 +1032,10 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
         composition_spec_v2=composition_spec_v2,
         image_capable_layouts=capability_manifest.get("image_capable_layouts", []),
         run_log_path=log_path,
+        intent_briefs=intent_briefs_payload,
+        structure_plans=structure_plans_payload,
+        visual_realization_plans=visual_plans_payload,
+        planning_validation=planning_validation_payload,
     )
     _write_json(run_dir / "quality_gates_v2.json", quality_gates_v2)
     log_event(log_path, "QUALITY_GATES_V2", quality_gates_v2)
@@ -1014,6 +1068,12 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
             - int(composition_metrics_v1.get("total_visual_blocks", 0)),
             "hero_icon_count": int(composition_metrics_v2.get("hero_icon_count", 0))
             - int(composition_metrics_v1.get("hero_icon_count", 0)),
+        },
+        "planning": {
+            "validation": planning_validation_payload,
+            "intent_briefs_count": len(intent_briefs_payload),
+            "structure_plans_count": len(structure_plans_payload),
+            "visual_realization_plans_count": len(visual_plans_payload),
         },
     }
     _write_json(run_dir / "run_summary.json", run_summary)

@@ -193,6 +193,62 @@ def load_planner_policy(assets_dir: Path) -> Dict[str, Any]:
     return json.loads(policy_path.read_text(encoding="utf-8"))
 
 
+def load_archetype_message_contracts(assets_dir: Path) -> Dict[str, Any]:
+    """Load archetype-specific message contract definitions."""
+    contracts_path = assets_dir / "ground_truth" / "archetype_message_contracts_v1.json"
+    if not contracts_path.exists():
+        return {
+            "version": "1.0",
+            "archetypes": [
+                {
+                    "archetype_id": "general_story",
+                    "keywords": [],
+                    "required_fields": [
+                        "core_theme",
+                        "bottom_line",
+                        "audience_takeaway",
+                        "speaker_intent",
+                    ],
+                    "default_narrative_pattern": "claim_support",
+                    "density_budget": {"max_words": 90, "max_blocks": 4, "max_bullets": 5},
+                    "layout_preferences": [
+                        "statement_light",
+                        "one_content_light",
+                        "content_image_light",
+                    ],
+                }
+            ],
+        }
+    return json.loads(contracts_path.read_text(encoding="utf-8"))
+
+
+def load_visual_primitive_policy(assets_dir: Path) -> Dict[str, Any]:
+    """Load allowed visual primitive policy for realization planning."""
+    policy_path = assets_dir / "catalog" / "visual_primitive_policy_v1.json"
+    if not policy_path.exists():
+        return {
+            "version": "1.0",
+            "allowed_primitives": [
+                "table",
+                "chart",
+                "shape_cluster",
+                "icon_label_grid",
+                "smartart_like_flow",
+                "matrix_grid",
+                "timeline_stepper",
+                "text_callout",
+            ],
+            "max_primitives_per_slide": 3,
+            "declutter_rules": [
+                "limit_colors_to_theme_tokens",
+                "limit_icon_styles_per_slide",
+                "enforce_whitespace_buffers",
+            ],
+            "style_tokens": {"headline_role": "h1", "body_role": "body", "caption_role": "caption"},
+        }
+    return json.loads(policy_path.read_text(encoding="utf-8"))
+
+
 def resolve_visual_concept(concept: str, vocabulary: Dict[str, Any]) -> str | None:
     """Resolve a concept name to the preferred icon_id, falling back to alternatives."""
     concepts = vocabulary.get("concepts", {})

@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import unittest
 
-from src.llm.planner import _build_system_prompt
+from src.llm.planner import _build_system_prompt, _build_user_prompt
+from src.models.content import ContentModel, ContentSection
 
 
 class TestPlannerPromptMetadata(unittest.TestCase):
@@ -65,6 +66,34 @@ class TestPlannerPromptMetadata(unittest.TestCase):
         self.assertIn("=== VISUAL PLANNING POLICY ===", prompt)
         self.assertIn("min_unique_visual_assets_per_10_slides", prompt)
         self.assertIn("Do not reuse a branded image more than 2 times", prompt)
+
+    def test_user_prompt_includes_planning_guardrails_when_provided(self) -> None:
+        content_model = ContentModel(
+            doc_id="doc",
+            version="1.0",
+            source_hash="abc123",
+            sections=[
+                ContentSection(
+                    section_id="exec_summary",
+                    title="Executive Summary",
+                    bullets=["Point one"],
+                    paragraphs=[],
+                )
+            ],
+        )
+        prompt = _build_user_prompt(
+            content_model=content_model,
+            cues_data={"cues": []},
+            run_id="run_1",
+            deck_id="deck_1",
+            template_id="corp_deck_2025",
+            planning_context={
+                "intent_briefs": [{"section_id": "exec_summary", "bottom_line": "Point one"}],
+                "structure_plans": [{"section_id": "exec_summary"}],
+            },
+        )
+        self.assertIn("=== MESSAGE + STRUCTURE + VISUAL GUARDRAILS ===", prompt)
+        self.assertIn('"section_id": "exec_summary"', prompt)
 
 
 if __name__ == "__main__":

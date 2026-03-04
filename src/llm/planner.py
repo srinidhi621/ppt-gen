@@ -71,6 +71,7 @@ def plan_deck_with_llm(
     prior_planner_output: Dict[str, Any] | None = None,
     diagnose_report: Dict[str, Any] | None = None,
     composition_spec: Dict[str, Any] | None = None,
+    planning_context: Dict[str, Any] | None = None,
 ) -> Tuple[DeckIR, PlanningStats]:
     """Return schema-valid DeckIR and number of attempts used."""
     layout_catalog = _load_json(layout_catalog_path)
@@ -98,6 +99,7 @@ def plan_deck_with_llm(
         prior_planner_output=prior_planner_output,
         diagnose_report=diagnose_report,
         composition_spec=composition_spec,
+        planning_context=planning_context,
     )
 
     attempts = max_retries + 1
@@ -135,6 +137,7 @@ def plan_deck_with_gemini(
     deck_id: str,
     template_id: str = "corp_deck_2025",
     max_retries: int = 2,
+    planning_context: Dict[str, Any] | None = None,
 ) -> Tuple[DeckIR, PlanningStats]:
     """Backward-compatible alias; planner is now provider-agnostic."""
     return plan_deck_with_llm(
@@ -147,6 +150,7 @@ def plan_deck_with_gemini(
         deck_id=deck_id,
         template_id=template_id,
         max_retries=max_retries,
+        planning_context=planning_context,
     )
 
 
@@ -499,6 +503,7 @@ def _build_user_prompt(
     prior_planner_output: Dict[str, Any] | None = None,
     diagnose_report: Dict[str, Any] | None = None,
     composition_spec: Dict[str, Any] | None = None,
+    planning_context: Dict[str, Any] | None = None,
 ) -> str:
     content_json = content_model.to_json()
 
@@ -525,6 +530,13 @@ def _build_user_prompt(
         "=== VISUALIZATION CUES (use these to drive layout and visual choices) ===\n"
         f"{cues_block}\n"
     )
+    if planning_context:
+        base += (
+            "\n=== MESSAGE + STRUCTURE + VISUAL GUARDRAILS ===\n"
+            "Treat this as pre-approved planning context. Keep each section aligned to its core theme, "
+            "bottom line, structure plan, and allowed primitive realization.\n"
+            f"{json.dumps(planning_context, ensure_ascii=True)}\n"
+        )
     if review_feedback is None:
         return base
     return (

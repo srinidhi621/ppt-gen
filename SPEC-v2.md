@@ -13,7 +13,7 @@ This is an architectural document and source-of-truth contract for V2 implementa
 
 ---
 
-## 0.1) Implementation Progress Snapshot (`2026-03-02`)
+## 0.1) Implementation Progress Snapshot (`2026-03-04`)
 
 Implemented in current branch:
 - planner metadata loading:
@@ -32,11 +32,30 @@ Implemented in current branch:
   - `tests/test_planner_prompt_metadata.py`
 - DeckIR v2 fixture directory scaffold:
   - `tests/fixtures/deckir_v2/README.md`
+- deterministic planning guardrails (new pre-planning stage):
+  - `src/planning/guardrails.py`
+  - `src/models/planning.py`
+  - artifacts persisted under `runs/<run_id>/`:
+    - `intent_briefs_v1.json`
+    - `structure_plans_v1.json`
+    - `visual_realization_plan_v1.json`
+    - `planning_validation_v1.json`
+- archetype and visual policy catalogs:
+  - `assets/ground_truth/archetype_message_contracts_v1.json`
+  - `assets/catalog/visual_primitive_policy_v1.json`
+- planner prompt now includes planning guardrail context:
+  - section-level core theme and bottom line
+  - structure plan constraints
+  - visual primitive realization plan
+- quality gates expanded to include:
+  - `message_contract_alignment`
+  - `structure_layout_alignment`
+  - `visual_primitive_policy`
 
 Not yet implemented:
-- deterministic enforcement of policy constraints after planning
 - expanded KPI emission into `quality_gates_v2.json` and `run_summary.json`
 - runtime composed renderer and bounded solver implementation
+- benchmark-calibrated archetype contract scoring against curated ground-truth corpus
 
 ---
 
