@@ -46,26 +46,6 @@
       "source_file": "assets/ground_truth/external_links2.json"
     },
     {
-      "source_id": "ext2_003",
-      "origin": "external",
-      "batch": "external_links2",
-      "title": "Market Insights AI Report: Building an Action Plan",
-      "url": "https://www.aha.org/system/files/media/file/2025/01/Market_Insights_AI_Report-2025.pdf",
-      "publisher": "Bain & Company / AHA",
-      "year": "2025",
-      "format": "pdf",
-      "categories": [
-        "solution_approach",
-        "opportunity_assessment"
-      ],
-      "average_quality": 4.17,
-      "usage_rights": "reference_only",
-      "confidentiality_class": "public",
-      "ingest_status": "candidate",
-      "shortlist_candidate": true,
-      "source_file": "assets/ground_truth/external_links2.json"
-    },
-    {
       "source_id": "ext2_004",
       "origin": "external",
       "batch": "external_links2",
@@ -140,46 +120,6 @@
       ],
       "average_quality": 4.0,
       "usage_rights": "reference_only",
-      "confidentiality_class": "public",
-      "ingest_status": "candidate",
-      "shortlist_candidate": true,
-      "source_file": "assets/ground_truth/external_links2.json"
-    },
-    {
-      "source_id": "ext2_008",
-      "origin": "external",
-      "batch": "external_links2",
-      "title": "Is Your Data Ready to Power AI Reinvention?",
-      "url": "https://www.accenture.com/content/dam/accenture/final/accenture-com/document-3/Accenture-Is-Your-Data-Ready-To-Power-AI-Reinvention-Report.pdf",
-      "publisher": "Accenture",
-      "year": "2024",
-      "format": "pdf",
-      "categories": [
-        "data_ai_platform_blueprint",
-        "opportunity_assessment"
-      ],
-      "average_quality": 4.5,
-      "usage_rights": "reference_only",
-      "confidentiality_class": "public",
-      "ingest_status": "candidate",
-      "shortlist_candidate": true,
-      "source_file": "assets/ground_truth/external_links2.json"
-    },
-    {
-      "source_id": "ext2_009",
-      "origin": "external",
-      "batch": "external_links2",
-      "title": "OMNIA Partners RFP Response",
-      "url": "https://www.omniapartners.com/suppliers-files/A-D/Accenture/Contract_Documents/159587/Accenture_Response.pdf",
-      "publisher": "Accenture",
-      "year": "2024",
-      "format": "pdf",
-      "categories": [
-        "proposal_rfp",
-        "solution_approach"
-      ],
-      "average_quality": 3.83,
-      "usage_rights": "unclear",
       "confidentiality_class": "public",
       "ingest_status": "candidate",
       "shortlist_candidate": true,

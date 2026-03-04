@@ -33,9 +33,9 @@
     ]
   },
   "counts": {
-    "external_longlist": 30,
-    "external_shortlist": 12,
-    "external_candidates_written": 30
+    "external_longlist": 21,
+    "external_shortlist": 3,
+    "external_candidates_written": 21
   },
   "external_candidates": [
     {
@@ -68,33 +68,6 @@
       "shortlist_candidate": true
     },
     {
-      "candidate_id": "ext_002",
-      "origin": "external",
-      "title": "Databricks Reference Architecture (Databricks on AWS) \u2013 Lakehouse platform blueprint",
-      "url": "https://docs.databricks.com/_extras/documents/reference-architecture-databricks-on-aws.pdf",
-      "publisher": "Databricks",
-      "year": "2023",
-      "format": "pdf",
-      "categories": [
-        "data_ai_platform_blueprint",
-        "solution_approach"
-      ],
-      "quality_scores": {
-        "message_clarity": 5,
-        "narrative_flow": 4,
-        "visual_hierarchy": 5,
-        "layout_consistency": 5,
-        "evidence_quality": 4,
-        "visual_non_repetition": 4,
-        "average": 4.5
-      },
-      "why_relevant": "A clean, system-level reference architecture slide with strong layering and component taxonomy.",
-      "license_or_usage_notes": "Vendor reference architecture; reference use recommended.",
-      "usage_rights": "reference_only",
-      "downloadable": true,
-      "shortlist_candidate": true
-    },
-    {
       "candidate_id": "ext_003",
       "origin": "external",
       "title": "Advanced Data Engineering with Databricks (training deck) \u2013 End-to-end lakehouse patterns",
@@ -120,34 +93,6 @@
       "usage_rights": "reference_only",
       "downloadable": true,
       "shortlist_candidate": false
-    },
-    {
-      "candidate_id": "ext_004",
-      "origin": "external",
-      "title": "AWS Cloud Adoption Framework for Artificial Intelligence (CAF for AI)",
-      "url": "https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.pdf",
-      "publisher": "Amazon Web Services",
-      "year": "2023",
-      "format": "pdf",
-      "categories": [
-        "ai_strategy",
-        "solution_approach",
-        "responsible_ai_governance"
-      ],
-      "quality_scores": {
-        "message_clarity": 5,
-        "narrative_flow": 4,
-        "visual_hierarchy": 4,
-        "layout_consistency": 5,
-        "evidence_quality": 4,
-        "visual_non_repetition": 4,
-        "average": 4.3
-      },
-      "why_relevant": "Executive-ready operating model framing with repeatable domains, stakeholder mapping, and capability structure.",
-      "license_or_usage_notes": "AWS whitepaper PDF; reference use.",
-      "usage_rights": "reference_only",
-      "downloadable": true,
-      "shortlist_candidate": true
     },
     {
       "candidate_id": "ext_005",
@@ -260,34 +205,6 @@
       "shortlist_candidate": false
     },
     {
-      "candidate_id": "ext_009",
-      "origin": "external",
-      "title": "Microsoft 365 Security Compass \u2013 Presentation",
-      "url": "https://learn.microsoft.com/en-us/microsoft-365/downloads/security-compass-presentation.pdf",
-      "publisher": "Microsoft",
-      "year": "2023",
-      "format": "pdf",
-      "categories": [
-        "solution_approach",
-        "responsible_ai_governance",
-        "executive_steering_update"
-      ],
-      "quality_scores": {
-        "message_clarity": 4,
-        "narrative_flow": 4,
-        "visual_hierarchy": 5,
-        "layout_consistency": 5,
-        "evidence_quality": 4,
-        "visual_non_repetition": 4,
-        "average": 4.3
-      },
-      "why_relevant": "Excellent Microsoft-grade slide craft: crisp hierarchy, strong iconography, and modular story blocks.",
-      "license_or_usage_notes": "Microsoft content; reference use.",
-      "usage_rights": "reference_only",
-      "downloadable": true,
-      "shortlist_candidate": true
-    },
-    {
       "candidate_id": "ext_010",
       "origin": "external",
       "title": "Power Platform in a Modern Data Platform Architecture (Fabric / OneLake reference architecture)",
@@ -313,34 +230,6 @@
       "usage_rights": "reference_only",
       "downloadable": true,
       "shortlist_candidate": false
-    },
-    {
-      "candidate_id": "ext_011",
-      "origin": "external",
-      "title": "The Art of Practical AI: Transforming Customer Experiences (Microsoft) \u2013 Customer stories slide deck",
-      "url": "https://info.microsoft.com/rs/157-GQE-382/images/EN-CNTNT-SlideDeck-SRGCM14132.pdf?version=0",
-      "publisher": "Microsoft",
-      "year": "2025",
-      "format": "pdf",
-      "categories": [
-        "case_study",
-        "ai_strategy",
-        "business_case_roi"
-      ],
-      "quality_scores": {
-        "message_clarity": 5,
-        "narrative_flow": 4,
-        "visual_hierarchy": 5,
-        "layout_consistency": 5,
-        "evidence_quality": 4,
-        "visual_non_repetition": 4,
-        "average": 4.5
-      },
-      "why_relevant": "Slide-by-slide customer narrative with outcomes framing; good for case-study story structure and value articulation.",
-      "license_or_usage_notes": "Microsoft marketing content; reference use.",
-      "usage_rights": "reference_only",
-      "downloadable": true,
-      "shortlist_candidate": true
     },
     {
       "candidate_id": "ext_012",
@@ -485,61 +374,6 @@
       "shortlist_candidate": false
     },
     {
-      "candidate_id": "ext_017",
-      "origin": "external",
-      "title": "Analysys Mason \u2013 AI and Data Platforms: Worldwide Market Shares 2024 (PPTX)",
-      "url": "https://www.analysysmason.com/contentassets/e884f8f984b848708b9187b44ca1373d/analysys_mason_ai_data_platforms_shares_dec2025_rma14.pptx",
-      "publisher": "Analysys Mason",
-      "year": "2025",
-      "format": "pptx",
-      "categories": [
-        "opportunity_assessment",
-        "business_case_roi",
-        "ai_strategy"
-      ],
-      "quality_scores": {
-        "message_clarity": 4,
-        "narrative_flow": 4,
-        "visual_hierarchy": 5,
-        "layout_consistency": 5,
-        "evidence_quality": 5,
-        "visual_non_repetition": 4,
-        "average": 4.5
-      },
-      "why_relevant": "Great example of evidence-driven market framing, chart rigor, and clean slide design for exec decisioning.",
-      "license_or_usage_notes": "Analyst research; reuse may be restricted\u2014treat as reference, not distributable.",
-      "usage_rights": "unclear",
-      "downloadable": true,
-      "shortlist_candidate": true
-    },
-    {
-      "candidate_id": "ext_018",
-      "origin": "external",
-      "title": "ASEAN Guide on AI Governance and Ethics",
-      "url": "https://asean.org/wp-content/uploads/2024/02/ASEAN-Guide-on-AI-Governance-and-Ethics_beautified_201223_v2.pdf",
-      "publisher": "ASEAN",
-      "year": "2024",
-      "format": "pdf",
-      "categories": [
-        "responsible_ai_governance",
-        "ai_strategy"
-      ],
-      "quality_scores": {
-        "message_clarity": 4,
-        "narrative_flow": 4,
-        "visual_hierarchy": 4,
-        "layout_consistency": 5,
-        "evidence_quality": 5,
-        "visual_non_repetition": 4,
-        "average": 4.3
-      },
-      "why_relevant": "Credible governance baseline; useful for governance pillars, policy checklists, and regional framing in exec decks.",
-      "license_or_usage_notes": "Public policy document; verify attribution requirements.",
-      "usage_rights": "unclear",
-      "downloadable": true,
-      "shortlist_candidate": true
-    },
-    {
       "candidate_id": "ext_019",
       "origin": "external",
       "title": "Accountable AI Workshop Slides (CIPL Executive Retreat \u2013 2018)",
@@ -679,61 +513,6 @@
       "shortlist_candidate": false
     },
     {
-      "candidate_id": "ext_024",
-      "origin": "external",
-      "title": "Smartsheet \u2013 Project Kickoff Presentation Template (PPTX)",
-      "url": "https://www.smartsheet.com/sites/default/files/2023-08/IC-Project-Kickoff-Presentation-11817_PowerPoint.pptx?srsltid=AfmBOorwGfyt6PnANVUtZYv1w3ML9lE_Y0rlN5kfxVDA8ALqWHI6InrD",
-      "publisher": "Smartsheet",
-      "year": "2023",
-      "format": "pptx",
-      "categories": [
-        "proposal_rfp",
-        "executive_steering_update",
-        "solution_approach"
-      ],
-      "quality_scores": {
-        "message_clarity": 4,
-        "narrative_flow": 4,
-        "visual_hierarchy": 4,
-        "layout_consistency": 5,
-        "evidence_quality": 4,
-        "visual_non_repetition": 4,
-        "average": 4.2
-      },
-      "why_relevant": "Strong baseline for consulting-style delivery governance decks: scope, approach, milestones, roles, reporting cadence.",
-      "license_or_usage_notes": "Template; review Smartsheet licensing for redistribution.",
-      "usage_rights": "unclear",
-      "downloadable": true,
-      "shortlist_candidate": true
-    },
-    {
-      "candidate_id": "ext_025",
-      "origin": "external",
-      "title": "UNHCR RFP 1007 \u2013 Bidders Conference Slide Deck (procurement structure exemplar)",
-      "url": "https://www.unhcr.org/sites/default/files/2025-03/unhcr-rfp-1007-bidders-conference-slide-deck.pdf",
-      "publisher": "UNHCR",
-      "year": "2025",
-      "format": "pdf",
-      "categories": [
-        "proposal_rfp",
-        "solution_approach"
-      ],
-      "quality_scores": {
-        "message_clarity": 4,
-        "narrative_flow": 4,
-        "visual_hierarchy": 4,
-        "layout_consistency": 4,
-        "evidence_quality": 4,
-        "visual_non_repetition": 4,
-        "average": 4.0
-      },
-      "why_relevant": "Good procurement evaluation + submission mechanics; useful for structuring RFP response sections and compliance slides.",
-      "license_or_usage_notes": "Public procurement material; reuse likely permissible with attribution\u2014verify.",
-      "usage_rights": "unclear",
-      "downloadable": true,
-      "shortlist_candidate": true
-    },
-    {
       "candidate_id": "ext_026",
       "origin": "external",
       "title": "DC DGS \u2013 Pre-Proposal Presentation (RFP) (public procurement deck format)",
@@ -758,33 +537,6 @@
       "usage_rights": "unclear",
       "downloadable": true,
       "shortlist_candidate": false
-    },
-    {
-      "candidate_id": "ext_027",
-      "origin": "external",
-      "title": "Remade Institute \u2013 RFP PowerPoint Template (PPTX) (proposal structure)",
-      "url": "https://remadeinstitute.org/wp-content/uploads/2024/01/RFP-23-01PowerPointTemplate.pptx",
-      "publisher": "REMADE Institute",
-      "year": "2024",
-      "format": "pptx",
-      "categories": [
-        "proposal_rfp",
-        "solution_approach"
-      ],
-      "quality_scores": {
-        "message_clarity": 4,
-        "narrative_flow": 4,
-        "visual_hierarchy": 4,
-        "layout_consistency": 5,
-        "evidence_quality": 4,
-        "visual_non_repetition": 4,
-        "average": 4.2
-      },
-      "why_relevant": "A clean proposal template with credible sections for approach, milestones, deliverables, and evaluation alignment.",
-      "license_or_usage_notes": "Template; verify licensing for reuse.",
-      "usage_rights": "unclear",
-      "downloadable": true,
-      "shortlist_candidate": true
     },
     {
       "candidate_id": "ext_028",

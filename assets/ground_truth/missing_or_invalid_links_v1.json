@@ -3,18 +3,8 @@
   "version": "1.0.0",
   "generated_at_utc": "2026-03-03T14:24:50+00:00",
   "source_report": "assets/ground_truth/external_download_report_v1.json",
-  "total_issues": 2,
+  "total_issues": 1,
   "tasks": [
-    {
-      "index": 6,
-      "title": "Analysys Mason \u2013 AI and Data Platforms: Worldwide Market Shares 2024 (PPTX)",
-      "url": "https://www.analysysmason.com/contentassets/e884f8f984b848708b9187b44ca1373d/analysys_mason_ai_data_platforms_shares_dec2025_rma14.pptx",
-      "category_hint": "opportunity_assessment",
-      "issue_type": "invalid_file_type",
-      "error_or_status": "invalid_or_unknown",
-      "recommended_action": "replace_with_direct_file_url_or_alternate_source",
-      "priority": "high"
-    },
     {
       "index": 11,
       "title": "Florida PALM \u2013 Executive Steering Committee Meeting Presentation (09/27/2023)",

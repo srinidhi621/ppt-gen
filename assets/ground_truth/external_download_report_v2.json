@@ -5,25 +5,9 @@
   "source_file": "assets/ground_truth/external_links2_normalized.json",
   "target_dir": "assets/ground_truth/external_inbox",
   "total_shortlist": 11,
-  "downloaded_count": 10,
+  "downloaded_count": 7,
   "failed_count": 1,
   "results": [
-    {
-      "batch": "external_links2",
-      "index": 1,
-      "title": "OMNIA Partners RFP Response",
-      "url": "https://www.omniapartners.com/suppliers-files/A-D/Accenture/Contract_Documents/159587/Accenture_Response.pdf",
-      "category_hint": "proposal_rfp",
-      "status": "downloaded",
-      "final_url": "https://www.omniapartners.com/suppliers-files/A-D/Accenture/Contract_Documents/159587/Accenture_Response.pdf",
-      "content_type": "application/pdf",
-      "bytes": 30793703,
-      "saved_as": "assets/ground_truth/external_inbox/b2_01_proposal_rfp_omnia_partners_rfp_response.pdf",
-      "post_validation": {
-        "status": "valid_pdf",
-        "file_signature": "PDF document, version 1.6 (zip deflate encoded)"
-      }
-    },
     {
       "batch": "external_links2",
       "index": 2,
@@ -47,22 +31,6 @@
       "post_validation": {
         "status": "valid_pdf",
         "file_signature": "PDF document, version 1.7, 24 pages"
-      }
-    },
-    {
-      "batch": "external_links2",
-      "index": 4,
-      "title": "Market Insights AI Report: Building an Action Plan",
-      "url": "https://www.aha.org/system/files/media/file/2025/01/Market_Insights_AI_Report-2025.pdf",
-      "category_hint": "case_study",
-      "status": "downloaded",
-      "final_url": "https://www.aha.org/system/files/media/file/2025/01/Market_Insights_AI_Report-2025.pdf",
-      "content_type": "application/pdf",
-      "bytes": 5467917,
-      "saved_as": "assets/ground_truth/external_inbox/b2_04_case_study_market_insights_ai_report_building_an_action_plan.pdf",
-      "post_validation": {
-        "status": "valid_pdf",
-        "file_signature": "PDF document, version 1.7 (zip deflate encoded)"
       }
     },
     {
@@ -131,22 +99,6 @@
     },
     {
       "batch": "external_links2",
-      "index": 9,
-      "title": "Is Your Data Ready to Power AI Reinvention?",
-      "url": "https://www.accenture.com/content/dam/accenture/final/accenture-com/document-3/Accenture-Is-Your-Data-Ready-To-Power-AI-Reinvention-Report.pdf",
-      "category_hint": "data_ai_platform_blueprint",
-      "status": "downloaded",
-      "final_url": "https://www.accenture.com/content/dam/accenture/final/accenture-com/document-3/Accenture-Is-Your-Data-Ready-To-Power-AI-Reinvention-Report.pdf",
-      "content_type": "application/pdf",
-      "bytes": 11907674,
-      "saved_as": "assets/ground_truth/external_inbox/b2_09_data_ai_platform_blueprint_is_your_data_ready_to_power_ai_reinvention.pdf",
-      "post_validation": {
-        "status": "valid_pdf",
-        "file_signature": "PDF document, version 1.7"
-      }
-    },
-    {
-      "batch": "external_links2",
       "index": 10,
       "title": "NCDOT Data Governance Presentation",
       "url": "https://connect.ncdot.gov/projects/Value-Management/CLEAR-Program/Video/Data%20Governance%20Presentation.pdf",
@@ -179,7 +131,7 @@
     }
   ],
   "post_validation": {
-    "valid_downloads": 10,
+    "valid_downloads": 7,
     "invalid_downloads": 0,
     "renamed_files": []
   }
