@@ -1,194 +1,66 @@
-# PLAN.md — Thin-Slice Plan With Ground-Truth First (TDD-First)
+# PLAN.md — Vertical Slice Build Plan for the GPT-5.4 Presentation Composer
 
 ## 0) Objective
 
-Build a high-quality AI consulting deck generator through small, end-to-end vertical slices, anchored to a curated ground-truth corpus of good slides.
+Build a presentation generation agent that can produce branded, editable, high-polish PowerPoint decks through:
+- `gpt-5.4` planning;
+- reusable skills;
+- element-level slide composition;
+- deterministic PowerPoint rendering;
+- per-slide visual review and repair;
+- progressive delivery from CLI to local web UI to cloud endpoint.
 
-Primary failure to avoid:
-- shipping large feature sets without evidence that slide quality improved.
-
----
-
-## 1) Operating Rules (Non-Negotiable)
-
-1. Ground truth first, feature breadth second.
-2. Thin vertical slices only:
-- `normalize -> plan -> validate/remediate -> render -> diagnose -> quality gates -> artifacts`.
-3. Red/Green/Refactor TDD for every slice.
-4. Evidence gate between slices:
-- do not start next slice until current exit criteria are met.
-5. Anti-bloat policy:
-- no speculative modules/catalogs;
-- no dead flags;
-- remove temporary shims within one following slice.
-6. Reuse before rewrite:
-- rewrite only when measured complexity/regression cost is worse than replacement.
+This plan fully replaces the prior `PLAN.md`.
 
 ---
 
-## 2) Baseline (As of 2026-03-04)
+## 1) Build Rules
 
-Already in place:
-1. One-loop `generate-auto` pipeline (V1 review V2).
-2. Deterministic validation/remediation/rendering.
-3. Review image export (`soffice` + `pdftoppm`).
-4. Prompt-level planner metadata wiring (`component_catalog_v1`, `planner_policy_v1`).
-5. Initial metadata tests for loader and prompt sections.
-6. Deterministic planning guardrails before LLM planning:
-- `intent_briefs_v1.json`
-- `structure_plans_v1.json`
-- `visual_realization_plan_v1.json`
-- `planning_validation_v1.json`
-7. Archetype-specific message contracts and visual primitive policy catalogs:
-- `assets/ground_truth/archetype_message_contracts_v1.json`
-- `assets/catalog/visual_primitive_policy_v1.json`
-8. V2 quality gates now enforce:
-- message contract alignment
-- structure layout alignment
-- visual primitive policy alignment
-
-Current weaknesses:
-1. Quality still inconsistent despite technical correctness.
-2. Diversity and intent logic are not fully deterministic.
-3. KPI reporting is incomplete for benchmark-driven decisions.
-4. No formal ground-truth corpus yet.
-5. Archetype inference is still heuristic and needs benchmark-backed calibration.
-6. Visual realization currently plans primitives but does not yet render richer native charts/tables/shapes beyond current template path.
+1. Ship end-to-end slices only.
+2. Every slice must produce user-visible functionality.
+3. CLI comes first, then local web UI, then cloud endpoint.
+4. Do not widen archetype coverage until at least one archetype works end-to-end.
+5. Do not build a general freeform drawing engine.
+6. Keep `python-pptx` as the baseline renderer.
+7. Use OpenAI-hosted `gpt-5.4` capability as the canonical AI target where available.
+8. Keep internal skills provider-agnostic so they can run with or without native OpenAI Skills support.
+9. Every slice requires tests and persisted artifacts.
+10. No slice is complete until exit criteria are met and evidenced.
 
 ---
 
-## 3) Ground-Truth Program (Do This Before Broad Buildout)
+## 2) Starting Point (`2026-03-11`)
 
-## GT0 — Source Collection and Permissions
+Already present in the repo:
+- deterministic Python rendering pipeline;
+- template/layout catalog scaffolding;
+- placeholder-based rendering;
+- validation/remediation logic;
+- review-image export;
+- multimodal review loop scaffold;
+- planning metadata and policy scaffolding;
+- solid test baseline.
 
-Goal:
-- gather high-quality reference decks/slides for north-star guidance.
-
-Internal sourcing actions:
-1. Request candidate decks from sales, strategy, delivery, and GTM leads for:
-- proposals/RFPs
-- solution approach
-- case studies
-- GTM offerings
-- AI strategy
-2. Prioritize decks with known positive outcomes:
-- won proposals
-- strong client feedback
-- reused internal exemplars.
-3. Redact sensitive client data (names, pricing specifics, confidential architecture details).
-4. Record usage permission and confidentiality class per deck.
-
-External sourcing actions:
-1. Collect public examples from:
-- consulting thought leadership decks
-- public case studies
-- AI strategy/governance frameworks
-- proposal template structures from public procurement guidance.
-2. Use external material for structure/style signals, not direct content copying.
-3. Record source URL + usage notes in metadata.
-
-Deliverables:
-1. `assets/ground_truth/raw_manifest_v1.json`
-2. `assets/ground_truth/source_log_v1.json`
-
-Exit criteria:
-1. At least 20 candidate decks total.
-2. Coverage across all target blueprint types.
-3. Permission and redaction status recorded.
+What is still missing for the target architecture:
+- element-level slide composition plans;
+- true composed slide rendering layer;
+- skill repository and skill loader;
+- `gpt-5.4`-first planning runtime;
+- per-slide review packets and targeted slide repair;
+- visual recipe catalog;
+- PowerPoint primitive catalog;
+- local web UI and cloud endpoint on the new architecture.
 
 ---
 
-## GT1 — Blueprint, Archetype, and Rubric Codification
+## 3) Program-Level Exit Metrics
 
-Goal:
-- convert examples into machine-usable structure for planning and validation.
-
-Deck blueprint set (required):
-1. `proposal_rfp`
-2. `solution_approach`
-3. `case_study`
-4. `gtm_offering`
-5. `ai_strategy`
-6. `opportunity_assessment`
-7. `business_case_roi`
-8. `responsible_ai_governance`
-9. `data_ai_platform_blueprint`
-10. `executive_steering_update`
-
-Actions:
-1. Define `required_sections`, `optional_sections`, and `target_slide_range` per blueprint.
-2. Define reusable slide archetypes and map each blueprint to required archetypes.
-3. Define quality rubric dimensions for both content and presentation:
-- message clarity
-- narrative fit
-- evidence specificity
-- visual hierarchy
-- layout balance/spacing
-- visual relevance/non-repetition.
-4. Build annotation schema for each reference slide:
-- blueprint ID, archetype ID, story role, content pattern, visual pattern, quality scores.
-
-Deliverables:
-1. `assets/ground_truth/deck_blueprints_v1.json`
-2. `assets/ground_truth/slide_archetypes_v1.json`
-3. `assets/ground_truth/quality_rubric_v1.json`
-4. `assets/ground_truth/ground_truth_manifest_v1.json`
-5. `assets/ground_truth/annotations/*.json`
-
-Exit criteria:
-1. All reference slides are schema-valid annotations.
-2. Only slides scoring `>= 4.0/5.0` are kept as north-star set.
-
----
-
-## GT2 — First-Slide North-Star Validator (Start Small)
-
-Goal:
-- validate one generated slide against ground truth before broader functionality.
-
-Pilot scope:
-1. Blueprint: `proposal_rfp`
-2. Archetype: `executive_summary`
-3. Output: one-slide generation path, end-to-end.
-
-TDD:
-1. RED:
-- tests for archetype structural checks;
-- tests for rubric scorer determinism;
-- integration test requiring `ground_truth_eval_v1.json`.
-2. GREEN:
-- implement deterministic evaluator using composition/diagnose outputs;
-- add first-slide quality gate.
-3. REFACTOR:
-- simplify scorer/evaluator modules and remove duplication.
-
-Deliverables:
-1. `runs/<run_id>/ground_truth_eval_v1.json`
-2. rubric and alignment score in `run_summary.json`
-
-Exit criteria:
-1. Pilot slide passes hard safety gates.
-2. Pilot slide passes minimum ground-truth quality floor.
-
----
-
-## GT3 — Ground-Truth Benchmark Pack v1
-
-Goal:
-- create stable benchmark set used by all later slices.
-
-Actions:
-1. Select final benchmark corpus from annotated references.
-2. Ensure each deck blueprint has representative benchmark coverage.
-3. Define go/no-go benchmark thresholds.
-
-Deliverables:
-1. `assets/benchmarks/benchmark_manifest_v2.json`
-2. `assets/benchmarks/benchmark_thresholds_v1.json`
-
-Exit criteria:
-1. Benchmark pack is versioned and reproducible.
-2. All later slices consume this benchmark contract.
+The build program is only complete when all are true:
+1. One-slide archetype path works end-to-end from prompt to reviewed/repaired PPTX.
+2. At least 5 archetypes render through the composed path.
+3. A 10-15 slide benchmark deck passes hard quality gates.
+4. Slide-level repair improves review outcomes measurably.
+5. The same backend supports CLI, local web UI, and cloud API.
 
 ---
 
@@ -196,164 +68,397 @@ Exit criteria:
 
 Statuses: `planned | in_progress | complete | blocked`
 
-| Slice | Focus | Status | Evidence Required |
+| Slice | Focus | Status | User-visible Demo |
 |---|---|---|---|
-| GT0 | Source collection + permissions | planned | source log + raw manifest |
-| GT1 | Codify blueprints/archetypes/rubric | planned | schema-valid annotations |
-| GT2 | First-slide validator pilot | planned | ground_truth_eval artifact |
-| GT3 | Benchmark pack v1 | planned | versioned benchmark manifest |
-| S0 | KPI scaffold into run artifacts | in_progress | KPI block in run summary/gates |
-| S0.5 | Message -> Structure -> Primitive guardrails | complete | planning artifacts + gate enforcement |
-| S1 | Deterministic asset diversity enforcement | planned | tests + enforced remediation traces |
-| S2 | Deterministic cue intent classifier | planned | intents persisted in artifacts |
-| S3 | Intent-to-layout routing guard | planned | routing mismatch class reduced |
-| S4 | Recipe 1: technical deep dive | planned | benchmark delta for targeted slides |
-| S5 | Recipes 2-3: comparison + roadmap | planned | layout variety and repetition improvements |
-| S6 | Review-loop delta discipline | planned | measurable V1->V2 KPI improvement |
-| S7 | Benchmark ship/no-ship gates | planned | benchmark report + decision output |
-| S8 | Cleanup/de-bloat hardening | planned | dead code removed + docs aligned |
+| S0 | Runtime reset: `gpt-5.4` + skill loader + artifact contracts | planned | plan-only CLI run with resolved skills |
+| S1 | Template inspection + design tokens + primitive catalog | planned | inspect template and emit tokens |
+| S2 | One-slide composed render (`executive_summary`) | planned | generate one editable composed slide |
+| S3 | Per-slide visual review + repair for one archetype | planned | regenerate one slide from review feedback |
+| S4 | Add `process_flow` and `roadmap` archetypes | planned | 3-slide microdeck with varied visuals |
+| S5 | Multi-slide deck planner with diversity/rhythm rules | planned | 5-slide deck from one prompt |
+| S6 | Reference-backed quality evaluation and benchmark gates | planned | benchmark report for fixture deck |
+| S7 | Local web UI over the same pipeline | planned | local browser workflow |
+| S8 | Cloud-hosted endpoint | planned | async API job flow |
+| S9 | Hardening, cleanup, de-bloat | planned | stable release candidate |
 
 ---
 
-## 5) TDD Contract (All Slices)
+## 5) Vertical Slices
 
-For every slice:
-1. Define acceptance criteria first.
-2. Write failing tests first (unit + one integration/e2e contract test).
-3. Implement minimal code to pass.
-4. Refactor without behavior change.
-5. Run:
-- `python -m pytest -q`
-- targeted integration command(s) for touched behavior.
-6. Persist evidence under `runs/<run_id>/`.
-7. Update this plan with outcome and keep/pivot call.
+## S0 — Runtime Reset: `gpt-5.4`, Responses API, Skill Loader, Artifact Contracts
 
-Test mix target:
-1. Unit: 70%
-2. Integration: 20%
-3. End-to-end benchmark checks: 10%
+### Goal
+Create the canonical AI runtime and artifact model for the new architecture without yet changing the renderer.
 
-No pixel-perfect visual tests.
+### Build
+- Add a Responses-API-capable OpenAI client path for `gpt-5.4`.
+- Define provider abstraction so Azure-compatible deployments can still run when feature parity differs.
+- Add skill loader that resolves internal skill bundles for a run.
+- Persist `resolved_skills.json`.
+- Add `plan-only` CLI command that produces:
+  - `normalized_content.json`
+  - `resolved_skills.json`
+  - `deck_blueprint_v1.json`
+  - `slide_briefs_v1.json`
 
----
+### User-visible demo
+Run one command that ingests a prompt and shows:
+- deck blueprint;
+- chosen slide archetypes;
+- selected skill bundles.
 
-## 6) Implementation Slices After Ground Truth
+### Tests
+- unit tests for skill manifest parsing and resolution;
+- unit tests for provider selection;
+- schema tests for deck blueprint and slide briefs;
+- one integration test for `plan-only` artifacts.
 
-## S0 — KPI Scaffold in Artifacts
-
-Goal:
-- baseline measurement for all future comparisons.
-
-Exit criteria:
-1. KPI block added to `quality_gates_v2.json` and `run_summary.json`.
-2. Baseline metrics recorded in this file.
-
-## S1 — Deterministic Diversity Enforcement
-
-Goal:
-- enforce max reuse, adjacent icon constraints, and minimum unique asset targets deterministically.
-
-Exit criteria:
-1. Policy violations are remediated post-plan.
-2. Remediation traces are persisted.
-
-## S2 — Deterministic Cue Intent Classifier
-
-Goal:
-- assign explicit visual intent tags per slide before routing.
-
-Exit criteria:
-1. Intent tags persisted in planner/composition artifacts.
-2. Cue-rich slide fallback rate decreases.
-
-## S3 — Intent-to-Layout Routing Guard
-
-Goal:
-- ensure intent-compatible layout choice using deterministic upgrades when needed.
-
-Exit criteria:
-1. Fewer cue-rich slides on non-image-capable layouts.
-2. No overflow regression from routing upgrades.
-
-## S4 — Recipe 1 (`technical_deep_dive`)
-
-Goal:
-- prove recipe-driven composition on one high-value archetype.
-
-Exit criteria:
-1. Target slides improve versus GT baseline and S0 baseline.
-2. Existing safety gates remain green.
-
-## S5 — Recipes 2-3 (`comparison`, `roadmap`)
-
-Goal:
-- expand carefully after S4 evidence.
-
-Exit criteria:
-1. Layout variety KPI improves.
-2. Visual repetition KPI improves.
-
-## S6 — Review Loop Delta Discipline
-
-Goal:
-- enforce measurable V1->V2 improvement, not cosmetic churn.
-
-Exit criteria:
-1. `v1_vs_v2_delta` persisted in run summary.
-2. At least one quality KPI improves when review issues are present.
-
-## S7 — Benchmark Ship/No-Ship Gates
-
-Goal:
-- convert benchmark metrics into release decisions.
-
-Exit criteria:
-1. Benchmark report emitted in deterministic schema.
-2. Clear pass/fail ship decision is generated.
-
-## S8 — Cleanup and De-Bloat
-
-Goal:
-- keep repo compact and agent-friendly.
-
-Exit criteria:
-1. Remove dead modules/flags.
-2. Consolidate temporary compatibility paths.
-3. Refresh docs to match shipped behavior.
+### Exit criteria
+1. `gpt-5.4` planning works in a reproducible CLI flow.
+2. Skill resolution is persisted and test-covered.
+3. The repo can produce a valid deck blueprint without rendering.
 
 ---
 
-## 7) Baseline Metrics (Fill Starting GT2/S0)
+## S1 — Template Inspection, Design Tokens, Primitive Catalog
 
-1. Blocking overflow count:
-2. Visual density:
-3. Unique visual assets per 10 slides:
-4. Max single-image reuse:
-5. Layout variety:
-6. Ground-truth alignment score:
-7. Ground-truth rubric score:
-8. V1->V2 improvement score:
+### Goal
+Make the presentation layer explicit and deterministic.
+
+### Build
+- Build template inspection artifact generation.
+- Extract theme tokens from the template.
+- Create `ppt_primitive_catalog_v1.json`.
+- Create `visual_recipes_v1.json` scaffold.
+- Add CLI command to inspect template and emit tokens.
+
+### User-visible demo
+Run a command that prints and persists:
+- template summary;
+- token set;
+- available layouts/routes;
+- allowed primitive families.
+
+### Tests
+- unit tests for token extraction;
+- unit tests for placeholder/layout detection;
+- snapshot-like structural tests for primitive catalog validity;
+- integration test for template inspection artifact generation.
+
+### Exit criteria
+1. Every run can produce `template_inspection.json` and `design_tokens.json`.
+2. Primitive catalog exists and is schema-valid.
+3. Visual recipes scaffold exists for at least 3 archetypes.
 
 ---
 
-## 8) Commit Cadence
+## S2 — One-Slide Composed Render (`executive_summary`)
 
-Per slice:
-1. `RED` commit: tests only (expected fail).
-2. `GREEN` commit: minimal implementation.
-3. `REFACTOR` commit: cleanup only.
-4. Add slice note in this plan:
-- shipped scope
-- KPI deltas
-- keep or pivot decision.
+### Goal
+Prove the new architecture on a single archetype using the composed path.
+
+### Build
+- Define `executive_summary` skill.
+- Define one `executive_summary` visual recipe.
+- Introduce `SlidePlan` and `SlideElementPlan` schemas.
+- Add a minimal bounded layout solver.
+- Render one composed slide using native PowerPoint primitives.
+- Keep output editable.
+
+### User-visible demo
+CLI command:
+- generate one `executive_summary` slide from prompt;
+- emit `slide_plan_v1/<slide_id>.json`;
+- render `deck_v1.pptx` containing that slide.
+
+### Tests
+- unit tests for `SlidePlan` schema;
+- solver unit tests for bounds and non-overlap;
+- renderer tests for text, shapes, connectors, and background blocks;
+- one end-to-end test for prompt -> slide plan -> PPTX.
+
+### Exit criteria
+1. One-slide composed render works end-to-end.
+2. Slide contains native text and shapes, not rasterized layout.
+3. Blocking overflow is zero for the fixture case.
+4. The slide is clearly better than placeholder-only output for the same input.
 
 ---
 
-## 9) Definition of Done
+## S3 — Per-Slide Visual Review and Repair for One Archetype
 
-Done when:
-1. Ground-truth benchmark gates pass consistently.
-2. Pilot-to-full archetype rollout maintains quality floor.
-3. Deck quality improvements are measurable against baseline.
-4. Pipeline remains deterministic and artifact-complete.
-5. Codebase is free from significant dead/experimental paths.
+### Goal
+Close the loop on a single slide: render, review, repair, rerender.
+
+### Build
+- Produce per-slide review packets.
+- Add `visual_review_v1/<slide_id>.json` schema.
+- Add `repair_plan_v1/<slide_id>.json` schema.
+- Make the multimodal reviewer explicitly score each slide for:
+  - content quality/message clarity;
+  - placement/alignment/spacing;
+  - visual appeal/polish.
+- Route structured review feedback back into the slide composer/repair planner.
+- Add repair planner that updates only the target slide plan.
+- Rerender only changed slides.
+
+### User-visible demo
+CLI command:
+- generate one slide;
+- export review image;
+- run review;
+- inspect targeted feedback for content, placement, and visual appeal;
+- apply repair;
+- produce `deck_v2.pptx`.
+
+### Tests
+- unit tests for review-output schema;
+- integration test for image export and review packet generation;
+- end-to-end test for one-slide review/repair loop;
+- assertions that the repaired slide plan changes only bounded fields.
+
+### Exit criteria
+1. One-slide repair loop works without manual intervention.
+2. Repair changes only the target slide.
+3. Review outputs actionable, structured instructions on content, placement, and visual appeal.
+4. Repaired slide passes review-specific gates better than v1.
+
+---
+
+## S4 — Add `process_flow` and `roadmap` Archetypes
+
+### Goal
+Prove that the architecture generalizes beyond one slide type.
+
+### Build
+- Add skills and visual recipes for:
+  - `process_flow`
+  - `roadmap`
+- Expand primitive rendering for connectors, chevrons, swimlanes, and milestone markers.
+- Add archetype-specific caps and validation rules.
+
+### User-visible demo
+CLI command creates a 3-slide microdeck:
+- `executive_summary`
+- `process_flow`
+- `roadmap`
+
+### Tests
+- unit tests for new archetype contracts;
+- renderer tests for flows and timeline/roadmap elements;
+- integration test for 3-slide microdeck generation.
+
+### Exit criteria
+1. Three archetypes work through the composed path.
+2. Adjacent slides show clear visual variety.
+3. All three slides remain editable and reviewable.
+
+---
+
+## S5 — Multi-Slide Deck Planner with Diversity and Rhythm Rules
+
+### Goal
+Generate a coherent short deck, not just isolated slides.
+
+### Build
+- Add deck-level variety constraints.
+- Add neighbor-aware slide composition planning.
+- Add rhythm rules for title zones, backgrounds, and density.
+- Add review summaries that consider adjacent slide continuity.
+- Feed slide-level multimodal review results back into planning for targeted slide repair inside a multi-slide deck.
+
+### User-visible demo
+Generate a 5-slide deck from a single input prompt with:
+- coherent narrative order;
+- varied slide visuals;
+- no repeated recipe streaks beyond configured limits.
+
+### Tests
+- unit tests for deck variety enforcement;
+- integration test for 5-slide generation;
+- structural tests for recipe repetition and asset reuse;
+- review tests that include neighboring slide context.
+
+### Exit criteria
+1. 5-slide deck generation works end-to-end.
+2. Deck variety and rhythm rules are visibly enforced.
+3. Review loop can flag and repair a single weak slide within the deck based on content, placement, and visual appeal.
+
+---
+
+## S6 — Reference-Backed Quality Evaluation and Benchmark Gates
+
+### Goal
+Stop relying on intuition alone; evaluate against reference-backed thresholds.
+
+### Build
+- Finalize benchmark manifest and threshold files.
+- Add rubric scoring hooks tied to archetypes and reference packets.
+- Add benchmark report artifact.
+- Add ship/no-ship quality gate command.
+
+### User-visible demo
+Run benchmark command and get:
+- overall status;
+- archetype scores;
+- blocking issues;
+- v1/v2 deltas where available.
+
+### Tests
+- schema tests for benchmark manifest;
+- deterministic scorer tests;
+- integration test for benchmark report generation.
+
+### Exit criteria
+1. Benchmark artifact is versioned and reproducible.
+2. Hard quality thresholds exist and are enforced in CI/local runs.
+3. At least one reference-backed archetype floor is measured, not guessed.
+
+---
+
+## S7 — Local Web UI
+
+### Goal
+Wrap the CLI pipeline in a locally run UI suitable for iterative use on a laptop.
+
+### Build
+- Add local web app shell backed by the same backend pipeline.
+- Support input prompt entry, template selection, run launch, slide thumbnails, review status, and per-slide regenerate.
+- Support artifact inspection for current run.
+
+### User-visible demo
+A local browser workflow where the user can:
+- paste prompt + cues;
+- generate deck;
+- inspect slides;
+- click regenerate for one slide;
+- download the deck.
+
+### Tests
+- API contract tests for local endpoints;
+- one minimal browser-flow integration test if practical;
+- backend regression tests to ensure CLI and UI use same contracts.
+
+### Exit criteria
+1. Local UI can drive the full run pipeline.
+2. Per-slide regenerate works from the UI.
+3. No divergence between CLI artifacts and UI artifacts.
+
+---
+
+## S8 — Cloud-Hosted Endpoint
+
+### Goal
+Expose the same engine as a hosted asynchronous API.
+
+### Build
+- Add job-based API endpoints.
+- Add artifact storage strategy.
+- Add status polling and run retrieval.
+- Add provider/config controls for local/OpenAI-hosted/Azure-hosted runtime.
+
+### User-visible demo
+Remote client can:
+- submit generation job;
+- poll status;
+- fetch final PPTX and review results;
+- trigger single-slide repair.
+
+### Tests
+- API contract tests;
+- async job lifecycle tests;
+- artifact persistence tests under hosted mode.
+
+### Exit criteria
+1. Hosted API reproduces local pipeline behavior.
+2. Job artifacts remain inspectable.
+3. Slide repair is supported remotely.
+
+---
+
+## S9 — Hardening, Cleanup, and De-Bloat
+
+### Goal
+Remove temporary scaffolding and prepare for sustained development.
+
+### Build
+- delete dead code and abandoned branches;
+- align README and docs to actual architecture;
+- tighten tests and runbooks;
+- audit OOXML bridge usage;
+- lock down skill versioning policy.
+
+### User-visible demo
+Stable release candidate with:
+- clean docs;
+- reproducible benchmark results;
+- simplified operational path.
+
+### Tests
+- full test suite;
+- benchmark smoke suite;
+- targeted regression runs on critical archetypes.
+
+### Exit criteria
+1. Obsolete V1-only assumptions are removed where no longer needed.
+2. Docs match implementation.
+3. Release candidate is operationally stable.
+
+---
+
+## 6) Commands and MVP Surfaces
+
+The plan assumes the following command progression:
+- `plan-only`
+- `inspect-template`
+- `generate-slide`
+- `review-slide`
+- `generate-deck`
+- `serve-local`
+- `serve-api`
+
+Command names may vary, but the surface progression may not.
+
+---
+
+## 7) Required Artifacts by Milestone
+
+By S0:
+- `resolved_skills.json`
+- `deck_blueprint_v1.json`
+- `slide_briefs_v1.json`
+
+By S1:
+- `template_inspection.json`
+- `design_tokens.json`
+- `ppt_primitive_catalog_v1.json`
+
+By S2:
+- `slide_plan_v1/<slide_id>.json`
+- `deck_render_plan_v1.json`
+- `deck_v1.pptx`
+
+By S3:
+- `visual_review_v1/<slide_id>.json`
+- `repair_plan_v1/<slide_id>.json`
+- `deck_v2.pptx`
+- planner-facing review feedback for content, placement, and visual appeal
+
+By S5:
+- `deck_review_summary_v1.json`
+- deck-level diversity/rhythm metrics
+
+By S6:
+- `benchmark_report_v1.json`
+- thresholded quality decision
+
+---
+
+## 8) Definition of Done
+
+The build program is done only when:
+1. CLI, local UI, and cloud endpoint all run the same core pipeline.
+2. At least 5 archetypes render with acceptable review quality.
+3. Per-slide multimodal review and planner-driven repair is operational.
+4. Benchmark gating is real and enforced.
+5. The resulting decks are editable, branded, and operationally reproducible.

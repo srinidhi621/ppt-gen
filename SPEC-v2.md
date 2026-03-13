@@ -1,91 +1,108 @@
-# SPEC-v2.md — AI Presentation Generator (Zero-Cost Runtime, Compositor Architecture)
+# SPEC-v2.md — AI Presentation Generator (GPT-5.4, Skills, Deterministic PowerPoint Composer)
 
 ## 0) Purpose
 
-This spec replaces the prior V2 draft with an implementation-ready architecture that:
+This spec fully replaces the prior `SPEC-v2.md`.
 
-1. Produces **fully native, editable `.pptx`** files
-2. Preserves **company template branding** (masters, theme colors, theme fonts)
-3. Uses **zero-cost, locally installable runtime dependencies**
-4. Fixes V1’s composition quality ceiling without discarding V1’s deterministic backbone
+The target system is a general-purpose presentation generation agent that:
+- accepts a prompt, optional visualization cues, and optional reference slides;
+- generates a fully native, editable `.pptx` deck;
+- preserves company branding through customer-provided PowerPoint templates;
+- plans each slide at the element level instead of only filling placeholders;
+- uses `gpt-5.4` and reusable skills for narrative, composition, review, and repair;
+- deterministically renders PowerPoint-native objects and persists run artifacts for every stage.
 
-This is an architectural document and source-of-truth contract for V2 implementation.
-
----
-
-## 0.1) Implementation Progress Snapshot (`2026-03-04`)
-
-Implemented in current branch:
-- planner metadata loading:
-  - `assets/catalog/component_catalog_v1.json`
-  - `assets/catalog/planner_policy_v1.json`
-- planner prompt now includes:
-  - component metadata summary
-  - visual planning policy summary
-  - policy-derived diversity/routing constraints
-- benchmark + style metadata scaffolding:
-  - `assets/benchmarks/benchmark_manifest_v1.json`
-  - `assets/catalog/component_examples_v1.json`
-  - `assets/catalog/template_style_baselines_v1.json`
-- regression coverage for metadata wiring:
-  - `tests/test_assets_metadata.py`
-  - `tests/test_planner_prompt_metadata.py`
-- DeckIR v2 fixture directory scaffold:
-  - `tests/fixtures/deckir_v2/README.md`
-- deterministic planning guardrails (new pre-planning stage):
-  - `src/planning/guardrails.py`
-  - `src/models/planning.py`
-  - artifacts persisted under `runs/<run_id>/`:
-    - `intent_briefs_v1.json`
-    - `structure_plans_v1.json`
-    - `visual_realization_plan_v1.json`
-    - `planning_validation_v1.json`
-- archetype and visual policy catalogs:
-  - `assets/ground_truth/archetype_message_contracts_v1.json`
-  - `assets/catalog/visual_primitive_policy_v1.json`
-- planner prompt now includes planning guardrail context:
-  - section-level core theme and bottom line
-  - structure plan constraints
-  - visual primitive realization plan
-- quality gates expanded to include:
-  - `message_contract_alignment`
-  - `structure_layout_alignment`
-  - `visual_primitive_policy`
-
-Not yet implemented:
-- expanded KPI emission into `quality_gates_v2.json` and `run_summary.json`
-- runtime composed renderer and bounded solver implementation
-- benchmark-calibrated archetype contract scoring against curated ground-truth corpus
+The quality bar is not "valid PPTX". The quality bar is near top-tier consulting and executive communication polish within bounded archetypes, controlled visual grammar, and reference-backed review.
 
 ---
 
-## 1) Hard Constraints
+## 0.1) Product Thesis
 
-### 1.1 Output Contract
-- Output is a `.pptx` file that opens in Microsoft PowerPoint.
-- Text, shapes, charts, connectors, and diagrams must be manually editable.
-- No slide-as-image rendering in exported PPTX.
+The main failure in the first version was not the Python stack itself. The failure was that the system behaved like a placeholder filler rather than a presentation composer.
 
-### 1.2 Template Contract
-- Input template is a customer-provided `.pptx` with branded masters/themes/layouts.
-- System must open/modify/preserve that template.
-- Placeholder binding remains `shape.alt_text == field_key` for template-native path.
+This revised architecture therefore changes the planning model more than the file-emission model:
+- the AI layer must reason about narrative role, slide archetype, visual hierarchy, shape selection, spacing, typography, color, and background treatment;
+- the deterministic layer must translate that plan into native PowerPoint objects with strict validation;
+- the review layer must inspect rendered slides visually and drive targeted slide repair.
 
-### 1.3 Dependency Cost and Licensing Policy
-- All non-LLM runtime dependencies must be zero-cost to install and run locally (no paid SDK/runtime licenses).
-- Open-source and proprietary-but-free tools are both allowed if they are locally installable and license-safe for intended use.
-- Paid usage is allowed only for:
-  - coding assistants used during development, and
-  - LLM inference used by the planning/review pipeline.
+The renderer remains Python-first because template preservation is still a hard requirement.
+
+---
+
+## 0.2) Outcome Target
+
+A successful run produces a deck that:
+- opens in Microsoft PowerPoint without repair prompts;
+- remains manually editable at the text, shape, connector, chart, and table level;
+- uses the customer theme and template correctly;
+- exhibits coherent slide-to-slide rhythm and varied visual structure;
+- passes deterministic safety gates and visual review gates;
+- is strong enough that a human editor is polishing, not rebuilding.
+
+---
+
+## 0.3) Architecture Summary
+
+The system is organized into five cooperating layers:
+1. Presentation layer: template understanding, design tokens, slide archetypes, visual grammar, and element-level composition plans.
+2. AI layer: `gpt-5.4` planning, skill loading, per-slide composition, and multimodal review/repair.
+3. Deterministic renderer: `python-pptx` plus a bounded OOXML bridge for edge cases.
+4. Review layer: slide export, per-slide diagnostics, per-slide visual review, and targeted repair.
+5. Delivery layer: CLI first, local web UI second, cloud-hosted API third.
+
+---
+
+## 1) Non-Negotiable Constraints
+
+### 1.1 Native PPTX Output
+- Output must be `.pptx`.
+- Output must open in Microsoft PowerPoint.
+- Text, shapes, lines, connectors, tables, and charts must remain editable.
+- Do not export slides as images inside the final deck.
+
+### 1.2 Template-First Branding
+- The system must accept a customer-provided branded `.pptx` template.
+- The system must preserve masters, layouts, theme colors, and theme fonts.
+- Placeholder binding remains `shape.alt_text == field_key` for `template_native` slides.
+- `composed` slides may render on blank or low-content layouts, but must still inherit template theme tokens and rhythm rules.
+
+### 1.3 PowerPoint-Native Visuals
+- The system must use the same native object families users expect from PowerPoint's `Home` and `Insert` tabs:
+  - text boxes and placeholders;
+  - shapes;
+  - lines and connectors;
+  - tables;
+  - charts;
+  - pictures and icons;
+  - grouped visual constructs assembled from the above.
+- The system is not automating the PowerPoint UI. It is generating the same underlying native objects programmatically.
 
 ### 1.4 Deterministic Safety
-- LLM output must always be schema-validated.
-- Deterministic validation/remediation remains mandatory.
-- Run artifacts and logs must persist under `runs/<run_id>/`.
+- All LLM outputs must be schema-validated.
+- All final rendering decisions must pass deterministic validation before render.
+- Every run must persist artifacts under `runs/<run_id>/`.
+- Visual review may recommend changes, but rendering never executes raw free-form LLM text as code.
+
+### 1.5 Asset Format Policy
+- Render path supports raster assets (`PNG`, `JPG`, `WebP`).
+- Source SVGs may exist in catalogs, but must be converted before render.
+- Do not add SVG directly to the runtime render path.
+
+### 1.6 Review Image Generation
+- Automated slide previews remain headless:
+  - `soffice` for `PPTX -> PDF`
+  - `pdftoppm` for `PDF -> PNG`
+- Do not rely on GUI automation in the core pipeline.
+
+### 1.7 Delivery Surfaces
+- The first production surface is CLI.
+- The second surface is a locally run web UI on the laptop.
+- The third surface is a cloud-hosted endpoint.
+- All three surfaces must use the same planning, rendering, and review contracts.
 
 ---
 
-## 2) Architectural Decisions (Final)
+## 2) Primary Architecture Decisions
 
 ## 2.1 Rendering Engine: Python + `python-pptx` (Accepted)
 
@@ -93,601 +110,910 @@ Not yet implemented:
 - Primary renderer remains Python with `python-pptx`.
 
 **Why**
-- Must open and preserve existing branded templates.
-- Need editable native shapes/charts/connectors in output.
-- Reuses V1 deterministic infrastructure.
+- Template preservation is mandatory.
+- Existing branded masters/layouts already encode valuable presentation design work.
+- The current repo already has deterministic rendering, validation, and artifact scaffolding around Python.
+- A renderer rewrite would not solve the core composition-planning problem.
 
-**Alternatives considered**
-- `PptxGenJS` / `react-pptx`: generation-oriented; no reliable template import/edit parity.
-- Direct OOXML write-only approach: high complexity, low maintainability for V2 timeline.
-- Apache POI route: feasible but introduces JVM split and higher team complexity.
+**Implication**
+- The major architectural investment shifts to slide planning, visual grammar, and review-driven repair.
 
-**Risks**
-- `python-pptx` feature gaps and slow upstream evolution.
-- Some operations may require low-level XML workarounds.
+**Edge-case strategy**
+- Introduce a bounded OOXML bridge for features that `python-pptx` cannot express directly.
+- OOXML escape hatches must live behind helper APIs and tests.
 
-**Mitigations**
-- Introduce `src/render/ooxml_bridge.py` for isolated XML escape hatches.
-- Keep XML manipulation behind tested helper APIs, never inline in component code.
+**Non-goal**
+- Do not rewrite the runtime around `PptxGenJS` as the primary engine.
+- A future spike comparing one composed slide family in a Node stack is allowed, but it is not the baseline architecture.
 
-## 2.2 Layout Engine: Bounded Geometry Solver (Partially Accepted)
+## 2.2 AI Runtime: `gpt-5.4` + Skills via Responses API (Accepted)
 
 **Decision**
-- Implement a small deterministic solver for fixed-canvas layouts, not full Flexbox.
-
-**Allowed primitives only**
-- `inset`, `split_h`, `split_v`, `grid`, `flow`, `center`
+- Primary planning and review model family is `gpt-5.4`.
+- Runtime should use the OpenAI Responses API when available so the system can leverage Skills and modern tool orchestration.
 
 **Why**
-- Slide canvas is fixed; responsive web semantics are unnecessary for MVP.
+- The planner must do more than summarize content; it must compose slides at the element level.
+- The review loop must interpret slide images, compare them to intent, and issue bounded repair instructions.
+- Reusable skills materially improve consistency across blueprint types, slide archetypes, and company brand rules.
 
-**Guardrails (non-negotiable)**
-- Solver scope is layout regioning only; no generic CSS clone.
-- Max nesting depth: 3 (`slide -> region -> component internals`).
-- If solver complexity exceeds thresholds, escalate to constraint solver evaluation.
+**Provider strategy**
+- Canonical capability target is OpenAI-hosted `gpt-5.4` with Skills support.
+- Azure/OpenAI-compatible deployment remains supported, but the architecture must not assume identical provider feature parity.
+- Internal skill definitions must therefore be provider-agnostic and projectable into either:
+  - native OpenAI Skills, or
+  - local prompt/context bundles for providers without the same skill surface.
 
-**Escalation thresholds**
-- `solver.py` > 600 LOC excluding tests, or
-- > 12 ad-hoc special-case branches for overflow/collision, or
-- > 5 unresolved layout bug classes after two sprints
-
-If any threshold is hit, run a focused spike comparing bounded Cassowary/Kiwi constraints for the failing cases.
-
-## 2.3 Smart Component Library (Accepted with strict scope)
+## 2.3 Slide Strategy: Hybrid `template_native` + `composed` (Accepted)
 
 **Decision**
-- Build a component library that renders native PPT shapes into solver-computed regions.
+- Keep two rendering routes:
+  - `template_native`: use existing template placeholders and designer-authored layouts when the slide structure already fits them well.
+  - `composed`: use a composition plan to place native PowerPoint primitives on a template-aligned canvas.
 
-**Component contract**
-- `min_size()`
-- `preferred_size()`
-- `validate_payload(data)`
-- `render(slide, bounds, theme) -> list[Shape]`
-- `to_composition_meta() -> dict`
+**Routing principle**
+- A slide must not be forced through placeholders if the message requires custom visual structure.
+- A slide must not be custom-composed if the template already provides a better branded layout for that slide type.
 
-**MVP component set (do not exceed in initial build)**
-- `TitleSlide`, `SectionBreak`, `ContentBlock`, `TextWithImage`, `MetricCards`, `BentoGrid`, `IconGrid`, `Timeline`, `ProcessFlow`, `ComparisonColumns`, `ArchitectureDiagram`, `DataTable`
+**Target steady state**
+- Most complex slides should use `composed`.
+- Many title, divider, simple content, and straightforward two-column slides may remain `template_native`.
 
-**Risks**
-- Programmatic visuals can look mechanical.
-- Payloads may be schema-valid but visually unfit (example: 15 timeline items).
-
-**Mitigations**
-- Per-component hard caps (`max_items`, `max_words_per_cell`, etc.).
-- Component-specific remediation (`paginate`, `compress`, `swap_component`).
-- Centralized theme tokens and spacing scale to avoid inconsistent look.
-
-## 2.4 Hybrid Slide Strategy: `template_native` + `composed` (Accepted)
+## 2.4 Review Policy: Per-Slide Visual Review with Targeted Repair (Accepted)
 
 **Decision**
-- Keep two slide paths:
-  - `template_native`: V1 placeholder-fill path for simple slides.
-  - `composed`: freeform component rendering for visual/diagram-heavy slides.
+- Review is performed at the slide level, not only at the full-deck level.
+- The reviewer produces slide-specific findings and repair instructions.
+- Review findings are fed back into the slide planner/repair planner as structured input, not just logged as commentary.
+- Repair rerenders only the affected slides unless a deck-level narrative issue requires wider replan.
 
-**Why**
-- Preserves template designer polish where it already works.
-- Removes V1 ceiling for advanced visuals.
+**MVP repair depth**
+- Initial production scope allows one review/repair loop per slide per run.
+- The system may batch review calls, but the review contract must remain per-slide.
 
-**Primary risk**
-- Deck looks inconsistent between template and composed slides.
-
-**Mitigations**
-- Shared theme token system from template extraction.
-- Shared slide rhythm constraints (title zone, margin grid, spacing scale).
-- Gate: mixed-mode decks fail if typography or spacing drift exceeds thresholds.
-
-## 2.5 Planning Architecture: Single Model, Two-Pass Orchestration (Override)
+## 2.5 Skills Policy: OpenAI Skills + Internal Skill Repository (Accepted)
 
 **Decision**
-- Keep a single model family, but split planning into two deterministic passes.
+- The system will use two skill layers:
+  - base runtime Skills provided by OpenAI where available;
+  - a versioned internal skills repository that encodes company-specific deck standards.
 
-**Pass A (Deck Skeleton)**
-- Narrative arc
-- Slide archetype
-- Route choice (`template_native` vs `composed`)
-- Component type selection
-- Visual intent tags
-
-**Pass B (Slide Payload Fill)**
-- Component data payload per slide
-- Asset references with diversity constraints
-- Text budgets per component
-
-**Why this override**
-- One giant call is brittle (token pressure + inconsistent structure).
-- Full multi-agent chain is overhead-heavy.
-- Two-pass with one model keeps coordination simple while improving reliability.
-
-**Concurrency**
-- Pass B can run in parallel per slide batch after Pass A is fixed.
-
-## 2.6 Web Preview: PPTX-Derived Images (Accepted as MVP ceiling)
-
-**Decision**
-- PPTX remains source of truth.
-- Preview uses rendered slide images (`soffice -> pdf -> pdftoppm/png`).
-
-**Why**
-- Avoids permanent dual-renderer fidelity drift.
-
-**Known limitation**
-- 2–3s slide refresh is not Gamma-level instant editing.
-
-**Mitigations**
-- Per-slide render cache keyed by `(slide_hash, template_hash)`.
-- Async render workers with bounded queue.
-- Incremental rerender only for affected slides.
-
-## 2.7 Migration Strategy: Evolutionary (Accepted with anti-coupling controls)
-
-**Decision**
-- Extend V1 modules and artifacts instead of clean-room rewrite.
-
-**Anti-coupling controls**
-- `deck_ir_v2` in separate module namespace from V1 schema.
-- Renderer split into explicit engines, not flag-heavy monolith.
-- Decommission policy for V1-only code paths after stable adoption window.
+**Purpose of internal skills**
+- Tell the planner what each slide should look like.
+- Encode slide archetype rules, brand rules, reference patterns, and review standards.
+- Make the system opinionated and repeatable rather than generic.
 
 ---
 
-## 3) Runtime Tech Stack (Locked)
+## 3) Presentation Layer
 
-## 3.1 Runtime and Core Libraries
-- Python 3.11+
-- `python-pptx`
-- `pydantic` v2
-- `fastapi`, `uvicorn`
-- `pytest`, `pytest-xdist`
-- `orjson`
+The presentation layer is the source of truth for how a slide should look and what PowerPoint-native primitives may be used.
 
-## 3.2 Preview Toolchain
-- LibreOffice `soffice` (headless PPTX->PDF)
-- `pdftoppm` (PDF->PNG)
+## 3.1 Responsibilities
 
-## 3.3 LLM Inference Backend
-- Supported modes:
-  - API-based hosted LLMs (paid allowed), or
-  - self-hosted models (`vLLM` preferred, `llama.cpp` fallback)
-- Planner model class: strong instruct model suitable for structured JSON output
-- Multimodal reviewer model class: VLM suitable for slide image critique
+The presentation layer must provide:
+- template inspection;
+- theme extraction;
+- design token generation;
+- a PowerPoint primitive catalog;
+- slide archetype definitions;
+- visual recipe definitions;
+- layout rhythm rules;
+- composition constraints;
+- render-ready slide element plans.
 
-Model name/version must be persisted in run artifacts for reproducibility.
+## 3.2 Template Inspection
 
-## 3.4 Queue/Concurrency (Phase 2+)
-- Redis + RQ/Celery for async generation/re-render jobs
+For every input template, the system must extract and persist:
+- slide size;
+- masters and layouts;
+- placeholder map;
+- theme fonts;
+- theme colors;
+- title bands and margin tendencies;
+- background treatments available in the template;
+- reusable branded layouts suitable for `template_native` routing.
 
----
+Required artifact:
+- `runs/<run_id>/template_inspection.json`
 
-## 4) System Architecture
+## 3.3 Design Tokens
 
-```text
-Input Markdown
-  -> Normalize (deterministic)
-  -> Theme + Catalog Load (deterministic)
-  -> Plan Pass A (LLM, skeleton)
-  -> Validate Skeleton (deterministic)
-  -> Plan Pass B (LLM, payload fill)
-  -> Validate + Remediate (deterministic)
-  -> Render V1 (deterministic)
-  -> Diagnose + Preview Export (deterministic)
-  -> Multimodal Review (LLM)
-  -> Replan Pass B only (LLM, bounded changes)
-  -> Validate + Render V2 (deterministic)
-  -> Quality Gates (deterministic)
-  -> Artifacts + Summary
-```
+The system must convert the template into deterministic design tokens, including:
+- typography roles:
+  - `display`
+  - `h1`
+  - `h2`
+  - `h3`
+  - `body`
+  - `caption`
+  - `footnote`
+- color roles:
+  - `bg_primary`
+  - `bg_secondary`
+  - `surface`
+  - `surface_muted`
+  - `text_primary`
+  - `text_secondary`
+  - `accent_1`
+  - `accent_2`
+  - `success`
+  - `warning`
+  - `risk`
+- spacing scale:
+  - `xs`, `sm`, `md`, `lg`, `xl`
+- stroke scale:
+  - `hairline`, `thin`, `standard`, `emphasis`
+- radius scale:
+  - `none`, `sm`, `md`, `pill`
+- shadow/effect policy:
+  - allowed, discouraged, forbidden effect families.
 
-Loop policy remains one review loop maximum.
+All composed slides must use tokenized values unless an explicit recipe override is defined.
 
----
+Required artifact:
+- `runs/<run_id>/design_tokens.json`
 
-## 4.1 Deck Blueprint Library Contract (New)
+## 3.4 PowerPoint Primitive Catalog
 
-The system must support blueprint-guided planning for common AI consulting deck types.  
-Blueprints define expected narrative structure and required slide roles before layout selection.
+The presentation layer must define the allowed primitive families used to emulate the visual language of PowerPoint `Home` and `Insert`.
 
-Required blueprint IDs:
-1. `proposal_rfp`
-2. `solution_approach`
-3. `case_study`
-4. `gtm_offering`
-5. `ai_strategy`
-6. `opportunity_assessment`
-7. `business_case_roi`
-8. `responsible_ai_governance`
-9. `data_ai_platform_blueprint`
-10. `executive_steering_update`
+Allowed primitive families for MVP:
+- `text_box`
+- `placeholder_text`
+- `shape_rect`
+- `shape_round_rect`
+- `shape_circle`
+- `shape_line`
+- `shape_bar`
+- `shape_chevron`
+- `shape_arrow`
+- `connector_straight`
+- `connector_elbow`
+- `connector_curved`
+- `table`
+- `chart_bar`
+- `chart_column`
+- `chart_line`
+- `chart_pie`
+- `image`
+- `icon`
+- `group`
 
-Minimum blueprint contract per type:
-- `blueprint_id`
-- `required_sections[]`
-- `optional_sections[]`
-- `target_slide_range`
-- `required_archetypes[]`
-- `required_evidence_types[]`
+Derived visual constructs may be built from those primitives, including:
+- metric cards;
+- process flows;
+- timelines;
+- architecture diagrams;
+- comparison matrices;
+- icon-label grids;
+- callout clusters;
+- section hero slides.
 
-Canonical section expectations:
-- `proposal_rfp`: executive summary, client context/problem, proposed solution, delivery plan, team/governance, risks/assumptions, commercials, proof points, next steps.
-- `solution_approach`: objectives/scope, current state, design principles, target-state architecture, prioritized use cases, phased implementation, dependencies/risks, success metrics.
-- `case_study`: client context, challenge, intervention, implementation highlights, measurable outcomes, lessons learned, repeatable pattern.
-- `gtm_offering`: market opportunity, ICP, value proposition, offer/package, pricing model, channel and sales motion, launch plan, pipeline KPIs.
-- `ai_strategy`: ambition and value thesis, value pools, use-case portfolio, operating model, data/platform foundation, governance/risk, talent/change, roadmap, investment case.
+### 3.4.1 Home/Insert Mapping Requirement
 
----
+For every derived construct, the system must be able to explain which PowerPoint-native primitives it maps to.
 
-## 4.2 Reusable Slide Archetype Library Contract (New)
+Example:
+- `timeline` = round rectangles + lines/connectors + text boxes + optional icons.
+- `architecture_diagram` = grouped rectangles + connectors + labels + optional icons.
+- `metric_cards` = rounded rectangles + text boxes + accent bars.
 
-A shared archetype library must be used across all blueprint types to avoid one-off slide logic.
+This keeps the system grounded in editable native PowerPoint objects instead of opaque custom drawing logic.
 
-Minimum archetype set:
-- `title_section_break`
+## 3.5 Slide Archetypes
+
+The system must ship with a bounded library of slide archetypes. Each archetype defines:
+- its narrative role;
+- content contract;
+- visual recipe options;
+- default route (`template_native` or `composed`);
+- allowed primitive families;
+- text budgets;
+- density limits;
+- reference examples;
+- review checklist.
+
+Initial required archetypes:
+- `title_hero`
+- `section_break`
 - `executive_summary`
 - `problem_statement`
-- `current_vs_target_state`
-- `use_case_prioritization_matrix`
-- `capability_heatmap`
-- `architecture_diagram`
+- `current_vs_target`
+- `capability_overview`
 - `process_flow`
-- `roadmap_workplan`
-- `governance_raci`
-- `risk_issue_matrix`
-- `kpi_dashboard`
-- `value_waterfall_roi`
-- `team_roles`
-- `pricing_options`
-- `case_study_problem_solution_impact`
+- `roadmap`
+- `architecture_diagram`
+- `comparison`
+- `kpi_snapshot`
+- `case_study`
 - `decision_next_steps`
 
-Archetype contract:
+## 3.6 Visual Recipes
+
+Each archetype must support one or more visual recipes.
+
+A visual recipe specifies:
+- composition pattern;
+- focal point strategy;
+- background treatment;
+- primitive mix;
+- title treatment;
+- evidence placement;
+- image/icon rules;
+- contrast rules;
+- whitespace expectations;
+- anti-patterns.
+
+Example visual recipe IDs:
+- `exec_summary_cards`
+- `exec_summary_split_hero`
+- `roadmap_horizontal_phases`
+- `roadmap_swimlane`
+- `architecture_layered_stack`
+- `architecture_hub_spoke`
+- `process_stepper`
+- `comparison_matrix`
+
+Required artifact:
+- `assets/catalog/visual_recipes_v1.json`
+
+## 3.7 Element-Level Composition Contract
+
+Each composed slide must be planned at the element level.
+
+Minimum `SlidePlan` fields:
+- `slide_id`
+- `narrative_role`
 - `archetype_id`
-- `intent_tags[]`
-- `content_schema`
-- `visual_schema`
-- `layout_affinity[]`
-- `quality_checks[]`
+- `visual_recipe_id`
+- `route`
+- `base_layout_id`
+- `background_plan`
+- `title_plan`
+- `regions[]`
+- `elements[]`
+- `text_budget`
+- `review_targets[]`
+
+Minimum `SlideElementPlan` fields:
+- `element_id`
+- `semantic_role`
+- `primitive_family`
+- `bounds`
+- `z_index`
+- `content_binding`
+- `style_tokens`
+- `shape_spec`
+- `line_spec`
+- `text_spec`
+- `background_spec`
+- `asset_ref`
+- `validation_rules[]`
+
+This is the central architectural change from V1.
 
 ---
 
-## 4.3 Ground-Truth Corpus Contract (New)
+## 4) AI Layer
 
-Ground truth is a curated, annotated reference corpus used as the north star for both planning and quality gates.
+The AI layer is responsible for narrative planning, slide-level composition planning, review, and repair.
+
+## 4.1 Model Roles
+
+Required model roles:
+- `deck_planner`: strong structured planner using `gpt-5.4`
+- `slide_composer`: per-slide composition planner using `gpt-5.4`
+- `visual_reviewer`: multimodal slide reviewer using the strongest available `gpt-5.4`-compatible image-capable endpoint
+- `repair_planner`: structured repair planner using `gpt-5.4`
+
+The same model family may serve multiple roles, but prompts, schemas, and skills must remain role-specific.
+
+## 4.2 Skill Loader
+
+The AI layer must load three skill classes per run:
+- deck-level skills;
+- slide archetype skills;
+- review/remediation skills.
+
+### 4.2.1 Canonical Internal Skill Repository
+
+The internal skill repository is the source of truth.
+
+Recommended structure:
+- `skills/brand/`
+- `skills/blueprints/`
+- `skills/archetypes/`
+- `skills/visual_recipes/`
+- `skills/review/`
+- `skills/remediation/`
+
+Each skill must be versioned and may include:
+- instructions;
+- examples;
+- allowed visual patterns;
+- prohibited patterns;
+- required evidence patterns;
+- review rubric fragments;
+- tests or fixtures.
+
+### 4.2.2 OpenAI Skills Projection
+
+When running against OpenAI-hosted infrastructure that supports Skills:
+- selected internal skill bundles may be projected into native OpenAI Skills;
+- skill selection may occur at deck scope or slide scope;
+- runtime must persist the resolved skill set used for reproducibility.
+
+When native Skills are unavailable:
+- the same skill content must be injected as structured prompt context.
+
+Required artifact:
+- `runs/<run_id>/resolved_skills.json`
+
+## 4.3 Planning Workflow
+
+The planner is hierarchical. It does not emit a deck in one giant step.
+
+### Pass 0 — Intake and Context Assembly
+- normalize user content and visualization cues;
+- load template inspection and design tokens;
+- load applicable skills;
+- load relevant reference slides;
+- classify deck blueprint.
+
+Artifacts:
+- `normalized_content.json`
+- `template_inspection.json`
+- `resolved_skills.json`
+- `reference_packet.json`
+
+### Pass 1 — Deck Blueprint Planning
+The deck planner determines:
+- deck objective;
+- audience;
+- narrative arc;
+- slide roster;
+- slide count;
+- slide archetype per section;
+- target evidence pattern per slide;
+- target visual variety constraints across the deck.
+
+Artifact:
+- `deck_blueprint_v1.json`
+
+### Pass 2 — Slide Brief Planning
+Each slide receives a brief that captures:
+- slide purpose;
+- key message;
+- audience takeaway;
+- must-include evidence;
+- avoid/forbid notes;
+- recommended visual recipe candidates;
+- route recommendation.
+
+Artifact:
+- `slide_briefs_v1.json`
+
+### Pass 3 — Per-Slide Composition Planning
+Each slide is planned independently, but with neighbor context.
+
+The slide composer must decide:
+- title treatment;
+- background treatment;
+- region layout;
+- exact primitive families to use;
+- shape, line, and connector choices;
+- font roles and token selections;
+- color token usage;
+- visual emphasis strategy;
+- asset placement and crop mode;
+- text budgets per element;
+- overflow fallback strategy.
+
+This pass must return `SlidePlan` objects, not only layout names.
+
+Artifacts:
+- `slide_plan_v1/<slide_id>.json`
+- `deck_render_plan_v1.json`
+
+### Pass 4 — Deterministic Validation and Repair Prep
+Before render, deterministic logic must validate:
+- allowed primitive families;
+- token compliance;
+- text density budgets;
+- asset availability;
+- route/layout compatibility;
+- non-overlap and bounds sanity;
+- archetype-specific payload caps.
+
+Blocking failures may cause:
+- deterministic compression;
+- component swap;
+- recipe reroute;
+- targeted replan request.
+
+Artifact:
+- `planning_validation_v1.json`
+
+### Pass 5 — Visual Review and Repair Planning
+After render and slide export, the review model must evaluate each slide and decide one of:
+- `accept`
+- `minor_repair`
+- `major_replan`
+
+Review must examine:
+- content quality and message clarity;
+- placement, alignment, spacing, and visual balance;
+- visual appeal, emphasis, and slide polish;
+- slide image;
+- slide plan;
+- diagnose output;
+- neighboring slides;
+- relevant archetype skill and review rubric.
+
+Artifacts:
+- `visual_review_v1/<slide_id>.json`
+- `deck_review_summary_v1.json`
+- `repair_plan_v1/<slide_id>.json`
+
+### Pass 6 — Targeted Repair Render
+The repair planner consumes the multimodal review output and produces updated slide plans.
+Only flagged slides are rerendered unless the review explicitly marks a deck-level narrative issue.
+
+Artifact:
+- `slide_plan_v2/<slide_id>.json`
+- `deck_render_plan_v2.json`
+
+## 4.4 Planning Rules
+
+The AI layer must follow these rules:
+- do not invent layouts or primitives outside the allowed catalog;
+- do not style individual elements with arbitrary fonts/colors outside the token system;
+- do not overfill slides beyond archetype budgets;
+- do not repeat the same visual pattern on adjacent slides unless explicitly justified;
+- do not treat visuals as decoration separate from the message.
+
+---
+
+## 5) Deterministic Renderer
+
+The deterministic renderer translates validated slide plans into a native `.pptx`.
+
+## 5.1 Responsibilities
+
+The renderer must:
+- open the template presentation;
+- create `template_native` slides from placeholders when appropriate;
+- create `composed` slides on template-aligned layouts when needed;
+- render native PowerPoint objects;
+- apply tokenized typography and styling;
+- persist diagnostics and mapping metadata;
+- isolate OOXML edge cases.
+
+## 5.2 Route Types
+
+### `template_native`
+Use when:
+- the template already contains the right structure;
+- slide complexity is low to medium;
+- custom composition would not materially improve clarity.
+
+Required inputs:
+- `layout_id`
+- field bindings
+- optional image/icon bindings
+
+### `composed`
+Use when:
+- slide structure requires explicit composition control;
+- the message depends on diagramming, card layouts, process flows, or carefully balanced evidence blocks;
+- placeholder layouts would materially reduce quality.
+
+Required inputs:
+- `base_layout_id`
+- `background_plan`
+- `regions[]`
+- `elements[]`
+
+## 5.3 Renderer Modules
+
+Required renderer modules:
+- `template_loader`
+- `token_resolver`
+- `layout_solver`
+- `element_factory`
+- `asset_resolver`
+- `chart_factory`
+- `table_factory`
+- `connector_router`
+- `diagnostics_emitter`
+- `ooxml_bridge`
+
+## 5.4 Layout Solver
+
+The solver is bounded and deterministic.
+
+It may support only:
+- `inset`
+- `split_h`
+- `split_v`
+- `grid`
+- `stack`
+- `center`
+- `anchor`
+
+The solver does not emulate CSS or full responsive layout. It solves fixed-canvas PowerPoint composition.
+
+## 5.5 Element Rendering Rules
+
+Every element render must resolve:
+- absolute bounds in slide coordinates;
+- typography tokens;
+- fill/stroke tokens;
+- alignment;
+- z-order;
+- asset crop/contain policy;
+- text overflow policy.
+
+### 5.5.1 Text Rendering
+The renderer must support:
+- bold/italic/underline where required;
+- paragraph spacing and indentation;
+- bullet and numbered list styles;
+- alignment;
+- emphasis spans;
+- speaker notes spillover as a last resort.
+
+### 5.5.2 Shape and Line Rendering
+The renderer must support:
+- rectangles and rounded rectangles;
+- circles and dots;
+- bars and accent rules;
+- arrows, chevrons, and banners where recipes allow;
+- connectors with line style, weight, and arrowhead policy.
+
+### 5.5.3 Chart and Table Rendering
+- Use native PowerPoint charts when structured numeric data exists.
+- Use native tables when tabular evidence is the clearest form.
+- If data is too sparse or too narrative for a chart, prefer shape-based composition instead of low-value charts.
+
+### 5.5.4 Background Rendering
+Background selection is part of the slide plan.
+
+Allowed background treatments:
+- theme solid fill;
+- tokenized surface blocks;
+- branded hero image;
+- section divider image;
+- light accent wash;
+- template-native background already present on chosen layout.
+
+Every background treatment must preserve text contrast and focal clarity.
+
+## 5.6 OOXML Bridge
+
+The OOXML bridge exists only for targeted gaps such as:
+- unsupported connector features;
+- grouping edge cases;
+- niche formatting not reliably available through `python-pptx`;
+- preservation fixes where the template object model requires lower-level access.
+
+OOXML bridge rules:
+- no business logic in OOXML patch helpers;
+- helper APIs only;
+- snapshot tests or structural assertions required;
+- avoid speculative patches.
+
+---
+
+## 6) Review Layer
+
+The review layer turns rendered slides into actionable repair instructions.
+
+## 6.1 Review Inputs
+
+Each slide review packet must include:
+- rendered slide image;
+- slide plan;
+- slide diagnostics;
+- slide brief;
+- neighboring slide summaries;
+- archetype skill;
+- review rubric.
+
+## 6.2 Review Outputs
+
+Each slide review output must include:
+- `slide_id`
+- `decision`
+- `severity`
+- `summary`
+- `findings[]`
+- `repair_instructions[]`
+- `must_preserve[]`
+- `reroute_required`
+- `planner_feedback`
+
+## 6.3 Review Dimensions
+
+Reviewer must score or classify at minimum:
+- content quality and message clarity;
+- hierarchy and scanability;
+- placement, alignment, spacing, and balance;
+- visual relevance;
+- visual appeal and polish;
+- asset quality and fit;
+- brand fit;
+- archetype fit;
+- deck continuity relative to neighboring slides.
+
+## 6.4 Repair Policy
+
+Repairs may change:
+- recipe choice;
+- element sizing and spacing;
+- shape emphasis;
+- background treatment;
+- asset choice;
+- title/body budgets;
+- route (`template_native` to `composed`, or vice versa) when justified.
+
+Repairs may not change:
+- core deck narrative without an explicit deck-level issue;
+- template identity;
+- required compliance/brand constraints.
+
+## 6.5 Review-To-Planner Feedback Loop
+
+The multimodal review loop is a required planning stage, not an optional post-process.
+
+Required behavior:
+- every rendered slide is reviewed visually;
+- the reviewer emits structured feedback for content, placement, and visual appeal;
+- that feedback is converted into planner-facing repair input;
+- the repair planner updates the slide plan before rerender;
+- the repaired slide is re-reviewed when it was previously blocking.
+
+This loop must remain explicit in both artifacts and runtime control flow.
+
+---
+
+## 7) Reference Corpus and Skills Inputs
+
+The system must consume three reference classes:
+- company template and brand assets;
+- company-approved reference slides and decks;
+- public benchmark/reference slides for structural inspiration where usage permits.
+
+## 7.1 Reference Usage Rules
+
+Reference material is used to guide:
+- slide archetype choices;
+- visual recipes;
+- spacing and density expectations;
+- hierarchy patterns;
+- quality review rubrics.
+
+Reference material is not used to copy proprietary content verbatim.
+
+## 7.2 Required Reference Artifacts
 
 Required artifacts:
 - `assets/ground_truth/deck_blueprints_v1.json`
 - `assets/ground_truth/slide_archetypes_v1.json`
 - `assets/ground_truth/quality_rubric_v1.json`
-- `assets/ground_truth/ground_truth_manifest_v1.json`
-- `assets/ground_truth/annotations/*.json`
-- `assets/ground_truth/reference_slides/*.png` (and source metadata)
-
-Annotation requirements per reference slide:
-- `blueprint_id`
-- `archetype_id`
-- `story_role` (opening/problem/analysis/recommendation/close)
-- `content_structure` (headline, evidence blocks, takeaway line)
-- `visual_structure` (chart/diagram/image/table/icon mix)
-- `hierarchy_signals` (typography contrast, focal order)
-- `density_metrics` (text load, whitespace ratio, visual coverage)
-- `quality_scores` (1-5) across rubric dimensions
-
-Rubric dimensions (minimum):
-1. Message clarity
-2. Narrative role fit
-3. Evidence quality and specificity
-4. Visual hierarchy and scanability
-5. Layout balance and spacing discipline
-6. Visual relevance and non-repetition
-
-Only slides with average score `>= 4.0/5.0` can be included as north-star references.
+- `assets/ground_truth/reference_manifest_v1.json`
+- `assets/catalog/visual_recipes_v1.json`
+- `assets/catalog/ppt_primitive_catalog_v1.json`
 
 ---
 
-## 4.4 First-Slide Validation Protocol (New)
+## 8) Runtime Tech Stack
 
-No broad feature expansion is allowed until one archetype can pass ground-truth validation end-to-end.
+## 8.1 Core Runtime
+- Python 3.11+
+- `python-pptx`
+- `pydantic` v2
+- `orjson`
+- `fastapi`
+- `uvicorn`
+- `pytest`
 
-Pilot protocol:
-1. Select one blueprint + one archetype pair (initial recommendation: `proposal_rfp` + `executive_summary`).
-2. Generate a single-slide output via full deterministic pipeline.
-3. Validate against:
-- archetype structural checks;
-- rubric score thresholds;
-- existing hard safety gates (overflow/markdown/style constraints).
-4. Persist a comparison artifact:
-- `runs/<run_id>/ground_truth_eval_v1.json`
+## 8.2 Review Toolchain
+- LibreOffice `soffice`
+- `pdftoppm`
 
-This gate is required before implementing additional archetypes/components.
+## 8.3 AI Runtime
+- OpenAI Responses API as canonical runtime where available
+- `gpt-5.4` as primary planning model
+- strongest available multimodal GPT-5.4-compatible endpoint for slide review
+- provider abstraction for Azure/OpenAI-compatible deployments
 
----
-
-## 5) DeckIR v2 Contract
-
-## 5.1 Schema Versioning
-- Every IR payload includes:
-  - `schema_name = "deck_ir"`
-  - `schema_version = "2.0.0"`
-- Breaking changes require major version bump.
-- V1 and V2 readers live side-by-side during migration.
-
-## 5.2 Core Types
-
-```python
-class DeckIRv2(BaseModel):
-    schema_name: Literal["deck_ir"] = "deck_ir"
-    schema_version: str = "2.0.0"
-    run_id: str
-    template_id: str
-    title: str
-    slides: list[SlideIRv2]
-
-class SlideIRv2(BaseModel):
-    slide_id: str
-    title: str
-    archetype: Literal[
-        "title", "section_break", "content", "comparison",
-        "data_heavy", "visual_story", "closing"
-    ]
-    layout: SlideLayout
-    visual_intent: list[VisualIntent]
-    speaker_notes: str = ""
-
-class SlideLayout(BaseModel):
-    route: Literal["template_native", "composed"]
-    template_layout_id: str | None = None
-    structure: Literal["single", "split_h", "split_v", "grid"] = "single"
-    weights: list[float] = [1.0]
-    gap: float = 0.2
-    padding: Insets
-    regions: list[RegionSpec] = []
-```
-
-## 5.3 Compatibility Rules
-- `template_native` slides may omit `regions`.
-- `composed` slides must include region/component payloads.
-- Unknown component types fail validation; no soft fallback to generic text slide.
+## 8.4 Non-Core Development/Authoring Tools
+- Codex models may be used during development or internal authoring workflows
+- they are not required runtime dependencies for presentation generation
 
 ---
 
-## 6) Layout and Composition Rules
+## 9) Artifacts and Logging
 
-## 6.1 Slide Rhythm Constraints
-Apply to both routes for visual coherence:
-- Outer margins: derived from template, clamped to `[0.35, 0.8]` inches.
-- Title band reserve: fixed ratio per archetype.
-- Vertical spacing scale: `{xs, sm, md, lg} = {0.08, 0.14, 0.24, 0.36}` inches.
+Minimum run artifacts:
+- `normalized_content.json`
+- `template_inspection.json`
+- `design_tokens.json`
+- `resolved_skills.json`
+- `reference_packet.json`
+- `deck_blueprint_v1.json`
+- `slide_briefs_v1.json`
+- `slide_plan_v1/<slide_id>.json`
+- `deck_render_plan_v1.json`
+- `planning_validation_v1.json`
+- `deck_v1.pptx`
+- `diagnose_report_v1.json`
+- `review_images/v1/slide_*.png`
+- `visual_review_v1/<slide_id>.json`
+- `deck_review_summary_v1.json`
+- `repair_plan_v1/<slide_id>.json`
+- `slide_plan_v2/<slide_id>.json`
+- `deck_render_plan_v2.json`
+- `deck_v2.pptx`
+- `diagnose_report_v2.json`
+- `quality_gates_v2.json`
+- `run_summary.json`
+- `run_log.jsonl`
 
-## 6.2 Overflow Policy
-Overflow is handled before render:
-1. Component-level compress (truncate low-priority detail)
-2. Component swap (e.g., `Timeline -> ContentBlock`)
-3. Slide split (preferred for major overflow)
-4. Speaker-notes spillover (last resort)
-
-Blocking overflow after step 3 fails quality gates.
-
-## 6.3 Collision Policy
-- No overlaps between title band and body regions.
-- No inter-region overlap in composed path.
-- Connectors must terminate within source/target node bounds.
-
----
-
-## 7) Theme Extraction and Styling
-
-## 7.1 Theme Extraction
-Extract from template:
-- Accent colors
-- Text/background colors
-- Heading/body fonts
-- Slide dimensions
-
-## 7.2 Design Tokens
-Generated deterministic token map:
-- Typography scale (`h1/h2/h3/body/caption`)
-- Spacing scale
-- Radius and stroke profiles
-- Component role colors (`surface`, `accent`, `muted`)
-
-Components may use only tokenized style values; no arbitrary local styling.
-
----
-
-## 8) Asset Strategy
-
-## 8.1 Inputs
-- `assets/catalog/asset_catalog.json`
-- `assets/catalog/visual_vocabulary.json`
-- `assets/catalog/branded_images.json`
-- `assets/icons/icons.json`
-- `assets/catalog/component_catalog_v1.json`
-- `assets/catalog/component_examples_v1.json`
-- `assets/catalog/planner_policy_v1.json`
-- `assets/catalog/template_style_baselines_v1.json`
-- `assets/benchmarks/benchmark_manifest_v1.json`
-- `assets/ground_truth/deck_blueprints_v1.json`
-- `assets/ground_truth/slide_archetypes_v1.json`
-- `assets/ground_truth/quality_rubric_v1.json`
-- `assets/ground_truth/ground_truth_manifest_v1.json`
-
-## 8.2 Selection Rules
-- Intent-first matching (`diagram_map`, `icon_cluster`, `hero_image`, etc.)
-- Repetition penalty per deck
-- Role weighting (`hero`, `primary`, `secondary`, `accent`)
-
-## 8.3 Hard Diversity Constraints
-- Same branded image max reuse: `2`
-- Minimum unique visual assets per 10 slides: `>= 6`
-- Hero image cannot be reused in adjacent sections
+Required log markers:
+- `NORMALIZE_DONE`
+- `TEMPLATE_INSPECTION_DONE`
+- `SKILL_RESOLUTION_DONE`
+- `DECK_BLUEPRINT_DONE`
+- `SLIDE_BRIEFS_DONE`
+- `SLIDE_PLANS_V1_DONE`
+- `PLANNING_VALIDATION_V1_DONE`
+- `RENDER_V1_DONE`
+- `REVIEW_IMAGES_INGESTED`
+- `VISUAL_REVIEW_V1_DONE`
+- `REPAIR_PLANS_V1_DONE`
+- `SLIDE_PLANS_V2_DONE`
+- `RENDER_V2_DONE`
+- `DIAGNOSE_V2_DONE`
+- `QUALITY_GATES_V2`
+- `RUN_COMPLETE` or `RUN_FAILED_QUALITY_GATES`
 
 ---
 
-## 9) Quality Gates (V2)
+## 10) Quality Gates
 
-Existing gates retained:
+A final deck passes only if all blocking gates pass.
+
+Required gates:
+- `native_pptx_opens`
 - `no_blocking_overflow`
-- `visual_coverage_image_layouts`
-- `no_icon_hero_stretch`
+- `no_object_collisions`
+- `token_compliance`
+- `brand_template_compliance`
+- `reviewed_all_slides`
+- `no_slide_left_unrepaired_after_blocking_review`
+- `visual_hierarchy_floor`
+- `visual_density_floor`
+- `asset_diversity_floor`
+- `archetype_alignment`
+- `deck_variety_floor`
 - `no_markdown_marker_leak`
-- `min_visual_density`
-- `min_image_asset_presence`
+- `image_asset_presence_floor`
 
-New gates:
-- `component_bounds_respected`
-- `visual_intent_coverage`
-- `layout_variety`
-- `asset_diversity`
-- `mixed_mode_style_consistency`
-- `component_payload_limits_respected`
-- `ground_truth_archetype_alignment`
-- `ground_truth_quality_floor`
-
-Any blocking gate failure marks run as failed quality.
+Every gate must produce machine-readable evidence.
 
 ---
 
-## 10) Testing Strategy (Missing Concern Closed)
+## 11) Testing Strategy
 
-## 10.1 Unit Tests
-- Solver geometry invariants
-- Theme extraction correctness
-- Component payload validation and min/preferred size checks
+## 11.1 Unit Tests
+- template inspection
+- token extraction
+- primitive catalog validation
+- skill resolution
+- planner schema validation
+- layout solver invariants
+- element rendering helpers
+- OOXML bridge helpers
+- review output schema validation
 
-## 10.2 Integration Tests
-- End-to-end `generate-auto` with fixed seeds/model settings
-- Artifact contract checks under `runs/<run_id>/`
+## 11.2 Integration Tests
+- one-slide end-to-end composed render
+- one-slide visual review and repair
+- multi-slide CLI generation
+- artifact persistence contract
 
-## 10.3 Visual Regression (non-pixel-perfect)
-- Structural assertions from composition metadata (counts, bounds, overlaps)
-- Perceptual checks on preview images (density, whitespace bands, repetition)
-- No strict pixel snapshots
+## 11.3 Visual Validation Tests
+- no pixel-perfect snapshots
+- structural and perceptual assertions only
+- slide density and whitespace heuristics
+- primitive counts and collision checks
+- review-decision determinism for fixture cases
 
-## 10.4 Schema Compatibility Tests
-- Golden IR fixtures for `2.0.x`
-- Reader behavior for older compatible minor versions
-
-## 10.5 Ground-Truth Evaluation Tests
-- Annotation schema validation tests
-- Rubric scorer determinism tests
-- Archetype alignment tests for pilot slide generation
-
----
-
-## 11) Performance and Scale Plan
-
-## 11.1 SLO Targets (MVP)
-- 15-slide deck generation (single loop): p50 <= 90s, p95 <= 180s
-- Single-slide edit rerender: p50 <= 2.5s, p95 <= 5s
-
-## 11.2 Bottlenecks
-- Primary bottleneck: `soffice` conversion throughput
-- Secondary bottleneck: large model inference latency
-
-## 11.3 Scaling Controls
-- Worker pools separated by task class:
-  - LLM planning workers
-  - render workers
-  - preview conversion workers
-- Cache preview artifacts by slide hash
-- Queue backpressure and request shedding under overload
+## 11.4 Benchmark Tests
+- benchmark deck generation using fixed skill packs and fixed inputs
+- archetype score thresholds
+- visual variety thresholds
+- V1 vs V2 KPI deltas where relevant
 
 ---
 
-## 12) UX Error Recovery
+## 12) Delivery Surfaces
 
-When generation fails gates:
-- Return deck with failure report, not silent failure.
-- Expose top blocking reasons in API response.
-- Allow user to accept draft or trigger targeted slide remix.
+## 12.1 CLI (First Surface)
 
-When a component fails render:
-- Fallback to deterministic safe component (`ContentBlock`) and log degraded status.
-- Mark slide as degraded in `run_summary.json`.
+The CLI is the first production surface.
 
----
+Required capabilities:
+- run generation from prompt/content files;
+- select template;
+- select skill packs;
+- run one-slide or full-deck generation;
+- rerun review/repair for a single slide;
+- inspect artifacts under `runs/<run_id>/`.
 
-## 13) Accessibility and Localization
+## 12.2 Local Web UI (Second Surface)
 
-## 13.1 Accessibility Baseline
-- Enforce minimum contrast thresholds from theme token roles.
-- Maintain readable font-size floors per component.
-- Preserve alt text for inserted images where available.
+The locally run web UI is the second surface.
 
-## 13.2 Localization Baseline
-- Text expansion budget: +30% for non-English languages.
-- RTL not in MVP; must fail fast with explicit unsupported warning if requested.
+Required capabilities:
+- upload or paste content;
+- choose template and skill pack;
+- preview generated slides;
+- inspect review findings per slide;
+- trigger regenerate for a single slide;
+- download final deck.
 
----
+The local web UI is a presentation shell over the same backend pipeline.
 
-## 14) Execution Plan and Timeline (Revised)
+## 12.3 Cloud Endpoint (Third Surface)
 
-A 10-week timeline is optimistic for AI-agent-only implementation if polished components are in scope.  
-Revised baseline with ground-truth buildout: **13–15 weeks**.
+The cloud endpoint is the third surface.
 
-## Phase G (Week 1)
-- Ground-truth acquisition and curation kickoff (internal + external references)
-- Blueprint/archetype/rubric schema finalization
-- Exit: approved `ground_truth_manifest_v1.json` and pilot archetype selection
-
-## Phase 0 (Week 2)
-- DeckIR v2 schema + versioning
-- Theme extraction + token map
-- Exit: schema fixtures and extractor tests green
-
-## Phase 1 (Weeks 3–4)
-- Bounded layout solver + exhaustive unit tests
-- Exit: all solver invariants pass
-
-## Phase 2 (Weeks 5–7)
-- MVP component library implementation
-- Component payload validators + caps/remediation
-- Exit: handcrafted benchmark decks meet non-overlap + overflow constraints
-
-## Phase 3 (Weeks 8–9)
-- Two-pass planner integration with selected LLM backend (API or self-hosted)
-- Deterministic routing checks and retry handling
-- Exit: mixed `template_native/composed` decks generated reliably
-
-## Phase 4 (Weeks 10–11)
-- Review loop tuning + expanded quality gates
-- Visual regression heuristics + benchmark run suite
-- Exit: V2 wins on benchmark KPIs vs V1
-
-## Phase 5 (Weeks 12–13)
-- FastAPI endpoints + async workers + preview cache
-- Slide-edit rerender workflow
-- Exit: end-to-end web flow operational at target p50 latencies
-
-## Buffer (Weeks 14–15)
-- performance hardening, bug backlog, polish pass
+Required capabilities:
+- create generation job;
+- poll job status;
+- retrieve artifacts and final deck;
+- request per-slide repair;
+- support local hosting or Azure-hosted deployment.
 
 ---
 
-## 15) Success Criteria
+## 13) Out of Scope
 
-V2 is accepted when all are true:
-1. A 15-slide benchmark deck uses >= 5 distinct visual structures.
-2. Diagram/timeline/process slides are editable grouped native shapes.
-3. Blocking overflow count is zero.
-4. Asset diversity gates pass consistently across benchmark runs.
-5. Mixed-mode deck style consistency gate passes.
-6. Template swap changes deck branding without code changes.
-7. Ground-truth quality-floor gates pass for pilot archetypes.
-8. End-to-end pipeline artifacts/logging contracts remain intact.
+Out of scope for the baseline architecture:
+- full WYSIWYG browser canvas parity with PowerPoint;
+- animation choreography as a primary deliverable;
+- arbitrary freeform drawing beyond the approved primitive catalog;
+- dependence on PowerPoint desktop automation;
+- full replacement of the Python renderer with a JS-first renderer.
 
 ---
 
-## 16) Out of Scope (for this spec)
+## 14) Success Criteria
 
-- SmartArt generation
-- Rich animation choreography
-- WYSIWYG browser canvas matching PowerPoint layout semantics
-- Non-PPTX output formats as primary target
+The architecture is successful when all are true:
+1. A one-slide composed archetype can go from prompt to reviewed, repaired, editable `.pptx`.
+2. A 5-slide deck can maintain visual variety without losing brand coherence.
+3. A 10-15 slide benchmark deck can pass hard safety gates with zero blocking overflow.
+4. At least 5 distinct archetypes can render through the composed path with acceptable review scores.
+5. Slide review results are per-slide, actionable, and result in measurable repair improvements.
+6. Template swap changes branding without code changes.
+7. The same backend works through CLI, local web UI, and cloud endpoint.
+8. Skill packs can deterministically influence slide look-and-feel in reproducible ways.
 
 ---
 
-## 17) Required Follow-up Artifacts
+## 15) Required Follow-Up Artifacts
 
-To operationalize this spec, the following must be updated immediately after approval:
-- `PLAN.md` (phase breakdown + owners + dates)
-- `README.md` (LLM backend setup and runtime dependency install instructions)
-- `tests/` golden fixtures for DeckIR v2
+After this spec is accepted, the following must exist or be updated:
+- `PLAN.md` rewritten to vertical slices aligned to this spec
+- `README.md` updated for new CLI/runtime flow
+- deck blueprint catalog
+- slide archetype catalog
+- visual recipe catalog
+- PowerPoint primitive catalog
+- internal skill repository scaffold
+- new slide plan schemas and fixtures
