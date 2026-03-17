@@ -1,1031 +1,868 @@
-# SPEC-v2.md — AI Presentation Generator (GPT-5.4, Skills, Deterministic PowerPoint Composer)
+# SPEC-v2.md — Recipe-Driven Presentation Generator
 
 ## 0) Purpose
 
-This spec fully replaces the prior `SPEC-v2.md`.
+This spec defines the V2 architecture for a general-purpose presentation generation agent.
 
-The target system is a general-purpose presentation generation agent that:
-- accepts a prompt, optional visualization cues, and optional reference slides;
-- generates a fully native, editable `.pptx` deck;
-- preserves company branding through customer-provided PowerPoint templates;
-- plans each slide at the element level instead of only filling placeholders;
-- uses `gpt-5.4` and reusable skills for narrative, composition, review, and repair;
-- deterministically renders PowerPoint-native objects and persists run artifacts for every stage.
+V1 is a working placeholder-filler: it binds LLM-planned text and icons into pre-designed template layouts. It produces valid, branded PPTX files, but every slide is constrained to the spatial structure the template designer authored. It cannot compose a slide from primitives.
 
-The quality bar is not "valid PPTX". The quality bar is near top-tier consulting and executive communication polish within bounded archetypes, controlled visual grammar, and reference-backed review.
+V2 adds a **recipe-driven composition engine** that assembles native PowerPoint objects (shapes, text boxes, connectors, icons, tables, charts) on a fixed canvas using deterministic, parameterized layout recipes. The LLM selects a recipe and fills its semantic slots. The recipe engine computes all coordinates. The LLM never outputs spatial values.
+
+The quality bar is: a human editor is polishing phrasing and emphasis, not rebuilding layout or fixing overlap.
 
 ---
 
-## 0.1) Product Thesis
+## 0.1) What Already Exists (V1 Baseline)
 
-The main failure in the first version was not the Python stack itself. The failure was that the system behaved like a placeholder filler rather than a presentation composer.
+These components are implemented and tested in the current codebase. V2 builds on top of them; it does not discard them.
 
-This revised architecture therefore changes the planning model more than the file-emission model:
-- the AI layer must reason about narrative role, slide archetype, visual hierarchy, shape selection, spacing, typography, color, and background treatment;
-- the deterministic layer must translate that plan into native PowerPoint objects with strict validation;
-- the review layer must inspect rendered slides visually and drive targeted slide repair.
+### Rendering Pipeline
+- `python-pptx` renderer that opens a branded template, selects a layout by `layout_id`, binds text to placeholders by `shape.alt_text == field_key`, places icons/images into image placeholders, and writes speaker notes.
+- Markdown inline formatting (`**bold**`, `*italic*`) parsed into text-run formatting.
+- Validation and remediation: text overflow detection, bullet count enforcement, character budget truncation, line estimation, speaker-notes spillover.
+- Composition spec projection: deterministic metadata tracking what was remediated and why.
 
-The renderer remains Python-first because template preservation is still a hard requirement.
+### LLM Planner
+- Supports Gemini and Azure OpenAI providers via a `LLMClient` abstraction.
+- Emits a `DeckIR` (list of `DeckSlide` objects, each with `layout_id`, `fields` dict, `asset_refs`, `speaker_notes`).
+- Consumes content model, visualization cues, layout catalog constraints, icon catalog, visual vocabulary, branded image catalog, component catalog, and planner policy.
+- Planning guardrails: intent briefs, structure plans, visual realization plans, pre-planning validation.
+
+### Review Loop
+- Single-cycle automated pipeline: plan V1 → validate → render V1 → export review images → diagnose → multimodal review → plan V2 → validate → render V2 → diagnose → quality gates.
+- Review image export via LibreOffice (`soffice` + `pdftoppm`) or Aspose.Slides (higher fidelity, evaluation watermark).
+- Multimodal reviewer consumes slide images, planner output, composition spec, and diagnose report; emits structured `ReviewFeedback` with slide findings and change requests.
+- Diagnose script compares rendered PPTX against DeckIR to detect overflow, missing images, layout drift.
+
+### Quality Gates
+- `no_blocking_overflow`, `image_layout_visual_coverage`, `no_hero_icon_misuse`, `no_markdown_marker_leak`, `min_visual_density`, `min_image_asset_presence`, plus planning-aware gates.
+
+### Asset Catalogs
+| Catalog | Location | Contents |
+|---|---|---|
+| Layout catalog | `assets/layout/layout_catalog.json` | 12 template layouts with placeholder maps and constraint budgets |
+| Icon index | `assets/icons/icons.json` | ~29,000 icons (Tabler 5,928; Fluent 19,401; Lucide 1,542; AWS 1,842) |
+| Icon PNGs | `assets/icons/png/external/{pack}/` | Pre-rasterized PNGs ready for PowerPoint embedding |
+| Visual vocabulary | `assets/catalog/visual_vocabulary.json` | ~100+ concept-to-icon mappings with domain tags |
+| Branded images | `assets/catalog/branded_images.json` | Theme images for section breaks and title slides |
+| Component catalog | `assets/catalog/component_catalog_v1.json` | Semantic component definitions with size constraints |
+| Planner policy | `assets/catalog/planner_policy_v1.json` | Asset diversity rules, routing guidance, prompt directives |
+| Template style baselines | `assets/catalog/template_style_baselines_v1.json` | Typography and color defaults extracted from the template |
+| Template | `assets/template/template.pptx` | Branded Ascendion template with masters/layouts |
+
+### CLI
+- `validate`: template-catalog drift check.
+- `render`: DeckIR JSON to PPTX.
+- `smoke`: deterministic validate → preflight → render cycle.
+- `generate`: combined markdown → LLM or deterministic plan → validate → render.
+- `generate-auto`: full automated loop with multimodal review.
+
+### Tests
+- 18 test files covering: CLI, config, normalization, pipeline, renderer, preflight, drift, quality gates, composition, planning guardrails, planner metadata, visual fill, assets, Aspose export, review loop, LLM client, Pydantic models.
 
 ---
 
-## 0.2) Outcome Target
+## 0.2) What V2 Adds
 
-A successful run produces a deck that:
-- opens in Microsoft PowerPoint without repair prompts;
-- remains manually editable at the text, shape, connector, chart, and table level;
-- uses the customer theme and template correctly;
-- exhibits coherent slide-to-slide rhythm and varied visual structure;
-- passes deterministic safety gates and visual review gates;
-- is strong enough that a human editor is polishing, not rebuilding.
+V2 introduces four capabilities that V1 lacks:
 
----
+1. **Recipe engine**: deterministic, parameterized layout recipes that compute coordinates from semantic slot content. Each recipe is a Python class that owns its spatial math.
+2. **Composed slide rendering**: a renderer path that places native PowerPoint primitives (shapes, text boxes, connectors, grouped constructs) at recipe-computed positions, alongside the existing placeholder-binding path.
+3. **Text measurement heuristic**: font-aware estimation of text extents so the recipe engine can calculate accurate element heights before render.
+4. **Bounded per-slide visual review**: review that judges broad aesthetics and content quality, with repair limited to recipe/slot adjustment — never direct coordinate manipulation.
 
-## 0.3) Architecture Summary
-
-The system is organized into five cooperating layers:
-1. Presentation layer: template understanding, design tokens, slide archetypes, visual grammar, and element-level composition plans.
-2. AI layer: `gpt-5.4` planning, skill loading, per-slide composition, and multimodal review/repair.
-3. Deterministic renderer: `python-pptx` plus a bounded OOXML bridge for edge cases.
-4. Review layer: slide export, per-slide diagnostics, per-slide visual review, and targeted repair.
-5. Delivery layer: CLI first, local web UI second, cloud-hosted API third.
+V2 does NOT add:
+- A general-purpose constraint solver or CSS-like layout engine.
+- LLM-generated coordinates, bounds, or EMU values.
+- SVG in the render path (source SVGs remain in catalogs; PNGs are rendered).
+- Animation choreography.
+- PowerPoint desktop GUI automation.
 
 ---
 
-## 1) Non-Negotiable Constraints
+## 1) Core Design Decisions
 
-### 1.1 Native PPTX Output
-- Output must be `.pptx`.
-- Output must open in Microsoft PowerPoint.
+### 1.1 The Recipe Is the Architecture
+
+The central architectural decision in V2 is: **the LLM selects a recipe and fills its slots; the recipe computes all coordinates deterministically.**
+
+A recipe is a Python class that:
+- Declares a **slot schema**: the named content positions it supports (title, subtitle, N cards, connectors, footer bars, etc.) with type and cardinality constraints.
+- Accepts **slot content**: text, icon concept references, accent color tokens, relationship declarations — never coordinates.
+- Uses the **text measurement heuristic** to estimate rendered heights for text slots.
+- Applies **design tokens** from the template for colors, fonts, spacing, and radii.
+- Computes **absolute coordinates** for every element on the slide canvas.
+- Handles its **own overflow**: font-size reduction within token bounds, text truncation, speaker-notes spillover, item-count clamping.
+- Returns a **positioned element list** that the composed renderer consumes directly.
+
+The LLM's output for a composed slide looks like:
+
+```json
+{
+  "archetype": "executive_summary",
+  "recipe_id": "exec_summary_3_cards",
+  "title": "Strategic Priorities",
+  "subtitle": "FY26 Focus Areas",
+  "slots": [
+    {
+      "role": "card",
+      "heading": "Revenue Growth",
+      "body": "Expand enterprise accounts by 30%",
+      "icon_concept": "growth",
+      "accent_token": "accent_1"
+    },
+    {
+      "role": "card",
+      "heading": "Operational Excellence",
+      "body": "Reduce delivery cycle time by 40%",
+      "icon_concept": "efficiency",
+      "accent_token": "accent_2"
+    },
+    {
+      "role": "card",
+      "heading": "Market Expansion",
+      "body": "Enter 3 new verticals in APAC",
+      "icon_concept": "target",
+      "accent_token": "accent_3"
+    }
+  ],
+  "footer_text": "Source: FY26 Board Strategy Document",
+  "background_treatment": "surface_muted"
+}
+```
+
+The recipe engine converts this to absolute positions. The LLM sees slots, not geometry.
+
+### 1.2 Why Not a General Solver
+
+Two independent reviewers and Anthropic's own Claude-for-PowerPoint implementation converge on the same finding: LLMs cannot reliably produce absolute coordinates for multi-element slide layouts. Claude-for-PPT defaults to uniform grids because "that's what's easiest to compute correctly without visual feedback." A general constraint solver (Cassowary/Kiwi-style) would take months to build and still lack text-extent awareness.
+
+Recipe-driven layout trades generality for reliability. The system can only produce slides for which a recipe exists, but those slides will be spatially correct every time. The mitigation for limited recipe coverage is making recipe authoring fast (a new recipe is a single Python class following a base protocol).
+
+### 1.3 Hybrid Rendering: `template_native` + `composed`
+
+V2 retains both rendering paths:
+
+- **`template_native`**: existing V1 path. Uses template placeholders. Good for title slides, section breaks, simple one-column content, agenda slides — anywhere the template designer already solved the layout.
+- **`composed`**: new V2 path. Uses recipe engine to place native primitives on a blank or minimal-content template layout. Required for multi-card layouts, architecture diagrams, process flows, timelines, comparison grids, and any structure the template doesn't provide.
+
+The planner routes each slide. The routing decision is: if a template layout already provides the right structure for this content, use `template_native`; otherwise, use `composed` with a recipe.
+
+### 1.4 The LLM's Bounded Role
+
+The LLM is responsible for:
+- Narrative arc: deciding the deck's story structure and slide sequence.
+- Archetype and recipe selection: choosing the right visual pattern for each slide's message.
+- Slot content: writing the text, choosing icon concepts, selecting accent tokens.
+- Deck-level variety: ensuring adjacent slides don't repeat the same recipe.
+
+The LLM is NOT responsible for:
+- Coordinate computation. The recipe engine owns all spatial math.
+- Font size selection. Recipes use design tokens and adjust based on text measurement.
+- Overflow handling. Recipes handle their own overflow deterministically.
+- Connector routing. Each recipe that includes connectors routes them as part of its geometry.
+
+### 1.5 Asset Routing Is a Central Contract
+
+V1 treats icon/image resolution as a peripheral concern buried in `_resolve_asset_path`. V2 makes it a first-class pipeline stage:
+
+1. The LLM outputs `icon_concept` references (e.g., `"security"`, `"database"`, `"aws:lambda"`).
+2. The **asset resolver** maps concepts to concrete `asset_id` values using the visual vocabulary, icon index, and branded image catalog.
+3. The resolver enforces diversity (no duplicate icons on the same slide) and availability (rejects concepts with no matching asset).
+4. The recipe engine receives resolved `asset_id` values and embeds them at computed positions.
+
+This contract ensures:
+- The LLM never hallucinates asset paths.
+- Icon diversity is enforced deterministically, not hoped for.
+- The 29K icon library and visual vocabulary are fully utilized.
+
+### 1.6 Review Judges Aesthetics, Not Pixel Alignment
+
+The review loop is better than Claude-for-PPT's text-only feedback, but only if it is bounded and not asked to repair geometry that the deterministic layer should have prevented.
+
+Review responsibilities:
+- Content quality and message clarity.
+- Visual balance and overall aesthetic judgment.
+- Brand consistency and narrative coherence across slides.
+- Identifying slides where the recipe choice is wrong for the content.
+
+Review does NOT:
+- Suggest coordinate adjustments.
+- Micro-adjust spacing or alignment (the recipe owns that).
+- Override deterministic validation results.
+
+Repair actions the review can trigger:
+- Switch to a different recipe for the same archetype.
+- Adjust slot content (shorter text, different emphasis, different icon concept).
+- Change accent or background token.
+- Reroute from `composed` to `template_native` or vice versa.
+- Flag a slide for deck-level narrative restructuring.
+
+Repair actions the review CANNOT trigger:
+- Direct coordinate changes.
+- Font size overrides outside token bounds.
+- Arbitrary primitive insertion outside the recipe's slot schema.
+
+---
+
+## 2) Non-Negotiable Constraints
+
+### 2.1 Native PPTX Output
+- Output must be `.pptx`, must open in Microsoft PowerPoint without repair prompts.
 - Text, shapes, lines, connectors, tables, and charts must remain editable.
-- Do not export slides as images inside the final deck.
+- No rasterized layout. No slides exported as embedded images.
 
-### 1.2 Template-First Branding
+### 2.2 Template-First Branding
 - The system must accept a customer-provided branded `.pptx` template.
-- The system must preserve masters, layouts, theme colors, and theme fonts.
-- Placeholder binding remains `shape.alt_text == field_key` for `template_native` slides.
-- `composed` slides may render on blank or low-content layouts, but must still inherit template theme tokens and rhythm rules.
+- Masters, layouts, theme colors, and theme fonts must be preserved.
+- `template_native` slides bind by `shape.alt_text == field_key` (existing V1 contract).
+- `composed` slides inherit theme tokens and render on a blank or minimal-content template layout.
 
-### 1.3 PowerPoint-Native Visuals
-- The system must use the same native object families users expect from PowerPoint's `Home` and `Insert` tabs:
-  - text boxes and placeholders;
-  - shapes;
-  - lines and connectors;
-  - tables;
-  - charts;
-  - pictures and icons;
-  - grouped visual constructs assembled from the above.
-- The system is not automating the PowerPoint UI. It is generating the same underlying native objects programmatically.
+### 2.3 Asset Format Policy
+- Render path supports raster assets (`PNG`, `JPG`, `WebP`) only.
+- Source SVGs exist in catalogs but are converted to PNG before render.
+- No SVG embedding in the PowerPoint file.
 
-### 1.4 Deterministic Safety
-- All LLM outputs must be schema-validated.
-- All final rendering decisions must pass deterministic validation before render.
+### 2.4 Deterministic Safety
+- All LLM outputs must be schema-validated (Pydantic).
+- All coordinates are computed by recipe code, never by LLM output.
 - Every run must persist artifacts under `runs/<run_id>/`.
-- Visual review may recommend changes, but rendering never executes raw free-form LLM text as code.
+- Rendering never executes raw LLM text as code.
 
-### 1.5 Asset Format Policy
-- Render path supports raster assets (`PNG`, `JPG`, `WebP`).
-- Source SVGs may exist in catalogs, but must be converted before render.
-- Do not add SVG directly to the runtime render path.
-
-### 1.6 Review Image Generation
-- Automated slide previews remain headless.
-- Preferred backend: **Aspose.Slides** (`aspose-slides` Python package).
-  - Converts PPTX → PDF and PPTX → PNG directly with high fidelity.
-  - Evaluation mode adds a watermark to outputs; this is acceptable because review images are intermediate artifacts — final deliverables are the `.pptx` files.
-  - Requires `libgdiplus` system library (`brew install mono-libgdiplus` on macOS).
-- Fallback backend: LibreOffice + Poppler.
-  - `soffice` for `PPTX -> PDF`
-  - `pdftoppm` for `PDF -> PNG`
-  - Lower layout/typography fidelity than Aspose.Slides; use when Aspose is unavailable.
-- Do not rely on GUI automation in the core pipeline.
-
-### 1.7 Delivery Surfaces
-- The first production surface is CLI.
-- The second surface is a locally run web UI on the laptop.
-- The third surface is a cloud-hosted endpoint.
-- All three surfaces must use the same planning, rendering, and review contracts.
+### 2.5 Review Image Generation
+- **Preferred**: Aspose.Slides — high-fidelity PPTX-to-PNG. Evaluation watermark is acceptable for review artifacts.
+- **Fallback**: LibreOffice `soffice` + `pdftoppm`.
+- The reviewer must be instructed that review images may have minor rendering differences from PowerPoint and should not flag micro-alignment issues.
 
 ---
 
-## 2) Primary Architecture Decisions
+## 3) Recipe Engine
 
-## 2.1 Rendering Engine: Python + `python-pptx` (Accepted)
+The recipe engine is the highest-leverage new component in V2.
 
-**Decision**
-- Primary renderer remains Python with `python-pptx`.
+### 3.1 Recipe Protocol
 
-**Why**
-- Template preservation is mandatory.
-- Existing branded masters/layouts already encode valuable presentation design work.
-- The current repo already has deterministic rendering, validation, and artifact scaffolding around Python.
-- A renderer rewrite would not solve the core composition-planning problem.
+Every recipe must implement:
 
-**Implication**
-- The major architectural investment shifts to slide planning, visual grammar, and review-driven repair.
+```python
+class RecipeProtocol:
+    recipe_id: str
+    archetype: str
+    slot_schema: SlotSchema       # declares expected slots and constraints
+    
+    def validate_input(self, slots: RecipeInput) -> list[SlotError]
+    def compute_layout(self, slots: RecipeInput, tokens: DesignTokens, 
+                       canvas: CanvasSpec, measure: TextMeasurer) -> PositionedElementList
+```
 
-**Edge-case strategy**
-- Introduce a bounded OOXML bridge for features that `python-pptx` cannot express directly.
-- OOXML escape hatches must live behind helper APIs and tests.
+- `validate_input`: checks that slot content meets the recipe's constraints (item count within range, text within budget, required slots present).
+- `compute_layout`: deterministic function from (slot content, tokens, canvas size, text measurer) to positioned elements. No randomness, no LLM.
 
-**Non-goal**
-- Do not rewrite the runtime around `PptxGenJS` as the primary engine.
-- A future spike comparing one composed slide family in a Node stack is allowed, but it is not the baseline architecture.
+### 3.2 Slot Schema
 
-## 2.2 AI Runtime: `gpt-5.4` + Skills via Responses API (Accepted)
+Each recipe declares its slots:
 
-**Decision**
-- Primary planning and review model family is `gpt-5.4`.
-- Runtime should use the OpenAI Responses API when available so the system can leverage Skills and modern tool orchestration.
+```python
+SlotSchema = {
+    "title": {"type": "text", "required": True, "max_chars": 80},
+    "cards": {"type": "card_list", "min_items": 2, "max_items": 5,
+              "card_fields": {
+                  "heading": {"max_chars": 40},
+                  "body": {"max_chars": 120},
+                  "icon_concept": {"required": False},
+                  "accent_token": {"required": False}
+              }},
+    "footer_text": {"type": "text", "required": False, "max_chars": 100},
+    "background_treatment": {"type": "token_ref", "required": False}
+}
+```
 
-**Why**
-- The planner must do more than summarize content; it must compose slides at the element level.
-- The review loop must interpret slide images, compare them to intent, and issue bounded repair instructions.
-- Reusable skills materially improve consistency across blueprint types, slide archetypes, and company brand rules.
+The LLM sees the slot schema as part of the recipe catalog and fills it accordingly.
 
-**Provider strategy**
-- Canonical capability target is OpenAI-hosted `gpt-5.4` with Skills support.
-- Azure/OpenAI-compatible deployment remains supported, but the architecture must not assume identical provider feature parity.
-- Internal skill definitions must therefore be provider-agnostic and projectable into either:
-  - native OpenAI Skills, or
-  - local prompt/context bundles for providers without the same skill surface.
+### 3.3 Positioned Element List
 
-## 2.3 Slide Strategy: Hybrid `template_native` + `composed` (Accepted)
+The recipe's output is a flat list of positioned elements:
 
-**Decision**
-- Keep two rendering routes:
-  - `template_native`: use existing template placeholders and designer-authored layouts when the slide structure already fits them well.
-  - `composed`: use a composition plan to place native PowerPoint primitives on a template-aligned canvas.
+```python
+PositionedElement:
+    element_id: str
+    primitive: PrimitiveType       # text_box, shape_rect, shape_round_rect, connector, image, group, ...
+    bounds: Bounds                 # {left, top, width, height} in inches
+    z_index: int
+    content: ElementContent        # text, image path, shape fill, etc.
+    style: ElementStyle            # resolved token values: font, size, color, fill, stroke, radius
+```
 
-**Routing principle**
-- A slide must not be forced through placeholders if the message requires custom visual structure.
-- A slide must not be custom-composed if the template already provides a better branded layout for that slide type.
+This list is the contract between the recipe engine and the composed renderer.
 
-**Target steady state**
-- Most complex slides should use `composed`.
-- Many title, divider, simple content, and straightforward two-column slides may remain `template_native`.
+### 3.4 Initial Recipe Library
 
-## 2.4 Review Policy: Per-Slide Visual Review with Targeted Repair (Accepted)
+MVP requires recipes for 5-6 archetypes. Each archetype ships with 2-3 recipe variants for visual variety.
 
-**Decision**
-- Review is performed at the slide level, not only at the full-deck level.
-- The reviewer produces slide-specific findings and repair instructions.
-- Review findings are fed back into the slide planner/repair planner as structured input, not just logged as commentary.
-- Repair rerenders only the affected slides unless a deck-level narrative issue requires wider replan.
+| Archetype | Recipe Variants | Notes |
+|---|---|---|
+| `title_hero` | `title_centered`, `title_with_subtitle_bar` | Simple; may stay `template_native` for many templates |
+| `section_break` | `section_dark_bg`, `section_with_image` | Often `template_native`; `composed` variant for branded image overlays |
+| `executive_summary` | `exec_3_cards`, `exec_4_cards`, `exec_split_hero`, `exec_icon_grid` | Primary proof-of-concept archetype |
+| `process_flow` | `process_horizontal_stepper`, `process_vertical_flow` | Requires connectors within the recipe |
+| `architecture_diagram` | `arch_layered_stack`, `arch_data_pipeline`, `arch_hub_spoke` | Differentiator; uses AWS/cloud icons |
+| `comparison` | `comparison_2_col`, `comparison_matrix` | Side-by-side or grid |
+| `kpi_snapshot` | `kpi_metric_cards`, `kpi_dashboard_row` | Metric callouts with accent bars |
+| `roadmap` | `roadmap_horizontal_phases`, `roadmap_swimlane` | Timeline/phase layouts |
 
-**Review loop iteration limit**
-- The system allows a maximum of **2 review/repair loops** per run.
-- Loop 1: render V1 → review V1 → repair → render V2.
-- Loop 2: review V2 → repair → render V3 (only for slides still blocking after loop 1).
-- After 2 loops the run must stop regardless of remaining findings. Unresolved findings are recorded in the run summary but do not trigger further iterations.
-- The system may batch review calls, but the review contract must remain per-slide.
+Additional archetypes (`problem_statement`, `current_vs_target`, `case_study`, `decision_next_steps`) may be added after MVP by authoring new recipe classes.
 
-## 2.5 Skills Policy: OpenAI Skills + Internal Skill Repository (Accepted)
+### 3.5 Architecture Diagram Recipes (First-Class)
 
-**Decision**
-- The system will use two skill layers:
-  - base runtime Skills provided by OpenAI where available;
-  - a versioned internal skills repository that encodes company-specific deck standards.
+Architecture diagrams are the highest-value composed slide type. They are also the hardest because they involve:
+- Multiple labeled nodes arranged in spatial groups.
+- Icons from the cloud service icon library (AWS, Azure, etc.).
+- Connectors routed between nodes.
+- Container zones (dashed borders, background fills).
+- Cross-cutting bars (governance, monitoring, security).
 
-**Purpose of internal skills**
-- Tell the planner what each slide should look like.
-- Encode slide archetype rules, brand rules, reference patterns, and review standards.
-- Make the system opinionated and repeatable rather than generic.
+Each architecture recipe handles this complexity internally:
 
----
+**`arch_layered_stack`**: N horizontal tiers, each containing M service nodes. Connectors flow vertically between tiers. Optional cross-cutting side bars.
 
-## 3) Presentation Layer
+**`arch_data_pipeline`**: Left-to-right flow from source systems through ingestion, medallion zones (bronze/silver/gold), to consumers. Nodes grouped in vertical columns within each zone. Uses the data/analytics icons from the visual vocabulary.
 
-The presentation layer is the source of truth for how a slide should look and what PowerPoint-native primitives may be used.
+**`arch_hub_spoke`**: Central hub node with N radiating spoke nodes. Connectors from hub to each spoke. Good for integration patterns, API gateways, event-driven architectures.
 
-## 3.1 Responsibilities
+The slot input for an architecture recipe looks like:
 
-The presentation layer must provide:
-- template inspection;
-- theme extraction;
-- design token generation;
-- a PowerPoint primitive catalog;
-- slide archetype definitions;
-- visual recipe definitions;
-- layout rhythm rules;
-- composition constraints;
-- render-ready slide element plans.
+```json
+{
+  "recipe_id": "arch_data_pipeline",
+  "title": "Enterprise Data Platform",
+  "zones": [
+    {
+      "zone_id": "sources",
+      "label": "Source Systems",
+      "position": "left",
+      "nodes": [
+        {"label": "SAP ERP", "icon_concept": "database"},
+        {"label": "Salesforce", "icon_concept": "cloud"},
+        {"label": "IoT Streams", "icon_concept": "streaming"}
+      ]
+    },
+    {
+      "zone_id": "lakehouse",
+      "label": "Medallion Lakehouse",
+      "position": "center",
+      "sub_zones": ["Bronze", "Silver", "Gold"],
+      "nodes_per_sub": [
+        [{"label": "Raw Store", "icon_concept": "database"}],
+        [{"label": "Curated", "icon_concept": "transform"}],
+        [{"label": "Business", "icon_concept": "analytics"}]
+      ]
+    },
+    {
+      "zone_id": "consumers",
+      "label": "Consumption",
+      "position": "right",
+      "nodes": [
+        {"label": "Power BI", "icon_concept": "chart"},
+        {"label": "ML Models", "icon_concept": "ai"}
+      ]
+    }
+  ],
+  "cross_cutting_bars": [
+    {"label": "Governance & Security", "icon_concepts": ["security", "compliance"]},
+    {"label": "Monitoring & Ops", "icon_concepts": ["monitoring", "alerting"]}
+  ],
+  "flows": [
+    {"from": "sources", "to": "lakehouse", "style": "solid"},
+    {"from": "lakehouse", "to": "consumers", "style": "solid"}
+  ]
+}
+```
 
-## 3.2 Template Inspection
+The recipe computes zone widths, node positions within zones, connector routing between zones, and cross-cutting bar placement. All spatial math is deterministic and specific to this recipe's geometry.
 
-For every input template, the system must extract and persist:
-- slide size;
-- masters and layouts;
-- placeholder map;
-- theme fonts;
-- theme colors;
-- title bands and margin tendencies;
-- background treatments available in the template;
-- reusable branded layouts suitable for `template_native` routing.
+### 3.6 Connector Routing (Per-Recipe, Not General)
 
-Required artifact:
-- `runs/<run_id>/template_inspection.json`
+Connector routing is NOT a general graph-layout problem in this architecture. Each recipe that uses connectors defines its own routing logic:
 
-## 3.3 Design Tokens
+- `process_horizontal_stepper`: straight horizontal connectors between step boxes, with arrowheads. Trivial routing.
+- `arch_layered_stack`: vertical connectors between tier rows, anchored at node center-bottom to next-tier node center-top.
+- `arch_data_pipeline`: horizontal connectors between zone boundaries, routed at zone midpoints.
+- `arch_hub_spoke`: radial connectors from hub center to spoke node edges.
 
-The system must convert the template into deterministic design tokens, including:
-- typography roles:
-  - `display`
-  - `h1`
-  - `h2`
-  - `h3`
-  - `body`
-  - `caption`
-  - `footnote`
-- color roles:
-  - `bg_primary`
-  - `bg_secondary`
-  - `surface`
-  - `surface_muted`
-  - `text_primary`
-  - `text_secondary`
-  - `accent_1`
-  - `accent_2`
-  - `success`
-  - `warning`
-  - `risk`
-- spacing scale:
-  - `xs`, `sm`, `md`, `lg`, `xl`
-- stroke scale:
-  - `hairline`, `thin`, `standard`, `emphasis`
-- radius scale:
-  - `none`, `sm`, `md`, `pill`
-- shadow/effect policy:
-  - allowed, discouraged, forbidden effect families.
-
-All composed slides must use tokenized values unless an explicit recipe override is defined.
-
-Required artifact:
-- `runs/<run_id>/design_tokens.json`
-
-## 3.4 PowerPoint Primitive Catalog
-
-The presentation layer must define the allowed primitive families used to emulate the visual language of PowerPoint `Home` and `Insert`.
-
-Allowed primitive families for MVP:
-- `text_box`
-- `placeholder_text`
-- `shape_rect`
-- `shape_round_rect`
-- `shape_circle`
-- `shape_line`
-- `shape_bar`
-- `shape_chevron`
-- `shape_arrow`
-- `connector_straight`
-- `connector_elbow`
-- `connector_curved`
-- `table`
-- `chart_bar`
-- `chart_column`
-- `chart_line`
-- `chart_pie`
-- `image`
-- `icon`
-- `group`
-
-Derived visual constructs may be built from those primitives, including:
-- metric cards;
-- process flows;
-- timelines;
-- architecture diagrams;
-- comparison matrices;
-- icon-label grids;
-- callout clusters;
-- section hero slides.
-
-### 3.4.1 Home/Insert Mapping Requirement
-
-For every derived construct, the system must be able to explain which PowerPoint-native primitives it maps to.
-
-Example:
-- `timeline` = round rectangles + lines/connectors + text boxes + optional icons.
-- `architecture_diagram` = grouped rectangles + connectors + labels + optional icons.
-- `metric_cards` = rounded rectangles + text boxes + accent bars.
-
-This keeps the system grounded in editable native PowerPoint objects instead of opaque custom drawing logic.
-
-## 3.5 Slide Archetypes
-
-The system must ship with a bounded library of slide archetypes. Each archetype defines:
-- its narrative role;
-- content contract;
-- visual recipe options;
-- default route (`template_native` or `composed`);
-- allowed primitive families;
-- text budgets;
-- density limits;
-- reference examples;
-- review checklist.
-
-Initial required archetypes:
-- `title_hero`
-- `section_break`
-- `executive_summary`
-- `problem_statement`
-- `current_vs_target`
-- `capability_overview`
-- `process_flow`
-- `roadmap`
-- `architecture_diagram`
-- `comparison`
-- `kpi_snapshot`
-- `case_study`
-- `decision_next_steps`
-
-## 3.6 Visual Recipes
-
-Each archetype must support one or more visual recipes.
-
-A visual recipe specifies:
-- composition pattern;
-- focal point strategy;
-- background treatment;
-- primitive mix;
-- title treatment;
-- evidence placement;
-- image/icon rules;
-- contrast rules;
-- whitespace expectations;
-- anti-patterns.
-
-Example visual recipe IDs:
-- `exec_summary_cards`
-- `exec_summary_split_hero`
-- `roadmap_horizontal_phases`
-- `roadmap_swimlane`
-- `architecture_layered_stack`
-- `architecture_hub_spoke`
-- `process_stepper`
-- `comparison_matrix`
-
-Required artifact:
-- `assets/catalog/visual_recipes_v1.json`
-
-## 3.7 Element-Level Composition Contract
-
-Each composed slide must be planned at the element level.
-
-Minimum `SlidePlan` fields:
-- `slide_id`
-- `narrative_role`
-- `archetype_id`
-- `visual_recipe_id`
-- `route`
-- `base_layout_id`
-- `background_plan`
-- `title_plan`
-- `regions[]`
-- `elements[]`
-- `text_budget`
-- `review_targets[]`
-
-Minimum `SlideElementPlan` fields:
-- `element_id`
-- `semantic_role`
-- `primitive_family`
-- `bounds`
-- `z_index`
-- `content_binding`
-- `style_tokens`
-- `shape_spec`
-- `line_spec`
-- `text_spec`
-- `background_spec`
-- `asset_ref`
-- `validation_rules[]`
-
-This is the central architectural change from V1.
+Each recipe knows its geometry and routes connectors accordingly. There is no general connector-routing algorithm to build.
 
 ---
 
-## 4) AI Layer
+## 4) Text Measurement Heuristic
 
-The AI layer is responsible for narrative planning, slide-level composition planning, review, and repair.
+### 4.1 The Problem
 
-## 4.1 Model Roles
+`python-pptx` has no font-shaping engine. It cannot compute how tall a block of wrapped text will be at a given font size and box width. Without this, the recipe engine cannot compute accurate Y-offsets for stacked elements, and `no_object_collisions` is unmeasurable.
 
-Required model roles:
-- `deck_planner`: strong structured planner using `gpt-5.4`
-- `slide_composer`: per-slide composition planner using `gpt-5.4`
-- `visual_reviewer`: multimodal slide reviewer using the strongest available `gpt-5.4`-compatible image-capable endpoint
-- `repair_planner`: structured repair planner using `gpt-5.4`
+### 4.2 The Solution
 
-The same model family may serve multiple roles, but prompts, schemas, and skills must remain role-specific.
+Build a lightweight text measurement module using Pillow's `ImageFont`:
 
-## 4.2 Skill Loader
+```python
+class TextMeasurer:
+    def estimate_text_height(self, text: str, font_name: str, 
+                             font_size_pt: float, box_width_in: float) -> float:
+        """Returns estimated rendered height in inches."""
+    
+    def estimate_line_count(self, text: str, font_name: str,
+                            font_size_pt: float, box_width_in: float) -> int:
+        """Returns estimated number of wrapped lines."""
+```
 
-The AI layer must load three skill classes per run:
-- deck-level skills;
-- slide archetype skills;
-- review/remediation skills.
+Implementation:
+- Load the template's font files (TTF/OTF) or fall back to a metrics-compatible substitute.
+- Use `ImageFont.getbbox()` or `font.getlength()` to measure character widths.
+- Simulate line-wrapping by word-boundary splitting against the box width.
+- Multiply line count by (font_size + line_spacing) for height.
+- Apply a conservative 15-20% padding factor to account for PowerPoint's internal rendering differences.
 
-### 4.2.1 Canonical Internal Skill Repository
+This will not be pixel-perfect. It does not need to be. It needs to be close enough that:
+- Stacked elements don't overlap.
+- Overflow detection catches genuine overflows before render.
+- The review loop does not waste cycles on layout bugs that measurement could have prevented.
 
-The internal skill repository is the source of truth.
+### 4.3 Font Fallback Strategy
 
-Recommended structure:
-- `skills/brand/`
-- `skills/blueprints/`
-- `skills/archetypes/`
-- `skills/visual_recipes/`
-- `skills/review/`
-- `skills/remediation/`
+The text measurer must handle missing fonts gracefully:
+- Attempt to load the template's embedded fonts.
+- Fall back to metrics-compatible system fonts (e.g., Calibri → Liberation Sans).
+- Fall back to a conservative fixed estimate (assume wider characters) if no font is available.
+- Log the fallback path so font-related rendering issues can be traced.
 
-Each skill must be versioned and may include:
-- instructions;
-- examples;
-- allowed visual patterns;
-- prohibited patterns;
-- required evidence patterns;
-- review rubric fragments;
-- tests or fixtures.
+---
 
-### 4.2.2 OpenAI Skills Projection
+## 5) Design Tokens
 
-When running against OpenAI-hosted infrastructure that supports Skills:
-- selected internal skill bundles may be projected into native OpenAI Skills;
-- skill selection may occur at deck scope or slide scope;
-- runtime must persist the resolved skill set used for reproducibility.
+### 5.1 Token Extraction
 
-When native Skills are unavailable:
-- the same skill content must be injected as structured prompt context.
+The system extracts design tokens from the template and persists them per run. Tokens are consumed by recipes and the composed renderer.
 
-Required artifact:
-- `runs/<run_id>/resolved_skills.json`
+Token families:
 
-## 4.3 Planning Workflow
+**Typography roles:**
+- `display`, `h1`, `h2`, `h3`, `body`, `caption`, `footnote`
+- Each role specifies: font family, font size (pt), bold/italic, line spacing, color token.
 
-The planner is hierarchical. It does not emit a deck in one giant step.
+**Color roles:**
+- `bg_primary`, `bg_secondary`, `surface`, `surface_muted`
+- `text_primary`, `text_secondary`
+- `accent_1` through `accent_5`
+- `success`, `warning`, `risk`
 
-### Pass 0 — Intake and Context Assembly
-- normalize user content and visualization cues;
-- load template inspection and design tokens;
-- load applicable skills;
-- load relevant reference slides;
-- classify deck blueprint.
+**Spacing scale:** `xs` (0.05"), `sm` (0.1"), `md` (0.2"), `lg` (0.35"), `xl` (0.5")
 
-Artifacts:
-- `normalized_content.json`
-- `template_inspection.json`
-- `resolved_skills.json`
-- `reference_packet.json`
+**Stroke scale:** `hairline` (0.5pt), `thin` (1pt), `standard` (1.5pt), `emphasis` (2.5pt)
 
-### Pass 1 — Deck Blueprint Planning
+**Radius scale:** `none` (0), `sm` (0.05"), `md` (0.1"), `pill` (50%)
+
+### 5.2 Token Extraction Realism
+
+Corporate templates are messy. Theme colors may be hardcoded RGB, font mappings may be inconsistent, layouts may violate their own patterns. The token extractor must:
+
+- Extract what the theme provides cleanly (theme colors, theme fonts).
+- For semantic roles not directly expressed in the theme (e.g., `surface_muted`, `accent_3`), apply heuristic mapping from the theme's color palette.
+- Persist a `token_confidence` flag per token indicating whether it was directly extracted or heuristically mapped.
+- Allow manual token overrides via a `token_overrides.json` file per template.
+
+Required artifact per run: `runs/<run_id>/design_tokens.json`
+
+---
+
+## 6) Composed Renderer
+
+### 6.1 Responsibilities
+
+The composed renderer takes a `PositionedElementList` from the recipe engine and produces native PowerPoint objects using `python-pptx`.
+
+### 6.2 Supported Primitives
+
+| Primitive | python-pptx API | Notes |
+|---|---|---|
+| `text_box` | `slide.shapes.add_textbox()` | Free-positioned text with token-styled runs |
+| `shape_rect` | `slide.shapes.add_shape(MSO_SHAPE.RECTANGLE)` | With fill, stroke, radius from tokens |
+| `shape_round_rect` | `slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE)` | Primary card shape |
+| `shape_circle` | `slide.shapes.add_shape(MSO_SHAPE.OVAL)` | Hub nodes, status indicators |
+| `shape_chevron` | `slide.shapes.add_shape(MSO_SHAPE.CHEVRON)` | Process step indicators |
+| `shape_arrow` | `slide.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW)` | Directional flow indicators |
+| `connector_straight` | `slide.shapes.add_connector()` | Between-node connections |
+| `connector_elbow` | OOXML bridge | Routed connections |
+| `image` | `slide.shapes.add_picture()` | Icons and branded images |
+| `table` | `slide.shapes.add_table()` | Structured data |
+| `chart_bar` / `chart_column` / `chart_line` / `chart_pie` | `slide.shapes.add_chart()` | Native charts with data series |
+| `group` | OOXML bridge | Grouped constructs for editability |
+| `accent_bar` | Thin `shape_rect` | Visual separator/emphasis lines |
+
+### 6.3 OOXML Bridge
+
+The OOXML bridge handles features that `python-pptx` cannot express through its public API:
+- Elbow and curved connectors with routed waypoints.
+- Shape grouping (critical for editability of complex constructs).
+- Gradient fills on shapes (partial `python-pptx` support).
+- Shadow and glow effects where recipes explicitly request them.
+
+Bridge rules:
+- Every bridge helper must have a unit test that asserts the output XML structure.
+- Bridge helpers are called by the composed renderer, not by recipes or the LLM.
+- Bridge scope will grow over time. This is accepted. The containment strategy is: bridge helpers are isolated functions, not a parallel renderer.
+
+### 6.4 Background Rendering
+
+Background treatment is part of the recipe's positioned element list. Allowed treatments:
+- Template-native background (use the selected layout's existing background).
+- Theme solid fill (`bg_primary`, `bg_secondary`, `surface`, `surface_muted`).
+- Branded hero image (resolved from `branded_images.json`).
+- Light accent wash (semi-transparent shape covering the slide canvas).
+
+Every background treatment must preserve text contrast. The recipe is responsible for selecting text colors that work against its background.
+
+---
+
+## 7) AI Layer
+
+### 7.1 Model Roles
+
+| Role | Responsibility | Required Capability |
+|---|---|---|
+| `deck_planner` | Narrative arc, slide roster, archetype assignment, recipe selection | Strong structured output |
+| `slide_filler` | Per-slide slot content given archetype, recipe, and brief | Structured output, domain knowledge |
+| `visual_reviewer` | Per-slide aesthetic and content judgment from rendered image | Multimodal (image + text) |
+| `repair_planner` | Recipe/slot adjustments from review findings | Structured output |
+
+The same model family may serve multiple roles. Prompts, schemas, and context bundles remain role-specific.
+
+### 7.2 Provider Strategy
+
+- Primary target: strongest available model with structured output and multimodal support (currently GPT-4o / Claude / Gemini families).
+- The architecture must not be coupled to a single provider. The existing `LLMClient` abstraction is retained.
+- Provider-specific features (native Skills, tool use) are optional enhancements, not required for the core pipeline.
+
+### 7.3 Planning Workflow
+
+**Pass 0 — Intake**
+- Normalize user content and visualization cues (existing V1 code).
+- Load template inspection and design tokens.
+- Load recipe catalog.
+- Load asset catalogs.
+
+Artifacts: `normalized_content.json`, `design_tokens.json`, `recipe_catalog_snapshot.json`
+
+**Pass 1 — Deck Blueprint**
 The deck planner determines:
-- deck objective;
-- audience;
-- narrative arc;
-- slide roster;
-- slide count;
-- slide archetype per section;
-- target evidence pattern per slide;
-- target visual variety constraints across the deck.
+- Deck objective and audience.
+- Narrative arc and slide roster.
+- Per-slide: archetype, recommended recipe candidates, route (`template_native` or `composed`).
+- Deck-level variety constraints: no more than 2 consecutive slides with the same recipe; at least 3 distinct recipes across any 5-slide window.
 
-Artifact:
-- `deck_blueprint_v1.json`
+Artifact: `deck_blueprint_v1.json`
 
-### Pass 2 — Slide Brief Planning
-Each slide receives a brief that captures:
-- slide purpose;
-- key message;
-- audience takeaway;
-- must-include evidence;
-- avoid/forbid notes;
-- recommended visual recipe candidates;
-- route recommendation.
+**Pass 2 — Slot Filling**
+Each slide receives its recipe's slot schema and a content brief. The slide filler produces:
+- Slot content matching the recipe's schema.
+- Icon concept references (not asset IDs — the resolver handles that).
+- Accent token selections.
+- Background treatment selection.
 
-Artifact:
-- `slide_briefs_v1.json`
+For `template_native` slides, this pass produces the existing V1 `DeckSlide` format (layout_id + field bindings).
 
-### Pass 3 — Per-Slide Composition Planning
-Each slide is planned independently, but with neighbor context.
+Artifact: `slide_slots_v1/<slide_id>.json`
 
-The slide composer must decide:
-- title treatment;
-- background treatment;
-- region layout;
-- exact primitive families to use;
-- shape, line, and connector choices;
-- font roles and token selections;
-- color token usage;
-- visual emphasis strategy;
-- asset placement and crop mode;
-- text budgets per element;
-- overflow fallback strategy.
+**Pass 3 — Asset Resolution**
+Deterministic, no LLM:
+- Map `icon_concept` values to concrete `asset_id` values via visual vocabulary and icon index.
+- Enforce per-slide icon diversity (no duplicate asset_id on the same slide).
+- Resolve branded images for backgrounds.
+- Validate all assets exist on disk.
 
-This pass must return `SlidePlan` objects, not only layout names.
+Artifact: `asset_resolution_v1.json`
 
-Artifacts:
-- `slide_plan_v1/<slide_id>.json`
-- `deck_render_plan_v1.json`
+**Pass 4 — Recipe Execution**
+Deterministic, no LLM:
+- For each `composed` slide: call the recipe's `compute_layout()` with resolved slots, tokens, canvas spec, and text measurer.
+- For each `template_native` slide: pass through to V1 renderer path.
+- Run deterministic validation on positioned elements: bounds within canvas, no overlaps, text within budget.
 
-### Pass 4 — Deterministic Validation and Repair Prep
-Before render, deterministic logic must validate:
-- allowed primitive families;
-- token compliance;
-- text density budgets;
-- asset availability;
-- route/layout compatibility;
-- non-overlap and bounds sanity;
-- archetype-specific payload caps.
+Artifacts: `positioned_elements_v1/<slide_id>.json`, `layout_validation_v1.json`
 
-Blocking failures may cause:
-- deterministic compression;
-- component swap;
-- recipe reroute;
-- targeted replan request.
+**Pass 5 — Render**
+- `template_native` slides: existing V1 placeholder-binding renderer.
+- `composed` slides: new composed renderer consuming positioned element lists.
 
-Artifact:
-- `planning_validation_v1.json`
+Artifact: `deck_v1.pptx`
 
-### Pass 5 — Visual Review and Repair Planning
-After render and slide export, the review model must evaluate each slide and decide one of:
-- `accept`
-- `minor_repair`
-- `major_replan`
+**Pass 6 — Review and Repair**
+- Export slides to images (Aspose preferred, LibreOffice fallback).
+- Per-slide multimodal review: content quality, visual balance, brand fit, archetype fit.
+- Repair planner produces: recipe switch, slot content adjustment, accent/background change, or accept.
+- Re-execute passes 3-5 for repaired slides only.
 
-Review must examine:
-- content quality and message clarity;
-- placement, alignment, spacing, and visual balance;
-- visual appeal, emphasis, and slide polish;
-- slide image;
-- slide plan;
-- diagnose output;
-- neighboring slides;
-- relevant archetype skill and review rubric.
+Artifacts: `review_images/v1/`, `visual_review_v1/<slide_id>.json`, `repair_actions_v1.json`, `deck_v2.pptx`
 
-Artifacts:
-- `visual_review_v1/<slide_id>.json`
-- `deck_review_summary_v1.json`
-- `repair_plan_v1/<slide_id>.json`
+### 7.4 Review Loop Bounds
 
-### Pass 6 — Targeted Repair Render
-The repair planner consumes the multimodal review output and produces updated slide plans.
-Only flagged slides are rerendered unless the review explicitly marks a deck-level narrative issue.
+Hard constraints on the review-repair loop:
+- **Maximum 2 iterations total.** Iteration 1: render V1 → review → repair → render V2. Iteration 2 (only for slides still blocking after iteration 1): review V2 → repair → render V3.
+- **No coordinate-level repair.** Repair actions are: switch recipe, adjust slot content, change tokens, reroute. Never "move element X by 0.3 inches."
+- **Score-delta threshold.** If the reviewer scores a repaired slide within 0.5 points of its pre-repair score, stop iterating on that slide and accept.
+- **Graceful degradation.** If a composed slide fails review after 2 iterations, fall back to `template_native` using the best available layout, and log the fallback.
+- **Cost cap.** Total LLM calls per deck generation must not exceed: 3 + (2 * slide_count) calls. For a 10-slide deck, that's 23 calls max (1 blueprint + 10 slot fills + 10 reviews + 2 repair replans). Actual count will usually be lower because not all slides need repair.
 
-Artifact:
-- `slide_plan_v2/<slide_id>.json`
-- `deck_render_plan_v2.json`
+### 7.5 LLM Output Schemas
 
-## 4.4 Planning Rules
+All LLM outputs are Pydantic-validated. Key schemas:
 
-The AI layer must follow these rules:
-- do not invent layouts or primitives outside the allowed catalog;
-- do not style individual elements with arbitrary fonts/colors outside the token system;
-- do not overfill slides beyond archetype budgets;
-- do not repeat the same visual pattern on adjacent slides unless explicitly justified;
-- do not treat visuals as decoration separate from the message.
+**DeckBlueprint:**
+- `deck_objective`, `audience`, `narrative_arc`
+- `slides[]`: `slide_id`, `archetype`, `recipe_candidates[]`, `route`, `content_brief`, `variety_notes`
+
+**SlideSlotFill (per recipe):**
+- Must conform to the specific recipe's `SlotSchema`.
+- Common fields: `title`, `background_treatment`
+- Recipe-specific fields: `cards[]`, `steps[]`, `zones[]`, `metrics[]`, etc.
+
+**ReviewVerdict (per slide):**
+- `slide_id`, `decision` (accept | minor_repair | major_replan | reroute)
+- `content_score`, `visual_balance_score`, `brand_fit_score` (1-5 each)
+- `findings[]`: `category`, `description`, `severity`
+- `repair_suggestion`: `action` (switch_recipe | adjust_slots | change_tokens | reroute), `details`
 
 ---
 
-## 5) Deterministic Renderer
+## 8) Deterministic Validation
 
-The deterministic renderer translates validated slide plans into a native `.pptx`.
+### 8.1 Pre-Render Validation (Positioned Elements)
 
-## 5.1 Responsibilities
+After recipe execution and before render:
+- **Bounds check**: every element fits within slide canvas (13.333" x 7.5" standard).
+- **Overlap detection**: no two elements overlap by more than a configurable tolerance (default: 0.02").
+- **Text budget**: estimated text height (from text measurer) fits within element's allocated height.
+- **Asset availability**: every `asset_id` in the positioned elements has a corresponding file on disk.
+- **Token compliance**: every color, font, and spacing value traces back to a design token.
 
-The renderer must:
-- open the template presentation;
-- create `template_native` slides from placeholders when appropriate;
-- create `composed` slides on template-aligned layouts when needed;
-- render native PowerPoint objects;
-- apply tokenized typography and styling;
-- persist diagnostics and mapping metadata;
-- isolate OOXML edge cases.
+### 8.2 Post-Render Validation (PPTX Diagnostics)
 
-## 5.2 Route Types
+After render, the existing diagnose script checks:
+- Rendered shape count matches positioned element count.
+- No text overflow flags in PowerPoint's XML.
+- Image references resolve correctly.
+- Layout drift between planned and rendered positions.
 
-### `template_native`
-Use when:
-- the template already contains the right structure;
-- slide complexity is low to medium;
-- custom composition would not materially improve clarity.
+### 8.3 Quality Gates (Final Deck)
 
-Required inputs:
-- `layout_id`
-- field bindings
-- optional image/icon bindings
-
-### `composed`
-Use when:
-- slide structure requires explicit composition control;
-- the message depends on diagramming, card layouts, process flows, or carefully balanced evidence blocks;
-- placeholder layouts would materially reduce quality.
-
-Required inputs:
-- `base_layout_id`
-- `background_plan`
-- `regions[]`
-- `elements[]`
-
-## 5.3 Renderer Modules
-
-Required renderer modules:
-- `template_loader`
-- `token_resolver`
-- `layout_solver`
-- `element_factory`
-- `asset_resolver`
-- `chart_factory`
-- `table_factory`
-- `connector_router`
-- `diagnostics_emitter`
-- `ooxml_bridge`
-
-## 5.4 Layout Solver
-
-The solver is bounded and deterministic.
-
-It may support only:
-- `inset`
-- `split_h`
-- `split_v`
-- `grid`
-- `stack`
-- `center`
-- `anchor`
-
-The solver does not emulate CSS or full responsive layout. It solves fixed-canvas PowerPoint composition.
-
-## 5.5 Element Rendering Rules
-
-Every element render must resolve:
-- absolute bounds in slide coordinates;
-- typography tokens;
-- fill/stroke tokens;
-- alignment;
-- z-order;
-- asset crop/contain policy;
-- text overflow policy.
-
-### 5.5.1 Text Rendering
-The renderer must support:
-- bold/italic/underline where required;
-- paragraph spacing and indentation;
-- bullet and numbered list styles;
-- alignment;
-- emphasis spans;
-- speaker notes spillover as a last resort.
-
-### 5.5.2 Shape and Line Rendering
-The renderer must support:
-- rectangles and rounded rectangles;
-- circles and dots;
-- bars and accent rules;
-- arrows, chevrons, and banners where recipes allow;
-- connectors with line style, weight, and arrowhead policy.
-
-### 5.5.3 Chart and Table Rendering
-- Use native PowerPoint charts when structured numeric data exists.
-- Use native tables when tabular evidence is the clearest form.
-- If data is too sparse or too narrative for a chart, prefer shape-based composition instead of low-value charts.
-
-### 5.5.4 Background Rendering
-Background selection is part of the slide plan.
-
-Allowed background treatments:
-- theme solid fill;
-- tokenized surface blocks;
-- branded hero image;
-- section divider image;
-- light accent wash;
-- template-native background already present on chosen layout.
-
-Every background treatment must preserve text contrast and focal clarity.
-
-## 5.6 OOXML Bridge
-
-The OOXML bridge exists only for targeted gaps such as:
-- unsupported connector features;
-- grouping edge cases;
-- niche formatting not reliably available through `python-pptx`;
-- preservation fixes where the template object model requires lower-level access.
-
-OOXML bridge rules:
-- no business logic in OOXML patch helpers;
-- helper APIs only;
-- snapshot tests or structural assertions required;
-- avoid speculative patches.
-
----
-
-## 6) Review Layer
-
-The review layer turns rendered slides into actionable repair instructions.
-
-## 6.1 Review Inputs
-
-Each slide review packet must include:
-- rendered slide image;
-- slide plan;
-- slide diagnostics;
-- slide brief;
-- neighboring slide summaries;
-- archetype skill;
-- review rubric.
-
-## 6.2 Review Outputs
-
-Each slide review output must include:
-- `slide_id`
-- `decision`
-- `severity`
-- `summary`
-- `findings[]`
-- `repair_instructions[]`
-- `must_preserve[]`
-- `reroute_required`
-- `planner_feedback`
-
-## 6.3 Review Dimensions
-
-Reviewer must score or classify at minimum:
-- content quality and message clarity;
-- hierarchy and scanability;
-- placement, alignment, spacing, and balance;
-- visual relevance;
-- visual appeal and polish;
-- asset quality and fit;
-- brand fit;
-- archetype fit;
-- deck continuity relative to neighboring slides.
-
-## 6.4 Repair Policy
-
-Repairs may change:
-- recipe choice;
-- element sizing and spacing;
-- shape emphasis;
-- background treatment;
-- asset choice;
-- title/body budgets;
-- route (`template_native` to `composed`, or vice versa) when justified.
-
-Repairs may not change:
-- core deck narrative without an explicit deck-level issue;
-- template identity;
-- required compliance/brand constraints.
-
-## 6.5 Review-To-Planner Feedback Loop
-
-The multimodal review loop is a required planning stage, not an optional post-process.
-
-Required behavior:
-- every rendered slide is reviewed visually;
-- the reviewer emits structured feedback for content, placement, and visual appeal;
-- that feedback is converted into planner-facing repair input;
-- the repair planner updates the slide plan before rerender;
-- the repaired slide is re-reviewed when it was previously blocking.
-
-**Hard iteration cap:** the review-repair loop runs at most **2 iterations** (see §2.4). After the cap is reached the pipeline proceeds to quality gates with whatever findings remain. This prevents oscillation where the reviewer and repair planner trade conflicting instructions indefinitely.
-
-This loop must remain explicit in both artifacts and runtime control flow.
-
----
-
-## 7) Reference Corpus and Skills Inputs
-
-The system must consume three reference classes:
-- company template and brand assets;
-- company-approved reference slides and decks;
-- public benchmark/reference slides for structural inspiration where usage permits.
-
-## 7.1 Reference Usage Rules
-
-Reference material is used to guide:
-- slide archetype choices;
-- visual recipes;
-- spacing and density expectations;
-- hierarchy patterns;
-- quality review rubrics.
-
-Reference material is not used to copy proprietary content verbatim.
-
-## 7.2 Required Reference Artifacts
-
-Required artifacts:
-- `assets/ground_truth/deck_blueprints_v1.json`
-- `assets/ground_truth/slide_archetypes_v1.json`
-- `assets/ground_truth/quality_rubric_v1.json`
-- `assets/ground_truth/reference_manifest_v1.json`
-- `assets/catalog/visual_recipes_v1.json`
-- `assets/catalog/ppt_primitive_catalog_v1.json`
-
----
-
-## 8) Runtime Tech Stack
-
-## 8.1 Core Runtime
-- Python 3.11+
-- `python-pptx`
-- `pydantic` v2
-- `orjson`
-- `fastapi`
-- `uvicorn`
-- `pytest`
-
-## 8.2 Review Toolchain
-- **Preferred:** `aspose-slides` (Python) — high-fidelity PPTX → PDF/PNG; evaluation watermark acceptable for review artifacts
-- **Fallback:** LibreOffice `soffice` + `pdftoppm` — used when Aspose.Slides is not installed
-- System dependency for Aspose path: `libgdiplus` (`mono-libgdiplus` on macOS via Homebrew)
-
-## 8.3 AI Runtime
-- OpenAI Responses API as canonical runtime where available
-- `gpt-5.4` as primary planning model
-- strongest available multimodal GPT-5.4-compatible endpoint for slide review
-- provider abstraction for Azure/OpenAI-compatible deployments
-
-## 8.4 Non-Core Development/Authoring Tools
-- Codex models may be used during development or internal authoring workflows
-- they are not required runtime dependencies for presentation generation
+Retained from V1 with additions:
+- `native_pptx_opens`: file is valid PPTX.
+- `no_blocking_overflow`: no text overflow after measurement and remediation.
+- `no_object_collisions`: overlap check passes for all composed slides.
+- `token_compliance`: all styled elements use token values.
+- `brand_template_compliance`: template theme is preserved.
+- `reviewed_all_slides`: every slide was reviewed.
+- `visual_density_floor`: minimum number of non-text elements per slide (for composed slides).
+- `asset_diversity_floor`: no duplicate icon on the same slide.
+- `deck_variety_floor`: recipe repetition within bounds.
+- `no_markdown_marker_leak`: no literal `**` or `*` in rendered text.
 
 ---
 
 ## 9) Artifacts and Logging
 
-Minimum run artifacts:
-- `normalized_content.json`
-- `template_inspection.json`
-- `design_tokens.json`
-- `resolved_skills.json`
-- `reference_packet.json`
-- `deck_blueprint_v1.json`
-- `slide_briefs_v1.json`
-- `slide_plan_v1/<slide_id>.json`
-- `deck_render_plan_v1.json`
-- `planning_validation_v1.json`
-- `deck_v1.pptx`
-- `diagnose_report_v1.json`
-- `review_images/v1/slide_*.png`
-- `visual_review_v1/<slide_id>.json`
-- `deck_review_summary_v1.json`
-- `repair_plan_v1/<slide_id>.json`
-- `slide_plan_v2/<slide_id>.json`
-- `deck_render_plan_v2.json`
-- `deck_v2.pptx`
-- `diagnose_report_v2.json`
-- `quality_gates_v2.json`
-- `run_summary.json`
-- `run_log.jsonl`
+### 9.1 Run Artifacts
 
-Required log markers:
-- `NORMALIZE_DONE`
-- `TEMPLATE_INSPECTION_DONE`
-- `SKILL_RESOLUTION_DONE`
-- `DECK_BLUEPRINT_DONE`
-- `SLIDE_BRIEFS_DONE`
-- `SLIDE_PLANS_V1_DONE`
-- `PLANNING_VALIDATION_V1_DONE`
-- `RENDER_V1_DONE`
-- `REVIEW_IMAGES_INGESTED`
-- `VISUAL_REVIEW_V1_DONE`
-- `REPAIR_PLANS_V1_DONE`
-- `SLIDE_PLANS_V2_DONE`
-- `RENDER_V2_DONE`
-- `DIAGNOSE_V2_DONE`
-- `QUALITY_GATES_V2`
-- `RUN_COMPLETE` or `RUN_FAILED_QUALITY_GATES`
+All artifacts persisted under `runs/<run_id>/`:
+
+| Artifact | Stage | Format |
+|---|---|---|
+| `normalized_content.json` | Pass 0 | Content model |
+| `design_tokens.json` | Pass 0 | Extracted tokens |
+| `recipe_catalog_snapshot.json` | Pass 0 | Available recipes and slot schemas |
+| `deck_blueprint_v1.json` | Pass 1 | Deck plan with archetype/recipe assignments |
+| `slide_slots_v1/<slide_id>.json` | Pass 2 | Filled slot content per slide |
+| `asset_resolution_v1.json` | Pass 3 | Concept-to-asset mapping |
+| `positioned_elements_v1/<slide_id>.json` | Pass 4 | Recipe output |
+| `layout_validation_v1.json` | Pass 4 | Pre-render validation |
+| `deck_v1.pptx` | Pass 5 | Rendered deck |
+| `review_images/v1/slide_*.png` | Pass 6 | Exported slide images |
+| `visual_review_v1/<slide_id>.json` | Pass 6 | Review verdicts |
+| `repair_actions_v1.json` | Pass 6 | Repair plan |
+| `deck_v2.pptx` | Pass 6 | Repaired deck |
+| `quality_gates_v2.json` | Final | Gate results |
+| `run_summary.json` | Final | Aggregate metrics and deltas |
+| `run_log.jsonl` | Throughout | Structured event log |
+
+### 9.2 Log Markers
+
+`NORMALIZE_DONE`, `TOKENS_EXTRACTED`, `BLUEPRINT_DONE`, `SLOT_FILL_DONE`, `ASSET_RESOLUTION_DONE`, `RECIPE_EXECUTION_DONE`, `LAYOUT_VALIDATION_DONE`, `RENDER_V1_DONE`, `REVIEW_IMAGES_EXPORTED`, `VISUAL_REVIEW_DONE`, `REPAIR_PLANNED`, `RENDER_V2_DONE`, `QUALITY_GATES`, `RUN_COMPLETE`, `RUN_FAILED_QUALITY_GATES`
 
 ---
 
-## 10) Quality Gates
+## 10) Runtime Tech Stack
 
-A final deck passes only if all blocking gates pass.
+### 10.1 Core
+- Python 3.11+
+- `python-pptx` (rendering)
+- `pydantic` v2 (schema validation)
+- `Pillow` (text measurement)
+- `orjson` (fast JSON)
+- `pytest` (testing)
 
-Required gates:
-- `native_pptx_opens`
-- `no_blocking_overflow`
-- `no_object_collisions`
-- `token_compliance`
-- `brand_template_compliance`
-- `reviewed_all_slides`
-- `no_slide_left_unrepaired_after_blocking_review`
-- `visual_hierarchy_floor`
-- `visual_density_floor`
-- `asset_diversity_floor`
-- `archetype_alignment`
-- `deck_variety_floor`
-- `no_markdown_marker_leak`
-- `image_asset_presence_floor`
+### 10.2 Review Toolchain
+- **Preferred**: `aspose-slides` Python package (PPTX → PNG, high fidelity)
+- **Fallback**: LibreOffice `soffice` + `pdftoppm`
 
-Every gate must produce machine-readable evidence.
+### 10.3 AI Runtime
+- LLM client abstraction supporting multiple providers (existing)
+- Structured output via JSON schema enforcement
+- Multimodal image input for visual review
+
+### 10.4 CLI (First Delivery Surface)
+- Retained commands: `validate`, `render`, `smoke`, `generate`, `generate-auto`
+- New commands: `inspect-template` (emit tokens), `list-recipes` (show available recipes), `generate-slide` (single composed slide for testing)
+
+### 10.5 Local Web UI (Second Delivery Surface)
+- FastAPI backend exposing the same pipeline
+- Simple frontend: paste content, pick template, generate, preview slides, trigger per-slide repair, download deck
+- Deferred to post-MVP
 
 ---
 
 ## 11) Testing Strategy
 
-## 11.1 Unit Tests
-- template inspection
-- token extraction
-- primitive catalog validation
-- skill resolution
-- planner schema validation
-- layout solver invariants
-- element rendering helpers
-- OOXML bridge helpers
-- review output schema validation
+### 11.1 Recipe Tests (New)
+- Each recipe must have unit tests that verify:
+  - Slot validation rejects invalid input.
+  - `compute_layout()` produces non-overlapping elements for fixture input.
+  - Element bounds stay within canvas.
+  - Text measurement is called and results influence element heights.
+  - Varying slot counts produce different but valid layouts.
 
-## 11.2 Integration Tests
-- one-slide end-to-end composed render
-- one-slide visual review and repair
-- multi-slide CLI generation
-- artifact persistence contract
+### 11.2 Text Measurer Tests (New)
+- Known font + known text + known box width → expected line count within tolerance.
+- Fallback font path works when primary font is missing.
+- Edge cases: empty text, single character, very long word.
 
-## 11.3 Visual Validation Tests
-- no pixel-perfect snapshots
-- structural and perceptual assertions only
-- slide density and whitespace heuristics
-- primitive counts and collision checks
-- review-decision determinism for fixture cases
+### 11.3 Composed Renderer Tests (New)
+- Positioned element list → PPTX → re-read shape positions and verify bounds match.
+- OOXML bridge helpers produce valid XML.
+- Grouped constructs remain grouped in output.
 
-## 11.4 Benchmark Tests
-- benchmark deck generation using fixed skill packs and fixed inputs
-- archetype score thresholds
-- visual variety thresholds
-- V1 vs V2 KPI deltas where relevant
+### 11.4 Retained V1 Tests
+- All existing 18 test files remain. V2 does not break the V1 path.
+- Template validation, preflight, drift, quality gates, normalization, LLM client mocks.
+
+### 11.5 Integration Tests
+- One-slide composed render from hardcoded recipe input → PPTX.
+- One-slide end-to-end: prompt → LLM blueprint → slot fill → recipe → render → PPTX.
+- Multi-slide deck with mixed `template_native` and `composed` slides.
+- Review loop: render → export → review → repair → re-render.
+
+### 11.6 No Pixel-Perfect Tests
+- Structural and metric assertions only: element counts, overlap detection, bounds compliance, token usage.
+- No screenshot comparison. No visual regression baselines.
 
 ---
 
-## 12) Delivery Surfaces
+## 12) Build Sequence (Vertical Slices)
 
-## 12.1 CLI (First Surface)
+### Slice 0: Recipe Engine Proof (First Milestone)
 
-The CLI is the first production surface.
+**Goal**: One recipe renders a real composed slide from hardcoded input.
 
-Required capabilities:
-- run generation from prompt/content files;
-- select template;
-- select skill packs;
-- run one-slide or full-deck generation;
-- rerun review/repair for a single slide;
-- inspect artifacts under `runs/<run_id>/`.
+Build:
+- `TextMeasurer` module with Pillow.
+- `DesignTokens` extraction from template (simplified: theme colors + fonts).
+- `RecipeProtocol` base class.
+- `exec_summary_3_cards` recipe implementation.
+- Composed renderer that consumes `PositionedElementList` and produces shapes via `python-pptx`.
+- Hardcoded slot input → recipe → render → PPTX.
 
-## 12.2 Local Web UI (Second Surface)
+Demo: One rendered, editable executive summary slide with 3 styled cards, icons, and a title.
 
-The locally run web UI is the second surface.
+Exit criteria: Slide opens in PowerPoint. Shapes are editable. No overlap. Icons render correctly.
 
-Required capabilities:
-- upload or paste content;
-- choose template and skill pack;
-- preview generated slides;
-- inspect review findings per slide;
-- trigger regenerate for a single slide;
-- download final deck.
+### Slice 1: LLM Planning → Recipe Selection
 
-The local web UI is a presentation shell over the same backend pipeline.
+**Goal**: LLM picks a recipe and fills its slots from a prompt.
 
-## 12.3 Cloud Endpoint (Third Surface)
+Build:
+- Recipe catalog manifest (JSON listing all recipes, their slot schemas, and archetype associations).
+- Deck blueprint schema and LLM prompt.
+- Slot-fill schema and LLM prompt.
+- Asset resolution pipeline (concept → asset_id).
+- 2-3 additional recipes: `exec_icon_grid`, `kpi_metric_cards`, `process_horizontal_stepper`.
 
-The cloud endpoint is the third surface.
+Demo: CLI prompt → LLM selects archetype and recipe → fills slots → recipe computes layout → rendered PPTX.
 
-Required capabilities:
-- create generation job;
-- poll job status;
-- retrieve artifacts and final deck;
-- request per-slide repair;
-- support local hosting or Azure-hosted deployment.
+### Slice 2: Architecture Diagram Recipes
+
+**Goal**: Prove the architecture diagram differentiator.
+
+Build:
+- `arch_layered_stack` recipe.
+- `arch_data_pipeline` recipe.
+- Icon routing for AWS/cloud service icons.
+- Per-recipe connector routing.
+
+Demo: "Design a data lakehouse architecture" → branded architecture slide with real service icons and routed connectors.
+
+### Slice 3: Review and Repair Loop
+
+**Goal**: Close the quality loop.
+
+Build:
+- Per-slide review packet generation.
+- Multimodal review with bounded repair actions.
+- Repair planner (recipe switch / slot adjustment).
+- Re-execution of passes 3-5 for repaired slides.
+- Hard iteration cap enforcement.
+
+Demo: Generate → review → repair → measurably improved slide.
+
+### Slice 4: Multi-Slide Deck with Variety
+
+**Goal**: Coherent deck from a single prompt.
+
+Build:
+- Deck-level planner with variety constraints.
+- Mixed `template_native` + `composed` rendering in one deck.
+- Neighbor-aware recipe selection.
+- 5-6 archetypes functional.
+
+Demo: Single prompt → 5-8 slide deck with visual variety and narrative coherence.
+
+### Slice 5: Polish, Web UI, Benchmarks
+
+Build:
+- Recipe library expansion (more variants per archetype).
+- Local web UI.
+- Benchmark gating and quality thresholds.
+- Template compatibility validation.
 
 ---
 
 ## 13) Out of Scope
 
-Out of scope for the baseline architecture:
-- full WYSIWYG browser canvas parity with PowerPoint;
-- animation choreography as a primary deliverable;
-- arbitrary freeform drawing beyond the approved primitive catalog;
-- dependence on PowerPoint desktop automation;
-- full replacement of the Python renderer with a JS-first renderer.
+- Full WYSIWYG canvas parity with PowerPoint.
+- Animation choreography.
+- General-purpose constraint solver or CSS-like responsive layout.
+- LLM-generated coordinates or spatial values.
+- SVG embedding in the render path.
+- PowerPoint desktop automation.
+- Cloud-hosted endpoint (deferred past MVP).
+- Advanced chart types beyond basic bar/column/line/pie.
 
 ---
 
 ## 14) Success Criteria
 
-The architecture is successful when all are true:
-1. A one-slide composed archetype can go from prompt to reviewed, repaired, editable `.pptx`.
-2. A 5-slide deck can maintain visual variety without losing brand coherence.
-3. A 10-15 slide benchmark deck can pass hard safety gates with zero blocking overflow.
-4. At least 5 distinct archetypes can render through the composed path with acceptable review scores.
-5. Slide review results are per-slide, actionable, and result in measurable repair improvements.
+The architecture is successful when:
+1. One composed slide renders from prompt to reviewed, repaired, editable PPTX.
+2. At least 5 archetypes render through the composed path with recipe-driven layouts.
+3. A 10-slide deck passes quality gates with zero blocking overlap.
+4. Architecture diagram slides render with real cloud service icons and routed connectors.
+5. Review-driven repair measurably improves slide quality within 2 iterations.
 6. Template swap changes branding without code changes.
-7. The same backend works through CLI, local web UI, and cloud endpoint.
-8. Skill packs can deterministically influence slide look-and-feel in reproducible ways.
-
----
-
-## 15) Required Follow-Up Artifacts
-
-After this spec is accepted, the following must exist or be updated:
-- `PLAN.md` rewritten to vertical slices aligned to this spec
-- `README.md` updated for new CLI/runtime flow
-- deck blueprint catalog
-- slide archetype catalog
-- visual recipe catalog
-- PowerPoint primitive catalog
-- internal skill repository scaffold
-- new slide plan schemas and fixtures
+7. The same backend works through CLI and local web UI.
+8. Adding a new recipe is a single Python class plus slot schema — no changes to the engine.
