@@ -89,9 +89,15 @@ The system is organized into five cooperating layers:
 - Do not add SVG directly to the runtime render path.
 
 ### 1.6 Review Image Generation
-- Automated slide previews remain headless:
+- Automated slide previews remain headless.
+- Preferred backend: **Aspose.Slides** (`aspose-slides` Python package).
+  - Converts PPTX → PDF and PPTX → PNG directly with high fidelity.
+  - Evaluation mode adds a watermark to outputs; this is acceptable because review images are intermediate artifacts — final deliverables are the `.pptx` files.
+  - Requires `libgdiplus` system library (`brew install mono-libgdiplus` on macOS).
+- Fallback backend: LibreOffice + Poppler.
   - `soffice` for `PPTX -> PDF`
   - `pdftoppm` for `PDF -> PNG`
+  - Lower layout/typography fidelity than Aspose.Slides; use when Aspose is unavailable.
 - Do not rely on GUI automation in the core pipeline.
 
 ### 1.7 Delivery Surfaces
@@ -167,8 +173,11 @@ The system is organized into five cooperating layers:
 - Review findings are fed back into the slide planner/repair planner as structured input, not just logged as commentary.
 - Repair rerenders only the affected slides unless a deck-level narrative issue requires wider replan.
 
-**MVP repair depth**
-- Initial production scope allows one review/repair loop per slide per run.
+**Review loop iteration limit**
+- The system allows a maximum of **2 review/repair loops** per run.
+- Loop 1: render V1 → review V1 → repair → render V2.
+- Loop 2: review V2 → repair → render V3 (only for slides still blocking after loop 1).
+- After 2 loops the run must stop regardless of remaining findings. Unresolved findings are recorded in the run summary but do not trigger further iterations.
 - The system may batch review calls, but the review contract must remain per-slide.
 
 ## 2.5 Skills Policy: OpenAI Skills + Internal Skill Repository (Accepted)
@@ -774,6 +783,8 @@ Required behavior:
 - the repair planner updates the slide plan before rerender;
 - the repaired slide is re-reviewed when it was previously blocking.
 
+**Hard iteration cap:** the review-repair loop runs at most **2 iterations** (see §2.4). After the cap is reached the pipeline proceeds to quality gates with whatever findings remain. This prevents oscillation where the reviewer and repair planner trade conflicting instructions indefinitely.
+
 This loop must remain explicit in both artifacts and runtime control flow.
 
 ---
@@ -820,8 +831,9 @@ Required artifacts:
 - `pytest`
 
 ## 8.2 Review Toolchain
-- LibreOffice `soffice`
-- `pdftoppm`
+- **Preferred:** `aspose-slides` (Python) — high-fidelity PPTX → PDF/PNG; evaluation watermark acceptable for review artifacts
+- **Fallback:** LibreOffice `soffice` + `pdftoppm` — used when Aspose.Slides is not installed
+- System dependency for Aspose path: `libgdiplus` (`mono-libgdiplus` on macOS via Homebrew)
 
 ## 8.3 AI Runtime
 - OpenAI Responses API as canonical runtime where available

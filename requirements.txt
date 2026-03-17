@@ -8,6 +8,10 @@ CairoSVG
 # Test dependencies
 pytest
 
+# Optional: higher-fidelity PPTX->PDF/PNG export (evaluation watermark on output)
+# aspose-slides
+# Requires system library: brew install mono-libgdiplus  (macOS)
+
 # System binaries required for automated review image export (non-pip):
 # - LibreOffice (`soffice`)
 # - Poppler (`pdftoppm`)
