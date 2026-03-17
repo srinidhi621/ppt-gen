@@ -139,14 +139,11 @@ Two independent reviewers and Anthropic's own Claude-for-PowerPoint implementati
 
 Recipe-driven layout trades generality for reliability. The system can only produce slides for which a recipe exists, but those slides will be spatially correct every time. The mitigation for limited recipe coverage is making recipe authoring fast (a new recipe is a single Python class following a base protocol).
 
-### 1.3 Hybrid Rendering: `template_native` + `composed`
+### 1.3 All Slides Are Composed
 
-V2 retains both rendering paths:
+Every slide in V2 goes through the recipe engine. The V1 placeholder-binding path (`template_native`) is retired for production rendering. V1 code remains in the codebase for reference and testing but is not part of the V2 pipeline.
 
-- **`template_native`**: existing V1 path. Uses template placeholders. Good for title slides, section breaks, simple one-column content, agenda slides — anywhere the template designer already solved the layout.
-- **`composed`**: new V2 path. Uses recipe engine to place native primitives on a blank or minimal-content template layout. Required for multi-card layouts, architecture diagrams, process flows, timelines, comparison grids, and any structure the template doesn't provide.
-
-The planner routes each slide. The routing decision is: if a template layout already provides the right structure for this content, use `template_native`; otherwise, use `composed` with a recipe.
+Even simple slides (title, section break, agenda) use recipes. A `title_centered` recipe is trivial to implement — it computes positions for a title and subtitle on the template's canvas using design tokens. The benefit is uniformity: every slide flows through the same pipeline (slot fill → asset resolution → recipe execution → composed render → review), with no routing logic, no special cases, and no divergent code paths.
 
 ### 1.4 The LLM's Bounded Role
 
@@ -195,7 +192,7 @@ Repair actions the review can trigger:
 - Switch to a different recipe for the same archetype.
 - Adjust slot content (shorter text, different emphasis, different icon concept).
 - Change accent or background token.
-- Reroute from `composed` to `template_native` or vice versa.
+- Reroute to a different archetype's recipe if the current one is a poor fit.
 - Flag a slide for deck-level narrative restructuring.
 
 Repair actions the review CANNOT trigger:
@@ -215,8 +212,7 @@ Repair actions the review CANNOT trigger:
 ### 2.2 Template-First Branding
 - The system must accept a customer-provided branded `.pptx` template.
 - Masters, layouts, theme colors, and theme fonts must be preserved.
-- `template_native` slides bind by `shape.alt_text == field_key` (existing V1 contract).
-- `composed` slides inherit theme tokens and render on a blank or minimal-content template layout.
+- Composed slides inherit theme tokens and render on a blank or minimal-content template layout that preserves the template's masters and theme.
 
 ### 2.3 Asset Format Policy
 - Render path supports raster assets (`PNG`, `JPG`, `WebP`) only.
@@ -302,8 +298,8 @@ MVP requires recipes for 5-6 archetypes. Each archetype ships with 2-3 recipe va
 
 | Archetype | Recipe Variants | Notes |
 |---|---|---|
-| `title_hero` | `title_centered`, `title_with_subtitle_bar` | Simple; may stay `template_native` for many templates |
-| `section_break` | `section_dark_bg`, `section_with_image` | Often `template_native`; `composed` variant for branded image overlays |
+| `title_hero` | `title_centered`, `title_with_subtitle_bar` | Simple recipe; few elements but still composed for pipeline uniformity |
+| `section_break` | `section_dark_bg`, `section_with_image` | Branded image overlay or dark-background treatment |
 | `executive_summary` | `exec_3_cards`, `exec_4_cards`, `exec_split_hero`, `exec_icon_grid` | Primary proof-of-concept archetype |
 | `process_flow` | `process_horizontal_stepper`, `process_vertical_flow` | Requires connectors within the recipe |
 | `architecture_diagram` | `arch_layered_stack`, `arch_data_pipeline`, `arch_hub_spoke` | Differentiator; uses AWS/cloud icons |
@@ -556,7 +552,7 @@ Artifacts: `normalized_content.json`, `design_tokens.json`, `recipe_catalog_snap
 The deck planner determines:
 - Deck objective and audience.
 - Narrative arc and slide roster.
-- Per-slide: archetype, recommended recipe candidates, route (`template_native` or `composed`).
+- Per-slide: archetype, recommended recipe candidates.
 - Deck-level variety constraints: no more than 2 consecutive slides with the same recipe; at least 3 distinct recipes across any 5-slide window.
 
 Artifact: `deck_blueprint_v1.json`
@@ -567,8 +563,6 @@ Each slide receives its recipe's slot schema and a content brief. The slide fill
 - Icon concept references (not asset IDs — the resolver handles that).
 - Accent token selections.
 - Background treatment selection.
-
-For `template_native` slides, this pass produces the existing V1 `DeckSlide` format (layout_id + field bindings).
 
 Artifact: `slide_slots_v1/<slide_id>.json`
 
@@ -583,15 +577,13 @@ Artifact: `asset_resolution_v1.json`
 
 **Pass 4 — Recipe Execution**
 Deterministic, no LLM:
-- For each `composed` slide: call the recipe's `compute_layout()` with resolved slots, tokens, canvas spec, and text measurer.
-- For each `template_native` slide: pass through to V1 renderer path.
+- For each slide: call the recipe's `compute_layout()` with resolved slots, tokens, canvas spec, and text measurer.
 - Run deterministic validation on positioned elements: bounds within canvas, no overlaps, text within budget.
 
 Artifacts: `positioned_elements_v1/<slide_id>.json`, `layout_validation_v1.json`
 
 **Pass 5 — Render**
-- `template_native` slides: existing V1 placeholder-binding renderer.
-- `composed` slides: new composed renderer consuming positioned element lists.
+- All slides rendered by the composed renderer consuming positioned element lists.
 
 Artifact: `deck_v1.pptx`
 
@@ -609,7 +601,7 @@ Hard constraints on the review-repair loop:
 - **Maximum 2 iterations total.** Iteration 1: render V1 → review → repair → render V2. Iteration 2 (only for slides still blocking after iteration 1): review V2 → repair → render V3.
 - **No coordinate-level repair.** Repair actions are: switch recipe, adjust slot content, change tokens, reroute. Never "move element X by 0.3 inches."
 - **Score-delta threshold.** If the reviewer scores a repaired slide within 0.5 points of its pre-repair score, stop iterating on that slide and accept.
-- **Graceful degradation.** If a composed slide fails review after 2 iterations, fall back to `template_native` using the best available layout, and log the fallback.
+- **Graceful degradation.** If a slide fails review after 2 iterations, accept with warnings and log the unresolved findings. Do not block the run.
 - **Cost cap.** Total LLM calls per deck generation must not exceed: 3 + (2 * slide_count) calls. For a 10-slide deck, that's 23 calls max (1 blueprint + 10 slot fills + 10 reviews + 2 repair replans). Actual count will usually be lower because not all slides need repair.
 
 ### 7.5 LLM Output Schemas
@@ -756,7 +748,7 @@ All artifacts persisted under `runs/<run_id>/`:
 ### 11.5 Integration Tests
 - One-slide composed render from hardcoded recipe input → PPTX.
 - One-slide end-to-end: prompt → LLM blueprint → slot fill → recipe → render → PPTX.
-- Multi-slide deck with mixed `template_native` and `composed` slides.
+- Multi-slide deck with diverse recipes.
 - Review loop: render → export → review → repair → re-render.
 
 ### 11.6 No Pixel-Perfect Tests
@@ -827,7 +819,7 @@ Demo: Generate → review → repair → measurably improved slide.
 
 Build:
 - Deck-level planner with variety constraints.
-- Mixed `template_native` + `composed` rendering in one deck.
+- Multiple archetypes and recipes in one deck.
 - Neighbor-aware recipe selection.
 - 5-6 archetypes functional.
 
