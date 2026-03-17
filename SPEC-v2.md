@@ -30,7 +30,7 @@ These components are implemented and tested in the current codebase. V2 builds o
 
 ### Review Loop
 - Single-cycle automated pipeline: plan V1 → validate → render V1 → export review images → diagnose → multimodal review → plan V2 → validate → render V2 → diagnose → quality gates.
-- Review image export via LibreOffice (`soffice` + `pdftoppm`) or Aspose.Slides (higher fidelity, evaluation watermark).
+- Review image export via Aspose.Slides (PPTX → PDF/PNG, evaluation watermark acceptable for review artifacts).
 - Multimodal reviewer consumes slide images, planner output, composition spec, and diagnose report; emits structured `ReviewFeedback` with slide findings and change requests.
 - Diagnose script compares rendered PPTX against DeckIR to detect overflow, missing images, layout drift.
 
@@ -230,9 +230,10 @@ Repair actions the review CANNOT trigger:
 - Rendering never executes raw LLM text as code.
 
 ### 2.5 Review Image Generation
-- **Preferred**: Aspose.Slides — high-fidelity PPTX-to-PNG. Evaluation watermark is acceptable for review artifacts.
-- **Fallback**: LibreOffice `soffice` + `pdftoppm`.
-- The reviewer must be instructed that review images may have minor rendering differences from PowerPoint and should not flag micro-alignment issues.
+- **Required**: Aspose.Slides (`aspose-slides` Python package) for PPTX → PDF and PPTX → PNG conversion. High fidelity; evaluation-mode watermark is acceptable because review images are intermediate artifacts.
+- Requires `libgdiplus` system library (`brew install mono-libgdiplus` on macOS).
+- LibreOffice is **not used**. Its rendering fidelity is too low for reliable multimodal review — font substitution, theme-color misinterpretation, and shape rendering differences cause the reviewer to flag phantom issues and miss real ones.
+- The reviewer must still be instructed that review images may have minor rendering differences from PowerPoint and should not flag micro-alignment issues.
 
 ---
 
@@ -595,7 +596,7 @@ Artifacts: `positioned_elements_v1/<slide_id>.json`, `layout_validation_v1.json`
 Artifact: `deck_v1.pptx`
 
 **Pass 6 — Review and Repair**
-- Export slides to images (Aspose preferred, LibreOffice fallback).
+- Export slides to images via Aspose.Slides.
 - Per-slide multimodal review: content quality, visual balance, brand fit, archetype fit.
 - Repair planner produces: recipe switch, slot content adjustment, accent/background change, or accept.
 - Re-execute passes 3-5 for repaired slides only.
@@ -709,8 +710,8 @@ All artifacts persisted under `runs/<run_id>/`:
 - `pytest` (testing)
 
 ### 10.2 Review Toolchain
-- **Preferred**: `aspose-slides` Python package (PPTX → PNG, high fidelity)
-- **Fallback**: LibreOffice `soffice` + `pdftoppm`
+- `aspose-slides` Python package (PPTX → PDF/PNG, high fidelity)
+- System dependency: `libgdiplus` (`brew install mono-libgdiplus` on macOS)
 
 ### 10.3 AI Runtime
 - LLM client abstraction supporting multiple providers (existing)
