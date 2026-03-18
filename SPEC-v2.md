@@ -456,17 +456,25 @@ The template uses fonts that are not embedded in the PPTX and are not universall
 | Calibri | Theme body font | **Carlito** | Metrically compatible replacement with identical proportions |
 | Calibri Light | Theme heading font | **Lato Light (300)** | Similar elegant thin profile with rounded details |
 
-Font files are stored at:
+Font files are stored at `assets/fonts/` with a machine-readable mapping in `assets/fonts/font_map.json`:
 ```
 assets/fonts/
+  font_map.json                # template font → substitute mapping
   SpaceGrotesk-Regular.ttf
   SpaceGrotesk-Bold.ttf
+  SpaceGrotesk-Light.ttf
   Inter-Regular.ttf
   Inter-Bold.ttf
+  Inter-Italic.ttf
+  Inter-BoldItalic.ttf
   Carlito-Regular.ttf
   Carlito-Bold.ttf
+  Carlito-Italic.ttf
+  Carlito-BoldItalic.ttf
   Lato-Light.ttf
+  Lato-LightItalic.ttf
   Lato-Regular.ttf
+  Lato-Bold.ttf
 ```
 
 The text measurer loads fonts in this order:

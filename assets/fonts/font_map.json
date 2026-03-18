@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "description": "Maps template fonts to bundled Google Font substitutes for text measurement and review rendering.",
+  "mappings": [
+    {
+      "template_font": "PP Neue Machina Plain",
+      "role": "headings",
+      "substitute_family": "Space Grotesk",
+      "files": {
+        "regular": "SpaceGrotesk-Regular.ttf",
+        "bold": "SpaceGrotesk-Bold.ttf",
+        "light": "SpaceGrotesk-Light.ttf"
+      },
+      "rationale": "Geometric ink-trap aesthetic matching PP Neue Machina's futuristic feel"
+    },
+    {
+      "template_font": "Aptos",
+      "role": "body",
+      "substitute_family": "Inter",
+      "files": {
+        "regular": "Inter-Regular.ttf",
+        "bold": "Inter-Bold.ttf",
+        "italic": "Inter-Italic.ttf",
+        "bold_italic": "Inter-BoldItalic.ttf"
+      },
+      "rationale": "Modern, highly legible grotesque sans-serif matching Aptos's screen-optimized neutrality"
+    },
+    {
+      "template_font": "Calibri",
+      "role": "theme_body",
+      "substitute_family": "Carlito",
+      "files": {
+        "regular": "Carlito-Regular.ttf",
+        "bold": "Carlito-Bold.ttf",
+        "italic": "Carlito-Italic.ttf",
+        "bold_italic": "Carlito-BoldItalic.ttf"
+      },
+      "rationale": "Metrically compatible replacement with identical character widths and proportions"
+    },
+    {
+      "template_font": "Calibri Light",
+      "role": "theme_headings",
+      "substitute_family": "Lato",
+      "files": {
+        "light": "Lato-Light.ttf",
+        "light_italic": "Lato-LightItalic.ttf",
+        "regular": "Lato-Regular.ttf",
+        "bold": "Lato-Bold.ttf"
+      },
+      "rationale": "Elegant thin profile with rounded details matching Calibri Light's approachable professionalism"
+    }
+  ]
+}
