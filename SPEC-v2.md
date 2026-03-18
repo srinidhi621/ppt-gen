@@ -62,6 +62,80 @@ These components are implemented and tested in the current codebase. V2 builds o
 
 ---
 
+## 0.1.1) Pre-Build Readiness Checklist
+
+Everything needed before V2 development starts. Check items off as they land in the repo.
+
+**Fonts** (needed for: text measurement, recipe layout, review image fidelity)
+
+- [x] Space Grotesk Regular/Bold/Light — `assets/fonts/SpaceGrotesk-*.ttf` (sub for PP Neue Machina)
+- [x] Inter Regular/Bold/Italic/BoldItalic — `assets/fonts/Inter-*.ttf` (sub for Aptos)
+- [x] Carlito Regular/Bold/Italic/BoldItalic — `assets/fonts/Carlito-*.ttf` (sub for Calibri)
+- [x] Lato Light/LightItalic/Regular/Bold — `assets/fonts/Lato-*.ttf` (sub for Calibri Light)
+- [x] Font mapping manifest — `assets/fonts/font_map.json`
+
+**Icon Packs** (needed for: architecture diagrams, visual vocabulary, asset resolver)
+
+- [x] AWS service icons (PNG, 1,842) — `assets/icons/png/external/aws/`
+- [x] Fluent icons (PNG, 19,401) — `assets/icons/png/external/fluent/`
+- [x] Lucide icons (PNG, 1,542) — `assets/icons/png/external/lucide/`
+- [x] Tabler icons (PNG, 5,928) — `assets/icons/png/external/tabler/`
+- [x] Azure service icons (SVG source, 628) — `assets/external_assets/azure/svg/`
+- [ ] Azure service icons (PNG, converted) — `assets/icons/png/external/azure/` — run ingestion pipeline
+- [x] GCP service icons (SVG + PNG source, 19) — `assets/external_assets/gcp/`
+- [ ] GCP service icons (PNG, converted) — `assets/icons/png/external/gcp/` — run ingestion pipeline
+- [ ] Icon index updated with Azure + GCP entries — `assets/icons/icons.json`
+- [ ] Visual vocabulary extended with Azure/GCP service concepts — `assets/catalog/visual_vocabulary.json`
+
+**Template** (needed for: recipe canvas, design token extraction, branding)
+
+- [x] Branded Ascendion template — `assets/template/template.pptx`
+- [x] Layout catalog — `assets/layout/layout_catalog.json`
+- [ ] Canvas config (canonical master + recipe canvas layouts) — `assets/template/canvas_config.json`
+- [ ] Brand color token overrides — `assets/template/token_overrides.json`
+
+**Reference Slides** (needed for: recipe geometry calibration, review quality baseline)
+
+- [ ] `title_hero` — 1 hand-crafted slide
+- [ ] `section_break` — 1 hand-crafted slide
+- [ ] `executive_summary` — 2-3 hand-crafted slides
+- [ ] `process_flow` — 1-2 hand-crafted slides
+- [ ] `architecture_diagram` — 2-3 hand-crafted slides
+- [ ] `comparison` — 1-2 hand-crafted slides
+- [ ] `kpi_snapshot` — 1-2 hand-crafted slides
+- [ ] `roadmap` — 1-2 hand-crafted slides
+- [ ] `case_study` — 2-3 hand-crafted slides
+- [ ] `capability_showcase` — 2-3 hand-crafted slides
+- [ ] `rfp_template` — 2-3 hand-crafted slides
+- [ ] `strategy` — 2-3 hand-crafted slides
+- [ ] All reference slides saved in — `assets/ground_truth/reference_slides.pptx`
+
+**Sample Inputs** (needed for: recipe testing, integration tests, benchmarks)
+
+- [x] Legacy system navigator (test fixture) — `inputs/legacy-system-navigator.combined.md`
+- [ ] Executive summary content brief
+- [ ] Architecture diagram content brief (cloud data platform or similar)
+- [ ] Process flow content brief (CI/CD pipeline, data onboarding, or similar)
+- [ ] KPI / metrics content brief
+- [ ] Comparison content brief
+- [ ] Roadmap content brief
+- [ ] Case study content brief
+- [ ] Capability showcase content brief
+- [ ] RFP response content brief
+- [ ] Strategy content brief
+- [ ] All sample inputs in — `inputs/`
+
+**Runtime Dependencies** (needed for: pipeline execution)
+
+- [x] `python-pptx` — installed in `.venv`
+- [x] `pydantic` v2 — installed in `.venv`
+- [x] `Pillow` — installed in `.venv` (verified: ImageFont loads all bundled fonts)
+- [x] `aspose-slides` — installed in `.venv`
+- [x] `libgdiplus` — installed via Homebrew (`mono-libgdiplus`)
+- [x] `pytest` — installed in `.venv`
+
+---
+
 ## 0.2) What V2 Adds
 
 V2 introduces four capabilities that V1 lacks:
