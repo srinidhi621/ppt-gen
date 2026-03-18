@@ -214,6 +214,24 @@ Repair actions the review CANNOT trigger:
 - Masters, layouts, theme colors, and theme fonts must be preserved.
 - Composed slides inherit theme tokens and render on a blank or minimal-content template layout that preserves the template's masters and theme.
 
+### 2.2.1 Template Canvas Configuration
+
+The current Ascendion template has 5 masters and 118 layouts — significant bloat (Master 4 alone has 50 layouts, 39 named `1_Title slide`). V2 uses a single canonical master and a small set of canvas layouts.
+
+**Canonical master**: Master 0 (44 layouts, contains all branded Light/Dark variants).
+
+**Recipe canvas layouts** (from Master 0) — the blank or minimal-content layouts that composed recipes render onto:
+
+| Canvas Layout | Master 0 Index | Use Case |
+|---|---|---|
+| `Header Only - Light` | 8 | Composed slides needing only a branded header bar |
+| `Header Only - Dark` | 9 | Dark-themed composed slides |
+| `Blank` | 36 | Full-canvas composition with no template furniture |
+
+Other Master 0 layouts remain available for reference and token extraction but are not used as recipe canvases.
+
+Template cleanup task: document the canonical master and canvas layouts in `assets/template/canvas_config.json`. Recipes reference canvas layouts by config key, not by hardcoded index.
+
 ### 2.3 Asset Format Policy
 - Render path supports raster assets (`PNG`, `JPG`, `WebP`) only.
 - Source SVGs exist in catalogs but are converted to PNG before render.
@@ -294,7 +312,7 @@ This list is the contract between the recipe engine and the composed renderer.
 
 ### 3.4 Initial Recipe Library
 
-MVP requires recipes for 5-6 archetypes. Each archetype ships with 2-3 recipe variants for visual variety.
+MVP targets 12 archetypes. Each archetype ships with 2-3 recipe variants for visual variety.
 
 | Archetype | Recipe Variants | Notes |
 |---|---|---|
@@ -302,12 +320,16 @@ MVP requires recipes for 5-6 archetypes. Each archetype ships with 2-3 recipe va
 | `section_break` | `section_dark_bg`, `section_with_image` | Branded image overlay or dark-background treatment |
 | `executive_summary` | `exec_3_cards`, `exec_4_cards`, `exec_split_hero`, `exec_icon_grid` | Primary proof-of-concept archetype |
 | `process_flow` | `process_horizontal_stepper`, `process_vertical_flow` | Requires connectors within the recipe |
-| `architecture_diagram` | `arch_layered_stack`, `arch_data_pipeline`, `arch_hub_spoke` | Differentiator; uses AWS/cloud icons |
+| `architecture_diagram` | `arch_layered_stack`, `arch_data_pipeline`, `arch_hub_spoke` | Differentiator; uses AWS/Azure/GCP cloud icons |
 | `comparison` | `comparison_2_col`, `comparison_matrix` | Side-by-side or grid |
 | `kpi_snapshot` | `kpi_metric_cards`, `kpi_dashboard_row` | Metric callouts with accent bars |
 | `roadmap` | `roadmap_horizontal_phases`, `roadmap_swimlane` | Timeline/phase layouts |
+| `case_study` | `case_study_problem_solution`, `case_study_narrative` | Client story: challenge → approach → outcome, with metrics and logo |
+| `capability_showcase` | `capability_icon_grid`, `capability_pillar_cards` | Service/capability overview with icon-label cells or pillar cards |
+| `rfp_template` | `rfp_response_section`, `rfp_compliance_matrix` | Structured response with requirement mapping, compliance indicators |
+| `strategy` | `strategy_pillars`, `strategy_horizon_map` | Strategic framework with pillars/themes or time-horizon phasing |
 
-Additional archetypes (`problem_statement`, `current_vs_target`, `case_study`, `decision_next_steps`) may be added after MVP by authoring new recipe classes.
+Additional archetypes (`problem_statement`, `current_vs_target`, `decision_next_steps`) may be added post-MVP by authoring new recipe classes.
 
 ### 3.5 Architecture Diagram Recipes (First-Class)
 
@@ -423,13 +445,36 @@ This will not be pixel-perfect. It does not need to be. It needs to be close eno
 - Overflow detection catches genuine overflows before render.
 - The review loop does not waste cycles on layout bugs that measurement could have prevented.
 
-### 4.3 Font Fallback Strategy
+### 4.3 Font Strategy
 
-The text measurer must handle missing fonts gracefully:
-- Attempt to load the template's embedded fonts.
-- Fall back to metrics-compatible system fonts (e.g., Calibri → Liberation Sans).
-- Fall back to a conservative fixed estimate (assume wider characters) if no font is available.
-- Log the fallback path so font-related rendering issues can be traced.
+The template uses fonts that are not embedded in the PPTX and are not universally installed. The project bundles metrically compatible Google Font alternatives under `assets/fonts/`.
+
+| Template Font | Role | Google Font Substitute | Rationale |
+|---|---|---|---|
+| PP Neue Machina Plain | Headings in template shapes | **Space Grotesk** | Same geometric ink-trap aesthetic and futuristic feel |
+| Aptos | Body text in template shapes | **Inter** | Modern, highly legible grotesque sans-serif matching Aptos's neutrality |
+| Calibri | Theme body font | **Carlito** | Metrically compatible replacement with identical proportions |
+| Calibri Light | Theme heading font | **Lato Light (300)** | Similar elegant thin profile with rounded details |
+
+Font files are stored at:
+```
+assets/fonts/
+  SpaceGrotesk-Regular.ttf
+  SpaceGrotesk-Bold.ttf
+  Inter-Regular.ttf
+  Inter-Bold.ttf
+  Carlito-Regular.ttf
+  Carlito-Bold.ttf
+  Lato-Light.ttf
+  Lato-Regular.ttf
+```
+
+The text measurer loads fonts in this order:
+1. Template's original font if installed on the system (PP Neue Machina, Aptos, Calibri).
+2. Bundled substitute from `assets/fonts/` using the mapping above.
+3. Conservative fixed estimate (assume widest glyphs) if neither is available. This path logs a warning.
+
+The font mapping is also used by Aspose during review-image export: if the original fonts are missing, Aspose substitutes similarly, so the bundled fonts keep measurement and review rendering consistent with each other even if neither matches PowerPoint's rendering exactly.
 
 ---
 
