@@ -20,6 +20,12 @@ Known gap:
 - composition polish is still below target quality for consulting-style decks.
 - visual coverage is now enforced, but visual storytelling quality still needs stronger per-slide composition logic.
 
+Active redesign (`2026-04-09`):
+- `SPEC-v3.md` is now the active architecture target.
+- V3 shifts the repo toward `planner -> primitive-code builder -> multimodal reviewer`.
+- The builder phase is intended to generate disposable `python-pptx` code that composes slides from native primitives on blank/header-only template canvases.
+- The current implementation in this repo is still the older placeholder/layout-bound path until V3 lands.
+
 Latest progress (`2026-03-02`):
 - Added planner metadata catalogs:
   - `assets/catalog/component_catalog_v1.json`
@@ -121,6 +127,7 @@ Each run writes to `runs/<run_id>/`, including:
 
 ## Documentation
 
-- [SPEC-v2.md](SPEC-v2.md): architecture and V2 contracts
-- [PLAN.md](PLAN.md): execution plan and next priorities
+- [SPEC-v3.md](SPEC-v3.md): active architecture for planner -> builder -> reviewer primitive composition
+- [SPEC-v2.md](SPEC-v2.md): historical V2 recipe-driven architecture
+- [PLAN.md](PLAN.md): active execution plan and rollout slices
 - [AGENTS.md](AGENTS.md): operating guide for coding agents

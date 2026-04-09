@@ -1,68 +1,55 @@
-# PLAN.md — Vertical Slice Build Plan for the GPT-5.4 Presentation Composer
+# PLAN.md — V3 Planner / Builder / Reviewer Execution Plan
 
 ## 0) Objective
 
-Build a presentation generation agent that can produce branded, editable, high-polish PowerPoint decks through:
-- `gpt-5.4` planning;
-- reusable skills;
-- element-level slide composition;
-- deterministic PowerPoint rendering;
-- per-slide visual review and repair;
-- progressive delivery from CLI to local web UI to cloud endpoint.
-
-This plan fully replaces the prior `PLAN.md`.
-
----
+Implement the active V3 architecture from `SPEC-v3.md`:
+- planner model produces the final deck blueprint and slide briefs;
+- coding model builds the deck by composing native PowerPoint primitives with disposable `python-pptx` code;
+- multimodal reviewer evaluates rendered slides and drives bounded repair;
+- runs remain artifact-heavy, testable, and quality-gated.
 
 ## 1) Build Rules
 
 1. Ship end-to-end slices only.
-2. Every slice must produce user-visible functionality.
-3. CLI comes first, then local web UI, then cloud endpoint.
-4. Do not widen archetype coverage until at least one archetype works end-to-end.
-5. Do not build a general freeform drawing engine.
-6. Keep `python-pptx` as the baseline renderer.
-7. Use OpenAI-hosted `gpt-5.4` capability as the canonical AI target where available.
-8. Keep internal skills provider-agnostic so they can run with or without native OpenAI Skills support.
-9. Every slice requires tests and persisted artifacts.
-10. No slice is complete until exit criteria are met and evidenced.
+2. Keep the current CLI operational while V3 is landing.
+3. CLI first; web and service layers are downstream concerns.
+4. Do not commit generated builder code as product logic.
+5. Execute builder code only in an isolated runtime with explicit safeguards.
+6. Preserve native editable PPTX output.
+7. Prefer blank and header-only template canvases for primitive-composed slides.
+8. Keep deterministic diagnose, review-image export, logging, and quality gates.
+9. Every slice requires persisted artifacts and tests.
+10. No slice is complete until the new path is better than the placeholder baseline for that scope.
 
----
+## 2) Starting Point (`2026-04-09`)
 
-## 2) Starting Point (`2026-03-11`)
+Already present:
+- normalization and cue parsing;
+- layout, asset, and vocabulary catalogs;
+- placeholder renderer and preflight remediation;
+- automated review-image export;
+- multimodal review scaffold;
+- quality gates and run logging;
+- template canvas metadata and token overrides;
+- reference primitive-composition prototype in `alternate-approach/build.py`.
 
-Already present in the repo:
-- deterministic Python rendering pipeline;
-- template/layout catalog scaffolding;
-- placeholder-based rendering;
-- validation/remediation logic;
-- review-image export;
-- multimodal review loop scaffold;
-- planning metadata and policy scaffolding;
-- solid test baseline.
-
-What is still missing for the target architecture:
-- element-level slide composition plans;
-- true composed slide rendering layer;
-- skill repository and skill loader;
-- `gpt-5.4`-first planning runtime;
-- per-slide review packets and targeted slide repair;
-- visual recipe catalog;
-- PowerPoint primitive catalog;
-- local web UI and cloud endpoint on the new architecture.
-
----
+Missing for V3:
+- planner output schema for builder-oriented slide briefs;
+- builder sandbox and retry harness;
+- codex-oriented builder prompt + execution loop;
+- primitive-composition helper runtime;
+- build execution reports and attempt artifacts;
+- builder repair loop;
+- V3-specific quality gates and benchmark evaluation.
 
 ## 3) Program-Level Exit Metrics
 
-The build program is only complete when all are true:
-1. One-slide archetype path works end-to-end from prompt to reviewed/repaired PPTX.
-2. At least 5 archetypes render through the composed path.
-3. A 10-15 slide benchmark deck passes hard quality gates.
-4. Slide-level repair improves review outcomes measurably.
-5. The same backend supports CLI, local web UI, and cloud API.
-
----
+The V3 program is complete when all are true:
+1. One-slide primitive-composed generation works end-to-end from prompt to reviewed, repaired PPTX.
+2. A multi-slide deck can be built through planner -> builder -> reviewer without manual edits.
+3. Build retries recover from common syntax/runtime failures automatically.
+4. Final decks are visibly stronger than the placeholder baseline on benchmark prompts.
+5. Run artifacts make planner, builder, and reviewer behavior debuggable after failures.
 
 ## 4) Slice Tracker
 
@@ -70,395 +57,265 @@ Statuses: `planned | in_progress | complete | blocked`
 
 | Slice | Focus | Status | User-visible Demo |
 |---|---|---|---|
-| S0 | Runtime reset: `gpt-5.4` + skill loader + artifact contracts | planned | plan-only CLI run with resolved skills |
-| S1 | Template inspection + design tokens + primitive catalog | planned | inspect template and emit tokens |
-| S2 | One-slide composed render (`executive_summary`) | planned | generate one editable composed slide |
-| S3 | Per-slide visual review + repair for one archetype | planned | regenerate one slide from review feedback |
-| S4 | Add `process_flow` and `roadmap` archetypes | planned | 3-slide microdeck with varied visuals |
-| S5 | Multi-slide deck planner with diversity/rhythm rules | planned | 5-slide deck from one prompt |
-| S6 | Reference-backed quality evaluation and benchmark gates | planned | benchmark report for fixture deck |
-| S7 | Local web UI over the same pipeline | planned | local browser workflow |
-| S8 | Cloud-hosted endpoint | planned | async API job flow |
-| S9 | Hardening, cleanup, de-bloat | planned | stable release candidate |
-
----
+| S0 | V3 artifact contracts + doc alignment | complete | `SPEC-v3.md` + aligned repo plan |
+| S1 | Builder sandbox + execution harness | planned | run disposable builder code safely |
+| S2 | Primitive helper runtime + single-slide build | planned | one composed slide from code |
+| S3 | Planner output schema + planner API flow | planned | prompt -> deck blueprint JSON |
+| S4 | Planner -> builder integration | planned | prompt -> built PPTX without review |
+| S5 | Multimodal review -> builder repair loop | planned | reviewed and repaired PPTX |
+| S6 | Multi-slide deck support + deck-level gates | planned | 5-10 slide composed deck |
+| S7 | Benchmarking, hardening, and baseline comparison | planned | benchmark report and release decision |
 
 ## 5) Vertical Slices
 
-## S0 — Runtime Reset: `gpt-5.4`, Responses API, Skill Loader, Artifact Contracts
+## S1 — Builder Sandbox + Execution Harness
 
 ### Goal
-Create the canonical AI runtime and artifact model for the new architecture without yet changing the renderer.
+
+Safely run disposable generated builder code with retries and full artifact capture.
 
 ### Build
-- Add a Responses-API-capable OpenAI client path for `gpt-5.4`.
-- Define provider abstraction so Azure-compatible deployments can still run when feature parity differs.
-- Add skill loader that resolves internal skill bundles for a run.
-- Persist `resolved_skills.json`.
-- Add `plan-only` CLI command that produces:
-  - `normalized_content.json`
-  - `resolved_skills.json`
-  - `deck_blueprint_v1.json`
-  - `slide_briefs_v1.json`
 
-### User-visible demo
-Run one command that ingests a prompt and shows:
-- deck blueprint;
-- chosen slide archetypes;
-- selected skill bundles.
+- Define builder attempt directory layout under `runs/<run_id>/build_attempts/`.
+- Define import allowlist and execution policy.
+- Implement builder code execution wrapper with:
+  - timeout;
+  - isolated writable root;
+  - no network;
+  - stdout/stderr capture;
+  - traceback capture;
+  - retry orchestration.
+- Persist `build_exec_report_v1.json`.
+
+### Demo
+
+Run a trivial generated builder script that opens the template and writes a one-slide PPTX.
 
 ### Tests
-- unit tests for skill manifest parsing and resolution;
-- unit tests for provider selection;
-- schema tests for deck blueprint and slide briefs;
-- one integration test for `plan-only` artifacts.
 
-### Exit criteria
-1. `gpt-5.4` planning works in a reproducible CLI flow.
-2. Skill resolution is persisted and test-covered.
-3. The repo can produce a valid deck blueprint without rendering.
+- execution success case;
+- syntax-error retry case;
+- runtime-error retry case;
+- import-policy rejection case;
+- output-file existence assertions.
 
----
+### Exit Criteria
 
-## S1 — Template Inspection, Design Tokens, Primitive Catalog
+1. Disposable builder code can run safely.
+2. Common failures are persisted and surfaced clearly.
+3. Retry behavior is deterministic and test-covered.
+
+## S2 — Primitive Helper Runtime + Single-Slide Build
 
 ### Goal
-Make the presentation layer explicit and deterministic.
+
+Replace placeholder fill with direct primitive composition for one slide.
 
 ### Build
-- Build template inspection artifact generation.
-- Extract theme tokens from the template.
-- Create `ppt_primitive_catalog_v1.json`.
-- Create `visual_recipes_v1.json` scaffold.
-- Add CLI command to inspect template and emit tokens.
 
-### User-visible demo
-Run a command that prints and persists:
-- template summary;
-- token set;
-- available layouts/routes;
-- allowed primitive families.
+- Add a minimal approved helper runtime for builder code:
+  - template loader;
+  - canvas selection;
+  - token access;
+  - shape/text helpers;
+  - image insertion helpers.
+- Recreate one high-polish slide similar in spirit to `alternate-approach/build.py`.
+- Use native shapes and text boxes on blank or header-only canvas.
+
+### Demo
+
+Generate one editable slide from builder code only.
 
 ### Tests
-- unit tests for token extraction;
-- unit tests for placeholder/layout detection;
-- snapshot-like structural tests for primitive catalog validity;
-- integration test for template inspection artifact generation.
 
-### Exit criteria
-1. Every run can produce `template_inspection.json` and `design_tokens.json`.
-2. Primitive catalog exists and is schema-valid.
-3. Visual recipes scaffold exists for at least 3 archetypes.
+- slide contains native shapes/text boxes;
+- output PPTX opens successfully;
+- required title/header structure exists;
+- diagnose and review-image export succeed.
 
----
+### Exit Criteria
 
-## S2 — One-Slide Composed Render (`executive_summary`)
+1. One composed slide is visibly better than placeholder output for the same content.
+2. Slide remains editable in PowerPoint.
+3. The helper runtime is sufficient for nontrivial composed layouts.
+
+## S3 — Planner Output Schema + Planner API Flow
 
 ### Goal
-Prove the new architecture on a single archetype using the composed path.
+
+Make the planner produce builder-ready slide briefs instead of placeholder-bound `DeckIR`.
 
 ### Build
-- Define `executive_summary` skill.
-- Define one `executive_summary` visual recipe.
-- Introduce `SlidePlan` and `SlideElementPlan` schemas.
-- Add a minimal bounded layout solver.
-- Render one composed slide using native PowerPoint primitives.
-- Keep output editable.
 
-### User-visible demo
-CLI command:
-- generate one `executive_summary` slide from prompt;
-- emit `slide_plan_v1/<slide_id>.json`;
-- render `deck_v1.pptx` containing that slide.
+- Define `deck_blueprint_v1.json` schema.
+- Add planner prompt contract for:
+  - slide purpose;
+  - headline and subheadline;
+  - body content;
+  - visual intent;
+  - density budget;
+  - must-preserve constraints;
+  - acceptance checks.
+- Add planner artifact persistence.
+
+### Demo
+
+Prompt -> structured deck blueprint without rendering.
 
 ### Tests
-- unit tests for `SlidePlan` schema;
-- solver unit tests for bounds and non-overlap;
-- renderer tests for text, shapes, connectors, and background blocks;
-- one end-to-end test for prompt -> slide plan -> PPTX.
 
-### Exit criteria
-1. One-slide composed render works end-to-end.
-2. Slide contains native text and shapes, not rasterized layout.
-3. Blocking overflow is zero for the fixture case.
-4. The slide is clearly better than placeholder-only output for the same input.
+- schema validation;
+- prompt construction tests;
+- basic planner retry tests;
+- fixture coverage for one realistic prompt.
 
----
+### Exit Criteria
 
-## S3 — Per-Slide Visual Review and Repair for One Archetype
+1. Planner output is valid and builder-oriented.
+2. Planner no longer depends on placeholder layout IDs as the main abstraction.
+3. Artifacts are stable enough to drive downstream build prompts.
+
+## S4 — Planner -> Builder Integration
 
 ### Goal
-Close the loop on a single slide: render, review, repair, rerender.
+
+Build a full PPTX from planner output through generated primitive-composition code.
 
 ### Build
-- Produce per-slide review packets.
-- Add `visual_review_v1/<slide_id>.json` schema.
-- Add `repair_plan_v1/<slide_id>.json` schema.
-- Make the multimodal reviewer explicitly score each slide for:
-  - content quality/message clarity;
-  - placement/alignment/spacing;
-  - visual appeal/polish.
-- Route structured review feedback back into the slide composer/repair planner.
-- Add repair planner that updates only the target slide plan.
-- Rerender only changed slides.
 
-### User-visible demo
-CLI command:
-- generate one slide;
-- export review image;
-- run review;
-- inspect targeted feedback for content, placement, and visual appeal;
-- apply repair;
-- produce `deck_v2.pptx`.
+- Assemble `builder_input_v1.json` from planner output, tokens, canvas config, and asset paths.
+- Create builder prompts for coding-model generation.
+- Execute builder result and persist `build_deck_v1.py`.
+- Produce `deck_v1.pptx`.
+
+### Demo
+
+Prompt -> planner -> builder -> PPTX.
 
 ### Tests
-- unit tests for review-output schema;
-- integration test for image export and review packet generation;
-- end-to-end test for one-slide review/repair loop;
-- assertions that the repaired slide plan changes only bounded fields.
 
-### Exit criteria
-1. One-slide repair loop works without manual intervention.
-2. Repair changes only the target slide.
-3. Review outputs actionable, structured instructions on content, placement, and visual appeal.
-4. Repaired slide passes review-specific gates better than v1.
+- end-to-end one-slide integration;
+- end-to-end multi-slide smoke test;
+- builder-input assembly tests.
 
----
+### Exit Criteria
 
-## S4 — Add `process_flow` and `roadmap` Archetypes
+1. No manual code editing is required to get a composed PPTX.
+2. Build retries recover common failures.
+3. Output path is robust enough for review.
+
+## S5 — Multimodal Review -> Builder Repair Loop
 
 ### Goal
-Prove that the architecture generalizes beyond one slide type.
+
+Use visual feedback to improve composed slides rather than only re-planning text/layout placeholders.
 
 ### Build
-- Add skills and visual recipes for:
-  - `process_flow`
-  - `roadmap`
-- Expand primitive rendering for connectors, chevrons, swimlanes, and milestone markers.
-- Add archetype-specific caps and validation rules.
 
-### User-visible demo
-CLI command creates a 3-slide microdeck:
-- `executive_summary`
-- `process_flow`
-- `roadmap`
+- Update review prompt for primitive-composed slides.
+- Feed reviewer:
+  - review images;
+  - planner output;
+  - diagnose report;
+  - build execution report;
+  - optional build manifest.
+- Create repair-focused builder prompt that preserves accepted slides where possible.
+- Produce `deck_v2.pptx`.
+
+### Demo
+
+Prompt -> build V1 -> review -> repair build -> build V2.
 
 ### Tests
-- unit tests for new archetype contracts;
-- renderer tests for flows and timeline/roadmap elements;
-- integration test for 3-slide microdeck generation.
 
-### Exit criteria
-1. Three archetypes work through the composed path.
-2. Adjacent slides show clear visual variety.
-3. All three slides remain editable and reviewable.
+- reviewer schema validation;
+- repair prompt construction;
+- repair build retry test;
+- end-to-end reviewed slide improvement flow.
 
----
+### Exit Criteria
 
-## S5 — Multi-Slide Deck Planner with Diversity and Rhythm Rules
+1. Review feedback becomes actionable for the builder.
+2. Repair loop improves slide quality without rebuilding the deck blindly every time.
+3. V2 artifacts are persisted cleanly.
+
+## S6 — Multi-Slide Deck Support + Deck-Level Gates
 
 ### Goal
-Generate a coherent short deck, not just isolated slides.
+
+Scale the V3 path from one slide to real decks.
 
 ### Build
-- Add deck-level variety constraints.
-- Add neighbor-aware slide composition planning.
-- Add rhythm rules for title zones, backgrounds, and density.
-- Add review summaries that consider adjacent slide continuity.
-- Feed slide-level multimodal review results back into planning for targeted slide repair inside a multi-slide deck.
 
-### User-visible demo
-Generate a 5-slide deck from a single input prompt with:
-- coherent narrative order;
-- varied slide visuals;
-- no repeated recipe streaks beyond configured limits.
+- Support 5-10 slide planner outputs.
+- Add deck-level consistency checks:
+  - headline hierarchy;
+  - visual variety;
+  - accent restraint;
+  - slide density;
+  - primitive presence.
+- Adapt current quality gates to V3 outputs.
+
+### Demo
+
+Generate a small benchmark deck through the full V3 loop.
 
 ### Tests
-- unit tests for deck variety enforcement;
-- integration test for 5-slide generation;
-- structural tests for recipe repetition and asset reuse;
-- review tests that include neighboring slide context.
 
-### Exit criteria
-1. 5-slide deck generation works end-to-end.
-2. Deck variety and rhythm rules are visibly enforced.
-3. Review loop can flag and repair a single weak slide within the deck based on content, placement, and visual appeal.
+- multi-slide integration tests;
+- gate tests for planner/build/review artifacts;
+- artifact completeness tests.
 
----
+### Exit Criteria
 
-## S6 — Reference-Backed Quality Evaluation and Benchmark Gates
+1. Multi-slide deck generation is stable enough for repeated benchmark runs.
+2. Quality gates catch obvious failures.
+3. Final output is clearly beyond placeholder quality.
+
+## S7 — Benchmarking, Hardening, And Baseline Comparison
 
 ### Goal
-Stop relying on intuition alone; evaluate against reference-backed thresholds.
+
+Decide whether V3 should replace the current default generation path.
 
 ### Build
-- Finalize benchmark manifest and threshold files.
-- Add rubric scoring hooks tied to archetypes and reference packets.
-- Add benchmark report artifact.
-- Add ship/no-ship quality gate command.
 
-### User-visible demo
-Run benchmark command and get:
-- overall status;
-- archetype scores;
-- blocking issues;
-- v1/v2 deltas where available.
+- Define benchmark prompt set.
+- Produce side-by-side V1 placeholder vs V3 primitive outputs.
+- Track:
+  - build success rate;
+  - retry counts;
+  - review improvement rates;
+  - gate pass rates;
+  - human-rated quality deltas.
+- Harden prompts, helpers, and retries based on benchmark failures.
 
-### Tests
-- schema tests for benchmark manifest;
-- deterministic scorer tests;
-- integration test for benchmark report generation.
+### Demo
 
-### Exit criteria
-1. Benchmark artifact is versioned and reproducible.
-2. Hard quality thresholds exist and are enforced in CI/local runs.
-3. At least one reference-backed archetype floor is measured, not guessed.
-
----
-
-## S7 — Local Web UI
-
-### Goal
-Wrap the CLI pipeline in a locally run UI suitable for iterative use on a laptop.
-
-### Build
-- Add local web app shell backed by the same backend pipeline.
-- Support input prompt entry, template selection, run launch, slide thumbnails, review status, and per-slide regenerate.
-- Support artifact inspection for current run.
-
-### User-visible demo
-A local browser workflow where the user can:
-- paste prompt + cues;
-- generate deck;
-- inspect slides;
-- click regenerate for one slide;
-- download the deck.
+Benchmark report comparing old and new generation paths.
 
 ### Tests
-- API contract tests for local endpoints;
-- one minimal browser-flow integration test if practical;
-- backend regression tests to ensure CLI and UI use same contracts.
 
-### Exit criteria
-1. Local UI can drive the full run pipeline.
-2. Per-slide regenerate works from the UI.
-3. No divergence between CLI artifacts and UI artifacts.
+- regression suite for benchmark prompts;
+- gate pass/fail assertions on curated fixtures.
 
----
+### Exit Criteria
 
-## S8 — Cloud-Hosted Endpoint
+1. V3 is better than the baseline often enough to justify default routing.
+2. Failure modes are understood and operationally manageable.
+3. Default-path migration decision is backed by evidence.
 
-### Goal
-Expose the same engine as a hosted asynchronous API.
+## 6) Open Design Decisions
 
-### Build
-- Add job-based API endpoints.
-- Add artifact storage strategy.
-- Add status polling and run retrieval.
-- Add provider/config controls for local/OpenAI-hosted/Azure-hosted runtime.
+These remain intentionally configurable while implementation starts:
+- exact planner model choice within the GPT-5.x family;
+- exact coding-model identifier for builder calls;
+- whether repair rebuilds only affected slides or regenerates deck-level code;
+- whether `quality_gates_v2.json` is retained temporarily for compatibility or replaced immediately by `quality_gates_v3.json`.
 
-### User-visible demo
-Remote client can:
-- submit generation job;
-- poll status;
-- fetch final PPTX and review results;
-- trigger single-slide repair.
+## 7) Immediate Next Step
 
-### Tests
-- API contract tests;
-- async job lifecycle tests;
-- artifact persistence tests under hosted mode.
-
-### Exit criteria
-1. Hosted API reproduces local pipeline behavior.
-2. Job artifacts remain inspectable.
-3. Slide repair is supported remotely.
-
----
-
-## S9 — Hardening, Cleanup, and De-Bloat
-
-### Goal
-Remove temporary scaffolding and prepare for sustained development.
-
-### Build
-- delete dead code and abandoned branches;
-- align README and docs to actual architecture;
-- tighten tests and runbooks;
-- audit OOXML bridge usage;
-- lock down skill versioning policy.
-
-### User-visible demo
-Stable release candidate with:
-- clean docs;
-- reproducible benchmark results;
-- simplified operational path.
-
-### Tests
-- full test suite;
-- benchmark smoke suite;
-- targeted regression runs on critical archetypes.
-
-### Exit criteria
-1. Obsolete V1-only assumptions are removed where no longer needed.
-2. Docs match implementation.
-3. Release candidate is operationally stable.
-
----
-
-## 6) Commands and MVP Surfaces
-
-The plan assumes the following command progression:
-- `plan-only`
-- `inspect-template`
-- `generate-slide`
-- `review-slide`
-- `generate-deck`
-- `serve-local`
-- `serve-api`
-
-Command names may vary, but the surface progression may not.
-
----
-
-## 7) Required Artifacts by Milestone
-
-By S0:
-- `resolved_skills.json`
-- `deck_blueprint_v1.json`
-- `slide_briefs_v1.json`
-
-By S1:
-- `template_inspection.json`
-- `design_tokens.json`
-- `ppt_primitive_catalog_v1.json`
-
-By S2:
-- `slide_plan_v1/<slide_id>.json`
-- `deck_render_plan_v1.json`
-- `deck_v1.pptx`
-
-By S3:
-- `visual_review_v1/<slide_id>.json`
-- `repair_plan_v1/<slide_id>.json`
-- `deck_v2.pptx`
-- planner-facing review feedback for content, placement, and visual appeal
-
-By S5:
-- `deck_review_summary_v1.json`
-- deck-level diversity/rhythm metrics
-
-By S6:
-- `benchmark_report_v1.json`
-- thresholded quality decision
-
----
-
-## 8) Definition of Done
-
-The build program is done only when:
-1. CLI, local UI, and cloud endpoint all run the same core pipeline.
-2. At least 5 archetypes render with acceptable review quality.
-3. Per-slide multimodal review and planner-driven repair is operational.
-4. Benchmark gating is real and enforced.
-5. The resulting decks are editable, branded, and operationally reproducible.
+The next implementation step is S1:
+- land builder attempt artifacts;
+- land execution sandbox policy;
+- prove disposable builder code can run safely inside the repo workflow.

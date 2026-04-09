@@ -1,0 +1,2809 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-03-18T15:56:26.594704",
+  "description": "Supplementary reference metadata from non-standard-dimension decks",
+  "case_study_content_schema": {
+    "source": "Case Study Template_A4.pptx",
+    "fields": [
+      {
+        "slide": 1,
+        "shape_name": "TextBox 11",
+        "text_preview": "From Manual Chaos to Automated Efficiency: Transforming Billing and Revenue Management",
+        "position": {
+          "left_emu": 546100,
+          "top_emu": 2793434,
+          "width_emu": 5824220,
+          "height_emu": 1200329
+        }
+      },
+      {
+        "slide": 1,
+        "shape_name": "TextBox 14",
+        "text_preview": "CASE STUDY",
+        "position": {
+          "left_emu": 647699,
+          "top_emu": 2476500,
+          "width_emu": 1387475,
+          "height_emu": 316934
+        }
+      },
+      {
+        "slide": 1,
+        "shape_name": "object 13",
+        "text_preview": "Overview\nA leading healthcare provider faced operational inefficiencies impacting financial performance and compliance. ",
+        "position": {
+          "left_emu": 647700,
+          "top_emu": 4765477,
+          "width_emu": 5553075,
+          "height_emu": 805180
+        }
+      },
+      {
+        "slide": 1,
+        "shape_name": "object 14",
+        "text_preview": "Inefﬁcient Billing Processes Manual follow-ups caused delays and potential revenue losses.",
+        "position": {
+          "left_emu": 691515,
+          "top_emu": 7897935,
+          "width_emu": 1660525,
+          "height_emu": 894604
+        }
+      },
+      {
+        "slide": 1,
+        "shape_name": "object 15",
+        "text_preview": "Disconnected Systems\nLack of integrated data across patient care and diagnostic services.",
+        "position": {
+          "left_emu": 2550668,
+          "top_emu": 7897935,
+          "width_emu": 1715135,
+          "height_emu": 714042
+        }
+      },
+      {
+        "slide": 1,
+        "shape_name": "object 16",
+        "text_preview": "Compliance Risks Manual reporting created delays and vulnerability to compliance issues.",
+        "position": {
+          "left_emu": 4464431,
+          "top_emu": 7897935,
+          "width_emu": 1493520,
+          "height_emu": 736600
+        }
+      },
+      {
+        "slide": 1,
+        "shape_name": "object 17",
+        "text_preview": "Capability\nInsights Engineering",
+        "position": {
+          "left_emu": 2550668,
+          "top_emu": 5791132,
+          "width_emu": 1250950,
+          "height_emu": 381000
+        }
+      },
+      {
+        "slide": 1,
+        "shape_name": "object 18",
+        "text_preview": "Core Business\nRevenue Cycle Management",
+        "position": {
+          "left_emu": 4464431,
+          "top_emu": 5791132,
+          "width_emu": 1732914,
+          "height_emu": 381000
+        }
+      },
+      {
+        "slide": 1,
+        "shape_name": "object 19",
+        "text_preview": "Industry\nHealthcare, Consulting Services\nGeography\nNorth America",
+        "position": {
+          "left_emu": 647700,
+          "top_emu": 5782242,
+          "width_emu": 1387475,
+          "height_emu": 987450
+        }
+      },
+      {
+        "slide": 1,
+        "shape_name": "object 20",
+        "text_preview": "Tech Stack\nAWS, Spotﬁre, SQL Server",
+        "position": {
+          "left_emu": 2550668,
+          "top_emu": 6425878,
+          "width_emu": 1630680,
+          "height_emu": 381000
+        }
+      },
+      {
+        "slide": 1,
+        "shape_name": "object 13",
+        "text_preview": "Challenges",
+        "position": {
+          "left_emu": 691515,
+          "top_emu": 7578351,
+          "width_emu": 5553075,
+          "height_emu": 243656
+        }
+      },
+      {
+        "slide": 2,
+        "shape_name": "object 4",
+        "text_preview": "Solution\nTo address these challenges, the client implemented a data-driven solution leveraging advanced technologies:\nTr",
+        "position": {
+          "left_emu": 629214,
+          "top_emu": 636235,
+          "width_emu": 5456555,
+          "height_emu": 1871980
+        }
+      },
+      {
+        "slide": 2,
+        "shape_name": "object 6",
+        "text_preview": "Results",
+        "position": {
+          "left_emu": 633344,
+          "top_emu": 3207487,
+          "width_emu": 800735,
+          "height_emu": 243656
+        }
+      },
+      {
+        "slide": 2,
+        "shape_name": "object 7",
+        "text_preview": "This transformation showcases the power of leveraging technology to optimize revenue cycle management while enhancing co",
+        "position": {
+          "left_emu": 633344,
+          "top_emu": 4602705,
+          "width_emu": 5257165,
+          "height_emu": 330200
+        }
+      },
+      {
+        "slide": 2,
+        "shape_name": "object 8",
+        "text_preview": "35%",
+        "position": {
+          "left_emu": 633344,
+          "top_emu": 3546418,
+          "width_emu": 800735,
+          "height_emu": 289823
+        }
+      },
+      {
+        "slide": 2,
+        "shape_name": "object 10",
+        "text_preview": "Increase in Collections: Streamlined billing processes significantly improved revenue.",
+        "position": {
+          "left_emu": 1294619,
+          "top_emu": 3572363,
+          "width_emu": 1273321,
+          "height_emu": 566822
+        }
+      },
+      {
+        "slide": 2,
+        "shape_name": "object 11",
+        "text_preview": "Improved User Experience Interactive dashboards enabled real-time\ndecision-making.",
+        "position": {
+          "left_emu": 2854204,
+          "top_emu": 3572363,
+          "width_emu": 1412996,
+          "height_emu": 566822
+        }
+      },
+      {
+        "slide": 2,
+        "shape_name": "object 12",
+        "text_preview": "Efficiency Gains Automation eliminated manual reporting tasks, reducing errors and saving time.",
+        "position": {
+          "left_emu": 4787170,
+          "top_emu": 3572363,
+          "width_emu": 1461770,
+          "height_emu": 705321
+        }
+      },
+      {
+        "slide": 2,
+        "shape_name": "object 17",
+        "text_preview": "Want to discover how EngineeringAI can transform your business? Email us at mail@ascendion.com to drive growth, scale ef",
+        "position": {
+          "left_emu": 620713,
+          "top_emu": 5324075,
+          "width_emu": 5641340,
+          "height_emu": 330200
+        }
+      }
+    ],
+    "field_roles": {
+      "title": "Main case study headline",
+      "label_case_study": "'CASE STUDY' badge text",
+      "overview": "Situation paragraph (2-3 sentences)",
+      "industry": "Industry vertical",
+      "capability": "Ascendion capability area",
+      "core_business": "Client core business function",
+      "geography": "Client geography",
+      "tech_stack": "Technologies used",
+      "challenges": "3-column challenge descriptions",
+      "solution": "Solution bullet points (4-5 items)",
+      "results": "KPI metric cards (3 columns: metric value + description)",
+      "transformation_summary": "1-sentence transformation summary",
+      "cta": "Call-to-action paragraph",
+      "about": "About Ascendion boilerplate"
+    }
+  },
+  "rfp_layout_catalog": {
+    "source": "RFP PPT Template_V1.2_2025.pptx",
+    "total_layouts": 61,
+    "scale_to_widescreen": "multiply positions/sizes by 1.333",
+    "layouts": [
+      {
+        "index": 0,
+        "name": "1_Title slide - Light",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": 703898,
+            "width_emu": 9146381,
+            "height_emu": 2425381
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 3257550,
+            "width_emu": 8520600,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 4324350,
+            "width_emu": 8520600,
+            "height_emu": 457200
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": 703898,
+            "width_emu": 9146381,
+            "height_emu": 2425381
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 3257550,
+            "width_emu": 8520600,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 4324350,
+            "width_emu": 8520600,
+            "height_emu": 457200
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "name": "2_Title slide - Light",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": 703898,
+            "width_emu": 9146381,
+            "height_emu": 4439602
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 1927513,
+            "width_emu": 4260292,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 2994313,
+            "width_emu": 4260292,
+            "height_emu": 457200
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "name": "2_Title slide - Dark",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": 703898,
+            "width_emu": 9146381,
+            "height_emu": 4439602
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 1927513,
+            "width_emu": 4260292,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 2994313,
+            "width_emu": 4260292,
+            "height_emu": 457200
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "name": "Boilerplate - Light",
+        "placeholder_count": 1,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "name": "Boilerplate - Dark",
+        "placeholder_count": 1,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "name": "2_Section Breaker - Light",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4546600,
+            "top_emu": -13971,
+            "width_emu": 4597876,
+            "height_emu": 4490879
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "name": "2_Section Breaker - Dark",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4546600,
+            "top_emu": -13971,
+            "width_emu": 4597876,
+            "height_emu": 4490879
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "name": "1_Section Breaker - Light",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -8160,
+            "top_emu": -1271,
+            "width_emu": 9152635,
+            "height_emu": 4462781
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "name": "1_Section Breaker - Dark",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": -1271,
+            "width_emu": 9144476,
+            "height_emu": 4462781
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "name": "1_Title slide",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": -1271,
+            "width_emu": 9144476,
+            "height_emu": 4462781
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 11,
+        "name": "1_Title slide",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": -1271,
+            "width_emu": 9144476,
+            "height_emu": 4462781
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 12,
+        "name": "1_Title slide",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 3502603,
+            "width_emu": 2812492,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -7310,
+            "top_emu": -1270,
+            "width_emu": 9151313,
+            "height_emu": 3397458
+          }
+        ]
+      },
+      {
+        "index": 13,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 1,
+            "top_emu": 703898,
+            "width_emu": 9146039,
+            "height_emu": 2425381
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 3257550,
+            "width_emu": 8520600,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 4324350,
+            "width_emu": 8520600,
+            "height_emu": 457200
+          }
+        ]
+      },
+      {
+        "index": 14,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 3257550,
+            "width_emu": 8520600,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 4324350,
+            "width_emu": 8520600,
+            "height_emu": 457200
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 1,
+            "top_emu": 703898,
+            "width_emu": 9146039,
+            "height_emu": 2425381
+          }
+        ]
+      },
+      {
+        "index": 15,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": 701993,
+            "width_emu": 9147897,
+            "height_emu": 4443413
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 1927513,
+            "width_emu": 4260292,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 2994313,
+            "width_emu": 4260292,
+            "height_emu": 457200
+          }
+        ]
+      },
+      {
+        "index": 16,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": 703898,
+            "width_emu": 9146381,
+            "height_emu": 4439602
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 1927513,
+            "width_emu": 4260292,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 2994313,
+            "width_emu": 4260292,
+            "height_emu": 457200
+          }
+        ]
+      },
+      {
+        "index": 17,
+        "name": "1_Title slide",
+        "placeholder_count": 1,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 18,
+        "name": "1_Title slide",
+        "placeholder_count": 1,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 19,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4550410,
+            "top_emu": -12701,
+            "width_emu": 4593590,
+            "height_emu": 4480385
+          }
+        ]
+      },
+      {
+        "index": 20,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4550410,
+            "top_emu": -12701,
+            "width_emu": 4593590,
+            "height_emu": 4480385
+          }
+        ]
+      },
+      {
+        "index": 21,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -8160,
+            "top_emu": -1271,
+            "width_emu": 9152635,
+            "height_emu": 4462781
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 22,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -5100,
+            "top_emu": -1271,
+            "width_emu": 9149575,
+            "height_emu": 4462781
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 23,
+        "name": "1_Title slide",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -3810,
+            "top_emu": -3176,
+            "width_emu": 9148286,
+            "height_emu": 4464686
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 24,
+        "name": "1_Title slide",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -3810,
+            "top_emu": -3176,
+            "width_emu": 9148286,
+            "height_emu": 4464686
+          }
+        ]
+      },
+      {
+        "index": 25,
+        "name": "1_Title slide",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 3502603,
+            "width_emu": 2812492,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -7310,
+            "top_emu": -1270,
+            "width_emu": 9152737,
+            "height_emu": 3397458
+          }
+        ]
+      },
+      {
+        "index": 26,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": 703898,
+            "width_emu": 9146381,
+            "height_emu": 2425381
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 3257550,
+            "width_emu": 8520600,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 4324350,
+            "width_emu": 8520600,
+            "height_emu": 457200
+          }
+        ]
+      },
+      {
+        "index": 27,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 3257550,
+            "width_emu": 8520600,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 4324350,
+            "width_emu": 8520600,
+            "height_emu": 457200
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": 703898,
+            "width_emu": 9146381,
+            "height_emu": 2425381
+          }
+        ]
+      },
+      {
+        "index": 28,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": 703898,
+            "width_emu": 9146381,
+            "height_emu": 4439602
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 1927513,
+            "width_emu": 4260292,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 2994313,
+            "width_emu": 4260292,
+            "height_emu": 457200
+          }
+        ]
+      },
+      {
+        "index": 29,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 0,
+            "top_emu": 703898,
+            "width_emu": 9146381,
+            "height_emu": 4439602
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 1927513,
+            "width_emu": 4260292,
+            "height_emu": 1047749
+          },
+          {
+            "idx": 1,
+            "type": "SUBTITLE (4)",
+            "name": "Google Shape;11;p2",
+            "left_emu": 304800,
+            "top_emu": 2994313,
+            "width_emu": 4260292,
+            "height_emu": 457200
+          }
+        ]
+      },
+      {
+        "index": 30,
+        "name": "1_Title slide",
+        "placeholder_count": 1,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 31,
+        "name": "1_Title slide",
+        "placeholder_count": 1,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 32,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4552315,
+            "top_emu": -13971,
+            "width_emu": 4592161,
+            "height_emu": 4477544
+          },
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          }
+        ]
+      },
+      {
+        "index": 33,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4552315,
+            "top_emu": -13971,
+            "width_emu": 4592161,
+            "height_emu": 4477544
+          }
+        ]
+      },
+      {
+        "index": 34,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -8160,
+            "top_emu": -1271,
+            "width_emu": 9152635,
+            "height_emu": 4462781
+          }
+        ]
+      },
+      {
+        "index": 35,
+        "name": "1_Title slide",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 14,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 15",
+            "left_emu": 379413,
+            "top_emu": 1489710,
+            "width_emu": 1322387,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -8160,
+            "top_emu": -1271,
+            "width_emu": 9152635,
+            "height_emu": 4462781
+          }
+        ]
+      },
+      {
+        "index": 36,
+        "name": "1_Title slide",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -8160,
+            "top_emu": -1271,
+            "width_emu": 9152635,
+            "height_emu": 4462781
+          }
+        ]
+      },
+      {
+        "index": 37,
+        "name": "1_Title slide",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 2197678,
+            "width_emu": 3457652,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -8160,
+            "top_emu": -1271,
+            "width_emu": 9152635,
+            "height_emu": 4462781
+          }
+        ]
+      },
+      {
+        "index": 38,
+        "name": "1_Title slide",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "CENTER_TITLE (3)",
+            "name": "Google Shape;10;p2",
+            "left_emu": 311708,
+            "top_emu": 3502603,
+            "width_emu": 2812492,
+            "height_emu": 516890
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": -7310,
+            "top_emu": -1270,
+            "width_emu": 9152737,
+            "height_emu": 3397458
+          }
+        ]
+      },
+      {
+        "index": 0,
+        "name": "Title+Content",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title Placeholder 1",
+            "left_emu": 386952,
+            "top_emu": 292100,
+            "width_emu": 8377635,
+            "height_emu": 723900
+          },
+          {
+            "idx": 10,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 2",
+            "left_emu": 379413,
+            "top_emu": 1203325,
+            "width_emu": 8369300,
+            "height_emu": 3470275
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "name": "Only Title",
+        "placeholder_count": 1,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title Placeholder 1",
+            "left_emu": 386952,
+            "top_emu": 292100,
+            "width_emu": 8377635,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "name": "Blank",
+        "placeholder_count": 0,
+        "placeholders": []
+      },
+      {
+        "index": 3,
+        "name": "Title and two columns",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          },
+          {
+            "idx": 10,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 2",
+            "left_emu": 400600,
+            "top_emu": 1206500,
+            "width_emu": 4080118,
+            "height_emu": 3467100
+          },
+          {
+            "idx": 11,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 2",
+            "left_emu": 4663283,
+            "top_emu": 1206500,
+            "width_emu": 4102427,
+            "height_emu": 3467100
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "name": "Two Content with Image - Light",
+        "placeholder_count": 4,
+        "placeholders": [
+          {
+            "idx": 1,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386952,
+            "top_emu": 3070910,
+            "width_emu": 4093763,
+            "height_emu": 1595439
+          },
+          {
+            "idx": 2,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 4663283,
+            "top_emu": 3070910,
+            "width_emu": 4093764,
+            "height_emu": 1595439
+          },
+          {
+            "idx": 15,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 6",
+            "left_emu": 386954,
+            "top_emu": 1203326,
+            "width_emu": 8370094,
+            "height_emu": 1685018
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title Placeholder 1",
+            "left_emu": 386953,
+            "top_emu": 292100,
+            "width_emu": 8370094,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "name": "Three content - Light",
+        "placeholder_count": 4,
+        "placeholders": [
+          {
+            "idx": 1,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386954,
+            "top_emu": 1203325,
+            "width_emu": 2669562,
+            "height_emu": 3437732
+          },
+          {
+            "idx": 2,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 3236336,
+            "top_emu": 1203325,
+            "width_emu": 2668086,
+            "height_emu": 3437732
+          },
+          {
+            "idx": 15,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 6091933,
+            "top_emu": 1203325,
+            "width_emu": 2664344,
+            "height_emu": 3437732
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "name": "2 - Four content - Light",
+        "placeholder_count": 5,
+        "placeholders": [
+          {
+            "idx": 1,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386954,
+            "top_emu": 1203325,
+            "width_emu": 1953192,
+            "height_emu": 3470275
+          },
+          {
+            "idx": 2,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 2526563,
+            "top_emu": 1203325,
+            "width_emu": 1953192,
+            "height_emu": 3470275
+          },
+          {
+            "idx": 15,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 4664247,
+            "top_emu": 1203325,
+            "width_emu": 1955117,
+            "height_emu": 3470275
+          },
+          {
+            "idx": 17,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 6801930,
+            "top_emu": 1203325,
+            "width_emu": 1955117,
+            "height_emu": 3470275
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "name": "Three content with Images",
+        "placeholder_count": 7,
+        "placeholders": [
+          {
+            "idx": 1,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386497,
+            "top_emu": 2670098,
+            "width_emu": 2671200,
+            "height_emu": 1892475
+          },
+          {
+            "idx": 2,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 3237593,
+            "top_emu": 2657474,
+            "width_emu": 2671200,
+            "height_emu": 1892476
+          },
+          {
+            "idx": 15,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 6088688,
+            "top_emu": 2670097,
+            "width_emu": 2671200,
+            "height_emu": 1892476
+          },
+          {
+            "idx": 16,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 10",
+            "left_emu": 3858818,
+            "top_emu": 1223858,
+            "width_emu": 1428750,
+            "height_emu": 1397661
+          },
+          {
+            "idx": 17,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 10",
+            "left_emu": 6709913,
+            "top_emu": 1223858,
+            "width_emu": 1428750,
+            "height_emu": 1397661
+          },
+          {
+            "idx": 18,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 10",
+            "left_emu": 1007722,
+            "top_emu": 1223858,
+            "width_emu": 1428750,
+            "height_emu": 1397661
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "name": "1 - Case Study Template - Light",
+        "placeholder_count": 9,
+        "placeholders": [
+          {
+            "idx": 10,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 12",
+            "left_emu": 0,
+            "top_emu": 0,
+            "width_emu": 1553766,
+            "height_emu": 2109837
+          },
+          {
+            "idx": 28,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 1700538,
+            "top_emu": 1772238,
+            "width_emu": 1600949,
+            "height_emu": 2901361
+          },
+          {
+            "idx": 30,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 20",
+            "left_emu": 104618,
+            "top_emu": 2477720,
+            "width_emu": 1293019,
+            "height_emu": 391801
+          },
+          {
+            "idx": 32,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 3516625,
+            "top_emu": 1772238,
+            "width_emu": 1600949,
+            "height_emu": 2901361
+          },
+          {
+            "idx": 33,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 5332712,
+            "top_emu": 1772238,
+            "width_emu": 1600949,
+            "height_emu": 2901361
+          },
+          {
+            "idx": 34,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 7148800,
+            "top_emu": 1772238,
+            "width_emu": 1600949,
+            "height_emu": 2901361
+          },
+          {
+            "idx": 36,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 20",
+            "left_emu": 130374,
+            "top_emu": 3359287,
+            "width_emu": 1293019,
+            "height_emu": 391801
+          },
+          {
+            "idx": 37,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 20",
+            "left_emu": 129511,
+            "top_emu": 4175664,
+            "width_emu": 1293019,
+            "height_emu": 391801
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 1681220,
+            "top_emu": 295565,
+            "width_emu": 7084489,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "name": "2 - Case Study Template - Light",
+        "placeholder_count": 5,
+        "placeholders": [
+          {
+            "idx": 10,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 12",
+            "left_emu": 5921298,
+            "top_emu": 1210084,
+            "width_emu": 3222703,
+            "height_emu": 3448947
+          },
+          {
+            "idx": 28,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386950,
+            "top_emu": 1629262,
+            "width_emu": 5258352,
+            "height_emu": 1096846
+          },
+          {
+            "idx": 29,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386950,
+            "top_emu": 3299000,
+            "width_emu": 2423155,
+            "height_emu": 1360031
+          },
+          {
+            "idx": 30,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 3222150,
+            "top_emu": 3299000,
+            "width_emu": 2423155,
+            "height_emu": 1360031
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "name": "Slide with logo and Photos",
+        "placeholder_count": 31,
+        "placeholders": [
+          {
+            "idx": 10,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 857267,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 11,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 1615804,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 12,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 2374340,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3132877,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 14,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3891413,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 15,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4649950,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 16,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 5408486,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 17,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6167023,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 18,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6925559,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 19,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 7684094,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 20,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 857267,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 21,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 1615804,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 22,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 2374340,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 23,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3132877,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 24,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3891413,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 25,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4649950,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 26,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 5408486,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 27,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6167023,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 28,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6925559,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 29,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 7684094,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 30,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 867658,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 31,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 1626195,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 32,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 2384731,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 33,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3143268,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 34,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3901804,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 35,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4660341,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 36,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 5418877,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 37,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6177414,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 38,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6935950,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 39,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 7694485,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 0,
+        "name": "Title+Content - Dark",
+        "placeholder_count": 2,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title Placeholder 1",
+            "left_emu": 386952,
+            "top_emu": 292100,
+            "width_emu": 8377635,
+            "height_emu": 723900
+          },
+          {
+            "idx": 10,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 2",
+            "left_emu": 379413,
+            "top_emu": 1203325,
+            "width_emu": 8369300,
+            "height_emu": 3470275
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "name": "Only Title - Dark",
+        "placeholder_count": 1,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 292100,
+            "width_emu": 8382000,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "name": "Title and two columns",
+        "placeholder_count": 3,
+        "placeholders": [
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          },
+          {
+            "idx": 10,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 2",
+            "left_emu": 400600,
+            "top_emu": 1206500,
+            "width_emu": 4076700,
+            "height_emu": 3467100
+          },
+          {
+            "idx": 11,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 2",
+            "left_emu": 4677400,
+            "top_emu": 1206500,
+            "width_emu": 4076700,
+            "height_emu": 3467100
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "name": "Blank",
+        "placeholder_count": 0,
+        "placeholders": []
+      },
+      {
+        "index": 4,
+        "name": "Two Content with Image - Dark",
+        "placeholder_count": 4,
+        "placeholders": [
+          {
+            "idx": 1,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386952,
+            "top_emu": 3073400,
+            "width_emu": 4089400,
+            "height_emu": 1600200
+          },
+          {
+            "idx": 2,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 4667627,
+            "top_emu": 3073400,
+            "width_emu": 4089400,
+            "height_emu": 1600200
+          },
+          {
+            "idx": 15,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 6",
+            "left_emu": 386954,
+            "top_emu": 1206500,
+            "width_emu": 8369300,
+            "height_emu": 1689100
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title Placeholder 1",
+            "left_emu": 386953,
+            "top_emu": 292100,
+            "width_emu": 8370094,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "name": "Three content - Dark",
+        "placeholder_count": 4,
+        "placeholders": [
+          {
+            "idx": 1,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386954,
+            "top_emu": 1203325,
+            "width_emu": 2667000,
+            "height_emu": 3441700
+          },
+          {
+            "idx": 2,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 3242832,
+            "top_emu": 1203325,
+            "width_emu": 2667000,
+            "height_emu": 3441700
+          },
+          {
+            "idx": 15,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 6098709,
+            "top_emu": 1203325,
+            "width_emu": 2667000,
+            "height_emu": 3441700
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "name": "Four content - Dark",
+        "placeholder_count": 5,
+        "placeholders": [
+          {
+            "idx": 1,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386954,
+            "top_emu": 1220576,
+            "width_emu": 1955800,
+            "height_emu": 3453024
+          },
+          {
+            "idx": 2,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 2527939,
+            "top_emu": 1220576,
+            "width_emu": 1955800,
+            "height_emu": 3453024
+          },
+          {
+            "idx": 15,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 4668924,
+            "top_emu": 1220576,
+            "width_emu": 1955800,
+            "height_emu": 3453024
+          },
+          {
+            "idx": 17,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 6809909,
+            "top_emu": 1220576,
+            "width_emu": 1955800,
+            "height_emu": 3453024
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "name": "Three content with Images - Dark",
+        "placeholder_count": 7,
+        "placeholders": [
+          {
+            "idx": 17,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 10",
+            "left_emu": 6709913,
+            "top_emu": 1223858,
+            "width_emu": 1428750,
+            "height_emu": 1397661
+          },
+          {
+            "idx": 18,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 10",
+            "left_emu": 1007722,
+            "top_emu": 1223858,
+            "width_emu": 1428750,
+            "height_emu": 1397661
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          },
+          {
+            "idx": 1,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386497,
+            "top_emu": 2670098,
+            "width_emu": 2671200,
+            "height_emu": 1892475
+          },
+          {
+            "idx": 2,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 3237593,
+            "top_emu": 2657474,
+            "width_emu": 2671200,
+            "height_emu": 1892476
+          },
+          {
+            "idx": 15,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 3",
+            "left_emu": 6088688,
+            "top_emu": 2670097,
+            "width_emu": 2671200,
+            "height_emu": 1892476
+          },
+          {
+            "idx": 19,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 10",
+            "left_emu": 3858818,
+            "top_emu": 1219200,
+            "width_emu": 1428750,
+            "height_emu": 1397661
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "name": "1 - Case Study Template - Dark",
+        "placeholder_count": 9,
+        "placeholders": [
+          {
+            "idx": 10,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 12",
+            "left_emu": 0,
+            "top_emu": 0,
+            "width_emu": 1553766,
+            "height_emu": 2109837
+          },
+          {
+            "idx": 28,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 1700538,
+            "top_emu": 1772239,
+            "width_emu": 1600949,
+            "height_emu": 2901362
+          },
+          {
+            "idx": 30,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 20",
+            "left_emu": 104618,
+            "top_emu": 2477720,
+            "width_emu": 1293019,
+            "height_emu": 391801
+          },
+          {
+            "idx": 32,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 3516625,
+            "top_emu": 1772239,
+            "width_emu": 1600949,
+            "height_emu": 2901362
+          },
+          {
+            "idx": 33,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 5332712,
+            "top_emu": 1772239,
+            "width_emu": 1600949,
+            "height_emu": 2901362
+          },
+          {
+            "idx": 34,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 7148800,
+            "top_emu": 1772239,
+            "width_emu": 1600949,
+            "height_emu": 2901362
+          },
+          {
+            "idx": 36,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 20",
+            "left_emu": 130374,
+            "top_emu": 3359287,
+            "width_emu": 1293019,
+            "height_emu": 391801
+          },
+          {
+            "idx": 37,
+            "type": "BODY (2)",
+            "name": "Text Placeholder 20",
+            "left_emu": 129511,
+            "top_emu": 4175664,
+            "width_emu": 1293019,
+            "height_emu": 391801
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 1681220,
+            "top_emu": 295565,
+            "width_emu": 7084489,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "name": "2 - Case Study Template - Dark",
+        "placeholder_count": 5,
+        "placeholders": [
+          {
+            "idx": 10,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 12",
+            "left_emu": 5921298,
+            "top_emu": 1210084,
+            "width_emu": 3222703,
+            "height_emu": 3448947
+          },
+          {
+            "idx": 28,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386950,
+            "top_emu": 1629262,
+            "width_emu": 5258352,
+            "height_emu": 1096846
+          },
+          {
+            "idx": 29,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 386950,
+            "top_emu": 3299000,
+            "width_emu": 2423155,
+            "height_emu": 1360031
+          },
+          {
+            "idx": 30,
+            "type": "OBJECT (7)",
+            "name": "Content Placeholder 2",
+            "left_emu": 3222150,
+            "top_emu": 3299000,
+            "width_emu": 2423155,
+            "height_emu": 1360031
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          }
+        ]
+      },
+      {
+        "index": 10,
+        "name": "Slide with logo and Photos - Dark",
+        "placeholder_count": 31,
+        "placeholders": [
+          {
+            "idx": 10,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 857267,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 11,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 1615804,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 12,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 2374340,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 13,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3132877,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 14,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3891413,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 15,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4649950,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 16,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 5408486,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 17,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6167023,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 18,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6925559,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 19,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 7684094,
+            "top_emu": 1512040,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 20,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 857267,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 21,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 1615804,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 22,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 2374340,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 23,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3132877,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 24,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3891413,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 25,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4649950,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 26,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 5408486,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 27,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6167023,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 28,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6925559,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 29,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 7684094,
+            "top_emu": 2280940,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 30,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 867658,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 31,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 1626195,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 32,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 2384731,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 33,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3143268,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 34,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 3901804,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 35,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 4660341,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 36,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 5418877,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 37,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6177414,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 38,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 6935950,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 39,
+            "type": "PICTURE (18)",
+            "name": "Picture Placeholder 2",
+            "left_emu": 7694485,
+            "top_emu": 3049840,
+            "width_emu": 581621,
+            "height_emu": 581621
+          },
+          {
+            "idx": 0,
+            "type": "TITLE (1)",
+            "name": "Title 1",
+            "left_emu": 386952,
+            "top_emu": 295565,
+            "width_emu": 8378757,
+            "height_emu": 723900
+          }
+        ]
+      }
+    ]
+  }
+}

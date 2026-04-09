@@ -1,0 +1,2207 @@
+{
+  "version": "1.0",
+  "description": "Per-archetype geometry profiles derived from reference slide analysis",
+  "slide_dimensions_emu": {
+    "width": 12192000,
+    "height": 6858000
+  },
+  "archetypes": {
+    "architecture_diagram": {
+      "archetype": "architecture_diagram",
+      "reference_slide_count": 5,
+      "best_reference": {
+        "deck_id": "ai_services",
+        "slide_number": 6,
+        "notes": "System architecture: AI Agent hub + integrations + knowledge sources"
+      },
+      "zone_geometry": {
+        "title": {
+          "count": 8,
+          "median_left_pct": 3.2,
+          "median_top_pct": 5.8,
+          "median_width_pct": 93.5,
+          "median_height_pct": 14.0,
+          "range_left_pct": [
+            3.1,
+            4.2
+          ],
+          "range_top_pct": [
+            3.3,
+            16.7
+          ]
+        },
+        "body_wide": {
+          "count": 8,
+          "median_left_pct": 13.8,
+          "median_top_pct": 46.4,
+          "median_width_pct": 72.4,
+          "median_height_pct": 6.8,
+          "range_left_pct": [
+            0.0,
+            21.2
+          ],
+          "range_top_pct": [
+            19.0,
+            70.0
+          ]
+        },
+        "body_element": {
+          "count": 141,
+          "median_left_pct": 33.6,
+          "median_top_pct": 45.5,
+          "median_width_pct": 9.8,
+          "median_height_pct": 4.5,
+          "range_left_pct": [
+            -0.2,
+            94.9
+          ],
+          "range_top_pct": [
+            19.6,
+            72.6
+          ]
+        },
+        "body_column": {
+          "count": 14,
+          "median_left_pct": 46.7,
+          "median_top_pct": 54.5,
+          "median_width_pct": 32.2,
+          "median_height_pct": 3.2,
+          "range_left_pct": [
+            12.4,
+            71.8
+          ],
+          "range_top_pct": [
+            23.4,
+            72.6
+          ]
+        },
+        "kpi_bar": {
+          "count": 26,
+          "median_left_pct": 36.8,
+          "median_top_pct": 80.1,
+          "median_width_pct": 13.3,
+          "median_height_pct": 7.7,
+          "range_left_pct": [
+            3.1,
+            89.3
+          ],
+          "range_top_pct": [
+            76.3,
+            85.0
+          ]
+        },
+        "footer": {
+          "count": 2,
+          "median_left_pct": 15.3,
+          "median_top_pct": 95.5,
+          "median_width_pct": 1.2,
+          "median_height_pct": 2.1,
+          "range_left_pct": [
+            0.6,
+            15.3
+          ],
+          "range_top_pct": [
+            94.1,
+            95.5
+          ]
+        },
+        "sidebar_right": {
+          "count": 1,
+          "median_left_pct": 78.1,
+          "median_top_pct": 24.8,
+          "median_width_pct": 17.7,
+          "median_height_pct": 53.0,
+          "range_left_pct": [
+            78.1,
+            78.1
+          ],
+          "range_top_pct": [
+            24.8,
+            24.8
+          ]
+        },
+        "icon": {
+          "count": 21,
+          "median_left_pct": 62.8,
+          "median_top_pct": 53.7,
+          "median_width_pct": 3.4,
+          "median_height_pct": 3.1,
+          "range_left_pct": [
+            1.7,
+            86.8
+          ],
+          "range_top_pct": [
+            33.3,
+            73.9
+          ]
+        },
+        "hero_image": {
+          "count": 1,
+          "median_left_pct": 55.1,
+          "median_top_pct": 32.0,
+          "median_width_pct": 43.7,
+          "median_height_pct": 42.2,
+          "range_left_pct": [
+            55.1,
+            55.1
+          ],
+          "range_top_pct": [
+            32.0,
+            32.0
+          ]
+        }
+      },
+      "layout_patterns": [
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 5,
+          "layout_name": "Only Title",
+          "quality": "good",
+          "notes": "62-shape platform grid, complex",
+          "zone_counts": {
+            "title": 2,
+            "body_wide": 7,
+            "body_element": 36,
+            "body_column": 11,
+            "kpi_bar": 5,
+            "footer": 1
+          },
+          "total_shapes": 62,
+          "text_shapes": 54,
+          "image_shapes": 0,
+          "group_shapes": 8
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 14,
+          "layout_name": "One content (Light)",
+          "quality": "good",
+          "notes": "41-shape Agentic AI value accelerator",
+          "zone_counts": {
+            "title": 1,
+            "body_element": 37,
+            "sidebar_right": 1,
+            "kpi_bar": 1,
+            "footer": 1
+          },
+          "total_shapes": 41,
+          "text_shapes": 34,
+          "image_shapes": 0,
+          "group_shapes": 7
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 17,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "Agent-powered org blueprint",
+          "zone_counts": {
+            "title": 1,
+            "body_wide": 1,
+            "body_element": 8
+          },
+          "total_shapes": 10,
+          "text_shapes": 2,
+          "image_shapes": 0,
+          "group_shapes": 8
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 6,
+          "layout_name": "One content (Light)",
+          "quality": "excellent",
+          "notes": "System architecture: AI Agent hub + integrations + knowledge sources",
+          "zone_counts": {
+            "title": 2,
+            "body_element": 46,
+            "kpi_bar": 10,
+            "icon": 18,
+            "body_column": 1
+          },
+          "total_shapes": 77,
+          "text_shapes": 37,
+          "image_shapes": 19,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 11,
+          "layout_name": "One content (Light)",
+          "quality": "excellent",
+          "notes": "E2E platform blueprint + 6-step implementation flow",
+          "zone_counts": {
+            "title": 2,
+            "body_element": 14,
+            "body_column": 2,
+            "kpi_bar": 10,
+            "icon": 3,
+            "hero_image": 1
+          },
+          "total_shapes": 32,
+          "text_shapes": 14,
+          "image_shapes": 4,
+          "group_shapes": 6
+        }
+      ]
+    },
+    "capability_showcase": {
+      "archetype": "capability_showcase",
+      "reference_slide_count": 18,
+      "best_reference": {
+        "deck_id": "ai_services",
+        "slide_number": 6,
+        "notes": "System architecture: AI Agent hub + integrations + knowledge sources"
+      },
+      "zone_geometry": {
+        "title": {
+          "count": 29,
+          "median_left_pct": 3.2,
+          "median_top_pct": 3.5,
+          "median_width_pct": 93.5,
+          "median_height_pct": 14.9,
+          "range_left_pct": [
+            1.7,
+            5.1
+          ],
+          "range_top_pct": [
+            -0.0,
+            16.7
+          ]
+        },
+        "other": {
+          "count": 10,
+          "median_left_pct": 4.3,
+          "median_top_pct": 12.6,
+          "median_width_pct": 46.1,
+          "median_height_pct": 33.5,
+          "range_left_pct": [
+            3.4,
+            64.6
+          ],
+          "range_top_pct": [
+            0.7,
+            14.9
+          ]
+        },
+        "body_wide": {
+          "count": 28,
+          "median_left_pct": 13.8,
+          "median_top_pct": 48.2,
+          "median_width_pct": 63.2,
+          "median_height_pct": 15.3,
+          "range_left_pct": [
+            -2.7,
+            50.4
+          ],
+          "range_top_pct": [
+            16.4,
+            73.5
+          ]
+        },
+        "body_element": {
+          "count": 270,
+          "median_left_pct": 37.7,
+          "median_top_pct": 46.8,
+          "median_width_pct": 10.8,
+          "median_height_pct": 5.7,
+          "range_left_pct": [
+            -0.2,
+            94.9
+          ],
+          "range_top_pct": [
+            19.4,
+            74.6
+          ]
+        },
+        "body_column": {
+          "count": 55,
+          "median_left_pct": 18.3,
+          "median_top_pct": 47.4,
+          "median_width_pct": 29.5,
+          "median_height_pct": 8.7,
+          "range_left_pct": [
+            0.0,
+            71.8
+          ],
+          "range_top_pct": [
+            15.3,
+            72.6
+          ]
+        },
+        "kpi_bar": {
+          "count": 44,
+          "median_left_pct": 31.4,
+          "median_top_pct": 79.6,
+          "median_width_pct": 13.9,
+          "median_height_pct": 7.3,
+          "range_left_pct": [
+            2.8,
+            89.3
+          ],
+          "range_top_pct": [
+            75.2,
+            85.0
+          ]
+        },
+        "footer": {
+          "count": 28,
+          "median_left_pct": 28.6,
+          "median_top_pct": 87.8,
+          "median_width_pct": 11.8,
+          "median_height_pct": 6.5,
+          "range_left_pct": [
+            0.6,
+            68.9
+          ],
+          "range_top_pct": [
+            85.1,
+            95.5
+          ]
+        },
+        "sidebar_right": {
+          "count": 4,
+          "median_left_pct": 72.7,
+          "median_top_pct": 29.0,
+          "median_width_pct": 27.1,
+          "median_height_pct": 49.2,
+          "range_left_pct": [
+            69.1,
+            78.1
+          ],
+          "range_top_pct": [
+            20.5,
+            29.5
+          ]
+        },
+        "icon": {
+          "count": 44,
+          "median_left_pct": 32.5,
+          "median_top_pct": 53.4,
+          "median_width_pct": 3.5,
+          "median_height_pct": 5.7,
+          "range_left_pct": [
+            0.5,
+            86.8
+          ],
+          "range_top_pct": [
+            20.8,
+            73.9
+          ]
+        },
+        "hero_image": {
+          "count": 2,
+          "median_left_pct": 59.7,
+          "median_top_pct": 35.5,
+          "median_width_pct": 43.3,
+          "median_height_pct": 52.3,
+          "range_left_pct": [
+            54.8,
+            59.7
+          ],
+          "range_top_pct": [
+            32.0,
+            35.5
+          ]
+        }
+      },
+      "layout_patterns": [
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 4,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Practice snapshot with grouped metrics",
+          "zone_counts": {
+            "title": 1,
+            "other": 2,
+            "body_wide": 3
+          },
+          "total_shapes": 6,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 5
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 5,
+          "layout_name": "Only Title",
+          "quality": "good",
+          "notes": "62-shape platform grid, complex",
+          "zone_counts": {
+            "title": 2,
+            "body_wide": 7,
+            "body_element": 36,
+            "body_column": 11,
+            "kpi_bar": 5,
+            "footer": 1
+          },
+          "total_shapes": 62,
+          "text_shapes": 54,
+          "image_shapes": 0,
+          "group_shapes": 8
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 8,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "3-pillar 'Why us' with icon cards + flow arrows + image",
+          "zone_counts": {
+            "other": 3,
+            "title": 1,
+            "body_column": 8,
+            "kpi_bar": 1
+          },
+          "total_shapes": 13,
+          "text_shapes": 9,
+          "image_shapes": 0,
+          "group_shapes": 4
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 10,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "Maturity model 'Meet you where you are'",
+          "zone_counts": {
+            "title": 1,
+            "body_element": 3,
+            "sidebar_right": 1,
+            "kpi_bar": 1
+          },
+          "total_shapes": 6,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 5
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 11,
+          "layout_name": "Only Title",
+          "quality": "good",
+          "notes": "Full services spectrum",
+          "zone_counts": {
+            "title": 1,
+            "kpi_bar": 1,
+            "other": 2,
+            "body_wide": 2
+          },
+          "total_shapes": 6,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 5
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 13,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "AAVA platform studios overview",
+          "zone_counts": {
+            "title": 1,
+            "other": 1,
+            "body_wide": 8,
+            "body_element": 9,
+            "body_column": 3
+          },
+          "total_shapes": 22,
+          "text_shapes": 11,
+          "image_shapes": 0,
+          "group_shapes": 11
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 14,
+          "layout_name": "One content (Light)",
+          "quality": "good",
+          "notes": "41-shape Agentic AI value accelerator",
+          "zone_counts": {
+            "title": 1,
+            "body_element": 37,
+            "sidebar_right": 1,
+            "kpi_bar": 1,
+            "footer": 1
+          },
+          "total_shapes": 41,
+          "text_shapes": 34,
+          "image_shapes": 0,
+          "group_shapes": 7
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 26,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Value-Outcome Map 3-row matrix",
+          "zone_counts": {
+            "title": 1,
+            "body_wide": 5,
+            "body_column": 1,
+            "body_element": 1
+          },
+          "total_shapes": 8,
+          "text_shapes": 2,
+          "image_shapes": 0,
+          "group_shapes": 6
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 28,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "Full spectrum services list",
+          "zone_counts": {
+            "title": 1,
+            "other": 1,
+            "body_element": 1
+          },
+          "total_shapes": 3,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 1
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 3,
+          "layout_name": "Statement (Light)",
+          "quality": "excellent",
+          "notes": "3-tier offering catalog with icons",
+          "zone_counts": {
+            "title": 2,
+            "body_column": 3,
+            "body_wide": 2,
+            "body_element": 16,
+            "icon": 8,
+            "kpi_bar": 3
+          },
+          "total_shapes": 34,
+          "text_shapes": 22,
+          "image_shapes": 9,
+          "group_shapes": 3
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 4,
+          "layout_name": "Only Title",
+          "quality": "excellent",
+          "notes": "Dense advisory grid + KPI footer + client logos",
+          "zone_counts": {
+            "body_column": 12,
+            "kpi_bar": 7,
+            "footer": 2,
+            "body_element": 9,
+            "icon": 2,
+            "title": 3,
+            "other": 1
+          },
+          "total_shapes": 36,
+          "text_shapes": 25,
+          "image_shapes": 6,
+          "group_shapes": 4
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 5,
+          "layout_name": "One content (Light)",
+          "quality": "excellent",
+          "notes": "3-stage rapid prototyping + industry wheel + KPIs",
+          "zone_counts": {
+            "title": 2,
+            "kpi_bar": 1,
+            "footer": 9,
+            "sidebar_right": 1,
+            "body_column": 7,
+            "icon": 3,
+            "body_element": 11
+          },
+          "total_shapes": 34,
+          "text_shapes": 21,
+          "image_shapes": 4,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 6,
+          "layout_name": "One content (Light)",
+          "quality": "excellent",
+          "notes": "System architecture: AI Agent hub + integrations + knowledge sources",
+          "zone_counts": {
+            "title": 2,
+            "body_element": 46,
+            "kpi_bar": 10,
+            "icon": 18,
+            "body_column": 1
+          },
+          "total_shapes": 77,
+          "text_shapes": 37,
+          "image_shapes": 19,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 7,
+          "layout_name": "One content (Light)",
+          "quality": "good",
+          "notes": "Knowledge management offering with problem/solution split",
+          "zone_counts": {
+            "title": 2,
+            "body_element": 19,
+            "kpi_bar": 1,
+            "hero_image": 1,
+            "icon": 3
+          },
+          "total_shapes": 26,
+          "text_shapes": 15,
+          "image_shapes": 4,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 8,
+          "layout_name": "One content (Light)",
+          "quality": "good",
+          "notes": "Document processing with before/after flow",
+          "zone_counts": {
+            "title": 2,
+            "body_element": 16,
+            "hero_image": 1,
+            "kpi_bar": 4,
+            "footer": 7,
+            "icon": 3
+          },
+          "total_shapes": 33,
+          "text_shapes": 20,
+          "image_shapes": 4,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 9,
+          "layout_name": "One content (Light)",
+          "quality": "excellent",
+          "notes": "Validation metrics grid + highlights sidebar",
+          "zone_counts": {
+            "body_column": 3,
+            "body_wide": 1,
+            "sidebar_right": 1,
+            "title": 2,
+            "body_element": 28,
+            "icon": 3,
+            "kpi_bar": 4
+          },
+          "total_shapes": 42,
+          "text_shapes": 33,
+          "image_shapes": 3,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 10,
+          "layout_name": "One content (Light)",
+          "quality": "good",
+          "notes": "AI automation with before/after comparison",
+          "zone_counts": {
+            "title": 2,
+            "body_element": 27,
+            "kpi_bar": 1,
+            "icon": 1
+          },
+          "total_shapes": 31,
+          "text_shapes": 26,
+          "image_shapes": 5,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 12,
+          "layout_name": "One content (Light)",
+          "quality": "good",
+          "notes": "AI Ops observability with metrics",
+          "zone_counts": {
+            "title": 2,
+            "body_element": 11,
+            "kpi_bar": 4,
+            "footer": 8,
+            "body_column": 6,
+            "icon": 3
+          },
+          "total_shapes": 34,
+          "text_shapes": 20,
+          "image_shapes": 4,
+          "group_shapes": 0
+        }
+      ]
+    },
+    "case_study": {
+      "archetype": "case_study",
+      "reference_slide_count": 6,
+      "best_reference": {
+        "deck_id": "capability_deck",
+        "slide_number": 22,
+        "notes": "Retail supply chain case study with KPIs + tech logos"
+      },
+      "zone_geometry": {
+        "body_column": {
+          "count": 7,
+          "median_left_pct": 25.8,
+          "median_top_pct": 19.0,
+          "median_width_pct": 35.4,
+          "median_height_pct": 30.2,
+          "range_left_pct": [
+            17.7,
+            50.0
+          ],
+          "range_top_pct": [
+            17.1,
+            19.0
+          ]
+        },
+        "other": {
+          "count": 8,
+          "median_left_pct": 64.6,
+          "median_top_pct": 0.7,
+          "median_width_pct": 35.4,
+          "median_height_pct": 96.0,
+          "range_left_pct": [
+            50.0,
+            89.9
+          ],
+          "range_top_pct": [
+            0.0,
+            0.8
+          ]
+        },
+        "title": {
+          "count": 6,
+          "median_left_pct": 3.2,
+          "median_top_pct": 3.3,
+          "median_width_pct": 61.4,
+          "median_height_pct": 14.9,
+          "range_left_pct": [
+            3.2,
+            3.2
+          ],
+          "range_top_pct": [
+            3.3,
+            3.3
+          ]
+        },
+        "body_wide": {
+          "count": 5,
+          "median_left_pct": 16.2,
+          "median_top_pct": 55.7,
+          "median_width_pct": 46.4,
+          "median_height_pct": 0.1,
+          "range_left_pct": [
+            4.2,
+            16.2
+          ],
+          "range_top_pct": [
+            17.1,
+            56.9
+          ]
+        },
+        "body_element": {
+          "count": 35,
+          "median_left_pct": 16.1,
+          "median_top_pct": 61.2,
+          "median_width_pct": 16.5,
+          "median_height_pct": 8.1,
+          "range_left_pct": [
+            3.6,
+            44.4
+          ],
+          "range_top_pct": [
+            17.4,
+            68.3
+          ]
+        },
+        "kpi_bar": {
+          "count": 8,
+          "median_left_pct": 64.6,
+          "median_top_pct": 84.9,
+          "median_width_pct": 64.6,
+          "median_height_pct": 11.6,
+          "range_left_pct": [
+            0.0,
+            64.6
+          ],
+          "range_top_pct": [
+            84.9,
+            84.9
+          ]
+        },
+        "footer": {
+          "count": 19,
+          "median_left_pct": 17.7,
+          "median_top_pct": 86.9,
+          "median_width_pct": 5.2,
+          "median_height_pct": 6.7,
+          "range_left_pct": [
+            2.7,
+            55.2
+          ],
+          "range_top_pct": [
+            86.2,
+            89.5
+          ]
+        }
+      },
+      "layout_patterns": [
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 6,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "Case study snapshot template Option 1",
+          "zone_counts": {
+            "body_column": 1,
+            "other": 2,
+            "title": 1,
+            "body_wide": 1
+          },
+          "total_shapes": 5,
+          "text_shapes": 3,
+          "image_shapes": 0,
+          "group_shapes": 2
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 7,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "Case study snapshot template Option 2",
+          "zone_counts": {
+            "other": 2,
+            "title": 1,
+            "body_element": 1,
+            "body_column": 2
+          },
+          "total_shapes": 6,
+          "text_shapes": 3,
+          "image_shapes": 0,
+          "group_shapes": 3
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 22,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Retail supply chain case study with KPIs + tech logos",
+          "zone_counts": {
+            "title": 1,
+            "other": 1,
+            "kpi_bar": 2,
+            "body_element": 10,
+            "body_column": 1,
+            "body_wide": 1,
+            "footer": 4
+          },
+          "total_shapes": 20,
+          "text_shapes": 11,
+          "image_shapes": 4,
+          "group_shapes": 2
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 23,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Product data promotions case study",
+          "zone_counts": {
+            "title": 1,
+            "other": 1,
+            "kpi_bar": 2,
+            "body_element": 7,
+            "body_column": 1,
+            "body_wide": 1,
+            "footer": 6
+          },
+          "total_shapes": 19,
+          "text_shapes": 8,
+          "image_shapes": 6,
+          "group_shapes": 2
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 24,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Legacy Hadoop to BigQuery migration",
+          "zone_counts": {
+            "title": 1,
+            "other": 1,
+            "kpi_bar": 2,
+            "body_element": 10,
+            "body_column": 1,
+            "body_wide": 1,
+            "footer": 4
+          },
+          "total_shapes": 20,
+          "text_shapes": 11,
+          "image_shapes": 4,
+          "group_shapes": 2
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 27,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Customer data quality case study",
+          "zone_counts": {
+            "title": 1,
+            "other": 1,
+            "kpi_bar": 2,
+            "body_element": 7,
+            "body_column": 1,
+            "body_wide": 1,
+            "footer": 5
+          },
+          "total_shapes": 18,
+          "text_shapes": 8,
+          "image_shapes": 5,
+          "group_shapes": 2
+        }
+      ]
+    },
+    "executive_summary": {
+      "archetype": "executive_summary",
+      "reference_slide_count": 6,
+      "best_reference": {
+        "deck_id": "ai_services",
+        "slide_number": 4,
+        "notes": "Dense advisory grid + KPI footer + client logos"
+      },
+      "zone_geometry": {
+        "title": {
+          "count": 7,
+          "median_left_pct": 3.2,
+          "median_top_pct": 3.3,
+          "median_width_pct": 93.2,
+          "median_height_pct": 11.4,
+          "range_left_pct": [
+            3.2,
+            4.2
+          ],
+          "range_top_pct": [
+            3.3,
+            15.7
+          ]
+        },
+        "body_wide": {
+          "count": 18,
+          "median_left_pct": 8.7,
+          "median_top_pct": 43.6,
+          "median_width_pct": 56.4,
+          "median_height_pct": 23.5,
+          "range_left_pct": [
+            3.1,
+            53.1
+          ],
+          "range_top_pct": [
+            19.2,
+            73.5
+          ]
+        },
+        "other": {
+          "count": 10,
+          "median_left_pct": 59.5,
+          "median_top_pct": 8.0,
+          "median_width_pct": 36.9,
+          "median_height_pct": 19.3,
+          "range_left_pct": [
+            3.1,
+            91.5
+          ],
+          "range_top_pct": [
+            2.1,
+            14.5
+          ]
+        },
+        "hero_image": {
+          "count": 2,
+          "median_left_pct": 0.0,
+          "median_top_pct": 1.1,
+          "median_width_pct": 100.0,
+          "median_height_pct": 94.7,
+          "range_left_pct": [
+            0.0,
+            0.0
+          ],
+          "range_top_pct": [
+            1.1,
+            1.1
+          ]
+        },
+        "footer": {
+          "count": 5,
+          "median_left_pct": 2.1,
+          "median_top_pct": 91.2,
+          "median_width_pct": 93.2,
+          "median_height_pct": 5.7,
+          "range_left_pct": [
+            0.0,
+            10.7
+          ],
+          "range_top_pct": [
+            85.9,
+            94.9
+          ]
+        },
+        "kpi_bar": {
+          "count": 9,
+          "median_left_pct": 43.1,
+          "median_top_pct": 78.9,
+          "median_width_pct": 12.3,
+          "median_height_pct": 10.1,
+          "range_left_pct": [
+            3.1,
+            81.9
+          ],
+          "range_top_pct": [
+            78.9,
+            82.5
+          ]
+        },
+        "sidebar_right": {
+          "count": 1,
+          "median_left_pct": 77.2,
+          "median_top_pct": 17.4,
+          "median_width_pct": 19.6,
+          "median_height_pct": 63.8,
+          "range_left_pct": [
+            77.2,
+            77.2
+          ],
+          "range_top_pct": [
+            17.4,
+            17.4
+          ]
+        },
+        "body_column": {
+          "count": 14,
+          "median_left_pct": 38.3,
+          "median_top_pct": 47.1,
+          "median_width_pct": 33.1,
+          "median_height_pct": 14.7,
+          "range_left_pct": [
+            3.1,
+            44.8
+          ],
+          "range_top_pct": [
+            16.1,
+            66.9
+          ]
+        },
+        "body_element": {
+          "count": 14,
+          "median_left_pct": 74.2,
+          "median_top_pct": 66.9,
+          "median_width_pct": 9.5,
+          "median_height_pct": 4.7,
+          "range_left_pct": [
+            4.2,
+            86.9
+          ],
+          "range_top_pct": [
+            17.2,
+            73.4
+          ]
+        },
+        "icon": {
+          "count": 2,
+          "median_left_pct": 39.7,
+          "median_top_pct": 67.2,
+          "median_width_pct": 4.5,
+          "median_height_pct": 8.1,
+          "range_left_pct": [
+            3.5,
+            39.7
+          ],
+          "range_top_pct": [
+            51.5,
+            67.2
+          ]
+        }
+      },
+      "layout_patterns": [
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 2,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "Company overview with grouped elements",
+          "zone_counts": {
+            "title": 1,
+            "body_wide": 2,
+            "other": 1
+          },
+          "total_shapes": 4,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 3
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 3,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "Global footprint map with stats",
+          "zone_counts": {
+            "hero_image": 1,
+            "body_wide": 5,
+            "other": 3,
+            "title": 1
+          },
+          "total_shapes": 10,
+          "text_shapes": 4,
+          "image_shapes": 2,
+          "group_shapes": 4
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 4,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Practice snapshot with grouped metrics",
+          "zone_counts": {
+            "title": 1,
+            "other": 2,
+            "body_wide": 3
+          },
+          "total_shapes": 6,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 5
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 16,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "Client testimonial / quote slide",
+          "zone_counts": {
+            "hero_image": 1,
+            "title": 1,
+            "footer": 1,
+            "kpi_bar": 1,
+            "sidebar_right": 1,
+            "body_column": 2
+          },
+          "total_shapes": 7,
+          "text_shapes": 2,
+          "image_shapes": 1,
+          "group_shapes": 4
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 2,
+          "layout_name": "1_Title slide",
+          "quality": "good",
+          "notes": "'Know How' + 'Done That' expert pillars",
+          "zone_counts": {
+            "footer": 2,
+            "other": 3,
+            "body_wide": 8,
+            "body_element": 5,
+            "kpi_bar": 1
+          },
+          "total_shapes": 19,
+          "text_shapes": 9,
+          "image_shapes": 0,
+          "group_shapes": 7
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 4,
+          "layout_name": "Only Title",
+          "quality": "excellent",
+          "notes": "Dense advisory grid + KPI footer + client logos",
+          "zone_counts": {
+            "body_column": 12,
+            "kpi_bar": 7,
+            "footer": 2,
+            "body_element": 9,
+            "icon": 2,
+            "title": 3,
+            "other": 1
+          },
+          "total_shapes": 36,
+          "text_shapes": 25,
+          "image_shapes": 6,
+          "group_shapes": 4
+        }
+      ]
+    },
+    "kpi_snapshot": {
+      "archetype": "kpi_snapshot",
+      "reference_slide_count": 7,
+      "best_reference": {
+        "deck_id": "ai_services",
+        "slide_number": 9,
+        "notes": "Validation metrics grid + highlights sidebar"
+      },
+      "zone_geometry": {
+        "title": {
+          "count": 11,
+          "median_left_pct": 3.2,
+          "median_top_pct": 3.5,
+          "median_width_pct": 92.0,
+          "median_height_pct": 14.9,
+          "range_left_pct": [
+            3.1,
+            4.2
+          ],
+          "range_top_pct": [
+            3.3,
+            16.2
+          ]
+        },
+        "other": {
+          "count": 5,
+          "median_left_pct": 64.6,
+          "median_top_pct": 0.7,
+          "median_width_pct": 35.4,
+          "median_height_pct": 96.0,
+          "range_left_pct": [
+            3.5,
+            64.6
+          ],
+          "range_top_pct": [
+            0.7,
+            2.1
+          ]
+        },
+        "kpi_bar": {
+          "count": 23,
+          "median_left_pct": 33.9,
+          "median_top_pct": 82.5,
+          "median_width_pct": 16.6,
+          "median_height_pct": 7.9,
+          "range_left_pct": [
+            0.0,
+            81.9
+          ],
+          "range_top_pct": [
+            76.9,
+            85.0
+          ]
+        },
+        "body_element": {
+          "count": 82,
+          "median_left_pct": 39.6,
+          "median_top_pct": 53.9,
+          "median_width_pct": 12.6,
+          "median_height_pct": 6.0,
+          "range_left_pct": [
+            3.6,
+            86.9
+          ],
+          "range_top_pct": [
+            19.0,
+            73.5
+          ]
+        },
+        "body_column": {
+          "count": 25,
+          "median_left_pct": 25.8,
+          "median_top_pct": 47.1,
+          "median_width_pct": 33.1,
+          "median_height_pct": 14.7,
+          "range_left_pct": [
+            3.1,
+            63.7
+          ],
+          "range_top_pct": [
+            19.0,
+            67.3
+          ]
+        },
+        "body_wide": {
+          "count": 5,
+          "median_left_pct": 16.2,
+          "median_top_pct": 56.9,
+          "median_width_pct": 46.4,
+          "median_height_pct": 0.1,
+          "range_left_pct": [
+            5.2,
+            16.2
+          ],
+          "range_top_pct": [
+            55.7,
+            72.7
+          ]
+        },
+        "footer": {
+          "count": 29,
+          "median_left_pct": 22.2,
+          "median_top_pct": 86.8,
+          "median_width_pct": 8.3,
+          "median_height_pct": 6.7,
+          "range_left_pct": [
+            2.7,
+            63.1
+          ],
+          "range_top_pct": [
+            85.1,
+            92.6
+          ]
+        },
+        "icon": {
+          "count": 8,
+          "median_left_pct": 1.8,
+          "median_top_pct": 51.9,
+          "median_width_pct": 4.2,
+          "median_height_pct": 7.4,
+          "range_left_pct": [
+            1.3,
+            39.7
+          ],
+          "range_top_pct": [
+            36.2,
+            69.0
+          ]
+        },
+        "sidebar_right": {
+          "count": 1,
+          "median_left_pct": 69.2,
+          "median_top_pct": 29.5,
+          "median_width_pct": 27.1,
+          "median_height_pct": 42.5,
+          "range_left_pct": [
+            69.2,
+            69.2
+          ],
+          "range_top_pct": [
+            29.5,
+            29.5
+          ]
+        }
+      },
+      "layout_patterns": [
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 22,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Retail supply chain case study with KPIs + tech logos",
+          "zone_counts": {
+            "title": 1,
+            "other": 1,
+            "kpi_bar": 2,
+            "body_element": 10,
+            "body_column": 1,
+            "body_wide": 1,
+            "footer": 4
+          },
+          "total_shapes": 20,
+          "text_shapes": 11,
+          "image_shapes": 4,
+          "group_shapes": 2
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 23,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Product data promotions case study",
+          "zone_counts": {
+            "title": 1,
+            "other": 1,
+            "kpi_bar": 2,
+            "body_element": 7,
+            "body_column": 1,
+            "body_wide": 1,
+            "footer": 6
+          },
+          "total_shapes": 19,
+          "text_shapes": 8,
+          "image_shapes": 6,
+          "group_shapes": 2
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 24,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Legacy Hadoop to BigQuery migration",
+          "zone_counts": {
+            "title": 1,
+            "other": 1,
+            "kpi_bar": 2,
+            "body_element": 10,
+            "body_column": 1,
+            "body_wide": 1,
+            "footer": 4
+          },
+          "total_shapes": 20,
+          "text_shapes": 11,
+          "image_shapes": 4,
+          "group_shapes": 2
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 27,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Customer data quality case study",
+          "zone_counts": {
+            "title": 1,
+            "other": 1,
+            "kpi_bar": 2,
+            "body_element": 7,
+            "body_column": 1,
+            "body_wide": 1,
+            "footer": 5
+          },
+          "total_shapes": 18,
+          "text_shapes": 8,
+          "image_shapes": 5,
+          "group_shapes": 2
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 4,
+          "layout_name": "Only Title",
+          "quality": "excellent",
+          "notes": "Dense advisory grid + KPI footer + client logos",
+          "zone_counts": {
+            "body_column": 12,
+            "kpi_bar": 7,
+            "footer": 2,
+            "body_element": 9,
+            "icon": 2,
+            "title": 3,
+            "other": 1
+          },
+          "total_shapes": 36,
+          "text_shapes": 25,
+          "image_shapes": 6,
+          "group_shapes": 4
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 9,
+          "layout_name": "One content (Light)",
+          "quality": "excellent",
+          "notes": "Validation metrics grid + highlights sidebar",
+          "zone_counts": {
+            "body_column": 3,
+            "body_wide": 1,
+            "sidebar_right": 1,
+            "title": 2,
+            "body_element": 28,
+            "icon": 3,
+            "kpi_bar": 4
+          },
+          "total_shapes": 42,
+          "text_shapes": 33,
+          "image_shapes": 3,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 12,
+          "layout_name": "One content (Light)",
+          "quality": "good",
+          "notes": "AI Ops observability with metrics",
+          "zone_counts": {
+            "title": 2,
+            "body_element": 11,
+            "kpi_bar": 4,
+            "footer": 8,
+            "body_column": 6,
+            "icon": 3
+          },
+          "total_shapes": 34,
+          "text_shapes": 20,
+          "image_shapes": 4,
+          "group_shapes": 0
+        }
+      ]
+    },
+    "process_flow": {
+      "archetype": "process_flow",
+      "reference_slide_count": 5,
+      "best_reference": {
+        "deck_id": "ai_services",
+        "slide_number": 3,
+        "notes": "3-tier offering catalog with icons"
+      },
+      "zone_geometry": {
+        "title": {
+          "count": 9,
+          "median_left_pct": 3.2,
+          "median_top_pct": 3.5,
+          "median_width_pct": 93.5,
+          "median_height_pct": 14.9,
+          "range_left_pct": [
+            2.2,
+            5.1
+          ],
+          "range_top_pct": [
+            -0.0,
+            16.2
+          ]
+        },
+        "body_element": {
+          "count": 60,
+          "median_left_pct": 31.5,
+          "median_top_pct": 44.5,
+          "median_width_pct": 16.9,
+          "median_height_pct": 6.4,
+          "range_left_pct": [
+            5.0,
+            75.7
+          ],
+          "range_top_pct": [
+            19.4,
+            66.1
+          ]
+        },
+        "sidebar_right": {
+          "count": 2,
+          "median_left_pct": 72.7,
+          "median_top_pct": 29.0,
+          "median_width_pct": 29.5,
+          "median_height_pct": 49.2,
+          "range_left_pct": [
+            69.1,
+            72.7
+          ],
+          "range_top_pct": [
+            20.5,
+            29.0
+          ]
+        },
+        "kpi_bar": {
+          "count": 19,
+          "median_left_pct": 32.0,
+          "median_top_pct": 82.1,
+          "median_width_pct": 12.0,
+          "median_height_pct": 9.4,
+          "range_left_pct": [
+            4.1,
+            79.0
+          ],
+          "range_top_pct": [
+            75.9,
+            85.0
+          ]
+        },
+        "body_column": {
+          "count": 12,
+          "median_left_pct": 5.2,
+          "median_top_pct": 47.4,
+          "median_width_pct": 28.8,
+          "median_height_pct": 14.4,
+          "range_left_pct": [
+            0.0,
+            39.9
+          ],
+          "range_top_pct": [
+            15.3,
+            71.7
+          ]
+        },
+        "body_wide": {
+          "count": 2,
+          "median_left_pct": 5.1,
+          "median_top_pct": 67.5,
+          "median_width_pct": 91.2,
+          "median_height_pct": 25.7,
+          "range_left_pct": [
+            5.1,
+            5.1
+          ],
+          "range_top_pct": [
+            38.6,
+            67.5
+          ]
+        },
+        "icon": {
+          "count": 17,
+          "median_left_pct": 2.3,
+          "median_top_pct": 50.3,
+          "median_width_pct": 3.7,
+          "median_height_pct": 6.6,
+          "range_left_pct": [
+            0.5,
+            75.0
+          ],
+          "range_top_pct": [
+            20.8,
+            72.3
+          ]
+        },
+        "footer": {
+          "count": 16,
+          "median_left_pct": 34.8,
+          "median_top_pct": 88.0,
+          "median_width_pct": 11.8,
+          "median_height_pct": 6.5,
+          "range_left_pct": [
+            6.8,
+            68.9
+          ],
+          "range_top_pct": [
+            85.1,
+            92.2
+          ]
+        },
+        "hero_image": {
+          "count": 2,
+          "median_left_pct": 59.7,
+          "median_top_pct": 35.5,
+          "median_width_pct": 43.7,
+          "median_height_pct": 44.4,
+          "range_left_pct": [
+            55.1,
+            59.7
+          ],
+          "range_top_pct": [
+            32.0,
+            35.5
+          ]
+        }
+      },
+      "layout_patterns": [
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 10,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "Maturity model 'Meet you where you are'",
+          "zone_counts": {
+            "title": 1,
+            "body_element": 3,
+            "sidebar_right": 1,
+            "kpi_bar": 1
+          },
+          "total_shapes": 6,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 5
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 3,
+          "layout_name": "Statement (Light)",
+          "quality": "excellent",
+          "notes": "3-tier offering catalog with icons",
+          "zone_counts": {
+            "title": 2,
+            "body_column": 3,
+            "body_wide": 2,
+            "body_element": 16,
+            "icon": 8,
+            "kpi_bar": 3
+          },
+          "total_shapes": 34,
+          "text_shapes": 22,
+          "image_shapes": 9,
+          "group_shapes": 3
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 5,
+          "layout_name": "One content (Light)",
+          "quality": "excellent",
+          "notes": "3-stage rapid prototyping + industry wheel + KPIs",
+          "zone_counts": {
+            "title": 2,
+            "kpi_bar": 1,
+            "footer": 9,
+            "sidebar_right": 1,
+            "body_column": 7,
+            "icon": 3,
+            "body_element": 11
+          },
+          "total_shapes": 34,
+          "text_shapes": 21,
+          "image_shapes": 4,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 8,
+          "layout_name": "One content (Light)",
+          "quality": "good",
+          "notes": "Document processing with before/after flow",
+          "zone_counts": {
+            "title": 2,
+            "body_element": 16,
+            "hero_image": 1,
+            "kpi_bar": 4,
+            "footer": 7,
+            "icon": 3
+          },
+          "total_shapes": 33,
+          "text_shapes": 20,
+          "image_shapes": 4,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 11,
+          "layout_name": "One content (Light)",
+          "quality": "excellent",
+          "notes": "E2E platform blueprint + 6-step implementation flow",
+          "zone_counts": {
+            "title": 2,
+            "body_element": 14,
+            "body_column": 2,
+            "kpi_bar": 10,
+            "icon": 3,
+            "hero_image": 1
+          },
+          "total_shapes": 32,
+          "text_shapes": 14,
+          "image_shapes": 4,
+          "group_shapes": 6
+        }
+      ]
+    },
+    "section_break": {
+      "archetype": "section_break",
+      "reference_slide_count": 5,
+      "best_reference": {
+        "deck_id": "capability_deck",
+        "slide_number": 9,
+        "notes": "Half-image dark section divider"
+      },
+      "zone_geometry": {
+        "body_wide": {
+          "count": 5,
+          "median_left_pct": 3.2,
+          "median_top_pct": 21.4,
+          "median_width_pct": 46.8,
+          "median_height_pct": 53.5,
+          "range_left_pct": [
+            3.2,
+            3.2
+          ],
+          "range_top_pct": [
+            18.7,
+            40.7
+          ]
+        },
+        "other": {
+          "count": 5,
+          "median_left_pct": 46.7,
+          "median_top_pct": 0.7,
+          "median_width_pct": 53.3,
+          "median_height_pct": 95.8,
+          "range_left_pct": [
+            46.7,
+            46.7
+          ],
+          "range_top_pct": [
+            0.7,
+            0.7
+          ]
+        }
+      },
+      "layout_patterns": [
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 9,
+          "layout_name": "Section Divider – Half Image (Dark)",
+          "quality": "excellent",
+          "notes": "Half-image dark section divider",
+          "zone_counts": {
+            "body_wide": 1,
+            "other": 1
+          },
+          "total_shapes": 2,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 12,
+          "layout_name": "Section Divider – Half Image (Dark)",
+          "quality": "excellent",
+          "notes": "Half-image dark section divider",
+          "zone_counts": {
+            "body_wide": 1,
+            "other": 1
+          },
+          "total_shapes": 2,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 15,
+          "layout_name": "Section Divider – Half Image (Dark)",
+          "quality": "excellent",
+          "notes": "Half-image dark section divider",
+          "zone_counts": {
+            "body_wide": 1,
+            "other": 1
+          },
+          "total_shapes": 2,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 19,
+          "layout_name": "Section Divider – Half Image (Dark)",
+          "quality": "excellent",
+          "notes": "Half-image dark section divider",
+          "zone_counts": {
+            "body_wide": 1,
+            "other": 1
+          },
+          "total_shapes": 2,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 21,
+          "layout_name": "Section Divider – Half Image (Dark)",
+          "quality": "excellent",
+          "notes": "Half-image dark section divider",
+          "zone_counts": {
+            "body_wide": 1,
+            "other": 1
+          },
+          "total_shapes": 2,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 0
+        }
+      ]
+    },
+    "strategy": {
+      "archetype": "strategy",
+      "reference_slide_count": 3,
+      "best_reference": {
+        "deck_id": "capability_deck",
+        "slide_number": 20,
+        "notes": "Getting Data Ready for AI: Efficiency/Growth/Innovation pillars"
+      },
+      "zone_geometry": {
+        "hero_image": {
+          "count": 1,
+          "median_left_pct": 0.0,
+          "median_top_pct": 1.1,
+          "median_width_pct": 100.0,
+          "median_height_pct": 94.7,
+          "range_left_pct": [
+            0.0,
+            0.0
+          ],
+          "range_top_pct": [
+            1.1,
+            1.1
+          ]
+        },
+        "other": {
+          "count": 1,
+          "median_left_pct": 29.4,
+          "median_top_pct": -23.3,
+          "median_width_pct": 40.0,
+          "median_height_pct": 161.4,
+          "range_left_pct": [
+            29.4,
+            29.4
+          ],
+          "range_top_pct": [
+            -23.3,
+            -23.3
+          ]
+        },
+        "title": {
+          "count": 3,
+          "median_left_pct": 3.2,
+          "median_top_pct": 3.3,
+          "median_width_pct": 93.5,
+          "median_height_pct": 14.9,
+          "range_left_pct": [
+            3.2,
+            3.2
+          ],
+          "range_top_pct": [
+            3.3,
+            3.3
+          ]
+        },
+        "body_wide": {
+          "count": 6,
+          "median_left_pct": 33.5,
+          "median_top_pct": 38.1,
+          "median_width_pct": 63.2,
+          "median_height_pct": 15.3,
+          "range_left_pct": [
+            -2.7,
+            33.5
+          ],
+          "range_top_pct": [
+            16.4,
+            73.5
+          ]
+        },
+        "body_column": {
+          "count": 2,
+          "median_left_pct": 38.1,
+          "median_top_pct": 25.9,
+          "median_width_pct": 27.9,
+          "median_height_pct": 48.3,
+          "range_left_pct": [
+            2.2,
+            38.1
+          ],
+          "range_top_pct": [
+            25.5,
+            25.9
+          ]
+        },
+        "sidebar_right": {
+          "count": 1,
+          "median_left_pct": 71.2,
+          "median_top_pct": 13.6,
+          "median_width_pct": 25.8,
+          "median_height_pct": 40.1,
+          "range_left_pct": [
+            71.2,
+            71.2
+          ],
+          "range_top_pct": [
+            13.6,
+            13.6
+          ]
+        },
+        "body_element": {
+          "count": 12,
+          "median_left_pct": 58.8,
+          "median_top_pct": 38.2,
+          "median_width_pct": 13.7,
+          "median_height_pct": 10.9,
+          "range_left_pct": [
+            3.1,
+            84.8
+          ],
+          "range_top_pct": [
+            30.2,
+            63.9
+          ]
+        }
+      },
+      "layout_patterns": [
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 18,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "good",
+          "notes": "Scale your agent-powered future",
+          "zone_counts": {
+            "hero_image": 1,
+            "other": 1,
+            "title": 1,
+            "body_wide": 1,
+            "body_column": 1,
+            "sidebar_right": 1
+          },
+          "total_shapes": 6,
+          "text_shapes": 2,
+          "image_shapes": 1,
+          "group_shapes": 3
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 20,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Getting Data Ready for AI: Efficiency/Growth/Innovation pillars",
+          "zone_counts": {
+            "title": 1,
+            "body_element": 11
+          },
+          "total_shapes": 12,
+          "text_shapes": 8,
+          "image_shapes": 0,
+          "group_shapes": 4
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 26,
+          "layout_name": "Single Column Slide – Light",
+          "quality": "excellent",
+          "notes": "Value-Outcome Map 3-row matrix",
+          "zone_counts": {
+            "title": 1,
+            "body_wide": 5,
+            "body_column": 1,
+            "body_element": 1
+          },
+          "total_shapes": 8,
+          "text_shapes": 2,
+          "image_shapes": 0,
+          "group_shapes": 6
+        }
+      ]
+    },
+    "title_hero": {
+      "archetype": "title_hero",
+      "reference_slide_count": 3,
+      "best_reference": {
+        "deck_id": "capability_deck",
+        "slide_number": 1,
+        "notes": "Dark theme, hero image, brand logo"
+      },
+      "zone_geometry": {
+        "hero_image": {
+          "count": 1,
+          "median_left_pct": 0.0,
+          "median_top_pct": 0.0,
+          "median_width_pct": 100.0,
+          "median_height_pct": 100.0,
+          "range_left_pct": [
+            0.0,
+            0.0
+          ],
+          "range_top_pct": [
+            0.0,
+            0.0
+          ]
+        },
+        "title": {
+          "count": 1,
+          "median_left_pct": -0.0,
+          "median_top_pct": 0.0,
+          "median_width_pct": 55.0,
+          "median_height_pct": 100.0,
+          "range_left_pct": [
+            -0.0,
+            -0.0
+          ],
+          "range_top_pct": [
+            0.0,
+            0.0
+          ]
+        },
+        "body_wide": {
+          "count": 4,
+          "median_left_pct": 3.7,
+          "median_top_pct": 60.3,
+          "median_width_pct": 53.5,
+          "median_height_pct": 28.4,
+          "range_left_pct": [
+            3.2,
+            6.3
+          ],
+          "range_top_pct": [
+            26.3,
+            63.1
+          ]
+        },
+        "other": {
+          "count": 4,
+          "median_left_pct": 6.3,
+          "median_top_pct": 5.6,
+          "median_width_pct": 48.4,
+          "median_height_pct": 99.8,
+          "range_left_pct": [
+            0.0,
+            51.6
+          ],
+          "range_top_pct": [
+            0.0,
+            9.0
+          ]
+        },
+        "sidebar_right": {
+          "count": 1,
+          "median_left_pct": 90.2,
+          "median_top_pct": -78.1,
+          "median_width_pct": 23.7,
+          "median_height_pct": 83.8,
+          "range_left_pct": [
+            90.2,
+            90.2
+          ],
+          "range_top_pct": [
+            -78.1,
+            -78.1
+          ]
+        }
+      },
+      "layout_patterns": [
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 1,
+          "layout_name": "Title Slide – Image",
+          "quality": "excellent",
+          "notes": "Dark theme, hero image, brand logo",
+          "zone_counts": {
+            "hero_image": 1,
+            "title": 1,
+            "body_wide": 2,
+            "other": 1
+          },
+          "total_shapes": 5,
+          "text_shapes": 3,
+          "image_shapes": 2,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "capability_deck",
+          "slide_number": 25,
+          "layout_name": "Thank You Slide – Dark",
+          "quality": "good",
+          "notes": "Thank You / closing slide",
+          "zone_counts": {
+            "body_wide": 1,
+            "other": 1
+          },
+          "total_shapes": 2,
+          "text_shapes": 1,
+          "image_shapes": 0,
+          "group_shapes": 0
+        },
+        {
+          "deck_id": "ai_services",
+          "slide_number": 1,
+          "layout_name": "Title with image",
+          "quality": "excellent",
+          "notes": "Dark theme, hero image, brand logo",
+          "zone_counts": {
+            "other": 2,
+            "body_wide": 1,
+            "sidebar_right": 1
+          },
+          "total_shapes": 4,
+          "text_shapes": 1,
+          "image_shapes": 2,
+          "group_shapes": 0
+        }
+      ]
+    }
+  },
+  "coverage_summary": {
+    "covered": [
+      "architecture_diagram",
+      "capability_showcase",
+      "case_study",
+      "executive_summary",
+      "kpi_snapshot",
+      "process_flow",
+      "section_break",
+      "strategy",
+      "title_hero"
+    ],
+    "missing": [
+      "comparison",
+      "rfp_template",
+      "roadmap"
+    ]
+  }
+}

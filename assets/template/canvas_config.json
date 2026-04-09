@@ -1,0 +1,82 @@
+{
+  "version": "1.0",
+  "description": "Canonical master and recipe canvas layout configuration extracted from template.pptx",
+  "slide_dimensions": {
+    "width_emu": 12192000,
+    "height_emu": 6858000,
+    "width_inches": 13.33,
+    "height_inches": 7.5
+  },
+  "canonical_master": {
+    "index": 0,
+    "layout_count": 46
+  },
+  "recipe_canvas_layouts": [
+    {
+      "name": "Header Only - Light",
+      "index": 8,
+      "theme": "light",
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE",
+          "name": "Title 1",
+          "left_emu": 515938,
+          "top_emu": 298692,
+          "width_emu": 11160122,
+          "height_emu": 938437
+        }
+      ],
+      "usable_body_region": {
+        "description": "Area below the title placeholder, available for recipe-composed elements",
+        "left_emu": 515938,
+        "top_emu": 1237129,
+        "width_emu": 11160122,
+        "height_emu": 5420871
+      }
+    },
+    {
+      "name": "Header Only - Dark",
+      "index": 9,
+      "theme": "dark",
+      "placeholders": [
+        {
+          "idx": 0,
+          "type": "TITLE",
+          "name": "Title 1",
+          "left_emu": 515938,
+          "top_emu": 298692,
+          "width_emu": 11160122,
+          "height_emu": 938437
+        }
+      ],
+      "usable_body_region": {
+        "description": "Area below the title placeholder, available for recipe-composed elements",
+        "left_emu": 515938,
+        "top_emu": 1237129,
+        "width_emu": 11160122,
+        "height_emu": 5420871
+      }
+    },
+    {
+      "name": "Blank",
+      "index": 36,
+      "theme": "neutral",
+      "placeholders": [],
+      "usable_body_region": {
+        "description": "Full slide canvas, no inherited placeholders",
+        "left_emu": 0,
+        "top_emu": 0,
+        "width_emu": 12192000,
+        "height_emu": 6858000
+      }
+    }
+  ],
+  "margin_defaults": {
+    "description": "Default margins consistent with template placeholder alignment",
+    "left_emu": 515938,
+    "right_emu": 515938,
+    "top_emu": 298692,
+    "bottom_emu": 200000
+  }
+}

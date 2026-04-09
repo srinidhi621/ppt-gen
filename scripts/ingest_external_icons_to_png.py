@@ -12,7 +12,7 @@ from typing import Any
 import cairosvg
 
 RENDER_SIZE = 512
-PACK_ORDER = ("tabler", "lucide", "fluent", "aws")
+PACK_ORDER = ("tabler", "lucide", "fluent", "aws", "azure", "gcp")
 
 
 def parse_args() -> argparse.Namespace:

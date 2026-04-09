@@ -1,5 +1,10 @@
 # SPEC-v2.md — Recipe-Driven Presentation Generator
 
+Status (`2026-04-09`):
+- Superseded for active development by `SPEC-v3.md`.
+- Retained as historical context for the recipe-driven composed-slide direction.
+- The implemented repo still reflects parts of the V1/V2-era placeholder pipeline, but new architecture work should target `SPEC-v3.md`.
+
 ## 0) Purpose
 
 This spec defines the V2 architecture for a general-purpose presentation generation agent.
@@ -81,34 +86,49 @@ Everything needed before V2 development starts. Check items off as they land in 
 - [x] Lucide icons (PNG, 1,542) — `assets/icons/png/external/lucide/`
 - [x] Tabler icons (PNG, 5,928) — `assets/icons/png/external/tabler/`
 - [x] Azure service icons (SVG source, 628) — `assets/external_assets/azure/svg/`
-- [ ] Azure service icons (PNG, converted) — `assets/icons/png/external/azure/` — run ingestion pipeline
+- [x] Azure service icons (PNG, converted, 628) — `assets/icons/png/external/azure/`
 - [x] GCP service icons (SVG + PNG source, 19) — `assets/external_assets/gcp/`
-- [ ] GCP service icons (PNG, converted) — `assets/icons/png/external/gcp/` — run ingestion pipeline
-- [ ] Icon index updated with Azure + GCP entries — `assets/icons/icons.json`
-- [ ] Visual vocabulary extended with Azure/GCP service concepts — `assets/catalog/visual_vocabulary.json`
+- [x] GCP service icons (PNG, converted, 19) — `assets/icons/png/external/gcp/`
+- [x] Icon index updated with Azure + GCP entries (29,573 total) — `assets/icons/icons.json`
+- [x] Visual vocabulary extended with Azure/GCP + cross-cloud concepts (302 total) — `assets/catalog/visual_vocabulary.json`
 
 **Template** (needed for: recipe canvas, design token extraction, branding)
 
 - [x] Branded Ascendion template — `assets/template/template.pptx`
 - [x] Layout catalog — `assets/layout/layout_catalog.json`
-- [ ] Canvas config (canonical master + recipe canvas layouts) — `assets/template/canvas_config.json`
-- [ ] Brand color token overrides — `assets/template/token_overrides.json`
+- [x] Canvas config (canonical master + 3 recipe canvas layouts) — `assets/template/canvas_config.json`
+- [x] Brand color token overrides (15 semantic roles) — `assets/template/token_overrides.json`
 
 **Reference Slides** (needed for: recipe geometry calibration, review quality baseline)
 
-- [ ] `title_hero` — 1 hand-crafted slide
-- [ ] `section_break` — 1 hand-crafted slide
-- [ ] `executive_summary` — 2-3 hand-crafted slides
-- [ ] `process_flow` — 1-2 hand-crafted slides
-- [ ] `architecture_diagram` — 2-3 hand-crafted slides
-- [ ] `comparison` — 1-2 hand-crafted slides
-- [ ] `kpi_snapshot` — 1-2 hand-crafted slides
-- [ ] `roadmap` — 1-2 hand-crafted slides
-- [ ] `case_study` — 2-3 hand-crafted slides
-- [ ] `capability_showcase` — 2-3 hand-crafted slides
-- [ ] `rfp_template` — 2-3 hand-crafted slides
-- [ ] `strategy` — 2-3 hand-crafted slides
-- [ ] All reference slides saved in — `assets/ground_truth/reference_slides.pptx`
+Source decks (13.33" x 7.50" widescreen, matching our template):
+- [x] Capability Deck (28 slides) — `assets/template/Ascendion-Data Practice-Capability Deck_final.pptx`
+- [x] AI Services Deck (12 slides) — `assets/template/AI Services  Applied AI Offerings.pptx`
+
+Supplementary decks (10" x 5.62", scale 1.333x for geometry):
+- [x] Case Study A4 (content schema) — `assets/template/Case Study Template_A4.pptx`
+- [x] Case Study L1/L2 (layout patterns) — `assets/template/Case Study_L1.pptx`, `Case Study_L2.pptx`
+- [x] RFP Template (39 layouts) — `assets/template/RFP PPT Template_V1.2_2025.pptx`
+
+Archetype coverage from tagged reference slides (40 total):
+- [x] `title_hero` — 3 reference slides (Capability s1, AI s1, Capability s25)
+- [x] `section_break` — 5 reference slides (Capability s9,12,15,19,21)
+- [x] `executive_summary` — 6 reference slides
+- [x] `process_flow` — 5 reference slides (AI s3,5,8,11; Capability s10)
+- [x] `architecture_diagram` — 5 reference slides (AI s6,11; Capability s5,14,17)
+- [ ] `comparison` — 0 reference slides — **still needed**
+- [x] `kpi_snapshot` — 7 reference slides
+- [ ] `roadmap` — 0 reference slides — **still needed**
+- [x] `case_study` — 6 reference slides + A4 content schema
+- [x] `capability_showcase` — 18 reference slides
+- [x] `rfp_template` — 39 layouts cataloged from RFP template
+- [x] `strategy` — 3 reference slides
+
+Metadata artifacts:
+- [x] Full slide catalog (40 slides, per-shape geometry) — `assets/ground_truth/reference_slide_catalog.json`
+- [x] Supplementary catalog (case study fields + RFP layouts) — `assets/ground_truth/supplementary_reference_catalog.json`
+- [x] Archetype geometry profiles (zone-based) — `assets/ground_truth/archetype_geometry_profiles.json`
+- [x] Preview image index (45 PNGs) — `assets/ground_truth/preview_index.json`
 
 **Sample Inputs** (needed for: recipe testing, integration tests, benchmarks)
 

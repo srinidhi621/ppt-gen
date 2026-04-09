@@ -1,0 +1,94 @@
+{
+  "version": "1.0",
+  "description": "Brand color token overrides extracted from Ascendion template theme (ASCENDION COLOR PALETTE 2022)",
+  "source_theme": "ASCENDION COLOR PALETTE 2022",
+  "colors": {
+    "accent_1": {
+      "hex": "#008567",
+      "role": "primary brand / headings / key shapes",
+      "theme_slot": "accent1"
+    },
+    "accent_2": {
+      "hex": "#CC0066",
+      "role": "highlight / callout / risk indicator",
+      "theme_slot": "accent2"
+    },
+    "accent_3": {
+      "hex": "#FFCC00",
+      "role": "warning / attention / secondary highlight",
+      "theme_slot": "accent3"
+    },
+    "accent_4": {
+      "hex": "#6666CC",
+      "role": "tertiary accent / charts / diagrams",
+      "theme_slot": "accent4"
+    },
+    "accent_5": {
+      "hex": "#AFAAB9",
+      "role": "muted fill / dividers / secondary backgrounds",
+      "theme_slot": "accent5"
+    },
+    "accent_6": {
+      "hex": "#71758A",
+      "role": "subtle text / borders / deemphasized elements",
+      "theme_slot": "accent6"
+    },
+    "bg_primary": {
+      "hex": "#FFFFFF",
+      "role": "primary slide background (light theme)",
+      "theme_slot": "lt1"
+    },
+    "bg_dark": {
+      "hex": "#000000",
+      "role": "primary slide background (dark theme)",
+      "theme_slot": "dk1"
+    },
+    "text_primary": {
+      "hex": "#000000",
+      "role": "main body text on light backgrounds",
+      "theme_slot": "dk1"
+    },
+    "text_secondary": {
+      "hex": "#71758A",
+      "role": "subtitle / caption / metadata text",
+      "theme_slot": "dk2"
+    },
+    "text_on_dark": {
+      "hex": "#FFFFFF",
+      "role": "text on dark backgrounds",
+      "theme_slot": "lt1"
+    },
+    "success": {
+      "hex": "#008567",
+      "role": "positive indicator / on-track status",
+      "derived_from": "accent_1"
+    },
+    "warning": {
+      "hex": "#FFCC00",
+      "role": "caution indicator / at-risk status",
+      "derived_from": "accent_3"
+    },
+    "risk": {
+      "hex": "#CC0066",
+      "role": "negative indicator / blocked status",
+      "derived_from": "accent_2"
+    },
+    "hyperlink": {
+      "hex": "#0563C1",
+      "role": "hyperlink text",
+      "theme_slot": "hlink"
+    }
+  },
+  "fonts": {
+    "heading": {
+      "template_font": "PP Neue Machina Plain",
+      "theme_major": "Consolas",
+      "substitute": "Space Grotesk"
+    },
+    "body": {
+      "template_font": "Aptos",
+      "theme_minor": "Verdana",
+      "substitute": "Inter"
+    }
+  }
+}
