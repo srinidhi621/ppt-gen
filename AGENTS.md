@@ -85,6 +85,12 @@ Key command:
 - runs: `runs/<run_id>/`
 - review images: `runs/<run_id>/review_images/v1/slide_*.png`
 
+### 3.3 Codex Cloud
+- default branch is `main`
+- if a cloud task asks for a git ref, use `main`, not `master`
+- bootstrap command: `./scripts/setup_codex_cloud.sh`
+- verification command: `./scripts/test_codex_cloud.sh`
+
 ### 3.2 Run Artifacts (minimum)
 - current pipeline artifacts: `planner_deckir_v1.json`, `planner_deckir_v2.json`, `deck_v1.pptx`, `deck_v2.pptx`, `composition_spec_v1.json`, `composition_spec_v2.json`
 - V3 target additions: `deck_blueprint_v1.json`, `builder_input_v1.json`, `build_deck_v1.py`, `build_exec_report_v1.json`

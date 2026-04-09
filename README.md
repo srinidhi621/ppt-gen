@@ -70,12 +70,34 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Codex cloud bootstrap:
+
+```bash
+./scripts/setup_codex_cloud.sh
+```
+
 macOS binaries:
 
 ```bash
 brew install --cask libreoffice
 brew install poppler
 ```
+
+## Codex Cloud
+
+Use `main` as the repo ref for cloud tasks. This repository does not use `master` as its primary branch.
+
+Recommended task entry points:
+
+```bash
+./scripts/setup_codex_cloud.sh
+./scripts/test_codex_cloud.sh
+```
+
+Notes:
+- full LLM-backed generation still requires `.env` credentials
+- review-image export still requires `soffice` and `pdftoppm`
+- `./scripts/test_codex_cloud.sh` is the safe default verification command for cloud tasks
 
 ## CLI
 
