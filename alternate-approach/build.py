@@ -1,4 +1,7 @@
-"""Build the 10x Accelerated Talent Program deck on the Ascendion template."""
+"""Rebuild the 10x Accelerated Talent Program deck from the checked-in source deck."""
+from pathlib import Path
+import sys
+
 from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
@@ -15,33 +18,58 @@ DARK = RGBColor(0x21, 0x21, 0x21)
 ICE = RGBColor(0xCA, 0xDC, 0xFC)
 BODY_FONT = "Calibri"
 
-prs = Presentation("template.pptx")
+BASE_DIR = Path(__file__).resolve().parent
+SOURCE_DECK_PATH = BASE_DIR / "10x_program_plan.pptx"
+DEFAULT_OUTPUT_PATH = BASE_DIR / "10x_program_plan.generated.pptx"
+OUTPUT_PATH = (
+    Path(sys.argv[1]).expanduser().resolve()
+    if len(sys.argv) > 1
+    else DEFAULT_OUTPUT_PATH
+)
+
+if not SOURCE_DECK_PATH.exists():
+    raise FileNotFoundError(f"Source deck not found: {SOURCE_DECK_PATH}")
+
+OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+prs = Presentation(str(SOURCE_DECK_PATH))
 SW, SH = prs.slide_width, prs.slide_height
 
-layout_blank = None
-for l in prs.slide_layouts:
-    if l.name == "Blank":
-        layout_blank = l
+EXPECTED_SLIDE_COUNT = 7
+REBUILD_SLIDE_COUNT = 6
 
-# Edit slide 1 title
-slide1 = prs.slides[0]
-for shp in slide1.shapes:
-    if shp.has_text_frame and "Slide heading" in shp.text_frame.text:
-        paras = shp.text_frame.paragraphs
-        if paras[0].runs:
-            paras[0].runs[0].text = "10x Accelerated Talent Program"
-        if len(paras) > 1 and paras[1].runs:
-            paras[1].runs[0].text = "Operating Plan  |  Leadership Review"
+if len(prs.slides) != EXPECTED_SLIDE_COUNT:
+    raise RuntimeError(
+        f"Expected {EXPECTED_SLIDE_COUNT} slides in source deck, found {len(prs.slides)}: "
+        f"{SOURCE_DECK_PATH}"
+    )
 
-# Delete slide 2 (placeholder)
-xml_slides = prs.slides._sldIdLst
-slides_list = list(xml_slides)
-rId = slides_list[1].get("{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id")
-prs.part.drop_rel(rId)
-xml_slides.remove(slides_list[1])
+def remove_shape(shape):
+    element = shape._element
+    element.getparent().remove(element)
+
+def clear_slide(slide):
+    for shape in list(slide.shapes):
+        remove_shape(shape)
+
+content_slides = list(prs.slides)[1:]
+if len(content_slides) != REBUILD_SLIDE_COUNT:
+    raise RuntimeError(
+        f"Expected {REBUILD_SLIDE_COUNT} content slides to rebuild, found {len(content_slides)}"
+    )
+
+for slide in content_slides:
+    clear_slide(slide)
+
+content_slide_index = 0
 
 def add_blank():
-    return prs.slides.add_slide(layout_blank)
+    global content_slide_index
+    if content_slide_index >= len(content_slides):
+        raise RuntimeError("No remaining content slides available to rebuild.")
+    slide = content_slides[content_slide_index]
+    content_slide_index += 1
+    return slide
 
 def add_rect(slide, left, top, width, height, fill, line=None):
     shp = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
@@ -91,7 +119,7 @@ add_rect(s, Inches(0.5), Inches(1.6), Inches(0.12), Inches(2.2), CORAL)
 add_text(s, Inches(0.95), Inches(1.85), Inches(11.5), Inches(0.4),
          "OPERATING PRINCIPLE", size=11, bold=True, color=CORAL)
 add_text(s, Inches(0.95), Inches(2.25), Inches(11.5), Inches(1.5),
-         "Find engineers who use judgment and AI leverage to remove work \u2014\nthen put them on a track that doesn\u2019t destroy that capability.",
+         "Find engineers who use judgment and AI leverage to remove work \u2014\nthen put them on a track that doesn't destroy that capability.",
          size=22, bold=True, color=WHITE)
 
 col_w = Inches(4.0)
@@ -100,8 +128,8 @@ col_top = Inches(4.15)
 col_lefts = [Inches(0.5), Inches(4.65), Inches(8.8)]
 cols = [
     ("THE PROBLEM", "Conventional hiring rewards pedigree, narrow correctness, and confidence. None of these find force multipliers."),
-    ("WHAT WE WON\u2019T DO", "No HackerRank rounds. No essay prompts. No personality interviews. No steering committees. No \u201810x\u2019 marketing language externally."),
-    ("WHAT WE WILL DO", "Verifiable artifacts. Scaffolded take-homes with AI allowed and scored. Anchored defense panels. Protected runway after admit."),
+    ("WHAT WE WON'T DO", "No essay prompts. No personality interviews. No steering committees. No '10x' marketing language externally."),
+    ("WHAT WE WILL DO", "Verifiable artifacts. Scaffolded take-homes with AI allowed and scored. Anchored defense panels. Clear runway after admission to ensure continuity"),
 ]
 for left, (h, body) in zip(col_lefts, cols):
     add_rect(s, left, col_top, col_w, col_h, LIGHT_GRAY)
@@ -142,20 +170,20 @@ def track_card(left, name, profile, size_, cycle, focus_label, focus_items):
                  val, size=12, color=DARK)
         y += Inches(1.05)
 
-track_card(Inches(0.5), "ASCENDER",
+track_card(Inches(0.5), "ASCENDER TRACK",
            "0\u20132 yrs experience  |  external + internal",
-           "8\u201312 per cohort", "Twice yearly",
+           "10\u201315 per cohort", "Twice yearly",
            "Test for",
            "Decomposition under ambiguity. Taste in deciding what NOT to fix. Healthy AI use the candidate can defend line by line.")
 
 track_card(Inches(6.85), "PRINCIPAL TRACK",
            "2\u20136 yrs experience  |  lateral + skip-level nomination",
-           "8\u201312 per cohort", "Twice yearly",
+           "10\u201315 per cohort", "Twice yearly",
            "Test for",
            "Sequencing and trade-off articulation. Resisting the urge to rewrite. Systems thinking, governance awareness, ability to teach.")
 
 add_text(s, Inches(0.5), Inches(6.55), Inches(12.3), Inches(0.35),
-         "Internal nominations run from day one and enter at Stage 2. Highest-yield source. The current draft ignores it.",
+         "Internal nominations run from day one and enter at Stage 2. Highest-yield source.",
          size=11, bold=True, color=NAVY)
 
 # ==== SLIDE 4: The Funnel ====
@@ -165,16 +193,16 @@ slide_header(s, "03  |  The funnel", "Four stages. Five weeks. ~150 in, 8\u20131
 stages = [
     ("01", "EVIDENCE GATE", "Week 1",
      "GitHub link + 3-min Loom + one shipped artifact. No essays.",
-     "~150 \u2192 ~40"),
+     "1,500\u201315,000 \u2192 ~400"),
     ("02", "SCAFFOLDED TAKE-HOME", "Week 2\u20133",
      "48 hrs. Real repo. AI allowed and expected. PR + 10-min walkthrough.",
-     "~40 \u2192 ~16"),
+     "~400 \u2192 ~50"),
     ("03", "DEFENSE PANEL", "Week 4",
      "60 min. Two panelists. Five anchored questions. Independent scoring.",
-     "~16 \u2192 ~10"),
+     "~50 \u2192 ~15"),
     ("04", "ADMIT DECISION", "Week 5",
      "30 min. Director + Principal. Confirms appetite. No new tech eval.",
-     "8\u201312 admits"),
+     "10\u201315 admits"),
 ]
 
 card_w = Inches(2.95)
@@ -224,7 +252,7 @@ rubric_cols = [
     ("HEALTHY USE", NAVY,
      "Used AI for boilerplate, scaffolding, tests. Verified outputs. Can explain every line."),
     ("OVER-RELIANCE", CORAL,
-     "Cannot explain choices. Inconsistent style. Hallucinated comments. Tests don\u2019t match code."),
+     "Cannot explain choices. Inconsistent style. Hallucinated comments. Tests don't match code."),
     ("AVOIDANCE", MED_GRAY,
      "Avoided AI in an AI-appropriate task. Slower with no quality gain."),
 ]
@@ -247,10 +275,10 @@ add_text(s, right_x, top_y + Inches(0.32), right_w, Inches(0.4),
 
 stats_top = top_y + Inches(0.85)
 stats = [
-    ("~150", "applicants"),
-    ("~40", "Stage 2 invitees"),
-    ("~16", "Stage 3 invitees"),
-    ("8\u201312", "admits"),
+    ("1,500\u201315,000", "applicants"),
+    ("~400", "Stage 2 invitees"),
+    ("~50", "Stage 3 invitees"),
+    ("10\u201315", "admits"),
     ("~6 hrs", "reviewer cost / admit"),
     ("25%", "false-positive tolerance"),
 ]
@@ -378,5 +406,5 @@ for when, what in moves:
              what, size=11, color=WHITE)
     y += Inches(0.55)
 
-prs.save("10x_program_plan.pptx")
-print("OK saved")
+prs.save(str(OUTPUT_PATH))
+print(f"OK saved {OUTPUT_PATH}")
