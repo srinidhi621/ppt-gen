@@ -1,321 +1,239 @@
-# PLAN.md — V3 Planner / Builder / Reviewer Execution Plan
+# PLAN.md — V3 Project Board
 
-## 0) Objective
+**Updated**: 2026-04-10
+**Active phase**: Foundations (Phase 1 of `SPEC-v3.md §11`)
+**Source of truth for architecture**: `SPEC-v3.md`
 
-Implement the active V3 architecture from `SPEC-v3.md`:
-- planner model produces the final deck blueprint and slide briefs;
-- coding model builds the deck by composing native PowerPoint primitives with disposable `python-pptx` code;
-- multimodal reviewer evaluates rendered slides and drives bounded repair;
-- runs remain artifact-heavy, testable, and quality-gated.
+---
 
-## 1) Build Rules
+## How This Board Works
 
-1. Ship end-to-end slices only.
-2. Keep the current CLI operational while V3 is landing.
-3. CLI first; web and service layers are downstream concerns.
-4. Do not commit generated builder code as product logic.
-5. Execute builder code only in an isolated runtime with explicit safeguards.
-6. Preserve native editable PPTX output.
-7. Prefer blank and header-only template canvases for primitive-composed slides.
-8. Keep deterministic diagnose, review-image export, logging, and quality gates.
-9. Every slice requires persisted artifacts and tests.
-10. No slice is complete until the new path is better than the placeholder baseline for that scope.
+This is a living document. It is updated after every working turn.
 
-## 2) Starting Point (`2026-04-09`)
+**Operating mode**:
+1. Claude builds one thin slice.
+2. User reviews the deliverable against the review gate.
+3. User steers (approve / revise / reprioritize).
+4. Claude updates this board.
+5. Repeat.
 
-Already present:
-- normalization and cue parsing;
-- layout, asset, and vocabulary catalogs;
-- placeholder renderer and preflight remediation;
-- automated review-image export;
-- multimodal review scaffold;
-- quality gates and run logging;
-- template canvas metadata and token overrides;
-- reference primitive-composition prototype in `alternate-approach/build.py`.
+**Rules**:
+- One active slice at a time. No batching multiple slices before a review.
+- Every slice ends at a **review gate** — a specific thing the user inspects before the next slice starts.
+- Slices blocked on user input are listed under "Blocked on User" and do not advance.
+- Deletions, destructive operations, and scope changes are always review-gated.
+- Review gates marked with **REVIEW-GATE** must be completed before the next slice starts.
+- Items marked **INDEPENDENT** can be built without a review gate but are still reported in the changelog.
 
-Missing for V3:
-- planner output schema for builder-oriented slide briefs;
-- builder sandbox and retry harness;
-- codex-oriented builder prompt + execution loop;
-- primitive-composition helper runtime;
-- build execution reports and attempt artifacts;
-- builder repair loop;
-- V3-specific quality gates and benchmark evaluation.
+---
 
-## 3) Program-Level Exit Metrics
+## Where We Are Right Now
 
-The V3 program is complete when all are true:
-1. One-slide primitive-composed generation works end-to-end from prompt to reviewed, repaired PPTX.
-2. A multi-slide deck can be built through planner -> builder -> reviewer without manual edits.
-3. Build retries recover from common syntax/runtime failures automatically.
-4. Final decks are visibly stronger than the placeholder baseline on benchmark prompts.
-5. Run artifacts make planner, builder, and reviewer behavior debuggable after failures.
+The repo has been through two architectural iterations (V1 placeholder-fill, V2 recipe engine — abandoned). `SPEC-v3.md` was rewritten on `2026-04-10` around a planner / builder / reviewer pipeline backed by a small runtime library (`ppt_runtime`), a hand-validated example library, and a deterministic post-build scanner. `BRAINSTORM.md` captures the first-principles derivation behind that spec.
 
-## 4) Slice Tracker
+No V3 code exists yet. The next few slices are **non-LLM foundations**: audit, cleanup, design system artifact, runtime library, runtime validation against `alternate-approach/build.py`. The LLM layer (planner, builder, reviewer) does not start until the foundations are reviewed and approved.
 
-Statuses: `planned | in_progress | complete | blocked`
+---
 
-| Slice | Focus | Status | User-visible Demo |
+## Active Slice
+
+### SLICE-001 — V1/V2 artifact keep/delete review
+**Status**: Awaiting user review
+**Owner**: User
+**Description**: Claude has audited V1/V2 artifacts in the repo and proposed a keep/delete matrix. User reviews the matrix and confirms what to delete, what to keep during the V1 fallback period, and what to mine before deletion.
+**Deliverable**: The table in this turn's chat reply.
+**REVIEW-GATE**:
+- [ ] User approves the `KEEP` list.
+- [ ] User approves the `KEEP DURING V1 FALLBACK` list.
+- [ ] User approves the `MINE THEN DELETE` list and confirms what "mine" means for each.
+- [ ] User approves the `DELETE NOW` list (currently empty).
+**Definition of done**: A follow-up slice (SLICE-002) captures the decisions as a cleanup task list in this plan.
+
+---
+
+## Review Queue (waiting on user)
+
+| Item | Why it matters | Blocks |
+|---|---|---|
+| V1/V2 artifact keep/delete matrix (SLICE-001) | Controls what the next foundational slices can discard or reuse | SLICE-002, SLICE-004 |
+| Seeded archetype vocabulary in `SPEC-v3.md §5` (11 archetypes) | Planner-to-builder contract; examples must populate each label | SLICE-007 (example seeding) |
+| `presentation-writing.skill` as authoritative copy-quality contract for the planner | Decides whether the planner embeds the skill's rules as hard constraints or treats them as guidance | SLICE-009 (planner schema) |
+| Design system authorship path | Decides whether Claude drafts `design_system.json` from existing catalogs or user hand-authors | SLICE-003 |
+
+---
+
+## Blocked on User Input
+
+| Blocker | What's needed | Slices blocked |
+|---|---|---|
+| Designer slides | 5-6 expert-designed slides as original PPTX, with per-slide intent + audience | SLICE-007 (example decomposition) |
+| V1/V2 cleanup decision | Outcome of SLICE-001 | SLICE-002 |
+| Archetype vocabulary review | Confirmation / edits to the 11 seeded archetypes | SLICE-007 |
+| Hosting + diagrams scope | Confirmation these stay in backlog, not pulled forward | None (backlog only) |
+
+---
+
+## Up Next (Claude can build independently)
+
+These slices are ready to start as soon as their blockers clear. Listed in execution order.
+
+### SLICE-002 — V1/V2 cleanup execution
+**Blocker**: SLICE-001 approval
+**Description**: Execute the approved keep/delete matrix. Mine the V2-era catalogs into notes for `design_system.json` authoring. Delete approved files. Update imports and tests that break as a result.
+**REVIEW-GATE**:
+- [ ] User confirms the resulting `git status` + diff summary before commit.
+
+### SLICE-003 — Draft `design_system.json`
+**Blocker**: SLICE-001, user confirms draft-and-review path
+**Description**: Author `assets/template/design_system.json` from `canvas_config.json`, `token_overrides.json`, `ground_truth/reference_slide_catalog.json`, and the mined V2 catalog notes. Schema per `SPEC-v3.md §4.0`.
+**REVIEW-GATE**:
+- [ ] User reads the draft file.
+- [ ] User confirms grid cols, gutter values, type scale sizes, accent policy.
+- [ ] User flags anything that should be derived from a reference slide but wasn't.
+
+### SLICE-004 — `ppt_runtime` skeleton: canvas, grid, tokens
+**Blocker**: SLICE-003 approval
+**Description**: Create `src/ppt_runtime/` with `canvas.py`, `grid.py`, `tokens.py`. No measurement, no shape helpers yet. Unit tests for grid math and token lookups.
+**REVIEW-GATE**:
+- [ ] User reads the public API surface.
+- [ ] User confirms the named-anchor vocabulary (`canvas.body_left`, `grid.span(...)`) matches intent.
+
+### SLICE-005 — `measure_text` primitive
+**Blocker**: SLICE-004 approval
+**Description**: Implement `measure.py` using Pillow + bundled substitute fonts. Unit tests against known strings at known sizes, verified against PowerPoint-rendered ground truth. `shrink_to_fit` helper.
+**REVIEW-GATE**:
+- [ ] User confirms measurement accuracy is within ~5% of PowerPoint's actual layout on a test string set.
+
+### SLICE-006 — Shape helpers + patterns
+**Blocker**: SLICE-005 approval
+**Description**: Implement `shapes.py` (`add_rect`, `add_text`, `add_image`, `add_line`) and a minimal `patterns.py` (`draw_card`, `draw_header_bar`, `draw_kicker`). Unit tests that produce real PPTX output and verify shape properties.
+**REVIEW-GATE**:
+- [ ] User opens the test-generated PPTX and confirms shapes look right.
+
+### SLICE-006b — Runtime validation: rewrite `alternate-approach/build.py` on runtime
+**Blocker**: SLICE-006 approval
+**Description**: Rewrite the existing 410-line `alternate-approach/build.py` on top of `ppt_runtime`. No LLM involved. This is the runtime's "can it reproduce a hand-polished deck" gate. Any missing primitive becomes a runtime addition.
+**REVIEW-GATE**:
+- [ ] User opens both decks side-by-side and confirms structural fidelity.
+- [ ] User confirms the rewritten file is shorter, clearer, or at minimum no worse than the original.
+- [ ] Any newly-added runtime primitives are explicitly listed in the review.
+
+### SLICE-007 — Example library seeding
+**Blocker**: Designer slides arrive + SLICE-006b approval
+**Description**: For each designer slide: parse shapes, identify archetype, write runtime-code decomposition, execute, visually diff against source, iterate. Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Update the archetype vocabulary if any slide does not fit cleanly.
+**REVIEW-GATE** (per example):
+- [ ] User confirms the archetype tag.
+- [ ] User confirms the runtime-code reproduction is faithful to the designer original.
+- [ ] User reviews the `invariants` and `variables` metadata.
+**Notes**: This is slow work. Expect ~1-2 hours per example. Do one, review, then next.
+
+### SLICE-008 — Deterministic post-build scanner
+**Blocker**: SLICE-006 (runtime available) — can run in parallel with SLICE-007
+**Description**: `src/scan/scanner.py` implementing the checks in `SPEC-v3.md §4.6`. BLOCKING vs WARNING severity. `geometry_report.json` schema. Unit tests against fixture decks with injected bugs.
+**REVIEW-GATE**:
+- [ ] User reviews the check list and severity mapping.
+- [ ] User confirms the `geometry_report.json` schema.
+
+### SLICE-009 — Sandbox execution harness
+**Blocker**: None (can start after SLICE-002)
+**Description**: `src/sandbox/` with subprocess wrapper, AST pre-scan, `resource.setrlimit` limits, RO bind-mount configuration, attempt directory management, retry loop. Unit tests for import rejection, timeout, memory cap, successful execution.
+**REVIEW-GATE**:
+- [ ] User confirms the AST rejection list.
+- [ ] User confirms the rlimit values.
+- [ ] User runs a trivial builder script end-to-end.
+
+### SLICE-010 — Planner schema + prompt
+**Blocker**: SLICE-001 approved, SLICE-003 approved, archetype vocabulary approved, presentation-writing skill decision
+**Description**: `src/v3/planner.py` with `deck_plan.json` schema, system prompt embedding archetype vocabulary, presentation-writing skill rules appendix, argument-spine requirement. Tests against one fixture content file. No builder yet.
+**REVIEW-GATE**:
+- [ ] User inspects planner output for one real prompt.
+- [ ] User confirms copy quality passes the presentation-writing skill's checklist.
+
+### SLICE-011 — Builder prompt + end-to-end plan→build→scan (no review)
+**Blocker**: SLICE-007 has at least one working example per seeded archetype, SLICE-008 + SLICE-009 + SLICE-010 done
+**Description**: Builder prompt assembly, runtime API docs generation, few-shot example injection. First end-to-end happy path: prompt → plan → build → sandbox-execute → scan → PPTX. No review loop yet.
+**REVIEW-GATE**:
+- [ ] User inspects the built PPTX on a real prompt.
+
+### SLICE-012 — Multimodal review with rubric + repair loop
+**Blocker**: SLICE-011 working
+**Description**: Rubric-based reviewer, repair builder prompt, end-to-end plan → build → scan → review → repair → scan → PPTX.
+**REVIEW-GATE**:
+- [ ] User compares V1 vs. repaired V1 on the same prompt.
+- [ ] User confirms the repair actually improved things.
+
+### SLICE-013 — Quality gates + CLI wiring
+**Blocker**: SLICE-012 working
+**Description**: Quality gate evaluation, `generate-auto --mode v3` flag, `runs/<run_id>/` artifacts per `SPEC-v3.md §8`.
+**REVIEW-GATE**:
+- [ ] User runs the CLI end-to-end on a real prompt.
+
+### SLICE-014 — Benchmark V1 vs V3
+**Blocker**: SLICE-013 + benchmark prompt set from user
+**Description**: Side-by-side V1 placeholder and V3 composed output on 5-10 benchmark prompts. Human rating by user on 1-5 scale per slice per axis. Cutover decision.
+**REVIEW-GATE**:
+- [ ] User rates the benchmark decks.
+- [ ] User decides cutover default.
+
+---
+
+## Backlog (out of current scope)
+
+### B1 — Architecture diagram generation
+**Why deferred**: Composition of text-and-card slides is a different problem from laying out a system architecture diagram (boxes, arrows, cloud service icons, hierarchical or topological layout). Different planner signals, different primitives, different review criteria. Has a real chance of being its own sub-pipeline.
+
+**Outline of the sub-problem when we get to it**:
+- New archetype: `architecture_diagram`.
+- New runtime module: `diagrams.py` with `node`, `cluster`, `connector`, layered-layout or DAG-layout helpers.
+- Integration with the existing 29K icon library (AWS, Azure, GCP icons are already in `assets/icons/png/external/`) — this is a real asset.
+- Planner output would include a graph description (nodes, edges, groupings) instead of prose bullets.
+- Review rubric needs architecture-specific axes (clarity of flow direction, grouping legibility, label readability).
+
+**Not starting until**: V3 main pipeline is shipping and stable on non-diagram slides.
+
+### B2 — Hosting / multi-user deployment
+**Why deferred**: Current scope is a single-user local CLI. Hosting is a product and infrastructure problem, not a quality problem.
+
+**Outline of the sub-problem when we get to it**:
+- API surface: REST + async job model (runs are multi-minute, not request/response). Upload content → receive run_id → poll or webhook → download PPTX.
+- Multi-tenancy: per-org templates, per-org brand assets, per-user auth.
+- Sandbox hardening: the subprocess sandbox acceptable for single-developer use is **not** acceptable for a public service. A hosted build would need real container isolation (Firecracker, gVisor, or a managed sandbox service).
+- LLM credential management: central vs. bring-your-own-key.
+- Storage: `runs/` grows unbounded. Needs a backing store (Azure Blob / S3) with lifecycle policies.
+- Render dependencies: `soffice` + `pdftoppm` need to be baked into the container image.
+- Queue + worker architecture: runs are 1-5 minutes. Synchronous HTTP doesn't work.
+- Cost model: each run is 5-8 LLM calls + sandbox compute + review images. Meter per run.
+
+**Candidate stack once we get there**: Azure Container Apps + Azure Service Bus + Azure Blob + Azure OpenAI + a hardened sandbox image. All already in the Azure ecosystem, matches the LLM client the repo already has.
+
+**Not starting until**: Local V3 is shipping and has been used by the user for real decks for at least a few weeks.
+
+### B3 — Example library expansion beyond seed batch
+**Why deferred**: 5-6 seed examples is a starting point, not a complete library. Coverage targets per `SPEC-v3.md §6.4` are 2-3 examples per archetype. Collecting and decomposing more examples is a slow trickle, not a phase.
+
+**Not starting until**: Seed batch is decomposed and the first few real runs reveal which archetypes are weakest.
+
+### B4 — Automatic design system derivation
+**Why deferred**: Currently `design_system.json` is hand-authored. An automatic derivation script could scan reference slides and extract dominant type sizes, gutters, and spacing. Nice to have, not a blocker.
+
+### B5 — Runtime versioning and example regression suite
+**Why deferred**: Once the example library has more than a few entries, runtime changes need a regression gate (re-run every example, diff against previous output). Meaningful only after SLICE-007 produces a real library.
+
+---
+
+## Completed
+
+| ID | Title | Date | Deliverable |
 |---|---|---|---|
-| S0 | V3 artifact contracts + doc alignment | complete | `SPEC-v3.md` + aligned repo plan |
-| S1 | Builder sandbox + execution harness | planned | run disposable builder code safely |
-| S2 | Primitive helper runtime + single-slide build | planned | one composed slide from code |
-| S3 | Planner output schema + planner API flow | planned | prompt -> deck blueprint JSON |
-| S4 | Planner -> builder integration | planned | prompt -> built PPTX without review |
-| S5 | Multimodal review -> builder repair loop | planned | reviewed and repaired PPTX |
-| S6 | Multi-slide deck support + deck-level gates | planned | 5-10 slide composed deck |
-| S7 | Benchmarking, hardening, and baseline comparison | planned | benchmark report and release decision |
+| PRE-01 | V3 architecture rewrite | 2026-04-10 | `SPEC-v3.md` (full rewrite) |
+| PRE-02 | First-principles design exercise | 2026-04-10 | `BRAINSTORM.md` |
+| PRE-03 | `presentation-writing.skill` added to repo | 2026-04-10 | `assets/presentation-writing.skill` |
 
-## 5) Vertical Slices
+---
 
-## S1 — Builder Sandbox + Execution Harness
+## Changelog
 
-### Goal
-
-Safely run disposable generated builder code with retries and full artifact capture.
-
-### Build
-
-- Define builder attempt directory layout under `runs/<run_id>/build_attempts/`.
-- Define import allowlist and execution policy.
-- Implement builder code execution wrapper with:
-  - timeout;
-  - isolated writable root;
-  - no network;
-  - stdout/stderr capture;
-  - traceback capture;
-  - retry orchestration.
-- Persist `build_exec_report_v1.json`.
-
-### Demo
-
-Run a trivial generated builder script that opens the template and writes a one-slide PPTX.
-
-### Tests
-
-- execution success case;
-- syntax-error retry case;
-- runtime-error retry case;
-- import-policy rejection case;
-- output-file existence assertions.
-
-### Exit Criteria
-
-1. Disposable builder code can run safely.
-2. Common failures are persisted and surfaced clearly.
-3. Retry behavior is deterministic and test-covered.
-
-## S2 — Primitive Helper Runtime + Single-Slide Build
-
-### Goal
-
-Replace placeholder fill with direct primitive composition for one slide.
-
-### Build
-
-- Add a minimal approved helper runtime for builder code:
-  - template loader;
-  - canvas selection;
-  - token access;
-  - shape/text helpers;
-  - image insertion helpers.
-- Recreate one high-polish slide similar in spirit to `alternate-approach/build.py`.
-- Use native shapes and text boxes on blank or header-only canvas.
-
-### Demo
-
-Generate one editable slide from builder code only.
-
-### Tests
-
-- slide contains native shapes/text boxes;
-- output PPTX opens successfully;
-- required title/header structure exists;
-- diagnose and review-image export succeed.
-
-### Exit Criteria
-
-1. One composed slide is visibly better than placeholder output for the same content.
-2. Slide remains editable in PowerPoint.
-3. The helper runtime is sufficient for nontrivial composed layouts.
-
-## S3 — Planner Output Schema + Planner API Flow
-
-### Goal
-
-Make the planner produce builder-ready slide briefs instead of placeholder-bound `DeckIR`.
-
-### Build
-
-- Define `deck_blueprint_v1.json` schema.
-- Add planner prompt contract for:
-  - slide purpose;
-  - headline and subheadline;
-  - body content;
-  - visual intent;
-  - density budget;
-  - must-preserve constraints;
-  - acceptance checks.
-- Add planner artifact persistence.
-
-### Demo
-
-Prompt -> structured deck blueprint without rendering.
-
-### Tests
-
-- schema validation;
-- prompt construction tests;
-- basic planner retry tests;
-- fixture coverage for one realistic prompt.
-
-### Exit Criteria
-
-1. Planner output is valid and builder-oriented.
-2. Planner no longer depends on placeholder layout IDs as the main abstraction.
-3. Artifacts are stable enough to drive downstream build prompts.
-
-## S4 — Planner -> Builder Integration
-
-### Goal
-
-Build a full PPTX from planner output through generated primitive-composition code.
-
-### Build
-
-- Assemble `builder_input_v1.json` from planner output, tokens, canvas config, and asset paths.
-- Create builder prompts for coding-model generation.
-- Execute builder result and persist `build_deck_v1.py`.
-- Produce `deck_v1.pptx`.
-
-### Demo
-
-Prompt -> planner -> builder -> PPTX.
-
-### Tests
-
-- end-to-end one-slide integration;
-- end-to-end multi-slide smoke test;
-- builder-input assembly tests.
-
-### Exit Criteria
-
-1. No manual code editing is required to get a composed PPTX.
-2. Build retries recover common failures.
-3. Output path is robust enough for review.
-
-## S5 — Multimodal Review -> Builder Repair Loop
-
-### Goal
-
-Use visual feedback to improve composed slides rather than only re-planning text/layout placeholders.
-
-### Build
-
-- Update review prompt for primitive-composed slides.
-- Feed reviewer:
-  - review images;
-  - planner output;
-  - diagnose report;
-  - build execution report;
-  - optional build manifest.
-- Create repair-focused builder prompt that preserves accepted slides where possible.
-- Produce `deck_v2.pptx`.
-
-### Demo
-
-Prompt -> build V1 -> review -> repair build -> build V2.
-
-### Tests
-
-- reviewer schema validation;
-- repair prompt construction;
-- repair build retry test;
-- end-to-end reviewed slide improvement flow.
-
-### Exit Criteria
-
-1. Review feedback becomes actionable for the builder.
-2. Repair loop improves slide quality without rebuilding the deck blindly every time.
-3. V2 artifacts are persisted cleanly.
-
-## S6 — Multi-Slide Deck Support + Deck-Level Gates
-
-### Goal
-
-Scale the V3 path from one slide to real decks.
-
-### Build
-
-- Support 5-10 slide planner outputs.
-- Add deck-level consistency checks:
-  - headline hierarchy;
-  - visual variety;
-  - accent restraint;
-  - slide density;
-  - primitive presence.
-- Adapt current quality gates to V3 outputs.
-
-### Demo
-
-Generate a small benchmark deck through the full V3 loop.
-
-### Tests
-
-- multi-slide integration tests;
-- gate tests for planner/build/review artifacts;
-- artifact completeness tests.
-
-### Exit Criteria
-
-1. Multi-slide deck generation is stable enough for repeated benchmark runs.
-2. Quality gates catch obvious failures.
-3. Final output is clearly beyond placeholder quality.
-
-## S7 — Benchmarking, Hardening, And Baseline Comparison
-
-### Goal
-
-Decide whether V3 should replace the current default generation path.
-
-### Build
-
-- Define benchmark prompt set.
-- Produce side-by-side V1 placeholder vs V3 primitive outputs.
-- Track:
-  - build success rate;
-  - retry counts;
-  - review improvement rates;
-  - gate pass rates;
-  - human-rated quality deltas.
-- Harden prompts, helpers, and retries based on benchmark failures.
-
-### Demo
-
-Benchmark report comparing old and new generation paths.
-
-### Tests
-
-- regression suite for benchmark prompts;
-- gate pass/fail assertions on curated fixtures.
-
-### Exit Criteria
-
-1. V3 is better than the baseline often enough to justify default routing.
-2. Failure modes are understood and operationally manageable.
-3. Default-path migration decision is backed by evidence.
-
-## 6) Open Design Decisions
-
-These remain intentionally configurable while implementation starts:
-- exact planner model choice within the GPT-5.x family;
-- exact coding-model identifier for builder calls;
-- whether repair rebuilds only affected slides or regenerates deck-level code;
-- whether `quality_gates_v2.json` is retained temporarily for compatibility or replaced immediately by `quality_gates_v3.json`.
-
-## 7) Immediate Next Step
-
-The next implementation step is S1:
-- land builder attempt artifacts;
-- land execution sandbox policy;
-- prove disposable builder code can run safely inside the repo workflow.
+- **2026-04-10** — Full rewrite of `PLAN.md` as a living project board. V1/V2 cleanup audit delivered as SLICE-001 review gate. Backlog seeded with architecture-diagrams and hosting items. `SPEC-v3.md` and `BRAINSTORM.md` referenced as source of truth.
+- **2026-04-10** — `SPEC-v3.md` full rewrite incorporating runtime library, design system artifact, example library, deterministic scan before review, structured rubric reviewer.
+- **2026-04-10** — `BRAINSTORM.md` created as first-principles derivation.
+- **2026-04-09** — `SPEC-v3.md` initial revision (now replaced).

@@ -1,64 +1,48 @@
 # PPT-Gen: LLM-Assisted PPTX Generator
 
-PPT-Gen generates editable PowerPoint decks from combined content + visual cues using:
-- `python-pptx` for deterministic rendering
-- template-first layout binding via placeholder alt-text (`field_key`)
-- LLM planning and one-loop multimodal review/rework
-- hard preflight fit checks to prevent overflow
+PPT-Gen generates editable, brand-consistent PowerPoint decks from a content brief and optional visualization cues. It is a research project exploring how to compose presentation-quality slides via a planner / builder / reviewer pipeline backed by a small runtime library.
 
-## Current Status
+## Current Status (2026-04-10)
 
-Implemented:
-- one-loop automated pipeline (`generate-auto`)
-- planner V1 -> render V1 -> diagnose + slide images -> multimodal review -> planner V2 -> render V2
-- deterministic composition artifacts (`composition_spec_v1.json`, `composition_spec_v2.json`)
-- V2 quality gates with hard fail mode
-- automated slide image conversion (`soffice` + `pdftoppm`)
-- planner metadata/policy ingestion for stronger visual routing + diversity constraints
+**Active architecture**: `SPEC-v3.md` — planner / builder / reviewer with `ppt_runtime` library and hand-validated example grounding.
 
-Known gap:
-- composition polish is still below target quality for consulting-style decks.
-- visual coverage is now enforced, but visual storytelling quality still needs stronger per-slide composition logic.
+**Implementation status**: Foundations phase. No V3 code exists yet. The currently-shipped CLI runs the older V1 placeholder-fill pipeline, retained as a baseline and comparison path during V3 development.
 
-Active redesign (`2026-04-09`):
-- `SPEC-v3.md` is now the active architecture target.
-- V3 shifts the repo toward `planner -> primitive-code builder -> multimodal reviewer`.
-- The builder phase is intended to generate disposable `python-pptx` code that composes slides from native primitives on blank/header-only template canvases.
-- The current implementation in this repo is still the older placeholder/layout-bound path until V3 lands.
+**Source of truth documents**:
+- [`SPEC-v3.md`](SPEC-v3.md) — active architecture, contracts, and phase specifications.
+- [`PLAN.md`](PLAN.md) — living project board. Current slice, review queue, what's blocked, what's next, backlog. Updated after every working turn.
+- [`BRAINSTORM.md`](BRAINSTORM.md) — first-principles derivation behind the current spec.
+- [`AGENTS.md`](AGENTS.md) — operating guide for coding agents working on the repo.
+- [`SPEC-v2.md`](SPEC-v2.md) — historical recipe-driven architecture (abandoned).
 
-Latest progress (`2026-03-02`):
-- Added planner metadata catalogs:
-  - `assets/catalog/component_catalog_v1.json`
-  - `assets/catalog/component_examples_v1.json`
-  - `assets/catalog/planner_policy_v1.json`
-  - `assets/catalog/template_style_baselines_v1.json`
-- Added benchmark manifest: `assets/benchmarks/benchmark_manifest_v1.json`
-- Wired planner prompt to component metadata + policy constraints via:
-  - `src/assets.py` (`load_component_catalog`, `load_planner_policy`)
-  - `src/llm/planner.py` (`_build_system_prompt` policy sections/rules)
-- Added tests:
-  - `tests/test_assets_metadata.py`
-  - `tests/test_planner_prompt_metadata.py`
-- Added DeckIR v2 fixture scaffold: `tests/fixtures/deckir_v2/README.md`
+## Architecture At A Glance
 
-## Architecture (Implemented)
+```
+User input
+  → Normalize
+  → Planner (LLM #1) — picks archetype + semantic content, no geometry
+  → Pre-build enrichment — resolves assets, attaches design system, picks examples
+  → Builder (LLM #2) — writes one disposable build_deck.py using ppt_runtime
+  → Sandbox execute — subprocess + AST scan + rlimit + RO mounts
+  → Deterministic scan — mechanical bugs caught before review
+  → Multimodal review (LLM #3) — 8-axis rubric
+  → Repair build — regenerate with preserve-list
+  → Quality gates → PPTX
+```
 
-Pipeline:
-1. Normalize combined markdown into `content.md` + `cues.json`
-2. Planner V1 (LLM) -> `planner_deckir_v1.json`
-3. Deterministic compose/validate/render V1
-4. Diagnose V1 + slide image export
-5. Multimodal review (LLM) -> `review_feedback_v1.json`
-6. Planner rework V2 (LLM) -> `planner_deckir_v2.json`
-7. Deterministic compose/validate/render V2
-8. Diagnose V2 + quality gates -> stop
+Key ideas:
+- **Planner picks patterns, not coordinates.** Output is semantic (archetype, headline, body). No EMU values, no hex codes.
+- **Builder composes against a runtime library.** `ppt_runtime` owns grid math, tokens, text measurement, shape helpers. The builder calls `grid.span(cols=4)`, not `Inches(4.33)`.
+- **One deck, one code file, one LLM call.** Cross-slide consistency falls out of the single-call context window.
+- **Examples populate archetypes.** Each archetype label is backed by one or more hand-decomposed designer slides stored as runtime code.
+- **Mechanical bugs before aesthetic ones.** A deterministic scanner runs before the multimodal reviewer.
 
 ## Requirements
 
 - Python 3.10+
-- Virtualenv `.venv`
-- LLM credentials in `.env` (Azure OpenAI or Gemini)
-- System binaries for automated review images:
+- `uv` or `venv` + `pip`
+- LLM credentials (`.env` with Azure OpenAI or Gemini) — only needed for LLM-backed phases
+- System binaries for review image export:
   - LibreOffice (`soffice`)
   - Poppler (`pdftoppm`)
 
@@ -70,86 +54,63 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Codex cloud bootstrap:
-
-```bash
-./scripts/setup_codex_cloud.sh
-```
-
-macOS binaries:
+macOS binaries for review image export:
 
 ```bash
 brew install --cask libreoffice
 brew install poppler
 ```
 
-## Codex Cloud
-
-Use `main` as the repo ref for cloud tasks. This repository does not use `master` as its primary branch.
-
-Recommended task entry points:
+Codex cloud bootstrap:
 
 ```bash
 ./scripts/setup_codex_cloud.sh
-./scripts/test_codex_cloud.sh
 ```
 
-Notes:
-- full LLM-backed generation still requires `.env` credentials
-- review-image export still requires `soffice` and `pdftoppm`
-- `./scripts/test_codex_cloud.sh` is the safe default verification command for cloud tasks
+## CLI (current V1 path — baseline)
 
-## CLI
-
-Validate template/catalog:
+The current CLI commands reflect the V1 placeholder pipeline. They will continue to work as a baseline during V3 development.
 
 ```bash
+# validate template against layout catalog
 python -m src.cli validate
-```
 
-Render DeckIR:
-
-```bash
+# render a DeckIR JSON to PPTX
 python -m src.cli render --deckir inputs/sample_deckir.json
-```
 
-Smoke test:
-
-```bash
+# smoke: deterministic validate → preflight → render
 python -m src.cli smoke --deckir inputs/sample_deckir.json
-```
 
-Single-pass generation:
-
-```bash
+# single-pass generation (LLM planner → render, no review loop)
 python -m src.cli generate --input inputs/legacy-system-navigator.combined.md --run-id run_single
+
+# full automated one-loop run with multimodal review
+python -m src.cli generate-auto --input inputs/legacy-system-navigator.combined.md --run-id run_auto
 ```
 
-Full automated one-loop run:
+V3 CLI entry points (`--mode v3`) will land in SLICE-013. See `PLAN.md`.
 
-```bash
-source .venv/bin/activate
-set -a && source .env && set +a
-python -m src.cli generate-auto \
-  --input inputs/legacy-system-navigator.combined.md \
-  --run-id run_auto
-```
+## Run Artifacts (current V1)
 
-## Run Artifacts
-
-Each run writes to `runs/<run_id>/`, including:
-- planner artifacts (`planner_deckir_v1.json`, `planner_deckir_v2.json`)
+Each run writes to `runs/<run_id>/`:
+- planner outputs (`planner_deckir_v1.json`, `planner_deckir_v2.json`)
 - remediated decks (`deckir_v1_1.json`, `deckir_v2_1.json`)
 - PPTX outputs (`deck_v1.pptx`, `deck_v2.pptx`)
-- diagnose outputs (`diagnose_report_v1.json`, `diagnose_report_v2.json`)
+- diagnose reports (`diagnose_report_v1.json`, `diagnose_report_v2.json`)
 - composition specs (`composition_spec_v1.json`, `composition_spec_v2.json`)
 - quality gate report (`quality_gates_v2.json`)
 - run summary (`run_summary.json`)
 - structured logs (`run_log.jsonl`)
 
-## Documentation
+V3 artifacts (`deck_plan.json`, `builder_input.json`, `build_attempts/`, `build_deck.py`, `geometry_report_v*.json`, `review_feedback_v*.json`) are specified in `SPEC-v3.md §8` and will land as V3 slices ship.
 
-- [SPEC-v3.md](SPEC-v3.md): active architecture for planner -> builder -> reviewer primitive composition
-- [SPEC-v2.md](SPEC-v2.md): historical V2 recipe-driven architecture
-- [PLAN.md](PLAN.md): active execution plan and rollout slices
-- [AGENTS.md](AGENTS.md): operating guide for coding agents
+## Project Board
+
+For current slice, review queue, what's blocked, and what's next, see [`PLAN.md`](PLAN.md). It is the authoritative state of the project at any given time.
+
+## Roadmap (high-level)
+
+- **Now**: V3 foundations — audit, cleanup, design system, runtime library, sandbox, scanner.
+- **Next**: example library seeding (needs designer slides from user).
+- **After**: planner, builder, reviewer, quality gates, CLI wiring, benchmark.
+- **Backlog**: architecture diagram generation, hosted multi-user deployment, automatic design system derivation. See `PLAN.md` backlog section.
