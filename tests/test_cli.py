@@ -78,6 +78,17 @@ class TestCLI(unittest.TestCase):
         self.assertEqual(args.command, "generate")
         self.assertEqual(args.llm_provider, "azure_openai")
 
+        args = parser.parse_args(
+            [
+                "builder-exec",
+                "--builder-code",
+                "runs/demo/build_deck_v1.py",
+                "--builder-input",
+                "runs/demo/builder_input_v1.json",
+            ]
+        )
+        self.assertEqual(args.command, "builder-exec")
+
 
 class TestSmokeIntegration(unittest.TestCase):
     """Integration test for the full smoke pipeline."""

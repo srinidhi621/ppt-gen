@@ -135,6 +135,15 @@ python -m src.cli generate-auto \
   --run-id run_auto
 ```
 
+Builder sandbox execution (V3 S1 slice):
+
+```bash
+python -m src.cli builder-exec \
+  --builder-code alternate-approach/build.py \
+  --builder-input runs/demo/builder_input_v1.json \
+  --run-id run_builder_sandbox
+```
+
 ## Run Artifacts
 
 Each run writes to `runs/<run_id>/`, including:
@@ -144,6 +153,7 @@ Each run writes to `runs/<run_id>/`, including:
 - diagnose outputs (`diagnose_report_v1.json`, `diagnose_report_v2.json`)
 - composition specs (`composition_spec_v1.json`, `composition_spec_v2.json`)
 - quality gate report (`quality_gates_v2.json`)
+- builder execution report (`build_exec_report_v1.json`) and attempt artifacts under `build_attempts/`
 - run summary (`run_summary.json`)
 - structured logs (`run_log.jsonl`)
 

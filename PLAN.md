@@ -58,7 +58,7 @@ Statuses: `planned | in_progress | complete | blocked`
 | Slice | Focus | Status | User-visible Demo |
 |---|---|---|---|
 | S0 | V3 artifact contracts + doc alignment | complete | `SPEC-v3.md` + aligned repo plan |
-| S1 | Builder sandbox + execution harness | planned | run disposable builder code safely |
+| S1 | Builder sandbox + execution harness | in_progress | run disposable builder code safely |
 | S2 | Primitive helper runtime + single-slide build | planned | one composed slide from code |
 | S3 | Planner output schema + planner API flow | planned | prompt -> deck blueprint JSON |
 | S4 | Planner -> builder integration | planned | prompt -> built PPTX without review |

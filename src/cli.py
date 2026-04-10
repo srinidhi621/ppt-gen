@@ -12,6 +12,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
+from .builder import execute_builder_harness
 from .config import load_config
 from .compose import build_composition_spec
 from .generate_pipeline import (
@@ -1160,6 +1161,56 @@ def cmd_generate_auto(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_builder_exec(args: argparse.Namespace) -> int:
+    """Execute generated builder code in sandbox harness with retries."""
+    config = load_config(Path(args.project_root) if args.project_root else None)
+    run_id = args.run_id or _generate_run_id()
+    run_dir = Path(config.runs_dir) / run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
+    log_path = run_dir / "run_log.jsonl"
+
+    builder_input_path = Path(args.builder_input)
+    if not builder_input_path.exists():
+        print(f"ERROR: builder_input not found: {builder_input_path}")
+        return 1
+    builder_input = json.loads(builder_input_path.read_text(encoding="utf-8"))
+
+    builder_code_path = Path(args.builder_code)
+    if not builder_code_path.exists():
+        print(f"ERROR: builder_code not found: {builder_code_path}")
+        return 1
+
+    candidate_codes = [builder_code_path.read_text(encoding="utf-8")]
+    for retry_path in args.retry_code:
+        path = Path(retry_path)
+        if not path.exists():
+            print(f"ERROR: retry code not found: {path}")
+            return 1
+        candidate_codes.append(path.read_text(encoding="utf-8"))
+
+    _write_json(run_dir / "builder_input_v1.json", builder_input)
+    result = execute_builder_harness(
+        run_dir=run_dir,
+        builder_input=builder_input,
+        candidate_codes=candidate_codes,
+        timeout_seconds=args.timeout_seconds,
+        max_attempts=args.max_attempts,
+        log_path=log_path,
+    )
+
+    if result.get("status") != "success":
+        print("ERROR: Builder execution failed.")
+        print(f"  Run ID: {run_id}")
+        print(f"  Report: {run_dir / 'build_exec_report_v1.json'}")
+        return 1
+
+    print("Builder execution complete.")
+    print(f"  Run ID: {run_id}")
+    print(f"  Output PPTX: {result['output_pptx']}")
+    print(f"  Report: {run_dir / 'build_exec_report_v1.json'}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="PPT-Gen CLI - LLM-Assisted PPTX Generator")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1355,6 +1406,47 @@ def build_parser() -> argparse.ArgumentParser:
         help="Minimum review image width in px for ingestion validation (default: 1600)",
     )
     generate_auto_parser.set_defaults(func=cmd_generate_auto)
+
+    builder_exec_parser = subparsers.add_parser(
+        "builder-exec",
+        help="Execute generated builder code in isolated harness with retries",
+    )
+    _add_common_args(builder_exec_parser)
+    builder_exec_parser.add_argument(
+        "--builder-code",
+        type=str,
+        required=True,
+        help="Path to generated builder Python code",
+    )
+    builder_exec_parser.add_argument(
+        "--builder-input",
+        type=str,
+        required=True,
+        help="Path to builder_input_v1.json payload",
+    )
+    builder_exec_parser.add_argument(
+        "--retry-code",
+        type=str,
+        action="append",
+        default=[],
+        help="Optional additional code paths to use for deterministic retries in order",
+    )
+    builder_exec_parser.add_argument(
+        "--run-id", type=str, default=None, help="Run ID (default: auto-generated timestamp)"
+    )
+    builder_exec_parser.add_argument(
+        "--max-attempts",
+        type=int,
+        default=3,
+        help="Maximum builder execution attempts (default: 3)",
+    )
+    builder_exec_parser.add_argument(
+        "--timeout-seconds",
+        type=int,
+        default=60,
+        help="Per-attempt timeout seconds (default: 60)",
+    )
+    builder_exec_parser.set_defaults(func=cmd_builder_exec)
 
     return parser
 
