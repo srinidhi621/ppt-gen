@@ -1,0 +1,140 @@
+{
+  "template_id": "corp_deck_2025",
+  "version": "1.0",
+  "description": "Design system for Ascendion Corp Deck 2025 template. Hand-authored from canvas_config.json, token_overrides.json, reference_slide_catalog.json, and v1_mined_notes.md per SPEC-v3.md §4.0.",
+
+  "canvas": {
+    "width_emu": 12192000,
+    "height_emu": 6858000,
+    "safe_area": {
+      "left_emu": 515938,
+      "right_emu": 515938,
+      "top_emu": 298692,
+      "bottom_emu": 200000
+    }
+  },
+
+  "grid": {
+    "cols": 12,
+    "gutter_sm_emu": 91440,
+    "gutter_md_emu": 137160,
+    "gutter_lg_emu": 274320
+  },
+
+  "type_scale": {
+    "display":  { "font": "Space Grotesk", "size_pt": 40, "bold": true,  "line": 1.05 },
+    "title":    { "font": "Space Grotesk", "size_pt": 28, "bold": true,  "line": 1.08 },
+    "kicker":   { "font": "Inter",         "size_pt": 11, "bold": true,  "line": 1.1,  "upper": true },
+    "subtitle": { "font": "Inter",         "size_pt": 16, "bold": false, "line": 1.2 },
+    "body":     { "font": "Inter",         "size_pt": 12, "bold": false, "line": 1.25 },
+    "caption":  { "font": "Inter",         "size_pt": 10, "bold": false, "line": 1.2 }
+  },
+
+  "spacing_scale": {
+    "xs_emu": 73152,
+    "sm_emu": 137160,
+    "md_emu": 228600,
+    "lg_emu": 365760,
+    "xl_emu": 548640
+  },
+
+  "colors": {
+    "accent_1":      "#008567",
+    "accent_2":      "#CC0066",
+    "accent_3":      "#FFCC00",
+    "accent_4":      "#6666CC",
+    "accent_5":      "#AFAAB9",
+    "accent_6":      "#71758A",
+    "bg_primary":    "#FFFFFF",
+    "bg_dark":       "#000000",
+    "text_primary":  "#000000",
+    "text_secondary":"#71758A",
+    "text_on_dark":  "#FFFFFF",
+    "success":       "#008567",
+    "warning":       "#FFCC00",
+    "risk":          "#CC0066",
+    "hyperlink":     "#0563C1"
+  },
+
+  "color_roles": {
+    "accent_1":       "primary brand / headings / key shapes",
+    "accent_2":       "highlight / callout / risk indicator",
+    "accent_3":       "warning / attention / secondary highlight",
+    "accent_4":       "tertiary accent / charts / diagrams",
+    "accent_5":       "muted fill / dividers / secondary backgrounds",
+    "accent_6":       "subtle text / borders / deemphasized elements",
+    "bg_primary":     "primary slide background (light theme)",
+    "bg_dark":        "primary slide background (dark theme)",
+    "text_primary":   "main body text on light backgrounds",
+    "text_secondary": "subtitle / caption / metadata text",
+    "text_on_dark":   "text on dark backgrounds",
+    "success":        "positive indicator / on-track status",
+    "warning":        "caution indicator / at-risk status",
+    "risk":           "negative indicator / blocked status",
+    "hyperlink":      "hyperlink text"
+  },
+
+  "accent_policy": {
+    "primary_role": "accent_1",
+    "secondary_role": "accent_2",
+    "max_accent_roles_per_slide": 2,
+    "hero_treatment_accents": ["accent_1"]
+  },
+
+  "canvases": {
+    "header_light": {
+      "layout_index": 8,
+      "theme": "light",
+      "title_placeholder": {
+        "idx": 0,
+        "left_emu": 515938,
+        "top_emu": 298692,
+        "width_emu": 11160122,
+        "height_emu": 938437
+      },
+      "body_region": {
+        "left_emu": 515938,
+        "top_emu": 1237129,
+        "width_emu": 11160122,
+        "height_emu": 5420871
+      }
+    },
+    "header_dark": {
+      "layout_index": 9,
+      "theme": "dark",
+      "title_placeholder": {
+        "idx": 0,
+        "left_emu": 515938,
+        "top_emu": 298692,
+        "width_emu": 11160122,
+        "height_emu": 938437
+      },
+      "body_region": {
+        "left_emu": 515938,
+        "top_emu": 1237129,
+        "width_emu": 11160122,
+        "height_emu": 5420871
+      }
+    },
+    "blank": {
+      "layout_index": 36,
+      "theme": "neutral",
+      "title_placeholder": null,
+      "body_region": {
+        "left_emu": 515938,
+        "top_emu": 298692,
+        "width_emu": 11160122,
+        "height_emu": 6359308
+      }
+    }
+  },
+
+  "font_substitution": {
+    "PP Neue Machina Plain": "Space Grotesk",
+    "PP Neue Machina":       "Space Grotesk",
+    "Aptos":                 "Inter",
+    "Calibri":               "Carlito",
+    "Consolas":              "Space Grotesk",
+    "Verdana":               "Inter"
+  }
+}
