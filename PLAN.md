@@ -120,15 +120,16 @@ Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archet
 ### SLICE-008 — Deterministic post-build scanner + stage contracts + content fidelity
 **Blocker**: SLICE-006 (runtime available) — can run in parallel with SLICE-007
 **Description**: Three components:
-1. `src/scan/scanner.py` implementing the checks in `SPEC-v3.md §4.6`. BLOCKING vs WARNING severity. `geometry_report.json` schema.
-2. `src/contracts/` with JSON Schema files for every pipeline handoff (§10.3). Validator utility that runs at each stage boundary.
-3. `src/scan/content_fidelity.py` implementing the automated content fidelity check (§10.4). Extracts PPTX text, fuzzy-matches against input facts, produces `content_fidelity_report.json`.
+1. `src/scan/scanner.py` implementing all 26 objective hygiene checks from `SPEC-v3.md §10.6`. BLOCKING vs WARNING severity. `geometry_report.json` schema.
+2. `src/contracts/` with JSON Schema files + AST/artifact validators for every pipeline handoff (§10.4). Covers normalize→planner, planner→feasibility, feasibility→builder, builder→sandbox, sandbox→scanner, scanner→reviewer, reviewer→repair, repair→accept.
+3. `src/scan/content_fidelity.py` implementing the content fidelity check (§10.5). Separates visible text from notes. Detects dropped facts, hallucinated specifics, placeholder/markdown leaks. Produces `content_fidelity_report.json`.
+4. Artifact/log completeness tests — verify required run artifacts and `run_log.jsonl` stage markers.
 Unit tests against fixture decks with injected bugs (scanner), invalid handoff payloads (contracts), and known-content input/output pairs (fidelity).
 **REVIEW-GATE**:
 - [ ] User reviews the scanner check list and severity mapping.
-- [ ] User confirms the `geometry_report.json` schema.
+- [ ] User confirms the `geometry_report.json` and `content_fidelity_report.json` schemas.
 - [ ] User reviews the contract schemas for each handoff.
-- [ ] User confirms content fidelity thresholds (0.85 warn, 0.60 block).
+- [ ] User confirms content fidelity rules (hallucinated specifics blocking, visible-vs-notes distinction).
 
 ### SLICE-009 — Sandbox execution harness
 **Blocker**: None (can start after SLICE-002)
@@ -138,39 +139,45 @@ Unit tests against fixture decks with injected bugs (scanner), invalid handoff p
 - [ ] User confirms the rlimit values.
 - [ ] User runs a trivial builder script end-to-end.
 
-### SLICE-010 — Planner schema + prompt
+### SLICE-010 — Planner + feasibility + normalize
 **Blocker**: SLICE-001 approved, SLICE-003 approved, archetype vocabulary approved, presentation-writing skill decision
-**Description**: `src/v3/planner.py` with `deck_plan.json` schema, system prompt embedding archetype vocabulary, presentation-writing skill rules appendix, argument-spine requirement. Tests against one fixture content file. No builder yet.
+**Description**: `src/v3/planner.py` with `deck_plan.json` schema, system prompt embedding archetype vocabulary, presentation-writing skill rules appendix, argument-spine requirement. `src/normalize/parser.py` for input normalization and cue extraction. `src/v3/feasibility.py` for capacity gate. Tests: planner validation, normalize/cues, feasibility pass/fail boundary cases, asset-resolution failure handling. Tests against one fixture content file. No builder yet.
 **REVIEW-GATE**:
 - [ ] User inspects planner output for one real prompt.
 - [ ] User confirms copy quality passes the presentation-writing skill's checklist.
+- [ ] User confirms feasibility gate correctly rejects an overstuffed slide.
 
 ### SLICE-011 — Builder prompt + end-to-end plan→build→scan (no review)
 **Blocker**: SLICE-007 has at least one working example per seeded archetype, SLICE-008 + SLICE-009 + SLICE-010 done
-**Description**: Builder prompt assembly, runtime API docs generation, few-shot example injection. First end-to-end happy path: prompt → plan → build → sandbox-execute → scan → PPTX. No review loop yet.
+**Description**: Builder prompt assembly, runtime API docs generation, few-shot example injection. First end-to-end happy path: prompt → plan → build → sandbox-execute → scan → PPTX. No review loop yet. Integration tests for happy paths, contract-violation handling, review-image export smoke. Canary live benchmark on 3-5 release-gate prompts.
 **REVIEW-GATE**:
 - [ ] User inspects the built PPTX on a real prompt.
+- [ ] User confirms canary prompts produce no catastrophic failures.
 
 ### SLICE-012 — Multimodal review with rubric + repair loop
 **Blocker**: SLICE-011 working
-**Description**: Rubric-based reviewer, repair builder prompt, end-to-end plan → build → scan → review → repair → scan → PPTX.
+**Description**: Rubric-based reviewer, repair builder prompt, end-to-end plan → build → scan → review → repair → scan → PPTX. Repair-path integration tests including preserve-list enforcement, dropped-fact repair, editability probe.
 **REVIEW-GATE**:
 - [ ] User compares V1 vs. repaired V1 on the same prompt.
 - [ ] User confirms the repair actually improved things.
+- [ ] User confirms preserve-list enforcement (non-flagged slides remain intact).
 
 ### SLICE-013 — Quality gates + CLI wiring + run metrics
 **Blocker**: SLICE-012 working
-**Description**: Quality gate evaluation, `generate-auto --mode v3` flag, `runs/<run_id>/` artifacts per `SPEC-v3.md §8`. Run metrics ledger (`runs/metrics_ledger.csv`) appended after every pipeline run per `SPEC-v3.md §10.5`.
+**Description**: Quality gate evaluation, `generate-auto --mode v3` flag, `runs/<run_id>/` artifacts per `SPEC-v3.md §8`. Run metrics ledger (`runs/metrics_ledger.csv`) with threshold-to-action wiring per `SPEC-v3.md §10.8`. Artifact completeness verification on CLI runs.
 **REVIEW-GATE**:
 - [ ] User runs the CLI end-to-end on a real prompt.
 - [ ] User confirms metrics ledger is populated with correct fields.
+- [ ] User confirms artifact completeness check works on both success and failure paths.
 
 ### SLICE-014 — Benchmark V1 vs V3
 **Blocker**: SLICE-013
-**Description**: Run all 26 test prompts from `assets/benchmarks/v3_test_prompts.xlsx` through both V1 and V3 pipelines. 20 single-slide + 6 multi-slide tests across 7 sections (core archetypes, untested archetypes, edge cases, audience variations, content types, deck-level, stress tests). User scores each on 7 base axes + 2 multi-slide axes per `SPEC-v3.md §10.1`. Benchmark pass: ≥ 70% of prompts pass AND V3 rated higher than V1 on majority.
+**Description**: Full paired V1 vs V3 benchmark on the release-gate subset of prompts from `assets/benchmarks/v3_test_prompts.xlsx` per `SPEC-v3.md §10.7`. Separate reporting for forward-coverage and stress prompts. Editability audit on sampled decks. Metrics ledger trend review with explicit actions. Calibration step on 10-prompt anchor set before score bands become release gates.
 **REVIEW-GATE**:
-- [ ] User scores all 10 prompts in the Excel rubric sheet.
-- [ ] User decides cutover default based on benchmark pass criteria.
+- [ ] User scores all release-gate prompts with paired V1/V3 comparison.
+- [ ] User confirms no catastrophic failures on release-gate prompts.
+- [ ] User confirms every active archetype has at least one passing prompt.
+- [ ] User decides cutover default based on calibrated pass criteria.
 
 ---
 
