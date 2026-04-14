@@ -117,12 +117,18 @@ Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archet
 - [ ] User confirms capacity values derived from measurement.
 **Notes**: This is slow work. Expect ~1-2 hours per example. Do one, review, then next. Start with an Ascendion slide (S01) to prove the workflow, then alternate.
 
-### SLICE-008 — Deterministic post-build scanner
+### SLICE-008 — Deterministic post-build scanner + stage contracts + content fidelity
 **Blocker**: SLICE-006 (runtime available) — can run in parallel with SLICE-007
-**Description**: `src/scan/scanner.py` implementing the checks in `SPEC-v3.md §4.6`. BLOCKING vs WARNING severity. `geometry_report.json` schema. Unit tests against fixture decks with injected bugs.
+**Description**: Three components:
+1. `src/scan/scanner.py` implementing the checks in `SPEC-v3.md §4.6`. BLOCKING vs WARNING severity. `geometry_report.json` schema.
+2. `src/contracts/` with JSON Schema files for every pipeline handoff (§10.3). Validator utility that runs at each stage boundary.
+3. `src/scan/content_fidelity.py` implementing the automated content fidelity check (§10.4). Extracts PPTX text, fuzzy-matches against input facts, produces `content_fidelity_report.json`.
+Unit tests against fixture decks with injected bugs (scanner), invalid handoff payloads (contracts), and known-content input/output pairs (fidelity).
 **REVIEW-GATE**:
-- [ ] User reviews the check list and severity mapping.
+- [ ] User reviews the scanner check list and severity mapping.
 - [ ] User confirms the `geometry_report.json` schema.
+- [ ] User reviews the contract schemas for each handoff.
+- [ ] User confirms content fidelity thresholds (0.85 warn, 0.60 block).
 
 ### SLICE-009 — Sandbox execution harness
 **Blocker**: None (can start after SLICE-002)
@@ -152,11 +158,12 @@ Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archet
 - [ ] User compares V1 vs. repaired V1 on the same prompt.
 - [ ] User confirms the repair actually improved things.
 
-### SLICE-013 — Quality gates + CLI wiring
+### SLICE-013 — Quality gates + CLI wiring + run metrics
 **Blocker**: SLICE-012 working
-**Description**: Quality gate evaluation, `generate-auto --mode v3` flag, `runs/<run_id>/` artifacts per `SPEC-v3.md §8`.
+**Description**: Quality gate evaluation, `generate-auto --mode v3` flag, `runs/<run_id>/` artifacts per `SPEC-v3.md §8`. Run metrics ledger (`runs/metrics_ledger.csv`) appended after every pipeline run per `SPEC-v3.md §10.5`.
 **REVIEW-GATE**:
 - [ ] User runs the CLI end-to-end on a real prompt.
+- [ ] User confirms metrics ledger is populated with correct fields.
 
 ### SLICE-014 — Benchmark V1 vs V3
 **Blocker**: SLICE-013

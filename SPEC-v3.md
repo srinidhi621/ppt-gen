@@ -673,10 +673,16 @@ The accepted `deck.pptx` at the run root is a copy of the attempt that passed al
 
 ## 10) Testing Strategy
 
+Full testing plan is documented in `TEST_PLAN.md`. Summary by category:
+
 - **Unit**: planner schema validation; builder input assembly; AST sandbox rejection of disallowed imports; runtime grid math; `measure_text` against known strings; token lookup; geometry scan checks.
 - **Integration**: one-archetype single-slide pipeline (plan → build → scan → review → stop); multi-slide pipeline across all seeded archetypes; mechanical repair loop recovery; aesthetic repair loop improvement.
 - **Regression**: every example file in `examples/` must continue to execute after any runtime change, producing a deck that passes the full geometry scan.
-- **Benchmark**: 10 curated test prompts in `assets/benchmarks/v3_test_prompts.xlsx`, each targeting a specific archetype with deliberately ambiguous user instructions. Side-by-side V1 placeholder vs. V3 composed, scored by the user on the 7-axis rubric below.
+- **Stage contracts**: JSON schema validation at every pipeline handoff point (§10.3). Deterministic, sub-second, runs on every pipeline execution.
+- **Content fidelity**: automated extraction and comparison of input content vs. output PPTX text (§10.4). Catches dropped facts, hallucinated content, placeholder leaks.
+- **Visual hygiene**: 26 binary mechanical-correctness checks (§10.2). Mix of scanner-automated and multimodal LLM verification.
+- **Benchmark**: 26 curated test prompts in `assets/benchmarks/v3_test_prompts.xlsx`, scored on 9-axis rubric (§10.1). Side-by-side V1 vs. V3, human-scored.
+- **Run metrics**: per-run telemetry appended to `runs/metrics_ledger.csv` (§10.5). Enables quality-over-time tracking without human effort.
 
 ### 10.1 Benchmark Evaluation Rubric
 
@@ -734,6 +740,69 @@ No pixel-perfect visual diffs. No tests that require the Azure/Gemini API for co
 **Verification method**: Checks marked `scanner_automatable` are implemented in the deterministic post-build scanner (§4.6). The remainder are verified via multimodal LLM review — the Excel includes pre-written per-category yes/no prompts for this purpose.
 
 **Deck-level pass**: zero BLOCKING failures AND ≤ 3 WARNING failures.
+
+### 10.3 Stage Contract Validators
+
+JSON schema validation at every pipeline handoff point. Runs automatically on every pipeline execution, sub-second, deterministic. Any contract failure halts the pipeline with a structured error before the next stage starts.
+
+| Handoff | Contract | Failure action |
+|---|---|---|
+| Planner → Feasibility gate | Every slide has `archetype`, `purpose`, `audience_takeaway`; archetype ∈ active vocabulary; item count ≤ `max_items`; word count ≤ `max_words` | Reject plan, return to planner with structured error |
+| Planner → Builder | `deck_plan.json` passes full JSON schema; no duplicate `slide_id`; slide count ∈ [1, 20]; all referenced archetypes have examples | Reject plan |
+| Builder → Sandbox | `build_deck.py` passes AST pre-scan; imports only `ppt_runtime.*`; no raw hex color literals; no hardcoded pixel positions (numeric literal > 100 in shape-placement context) | Reject code, return to builder |
+| Sandbox → Scanner | Output file exists, is valid PPTX (opens without exception), slide count matches plan | Pipeline error |
+| Scanner → Reviewer | `geometry_report.json` passes schema; zero BLOCKING findings | Route to repair, not reviewer |
+| Reviewer → Repair | `review_feedback.json` passes schema; every scored slide has all required axes; repair list non-empty only when warranted | Pipeline error |
+
+Contract schemas are defined as JSON Schema files in `src/contracts/` and validated using `jsonschema`. Builder code contracts use AST inspection.
+
+### 10.4 Automated Content Fidelity Check
+
+Post-build automated check that verifies the output PPTX contains the user's input content. No human review needed. Runs after the scanner, before the reviewer.
+
+**Method**:
+1. Extract all text runs from every slide and speaker notes in the output PPTX.
+2. Extract key facts from the input: named entities, numbers, percentages, proper nouns, quoted phrases.
+3. Fuzzy-match each input fact against the extracted PPTX text (token overlap with threshold).
+4. Flag any input fact with no match as **dropped content**.
+5. Flag any PPTX text segment with no input source as **potentially hallucinated** (advisory, not blocking — the planner may legitimately generate framing text).
+
+**Output**: `content_fidelity_report.json` with `coverage_score` (0.0–1.0), `dropped_facts[]`, `unmatched_output_segments[]`.
+
+**Pass criteria**: `coverage_score ≥ 0.85` (≥ 85% of input facts appear in output). Scores below this trigger a WARNING in the geometry report. Scores below 0.60 are BLOCKING.
+
+**Also catches**: leaked placeholder text (`[Title]`, `Lorem ipsum`, `TODO`), raw markdown syntax in text runs.
+
+### 10.5 Run Metrics Ledger
+
+Every pipeline run appends one row to `runs/metrics_ledger.csv`:
+
+```
+run_id, timestamp, prompt_hash, slide_count,
+planner_tokens_in, planner_tokens_out,
+builder_tokens_in, builder_tokens_out,
+reviewer_tokens_in, reviewer_tokens_out,
+build_attempts, repair_rounds,
+scanner_blocking_count, scanner_warning_count,
+content_fidelity_score,
+reviewer_avg_score, reviewer_min_axis,
+total_latency_sec, outcome
+```
+
+**Fields**:
+- `prompt_hash`: SHA-256 of the input content, for identifying re-runs of the same prompt.
+- `build_attempts`: number of sandbox executions (1 = first-pass success).
+- `repair_rounds`: number of review → repair cycles (0 = no repair needed).
+- `outcome`: one of `success`, `failed_scanner`, `failed_quality`, `error`.
+
+**Use cases**:
+- Track first-pass build success rate over time (builder prompt quality signal).
+- Track repair frequency and effectiveness (repair loop quality signal).
+- Detect token usage regressions (cost control).
+- Detect latency regressions.
+- Compare quality metrics across prompt categories.
+
+The ledger is append-only. No pipeline logic reads from it — it is purely observational.
 
 ## 11) Migration Strategy
 
