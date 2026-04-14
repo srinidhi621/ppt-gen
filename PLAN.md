@@ -223,11 +223,13 @@ Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archet
 | SLICE-001 | V1/V2 artifact keep/delete review | 2026-04-14 | Keep/delete matrix approved by user |
 | SLICE-002 | V1/V2 cleanup execution | 2026-04-14 | 5 V1 catalogs mined → `v1_mined_notes.md`; 14 ground_truth scratch files deleted; -5,862 lines |
 | PRE-06 | Benchmark test prompts + evaluation rubric | 2026-04-14 | `assets/benchmarks/v3_test_prompts.xlsx` (26 prompts, 9-axis rubric, reusable generator script) |
+| PRE-07 | Visual hygiene checks | 2026-04-14 | `assets/benchmarks/v3_visual_hygiene_checks.xlsx` (26 binary checks, 6 categories, reusable generator script) |
 
 ---
 
 ## Changelog
 
+- **2026-04-14** — Visual hygiene checks added: 26 binary pass/fail checks across 6 categories (Color, Typography, Spatial, Content Rendering, Cross-Slide, Structural), 12 BLOCKING / 14 WARNING, with LLM review prompts. Generator at `scripts/generate_visual_hygiene_xlsx.py`. SPEC-v3.md updated: §4.6 cross-references hygiene suite, §10.2 added with full check taxonomy and deck-level pass criteria.
 - **2026-04-14** — SLICE-001 approved, SLICE-002 executed (19 files deleted, 5 mined). Benchmark test bed expanded to 26 prompts across 7 sections (`v3_test_prompts.xlsx`): 20 single-slide + 6 multi-slide, 9-axis rubric (7 base + 2 multi-slide-only), reusable generator script at `scripts/generate_benchmark_xlsx.py`. Evaluation criteria added to `SPEC-v3.md §10.1` and `§13`. SLICE-003 (design_system.json) now active. Designer slides received, cataloged (21 slides, 3 Ascendion-branded decomposable). `BRAINSTORM_codex.md` assessed; 5 ideas incorporated into SPEC-v3.md: archetype capacity metadata, feasibility gate, section composers, repair escalation, purpose/audience_takeaway. Archetype vocabulary expanded to 13 active + 3 candidates. SLICE-007 updated with two-track decomposition plan. `content_with_diagram` renamed to `content_with_visual`. `matrix_grid` and `timeline_roadmap` added. SLICE-006 expanded to include section composers.
 - **2026-04-10** — Full rewrite of `PLAN.md` as a living project board. V1/V2 cleanup audit delivered as SLICE-001 review gate. Backlog seeded with architecture-diagrams and hosting items. `SPEC-v3.md` and `BRAINSTORM.md` referenced as source of truth.
 - **2026-04-10** — `SPEC-v3.md` full rewrite incorporating runtime library, design system artifact, example library, deterministic scan before review, structured rubric reviewer.
