@@ -674,7 +674,29 @@ The accepted `deck.pptx` at the run root is a copy of the attempt that passed al
 - **Unit**: planner schema validation; builder input assembly; AST sandbox rejection of disallowed imports; runtime grid math; `measure_text` against known strings; token lookup; geometry scan checks.
 - **Integration**: one-archetype single-slide pipeline (plan → build → scan → review → stop); multi-slide pipeline across all seeded archetypes; mechanical repair loop recovery; aesthetic repair loop improvement.
 - **Regression**: every example file in `examples/` must continue to execute after any runtime change, producing a deck that passes the full geometry scan.
-- **Benchmark**: 5-10 curated prompts, side-by-side V1 placeholder vs. V3 composed, rated by the user on clarity / hierarchy / aesthetics (1-5) per slide.
+- **Benchmark**: 10 curated test prompts in `assets/benchmarks/v3_test_prompts.xlsx`, each targeting a specific archetype with deliberately ambiguous user instructions. Side-by-side V1 placeholder vs. V3 composed, scored by the user on the 7-axis rubric below.
+
+### 10.1 Benchmark Evaluation Rubric
+
+Each test prompt is scored on 7 axes (1-5 scale):
+
+| Axis | What it measures |
+|---|---|
+| Content Fidelity | Does the output capture all user-specified content without fabrication? |
+| Archetype Selection | Did the planner pick the right layout family for the content? |
+| Visual Hierarchy | Is there a clear focal point and natural reading flow? |
+| Density & Readability | Does the content fit without overflow, with appropriate whitespace? |
+| Brand Consistency | Are all colors, fonts, and spacing from the design system tokens? |
+| Editability | Can a non-designer edit the content and maintain layout quality? |
+| Mechanical Defects | Does the geometry scan return zero blocking findings? |
+
+**Per-prompt pass**: average across all 7 axes ≥ 3.5 AND no single axis ≤ 2.
+
+**Benchmark pass** (V3 ships as default): ≥ 7 of 10 test prompts pass AND V3 output is rated higher than V1 placeholder output on a majority of prompts by the user's own scoring.
+
+The rubric is intentionally aligned with the multimodal reviewer's 8-axis scoring (§4.8). The benchmark axes are a superset: `Content Fidelity` and `Archetype Selection` are human-only judgments not available to the automated reviewer. `Mechanical Defects` subsumes what the deterministic scanner checks. The remaining 4 axes map directly to reviewer axes.
+
+Full axis definitions with score-level descriptions are in `assets/benchmarks/v3_test_prompts.xlsx` Sheet 3 ("Axis Definitions").
 
 No pixel-perfect visual diffs. No tests that require the Azure/Gemini API for correctness signals; mock the LLM layer.
 
@@ -722,7 +744,7 @@ V3 ships as default when all are true:
 2. The deterministic scanner catches ≥ 90% of mechanical bugs before review on a seeded failure fixture set.
 3. The end-to-end pipeline produces a composed deck from a real prompt with no manual intervention on the happy path.
 4. The repair loop demonstrably improves review scores on at least 60% of aesthetically-flagged slides in benchmark runs.
-5. On 10 benchmark prompts, V3 output is rated higher than V1 placeholder output on a majority of slides by the user's own 1-5 rubric.
+5. On the 10 benchmark prompts (`assets/benchmarks/v3_test_prompts.xlsx`), ≥ 7 pass the 7-axis rubric (§10.1), and V3 is rated higher than V1 on a majority of prompts.
 6. Run artifacts are sufficient to debug any failure mode (every attempt, every exec report, every scan, every review persisted).
 
 ## 14) Open Decisions (carry into implementation)

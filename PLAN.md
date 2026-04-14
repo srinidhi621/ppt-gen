@@ -39,17 +39,14 @@ No V3 code exists yet. The next few slices are **non-LLM foundations**: audit, c
 
 ## Active Slice
 
-### SLICE-001 — V1/V2 artifact keep/delete review
-**Status**: Awaiting user review
-**Owner**: User
-**Description**: Claude has audited V1/V2 artifacts in the repo and proposed a keep/delete matrix. User reviews the matrix and confirms what to delete, what to keep during the V1 fallback period, and what to mine before deletion.
-**Deliverable**: The table in this turn's chat reply.
+### SLICE-003 — Draft `design_system.json`
+**Status**: Up next (ready to start)
+**Owner**: Claude
+**Description**: Author `assets/template/design_system.json` from `canvas_config.json`, `token_overrides.json`, `ground_truth/reference_slide_catalog.json`, and the mined V1 catalog notes (`assets/catalog/v1_mined_notes.md`). Schema per `SPEC-v3.md §4.0`.
 **REVIEW-GATE**:
-- [ ] User approves the `KEEP` list.
-- [ ] User approves the `KEEP DURING V1 FALLBACK` list.
-- [ ] User approves the `MINE THEN DELETE` list and confirms what "mine" means for each.
-- [ ] User approves the `DELETE NOW` list (currently empty).
-**Definition of done**: A follow-up slice (SLICE-002) captures the decisions as a cleanup task list in this plan.
+- [ ] User reads the draft file.
+- [ ] User confirms grid cols, gutter values, type scale sizes, accent policy.
+- [ ] User flags anything that should be derived from a reference slide but wasn't.
 
 ---
 
@@ -78,20 +75,6 @@ No V3 code exists yet. The next few slices are **non-LLM foundations**: audit, c
 ## Up Next (Claude can build independently)
 
 These slices are ready to start as soon as their blockers clear. Listed in execution order.
-
-### SLICE-002 — V1/V2 cleanup execution
-**Blocker**: SLICE-001 approval
-**Description**: Execute the approved keep/delete matrix. Mine the V2-era catalogs into notes for `design_system.json` authoring. Delete approved files. Update imports and tests that break as a result.
-**REVIEW-GATE**:
-- [ ] User confirms the resulting `git status` + diff summary before commit.
-
-### SLICE-003 — Draft `design_system.json`
-**Blocker**: SLICE-001, user confirms draft-and-review path
-**Description**: Author `assets/template/design_system.json` from `canvas_config.json`, `token_overrides.json`, `ground_truth/reference_slide_catalog.json`, and the mined V2 catalog notes. Schema per `SPEC-v3.md §4.0`.
-**REVIEW-GATE**:
-- [ ] User reads the draft file.
-- [ ] User confirms grid cols, gutter values, type scale sizes, accent policy.
-- [ ] User flags anything that should be derived from a reference slide but wasn't.
 
 ### SLICE-004 — `ppt_runtime` skeleton: canvas, grid, tokens
 **Blocker**: SLICE-003 approval
@@ -176,11 +159,11 @@ Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archet
 - [ ] User runs the CLI end-to-end on a real prompt.
 
 ### SLICE-014 — Benchmark V1 vs V3
-**Blocker**: SLICE-013 + benchmark prompt set from user
-**Description**: Side-by-side V1 placeholder and V3 composed output on 5-10 benchmark prompts. Human rating by user on 1-5 scale per slice per axis. Cutover decision.
+**Blocker**: SLICE-013
+**Description**: Run all 10 test prompts from `assets/benchmarks/v3_test_prompts.xlsx` through both V1 and V3 pipelines. User scores each on the 7-axis rubric (Content Fidelity, Archetype Selection, Visual Hierarchy, Density & Readability, Brand Consistency, Editability, Mechanical Defects). Pass criteria per `SPEC-v3.md §10.1`: per-prompt average ≥ 3.5 with no axis ≤ 2. Benchmark pass: ≥ 7 of 10 prompts pass AND V3 rated higher than V1 on majority.
 **REVIEW-GATE**:
-- [ ] User rates the benchmark decks.
-- [ ] User decides cutover default.
+- [ ] User scores all 10 prompts in the Excel rubric sheet.
+- [ ] User decides cutover default based on benchmark pass criteria.
 
 ---
 
@@ -237,12 +220,15 @@ Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archet
 | PRE-03 | `presentation-writing.skill` added to repo | 2026-04-10 | `assets/presentation-writing.skill` |
 | PRE-04 | Designer reference slides received | 2026-04-14 | `assets/ground_truth/internal_inbox/designer_reference_slides.pptx` (21 slides cataloged) |
 | PRE-05 | Independent first-principles review incorporated | 2026-04-14 | `BRAINSTORM_codex.md` assessed; 5 ideas incorporated into `SPEC-v3.md` rev 2 |
+| SLICE-001 | V1/V2 artifact keep/delete review | 2026-04-14 | Keep/delete matrix approved by user |
+| SLICE-002 | V1/V2 cleanup execution | 2026-04-14 | 5 V1 catalogs mined → `v1_mined_notes.md`; 14 ground_truth scratch files deleted; -5,862 lines |
+| PRE-06 | Benchmark test prompts + evaluation rubric | 2026-04-14 | `assets/benchmarks/v3_test_prompts.xlsx` (10 prompts, 7-axis rubric, axis definitions) |
 
 ---
 
 ## Changelog
 
-- **2026-04-14** — Designer slides received, cataloged (21 slides, 3 Ascendion-branded decomposable). `BRAINSTORM_codex.md` assessed; 5 ideas incorporated into SPEC-v3.md: archetype capacity metadata, feasibility gate, section composers, repair escalation, purpose/audience_takeaway. Archetype vocabulary expanded to 13 active + 3 candidates. SLICE-007 updated with two-track decomposition plan. `content_with_diagram` renamed to `content_with_visual`. `matrix_grid` and `timeline_roadmap` added. SLICE-006 expanded to include section composers.
+- **2026-04-14** — SLICE-001 approved, SLICE-002 executed (19 files deleted, 5 mined). Benchmark test bed created (`v3_test_prompts.xlsx`: 10 prompts, 7-axis rubric, pass criteria). Evaluation criteria added to `SPEC-v3.md §10.1` and `§13`. SLICE-003 (design_system.json) now active. Designer slides received, cataloged (21 slides, 3 Ascendion-branded decomposable). `BRAINSTORM_codex.md` assessed; 5 ideas incorporated into SPEC-v3.md: archetype capacity metadata, feasibility gate, section composers, repair escalation, purpose/audience_takeaway. Archetype vocabulary expanded to 13 active + 3 candidates. SLICE-007 updated with two-track decomposition plan. `content_with_diagram` renamed to `content_with_visual`. `matrix_grid` and `timeline_roadmap` added. SLICE-006 expanded to include section composers.
 - **2026-04-10** — Full rewrite of `PLAN.md` as a living project board. V1/V2 cleanup audit delivered as SLICE-001 review gate. Backlog seeded with architecture-diagrams and hosting items. `SPEC-v3.md` and `BRAINSTORM.md` referenced as source of truth.
 - **2026-04-10** — `SPEC-v3.md` full rewrite incorporating runtime library, design system artifact, example library, deterministic scan before review, structured rubric reviewer.
 - **2026-04-10** — `BRAINSTORM.md` created as first-principles derivation.
