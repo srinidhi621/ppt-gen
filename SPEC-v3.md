@@ -1,7 +1,8 @@
 # SPEC-v3.md — Planner / Builder / Reviewer With Runtime Library And Example Grounding
 
-Status (`2026-04-10`):
-- Full rewrite. Replaces the earlier `2026-04-09` V3 revision.
+Status (`2026-04-14`):
+- Revision 2. Incorporates archetype capacity metadata, pre-builder feasibility gate, section-level runtime composers, repair escalation, and planner schema enrichment after independent first-principles review (`BRAINSTORM_codex.md`).
+- Designer reference slides received and cataloged (`2026-04-14`). Ascendion-branded slides identified for direct decomposition; layout patterns from other sources will be reimplemented on Ascendion template.
 - Active architecture for new development.
 - `SPEC-v2.md` retained as historical context for the recipe-driven direction.
 - The currently shipped CLI is still the V1 placeholder pipeline until V3 slices land.
@@ -226,6 +227,8 @@ Reuses existing `src/generate_pipeline.py` behavior. Combined markdown → conte
       "slide_id": "operating_principle",
       "archetype": "hero_statement_with_support_columns",
       "canvas": "header_light",
+      "purpose": "establish_thesis",
+      "audience_takeaway": "The problem is structural, not just operational.",
       "kicker": "01 | The thesis",
       "headline": "Legacy complexity is now a growth constraint",
       "hero_text": "Fragmentation slows delivery and compounds operational risk.",
@@ -252,6 +255,7 @@ Reuses existing `src/generate_pipeline.py` behavior. Combined markdown → conte
 
 Hard rules:
 - Every slide carries an `archetype` from the fixed vocabulary.
+- Every slide carries a `purpose` (e.g. `establish_thesis`, `present_evidence`, `compare_options`, `show_process`, `call_to_action`) and an `audience_takeaway` (single sentence the audience should remember). The reviewer evaluates whether the built slide achieves its stated purpose.
 - No field names containing `left`, `top`, `width`, `height`, `x`, `y`, `emu`, `inch`, `hex`, `rgb`, `size_pt`.
 - `style_contract` is deck-level and immutable during repair unless the reviewer flags it explicitly.
 
@@ -265,7 +269,13 @@ Planner retry budget: 2 retries on schema-validation failure.
 1. Resolve icon concepts → concrete asset paths via `visual_vocabulary.json`.
 2. Resolve branded image hints → concrete paths via `branded_images.json`.
 3. Pick examples: for each slide's archetype, select 1-3 relevant examples from `examples/` and attach their source paths. If no example exists for an archetype, record the gap and fall back to `alternate-approach` as nearest-neighbor.
-4. Pre-check density budgets: for each slide, call `measure_text` against the smallest reasonable body size and flag slides that cannot fit. If any slide fails, trigger a planner re-plan with the failure as context instead of spending builder tokens.
+4. **Feasibility gate** (hard — blocks builder if failed):
+   - For each slide, look up the archetype's `capacity` metadata (see §5).
+   - Reject if item count exceeds `max_items` (e.g. 5 supports in a family that allows 4).
+   - Reject if total word count exceeds `max_words`.
+   - Reject if asset hints reference assets that do not resolve.
+   - On any rejection: return the failing slides to the planner with the specific violation. The planner re-plans only the failing slides (split, reduce, or change archetype). Re-planning budget: 1 retry.
+   - This gate is deterministic and cheap. It prevents the builder from receiving plans it cannot lay out.
 5. Attach design system tokens, canvas dims, asset paths, and examples to build the builder input packet.
 
 **Output**: `builder_input.json`
@@ -410,6 +420,8 @@ Any axis score ≤ 2 is a mandatory repair target. Axis ≤ 3 is optional. Scori
 
 **Repair budget**: 1 repair loop by default, 2 max. Beyond that, ship the best attempt with a failure report.
 
+**Escalation on repeated failure**: If the same slide fails on the same axis (mechanical or aesthetic) across two consecutive repair attempts, the repair prompt is allowed to change the slide's archetype or split the slide into two. The planner's `must_preserve` fields still hold, but the layout strategy may change. This prevents the repair loop from repeatedly tweaking a layout that fundamentally does not work for the content.
+
 ### 4.10 Phase 10 — Quality Gates And Stop
 
 **Gates**:
@@ -424,26 +436,37 @@ Any axis score ≤ 2 is a mandatory repair target. Axis ≤ 3 is optional. Scori
 
 ## 5) Archetype Vocabulary
 
-Planner output archetypes are drawn from a fixed vocabulary. Initial set (to be expanded as the example library grows):
+Planner output archetypes are drawn from a fixed vocabulary. Each archetype carries capacity metadata used by the feasibility gate (§4.3 step 4). Initial set (to be expanded as the example library grows):
 
-| Archetype | Intent |
-|---|---|
-| `hero_title` | Deck cover with headline, optional subhead, optional backdrop |
-| `section_break` | Divider slide between deck sections |
-| `hero_statement_with_support_columns` | One dominant statement + 2-4 supporting columns |
-| `three_cards` | Three parallel concepts with title + body |
-| `comparison_split` | Two-sided before/after, us/them, problem/solution |
-| `kpi_grid` | Grid of 4-6 large metrics with labels |
-| `stat_list_with_icons` | Vertical list of stats with an icon per row |
-| `process_flow` | Linear or staged process with 3-6 steps |
-| `quote_callout` | Single large quotation with attribution |
-| `content_with_diagram` | Text on one side, diagram or image on the other |
-| `closing_cta` | Call-to-action closer with next steps |
+| Archetype | Intent | max_items | max_words | canvas_pref |
+|---|---|---|---|---|
+| `hero_title` | Deck cover with headline, optional subhead, optional backdrop | 2 | 30 | `header_dark` |
+| `section_break` | Divider slide between deck sections | 2 | 20 | `header_dark` |
+| `hero_statement_with_support_columns` | One dominant statement + 2-4 supporting columns | 4 supports | 85 | `header_light` |
+| `three_cards` | Three parallel concepts with title + body | 3 cards | 90 | `blank` |
+| `comparison_split` | Two-sided before/after, us/them, problem/solution | 2 sides, 4 pts/side | 80 | `blank` |
+| `kpi_grid` | Grid of 4-6 large metrics with labels | 6 metrics | 60 | `blank` |
+| `stat_list_with_icons` | Vertical list of stats with an icon per row | 5 rows | 75 | `header_light` |
+| `process_flow` | Linear or staged process with 3-6 steps | 6 steps | 90 | `blank` |
+| `quote_callout` | Single large quotation with attribution | 1 quote | 50 | `header_dark` |
+| `content_with_visual` | Text on one side, image or diagram on the other | 1 text + 1 visual | 60 | `blank` |
+| `closing_cta` | Call-to-action closer with next steps | 3 items | 50 | `header_light` |
+| `matrix_grid` | Labeled rows x labeled columns of content cells | 4 rows x 3 cols | 150 | `blank` |
+| `timeline_roadmap` | Phased timeline with milestones and durations | 5 phases | 100 | `blank` |
+
+Capacity values are initial estimates refined during example seeding (SLICE-007). `canvas_pref` is the default; the planner may override with justification.
+
+The following archetypes are **candidates** — observed in designer reference slides but not yet confirmed. They will be added to the active vocabulary only if example decomposition during SLICE-007 confirms they are distinct from existing archetypes:
+- `persona_use_case` — persona image + story + data flow (observed in designer slides)
+- `feature_columns` — multi-column feature list with category headers (observed in designer slides)
+- `services_overview` — multi-section: stats banner + pillars + value props (observed in designer slides, may be too complex for a single archetype)
 
 Rules:
 - Archetype names are planner-visible labels, not implementation names.
+- Every archetype carries `capacity` metadata: `max_items`, `max_words`, and `canvas_pref`. The feasibility gate (§4.3) checks these before the builder runs.
 - Every archetype must be populated by at least one validated example before the planner is allowed to select it. "Populated" means a working `examples/<label>_NN.py` that runs and produces a structurally-faithful reproduction of a designer source.
 - New archetypes are added only when a decomposed example shows an existing label cannot describe it cleanly.
+- Renamed: `content_with_diagram` → `content_with_visual` to reflect that the visual side may be an image, icon cluster, or simple diagram, not only a complex diagram.
 
 ## 6) Example Library
 
@@ -483,13 +506,37 @@ Each example ships with `examples/<archetype>_<slug>.json`:
 
 `invariants` and `variables` are hand-written. They are what make the example teachable — they tell the builder what to copy and what to adapt. Without them, few-shot is pure mimicry.
 
-### 6.4 Library growth policy
-- Initial seed: the user-provided expert slides + `alternate-approach/build.py` rewritten on the runtime.
-- Coverage target before S4 exits: at least one example per archetype the planner is allowed to select.
-- Coverage target before S7: 2-3 examples per archetype, varying on the listed variables, so the builder learns invariants across the variation.
+### 6.4 Designer slide source material
+
+Designer reference slides received `2026-04-14` at `assets/ground_truth/internal_inbox/designer_reference_slides.pptx` (21 slides). After filtering:
+
+**Ascendion-branded slides (direct decomposition sources)**:
+- S01: Hero title with background visual — maps to `hero_title`
+- S02: Numbered infographic overlay — may map to `process_flow` variant or new archetype
+- S06: Solution flow with connectors (22 shapes) — maps to `content_with_visual`, complex
+
+**Excluded**:
+- S03, S04: Full-bleed visuals, no extractable text — limited decomposition value
+- S10, S16, S19: Architecture diagrams — deferred to B1
+- S11-S13: Duplicates (identical slides)
+- S05, S07-S09, S14-S15, S17-S18, S20-S21: Collabera Digital branded — not direct sources
+
+**Layout patterns to reimplement on Ascendion template** (from non-Ascendion slides):
+- S14 pattern: 4x3 matrix grid with labeled rows and column headers → `matrix_grid`
+- S21 pattern: Phased timeline with duration badges → `timeline_roadmap`
+- S09 pattern: Two-phase horizontal approach → `process_flow`
+- S18 pattern: Multi-column feature list with priority badges → `feature_columns` candidate
+- S07 pattern: Two-column concept cards with icons → `comparison_split`
+
+These patterns are decomposed for layout structure only. Colors, fonts, and spacing are replaced with Ascendion design system tokens during reimplementation.
+
+### 6.5 Library growth policy
+- Initial seed: Ascendion designer slides (S01, S02, S06) + layout patterns reimplemented from non-Ascendion sources + `alternate-approach/build.py` rewritten on the runtime.
+- Coverage target before SLICE-011: at least one example per archetype the planner is allowed to select.
+- Coverage target before SLICE-014: 2-3 examples per archetype, varying on the listed variables, so the builder learns invariants across the variation.
 - Examples that stop being useful (e.g., template changes, archetype renamed) are removed, not left to rot.
 
-### 6.5 Example selection during a run
+### 6.6 Example selection during a run
 `src/compose/examples.py` (new) receives the planner's archetype list and returns the top examples per archetype (by tag match, then by recency). Budget cap: at most 3 examples in the builder prompt for any one run, regardless of archetype count. If the budget is exceeded, prefer one example per unique archetype over multiple examples of the same archetype.
 
 ## 7) Runtime Library
@@ -504,7 +551,8 @@ src/ppt_runtime/
   tokens.py           # Tokens, color, type, spacing
   measure.py          # measure_text, shrink_to_fit
   shapes.py           # add_rect, add_text, add_image, add_line, add_connector
-  patterns.py         # draw_card, draw_stat_block, draw_kicker, draw_header_bar
+  patterns.py         # shape-level: draw_card, draw_stat_block, draw_kicker, draw_header_bar
+  composers.py        # section-level: compose_card_row, compose_stat_grid, compose_split_columns, compose_timeline
   errors.py
 ```
 
@@ -541,11 +589,23 @@ add_text(slide, rect, "Legacy complexity", type_style=tokens.type("title"),
 add_rect(slide, rect, fill=tokens.color("accent_1"), line=None)
 add_image(slide, rect, path="assets/icons/png/...")
 
-# patterns (opinionated)
+# patterns (shape-level, opinionated)
 draw_card(slide, rect, title="...", body="...",
           accent=tokens.color("accent_1"), padding=tokens.spacing("md"))
 draw_header_bar(slide, kicker="01 | The thesis", title="Legacy complexity is now a growth constraint")
+
+# composers (section-level — lay out multi-shape sections)
+compose_card_row(slide, region, items=[{"title": "...", "body": "..."}],
+                 accent=tokens.color("accent_1"), gutter="md")       # N equal-width cards
+compose_stat_grid(slide, region, metrics=[{"value": "42%", "label": "..."}],
+                  cols=3)                                             # metric grid
+compose_split_columns(slide, region, left_content, right_content,
+                      split=0.5)                                     # two-panel layout
+compose_timeline(slide, region, phases=[{"label": "...", "body": "..."}],
+                 accent=tokens.color("accent_1"))                    # horizontal timeline
 ```
+
+Section composers own the internal layout of a region (card gutters, metric sizing, column splits). The builder calls them with content and a bounding `Rect`; the composer handles subdivision. This sits between shape-level helpers (draw one thing) and hypothetical future full-slide family functions. The builder still owns slide-level composition — choosing which sections go where on the canvas.
 
 ### 7.3 Validation gate for runtime changes
 Any change to the runtime must pass the full example library — every `examples/*.py` must still execute and still produce structurally-faithful output against its source. Breaking changes require bumping a runtime version and rerunning the validation.
@@ -673,3 +733,6 @@ V3 ships as default when all are true:
 - Whether the reviewer sees images for the selected examples as a second multimodal context, or only the candidate deck images.
 - Whether repair rebuilds use a temperature lower than the initial build (likely yes).
 - Whether `alternate-approach/build.py` stays in its current location or moves into `examples/source/` after rewrite.
+- Whether candidate archetypes (`persona_use_case`, `feature_columns`, `services_overview`) graduate to the active vocabulary or collapse into existing archetypes after SLICE-007 decomposition.
+- Whether section composers (`composers.py`) should be a separate module or folded into `patterns.py`. Current spec separates them for clarity; implementation may merge if the boundary is artificial.
+- Archetype capacity values are initial estimates. Final values should be derived from example decomposition + measurement during SLICE-007.

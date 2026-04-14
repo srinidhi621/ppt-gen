@@ -1,6 +1,6 @@
 # PLAN.md — V3 Project Board
 
-**Updated**: 2026-04-10
+**Updated**: 2026-04-14
 **Active phase**: Foundations (Phase 1 of `SPEC-v3.md §11`)
 **Source of truth for architecture**: `SPEC-v3.md`
 
@@ -33,6 +33,8 @@ The repo has been through two architectural iterations (V1 placeholder-fill, V2 
 
 No V3 code exists yet. The next few slices are **non-LLM foundations**: audit, cleanup, design system artifact, runtime library, runtime validation against `alternate-approach/build.py`. The LLM layer (planner, builder, reviewer) does not start until the foundations are reviewed and approved.
 
+**2026-04-14 update**: Designer reference slides received (21 slides, 3 Ascendion-branded usable for direct decomposition, layout patterns from others to reimplement). Independent first-principles review (`BRAINSTORM_codex.md`) incorporated into `SPEC-v3.md`: archetype capacity metadata, pre-builder feasibility gate, section-level runtime composers, repair escalation, planner schema enrichment (`purpose` + `audience_takeaway`).
+
 ---
 
 ## Active Slice
@@ -56,8 +58,8 @@ No V3 code exists yet. The next few slices are **non-LLM foundations**: audit, c
 | Item | Why it matters | Blocks |
 |---|---|---|
 | V1/V2 artifact keep/delete matrix (SLICE-001) | Controls what the next foundational slices can discard or reuse | SLICE-002, SLICE-004 |
-| Seeded archetype vocabulary in `SPEC-v3.md §5` (11 archetypes) | Planner-to-builder contract; examples must populate each label | SLICE-007 (example seeding) |
-| `presentation-writing.skill` as authoritative copy-quality contract for the planner | Decides whether the planner embeds the skill's rules as hard constraints or treats them as guidance | SLICE-009 (planner schema) |
+| Archetype vocabulary + capacity metadata (`SPEC-v3.md §5`, now 13 active + 3 candidates) | Planner-to-builder contract; feasibility gate; examples must populate each label | SLICE-007, SLICE-010 |
+| `presentation-writing.skill` as authoritative copy-quality contract for the planner | Decides whether the planner embeds the skill's rules as hard constraints or treats them as guidance | SLICE-010 (planner schema) |
 | Design system authorship path | Decides whether Claude drafts `design_system.json` from existing catalogs or user hand-authors | SLICE-003 |
 
 ---
@@ -66,9 +68,9 @@ No V3 code exists yet. The next few slices are **non-LLM foundations**: audit, c
 
 | Blocker | What's needed | Slices blocked |
 |---|---|---|
-| Designer slides | 5-6 expert-designed slides as original PPTX, with per-slide intent + audience | SLICE-007 (example decomposition) |
+| ~~Designer slides~~ | ~~Received 2026-04-14~~ | ~~SLICE-007~~ |
 | V1/V2 cleanup decision | Outcome of SLICE-001 | SLICE-002 |
-| Archetype vocabulary review | Confirmation / edits to the 11 seeded archetypes | SLICE-007 |
+| Archetype vocabulary review | Confirmation / edits to the 13 active + 3 candidate archetypes (see `SPEC-v3.md §5`) | SLICE-007 |
 | Hosting + diagrams scope | Confirmation these stay in backlog, not pulled forward | None (backlog only) |
 
 ---
@@ -104,11 +106,12 @@ These slices are ready to start as soon as their blockers clear. Listed in execu
 **REVIEW-GATE**:
 - [ ] User confirms measurement accuracy is within ~5% of PowerPoint's actual layout on a test string set.
 
-### SLICE-006 — Shape helpers + patterns
+### SLICE-006 — Shape helpers, patterns, and section composers
 **Blocker**: SLICE-005 approval
-**Description**: Implement `shapes.py` (`add_rect`, `add_text`, `add_image`, `add_line`) and a minimal `patterns.py` (`draw_card`, `draw_header_bar`, `draw_kicker`). Unit tests that produce real PPTX output and verify shape properties.
+**Description**: Implement `shapes.py` (`add_rect`, `add_text`, `add_image`, `add_line`), `patterns.py` (`draw_card`, `draw_header_bar`, `draw_kicker`), and `composers.py` (`compose_card_row`, `compose_stat_grid`, `compose_split_columns`, `compose_timeline`). Section composers take a bounding region + content and handle internal layout. Unit tests that produce real PPTX output and verify shape properties.
 **REVIEW-GATE**:
 - [ ] User opens the test-generated PPTX and confirms shapes look right.
+- [ ] User confirms section composers produce sensible multi-shape layouts.
 
 ### SLICE-006b — Runtime validation: rewrite `alternate-approach/build.py` on runtime
 **Blocker**: SLICE-006 approval
@@ -119,13 +122,17 @@ These slices are ready to start as soon as their blockers clear. Listed in execu
 - [ ] Any newly-added runtime primitives are explicitly listed in the review.
 
 ### SLICE-007 — Example library seeding
-**Blocker**: Designer slides arrive + SLICE-006b approval
-**Description**: For each designer slide: parse shapes, identify archetype, write runtime-code decomposition, execute, visually diff against source, iterate. Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Update the archetype vocabulary if any slide does not fit cleanly.
+**Blocker**: ~~Designer slides arrive~~ (received 2026-04-14) + SLICE-006b approval + archetype vocabulary review
+**Description**: Two tracks:
+1. **Ascendion direct decomposition** (S01, S02, S06): parse shapes, identify archetype, write runtime-code decomposition against `ppt_runtime`, execute, visually diff, iterate. S06 is complex (22 shapes, connectors) and may require runtime extensions.
+2. **Layout pattern reimplementation** (from non-Ascendion sources): study the layout structure of S14 (matrix grid), S21 (timeline), S09 (process flow), S07 (concept comparison), S18 (feature columns), and reimplement each on the Ascendion template using Ascendion tokens and grid.
+Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archetype capacity values based on actual measurement. Confirm or reject candidate archetypes.
 **REVIEW-GATE** (per example):
 - [ ] User confirms the archetype tag.
-- [ ] User confirms the runtime-code reproduction is faithful to the designer original.
+- [ ] User confirms the runtime-code reproduction is faithful (Ascendion) or structurally sound (reimplemented).
 - [ ] User reviews the `invariants` and `variables` metadata.
-**Notes**: This is slow work. Expect ~1-2 hours per example. Do one, review, then next.
+- [ ] User confirms capacity values derived from measurement.
+**Notes**: This is slow work. Expect ~1-2 hours per example. Do one, review, then next. Start with an Ascendion slide (S01) to prove the workflow, then alternate.
 
 ### SLICE-008 — Deterministic post-build scanner
 **Blocker**: SLICE-006 (runtime available) — can run in parallel with SLICE-007
@@ -228,11 +235,14 @@ These slices are ready to start as soon as their blockers clear. Listed in execu
 | PRE-01 | V3 architecture rewrite | 2026-04-10 | `SPEC-v3.md` (full rewrite) |
 | PRE-02 | First-principles design exercise | 2026-04-10 | `BRAINSTORM.md` |
 | PRE-03 | `presentation-writing.skill` added to repo | 2026-04-10 | `assets/presentation-writing.skill` |
+| PRE-04 | Designer reference slides received | 2026-04-14 | `assets/ground_truth/internal_inbox/designer_reference_slides.pptx` (21 slides cataloged) |
+| PRE-05 | Independent first-principles review incorporated | 2026-04-14 | `BRAINSTORM_codex.md` assessed; 5 ideas incorporated into `SPEC-v3.md` rev 2 |
 
 ---
 
 ## Changelog
 
+- **2026-04-14** — Designer slides received, cataloged (21 slides, 3 Ascendion-branded decomposable). `BRAINSTORM_codex.md` assessed; 5 ideas incorporated into SPEC-v3.md: archetype capacity metadata, feasibility gate, section composers, repair escalation, purpose/audience_takeaway. Archetype vocabulary expanded to 13 active + 3 candidates. SLICE-007 updated with two-track decomposition plan. `content_with_diagram` renamed to `content_with_visual`. `matrix_grid` and `timeline_roadmap` added. SLICE-006 expanded to include section composers.
 - **2026-04-10** — Full rewrite of `PLAN.md` as a living project board. V1/V2 cleanup audit delivered as SLICE-001 review gate. Backlog seeded with architecture-diagrams and hosting items. `SPEC-v3.md` and `BRAINSTORM.md` referenced as source of truth.
 - **2026-04-10** — `SPEC-v3.md` full rewrite incorporating runtime library, design system artifact, example library, deterministic scan before review, structured rubric reviewer.
 - **2026-04-10** — `BRAINSTORM.md` created as first-principles derivation.
