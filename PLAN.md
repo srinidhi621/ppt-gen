@@ -1,6 +1,6 @@
 # PLAN.md — V3 Project Board
 
-**Updated**: 2026-04-14
+**Updated**: 2026-04-15
 **Active phase**: Foundations (Phase 1 of `SPEC-v3.md §11`)
 **Source of truth for architecture**: `SPEC-v3.md`
 
@@ -31,22 +31,25 @@ This is a living document. It is updated after every working turn.
 
 The repo has been through two architectural iterations (V1 placeholder-fill, V2 recipe engine — abandoned). `SPEC-v3.md` was rewritten on `2026-04-10` around a planner / builder / reviewer pipeline backed by a small runtime library (`ppt_runtime`), a hand-validated example library, and a deterministic post-build scanner. `BRAINSTORM.md` captures the first-principles derivation behind that spec.
 
-No V3 code exists yet. The next few slices are **non-LLM foundations**: audit, cleanup, design system artifact, runtime library, runtime validation against `alternate-approach/build.py`. The LLM layer (planner, builder, reviewer) does not start until the foundations are reviewed and approved.
+V3 foundation code now exists on the active PR branch, but it is still under review-gated validation. The current focus remains the **non-LLM foundations**: design system artifact, runtime library, and runtime validation against `alternate-approach/build.py`. The LLM layer (planner, builder, reviewer) does not start until those foundations are reviewed and approved.
 
 **2026-04-14 update**: Designer reference slides received (21 slides, 3 Ascendion-branded usable for direct decomposition, layout patterns from others to reimplement). Independent first-principles review (`BRAINSTORM_codex.md`) incorporated into `SPEC-v3.md`: archetype capacity metadata, pre-builder feasibility gate, section-level runtime composers, repair escalation, planner schema enrichment (`purpose` + `audience_takeaway`).
+
+**2026-04-14 (evening) update**: Three open decisions resolved: (1) archetype vocabulary (13 active + 3 candidates) approved as-is, (2) `presentation-writing.skill` rules are hard constraints for the planner, (3) hosting + diagrams confirmed deferred. SLICE-003 (`design_system.json`) drafted and ready for review.
 
 ---
 
 ## Active Slice
 
-### SLICE-003 — Draft `design_system.json`
-**Status**: Up next (ready to start)
+### SLICE-006b — Runtime validation: rewrite `alternate-approach/build.py` on runtime
+**Status**: Built — awaiting user review
 **Owner**: Claude
-**Description**: Author `assets/template/design_system.json` from `canvas_config.json`, `token_overrides.json`, `ground_truth/reference_slide_catalog.json`, and the mined V1 catalog notes (`assets/catalog/v1_mined_notes.md`). Schema per `SPEC-v3.md §4.0`.
+**Description**: Rewrite the 410-line `build.py` on `ppt_runtime`. Same content, same structural patterns, Ascendion branding via tokens.
+**Deliverables**: `alternate-approach/build_v3.py` (507 lines), produces `10x_program_plan.v3_runtime.pptx` (6 placeholder-free slides, 20–44 shapes per slide)
 **REVIEW-GATE**:
-- [ ] User reads the draft file.
-- [ ] User confirms grid cols, gutter values, type scale sizes, accent policy.
-- [ ] User flags anything that should be derived from a reference slide but wasn't.
+- [ ] User opens both decks side-by-side and confirms structural fidelity.
+- [ ] User confirms the rewritten file is shorter, clearer, or at minimum no worse than the original.
+- [ ] Any newly-added runtime primitives are explicitly listed in the review.
 
 ---
 
@@ -54,10 +57,7 @@ No V3 code exists yet. The next few slices are **non-LLM foundations**: audit, c
 
 | Item | Why it matters | Blocks |
 |---|---|---|
-| V1/V2 artifact keep/delete matrix (SLICE-001) | Controls what the next foundational slices can discard or reuse | SLICE-002, SLICE-004 |
-| Archetype vocabulary + capacity metadata (`SPEC-v3.md §5`, now 13 active + 3 candidates) | Planner-to-builder contract; feasibility gate; examples must populate each label | SLICE-007, SLICE-010 |
-| `presentation-writing.skill` as authoritative copy-quality contract for the planner | Decides whether the planner embeds the skill's rules as hard constraints or treats them as guidance | SLICE-010 (planner schema) |
-| Design system authorship path | Decides whether Claude drafts `design_system.json` from existing catalogs or user hand-authors | SLICE-003 |
+| _(empty — no items pending user review)_ | | |
 
 ---
 
@@ -66,9 +66,10 @@ No V3 code exists yet. The next few slices are **non-LLM foundations**: audit, c
 | Blocker | What's needed | Slices blocked |
 |---|---|---|
 | ~~Designer slides~~ | ~~Received 2026-04-14~~ | ~~SLICE-007~~ |
-| V1/V2 cleanup decision | Outcome of SLICE-001 | SLICE-002 |
-| Archetype vocabulary review | Confirmation / edits to the 13 active + 3 candidate archetypes (see `SPEC-v3.md §5`) | SLICE-007 |
-| Hosting + diagrams scope | Confirmation these stay in backlog, not pulled forward | None (backlog only) |
+| ~~V1/V2 cleanup decision~~ | ~~Approved 2026-04-14~~ | ~~SLICE-002~~ |
+| ~~Archetype vocabulary review~~ | ~~Approved as-is 2026-04-14~~ | ~~SLICE-007~~ |
+| ~~Hosting + diagrams scope~~ | ~~Confirmed deferred 2026-04-14~~ | ~~None~~ |
+| ~~`presentation-writing.skill` authority~~ | ~~Hard constraints, confirmed 2026-04-14~~ | ~~SLICE-010~~ |
 
 ---
 
@@ -238,11 +239,18 @@ Unit tests against fixture decks with injected bugs (scanner), invalid handoff p
 | SLICE-002 | V1/V2 cleanup execution | 2026-04-14 | 5 V1 catalogs mined → `v1_mined_notes.md`; 14 ground_truth scratch files deleted; -5,862 lines |
 | PRE-06 | Benchmark test prompts + evaluation rubric | 2026-04-14 | `assets/benchmarks/v3_test_prompts.xlsx` (26 prompts, 9-axis rubric, reusable generator script) |
 | PRE-07 | Visual hygiene checks | 2026-04-14 | `assets/benchmarks/v3_visual_hygiene_checks.xlsx` (26 binary checks, 6 categories, reusable generator script) |
+| SLICE-003 | Draft `design_system.json` | 2026-04-14 | `assets/template/design_system.json` — 12-col grid, 6-level type scale, 15 color tokens, 3 canvases, accent policy |
+| SLICE-004 | `ppt_runtime` skeleton | 2026-04-15 | `src/ppt_runtime/` — canvas, grid, tokens, errors. 35 unit tests |
+| SLICE-005 | `measure_text` primitive | 2026-04-15 | `measure.py` — Pillow-based measurement, `shrink_to_fit`. 19 unit tests |
+| SLICE-006 | Shape helpers, patterns, composers | 2026-04-15 | `shapes.py`, `patterns.py`, `composers.py`. 18 unit tests producing real PPTX |
 
 ---
 
 ## Changelog
 
+- **2026-04-15** — PR #4 follow-up fixes applied on `feature/ppt-runtime-foundation`: `load_template()` now strips the template's seed slides, `Canvas.add_slide()` strips inherited layout placeholders, `measure_text()` preserves explicit newlines, `shrink_to_fit()` rejects width overflow, and `alternate-approach/build_v3.py` now runs standalone, uses named token styles from `design_system.json`, and exercises runtime fit logic on long text blocks. Added regressions for empty-template loading, placeholder stripping, multiline measurement, width-aware fit, and standalone `build_v3.py`. Affected test set: 79 passing.
+- **2026-04-15** — SLICE-004 through SLICE-006b built in sequence. Runtime library complete: canvas (load_template, add_slide, body properties), grid (12-col, 1-indexed span/row), tokens (color/type/spacing from design_system.json), measure (Pillow text measurement, shrink_to_fit), shapes (add_rect, add_text, add_image, add_line), patterns (draw_card, draw_header_bar, draw_kicker, draw_stat_block), composers (compose_card_row, compose_stat_grid, compose_split_columns, compose_timeline). 72 unit tests, all passing. `alternate-approach/build_v3.py` rewrites the 410-line original on ppt_runtime (507 lines — longer due to reusable helper definitions, but token-driven with no hex literals or inline sizing). No new runtime primitives required.
+- **2026-04-14 (evening)** — Three open decisions resolved: archetype vocabulary (13 active + 3 candidates) approved as-is; `presentation-writing.skill` confirmed as hard constraints for planner; hosting (B2) and diagrams (B1) confirmed deferred. SLICE-003 drafted: `assets/template/design_system.json` authored from `canvas_config.json`, `token_overrides.json`, `reference_slide_catalog.json`, `v1_mined_notes.md`, and `alternate-approach/build.py` spacing patterns. All prior user-input blockers cleared.
 - **2026-04-14** — Visual hygiene checks added: 26 binary pass/fail checks across 6 categories (Color, Typography, Spatial, Content Rendering, Cross-Slide, Structural), 12 BLOCKING / 14 WARNING, with LLM review prompts. Generator at `scripts/generate_visual_hygiene_xlsx.py`. SPEC-v3.md updated: §4.6 cross-references hygiene suite, §10.2 added with full check taxonomy and deck-level pass criteria.
 - **2026-04-14** — SLICE-001 approved, SLICE-002 executed (19 files deleted, 5 mined). Benchmark test bed expanded to 26 prompts across 7 sections (`v3_test_prompts.xlsx`): 20 single-slide + 6 multi-slide, 9-axis rubric (7 base + 2 multi-slide-only), reusable generator script at `scripts/generate_benchmark_xlsx.py`. Evaluation criteria added to `SPEC-v3.md §10.1` and `§13`. SLICE-003 (design_system.json) now active. Designer slides received, cataloged (21 slides, 3 Ascendion-branded decomposable). `BRAINSTORM_codex.md` assessed; 5 ideas incorporated into SPEC-v3.md: archetype capacity metadata, feasibility gate, section composers, repair escalation, purpose/audience_takeaway. Archetype vocabulary expanded to 13 active + 3 candidates. SLICE-007 updated with two-track decomposition plan. `content_with_diagram` renamed to `content_with_visual`. `matrix_grid` and `timeline_roadmap` added. SLICE-006 expanded to include section composers.
 - **2026-04-10** — Full rewrite of `PLAN.md` as a living project board. V1/V2 cleanup audit delivered as SLICE-001 review gate. Backlog seeded with architecture-diagrams and hosting items. `SPEC-v3.md` and `BRAINSTORM.md` referenced as source of truth.
