@@ -24,10 +24,14 @@
   "type_scale": {
     "display":  { "font": "Space Grotesk", "size_pt": 40, "bold": true,  "line": 1.05 },
     "title":    { "font": "Space Grotesk", "size_pt": 28, "bold": true,  "line": 1.08 },
+    "hero":     { "font": "Space Grotesk", "size_pt": 22, "bold": true,  "line": 1.1 },
+    "section_title": { "font": "Space Grotesk", "size_pt": 20, "bold": true,  "line": 1.1 },
+    "metric_value":  { "font": "Space Grotesk", "size_pt": 24, "bold": true,  "line": 1.08 },
     "kicker":   { "font": "Inter",         "size_pt": 11, "bold": true,  "line": 1.1,  "upper": true },
     "subtitle": { "font": "Inter",         "size_pt": 16, "bold": false, "line": 1.2 },
     "body":     { "font": "Inter",         "size_pt": 12, "bold": false, "line": 1.25 },
-    "caption":  { "font": "Inter",         "size_pt": 10, "bold": false, "line": 1.2 }
+    "caption":  { "font": "Inter",         "size_pt": 10, "bold": false, "line": 1.2 },
+    "footer_note": { "font": "Inter",      "size_pt": 11, "bold": true,  "line": 1.1 }
   },
 
   "spacing_scale": {

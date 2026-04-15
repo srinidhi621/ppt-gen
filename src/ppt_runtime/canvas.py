@@ -87,7 +87,9 @@ class Canvas:
         self._current_canvas_def = canvas_def
         layout_index = canvas_def["layout_index"]
         layout = self._prs.slide_layouts[layout_index]
-        return self._prs.slides.add_slide(layout)
+        slide = self._prs.slides.add_slide(layout)
+        _remove_placeholders(slide)
+        return slide
 
     def save(self, output_path: str | Path) -> None:
         self._prs.save(str(output_path))
@@ -104,6 +106,8 @@ class Canvas:
 def load_template(
     template_path: str | Path,
     design_system_path: str | Path | None = None,
+    *,
+    keep_template_slides: bool = False,
 ) -> Canvas:
     """Load a branded template and its design system.
 
@@ -117,8 +121,27 @@ def load_template(
         design_system_path = Path(design_system_path)
 
     prs = Presentation(str(template_path))
+    if not keep_template_slides:
+        _drop_existing_slides(prs)
 
     with open(design_system_path) as f:
         ds = json.load(f)
 
     return Canvas(prs, ds)
+
+
+def _drop_existing_slides(prs: Presentation) -> None:
+    """Start from the template's theme/layouts, not its sample slides."""
+    for slide_id in list(prs.slides._sldIdLst):
+        rel_id = slide_id.rId
+        prs.part.drop_rel(rel_id)
+        prs.slides._sldIdLst.remove(slide_id)
+
+
+def _remove_placeholders(slide) -> None:
+    """Generated slides should not inherit empty layout placeholders."""
+    for shape in list(slide.shapes):
+        if not shape.is_placeholder:
+            continue
+        element = shape._element
+        element.getparent().remove(element)

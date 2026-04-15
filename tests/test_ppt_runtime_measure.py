@@ -106,6 +106,16 @@ class TestMeasureText(unittest.TestCase):
         # Measured width should not exceed the constraint (with small tolerance)
         self.assertLessEqual(w, max_w + 12700)  # 1px tolerance
 
+    def test_explicit_newline_increases_height(self):
+        _, h_single = measure_text("hello world", self.body_style)
+        _, h_multi = measure_text("hello\nworld", self.body_style)
+        self.assertGreater(h_multi, h_single)
+
+    def test_explicit_newline_preserved_when_width_is_large(self):
+        _, h_single = measure_text("hello world", self.body_style, max_width_emu=10000000)
+        _, h_multi = measure_text("hello\nworld", self.body_style, max_width_emu=10000000)
+        self.assertGreater(h_multi, h_single)
+
     def test_display_style_works(self):
         w, h = measure_text("Big Title", DESIGN_SYSTEM["type_scale"]["display"])
         self.assertGreater(w, 0)
@@ -179,6 +189,17 @@ class TestShrinkToFit(unittest.TestCase):
             result = shrink_to_fit(text, rect, base="title", min_style="body", tokens=self.tokens)
             # Should shrink below title
             self.assertNotEqual(result, "title")
+
+    def test_checks_width_not_just_height(self):
+        rect = Rect(0, 0, 100000, 1000000)
+        result = shrink_to_fit(
+            "supercalifragilisticexpialidocious",
+            rect,
+            base="title",
+            min_style="caption",
+            tokens=self.tokens,
+        )
+        self.assertEqual(result, "caption")
 
 
 if __name__ == "__main__":

@@ -64,6 +64,7 @@ def add_text(
     align: str = "left",
     anchor: str = "top",
     word_wrap: bool = True,
+    upper: bool | None = None,
 ):
     """Add a text box.  Returns the textbox shape.
 
@@ -94,7 +95,10 @@ def add_text(
 
     # Apply upper-case if style requests it
     display_text = text
-    if type_style and type_style.get("upper"):
+    should_upper = upper
+    if should_upper is None and type_style:
+        should_upper = type_style.get("upper")
+    if should_upper:
         display_text = text.upper()
 
     r = p.add_run()

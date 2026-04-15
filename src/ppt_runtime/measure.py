@@ -66,25 +66,46 @@ def _get_font(font_family: str, size_pt: int, bold: bool = False) -> ImageFont.F
 
 
 def _wrap_text(text: str, font: ImageFont.FreeTypeFont, max_width_px: float) -> list[str]:
-    """Simple greedy word-wrap."""
-    words = text.split()
-    if not words:
+    """Greedy word-wrap that preserves explicit line breaks."""
+    paragraphs = text.split("\n")
+    if not paragraphs:
         return [""]
 
     lines: list[str] = []
-    current = words[0]
+    for paragraph in paragraphs:
+        words = paragraph.split()
+        if not words:
+            lines.append("")
+            continue
 
-    for word in words[1:]:
-        candidate = current + " " + word
-        bbox = font.getbbox(candidate)
-        if (bbox[2] - bbox[0]) <= max_width_px:
-            current = candidate
-        else:
-            lines.append(current)
-            current = word
+        current = words[0]
+        for word in words[1:]:
+            candidate = current + " " + word
+            bbox = font.getbbox(candidate)
+            if (bbox[2] - bbox[0]) <= max_width_px:
+                current = candidate
+            else:
+                lines.append(current)
+                current = word
+        lines.append(current)
 
-    lines.append(current)
     return lines
+
+
+def _measure_lines(
+    lines: list[str],
+    font: ImageFont.FreeTypeFont,
+    line_height_px: float,
+) -> tuple[int, int]:
+    max_w_px = 0
+    for line in lines:
+        bbox = font.getbbox(line)
+        w_px = bbox[2] - bbox[0]
+        if w_px > max_w_px:
+            max_w_px = w_px
+
+    total_h_px = line_height_px * max(len(lines), 1)
+    return (int(max_w_px * _PX_TO_EMU), int(total_h_px * _PX_TO_EMU))
 
 
 # ---------------------------------------------------------------------------
@@ -121,22 +142,11 @@ def measure_text(
         return (0, int(line_height_px * _PX_TO_EMU))
 
     if max_width_emu is None:
-        bbox = font.getbbox(text)
-        w_px = bbox[2] - bbox[0]
-        return (int(w_px * _PX_TO_EMU), int(line_height_px * _PX_TO_EMU))
+        return _measure_lines(text.split("\n"), font, line_height_px)
 
     max_width_px = max_width_emu / _PX_TO_EMU
     lines = _wrap_text(text, font, max_width_px)
-
-    max_w_px = 0
-    for line in lines:
-        bbox = font.getbbox(line)
-        w = bbox[2] - bbox[0]
-        if w > max_w_px:
-            max_w_px = w
-
-    total_h_px = line_height_px * len(lines)
-    return (int(max_w_px * _PX_TO_EMU), int(total_h_px * _PX_TO_EMU))
+    return _measure_lines(lines, font, line_height_px)
 
 
 def shrink_to_fit(
@@ -179,8 +189,8 @@ def shrink_to_fit(
             continue
         if style["size_pt"] < min_size:
             break
-        _, h = measure_text(text, style, max_width_emu=rect.width)
-        if h <= rect.height:
+        w, h = measure_text(text, style, max_width_emu=rect.width)
+        if w <= rect.width and h <= rect.height:
             return name
 
     return min_style

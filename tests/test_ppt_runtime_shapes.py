@@ -129,6 +129,18 @@ class TestAddText(unittest.TestCase):
         )
         self.assertTrue(tb.text_frame.word_wrap)
 
+    def test_uppercase_can_be_disabled(self):
+        canvas, tokens, slide, grid = _setup()
+        rect = Rect(0, 0, 5000000, 200000)
+        tb = add_text(
+            slide, rect, "Not All Caps",
+            type_style=tokens.type("kicker"),
+            color=tokens.color("accent_2"),
+            upper=False,
+        )
+        text = tb.text_frame.paragraphs[0].runs[0].text
+        self.assertEqual(text, "Not All Caps")
+
 
 class TestAddLine(unittest.TestCase):
     def test_creates_connector(self):
@@ -275,6 +287,16 @@ class TestComposeTimeline(unittest.TestCase):
 
 
 class TestFullSliceProducesPptx(unittest.TestCase):
+    def test_load_template_starts_from_empty_slide_list(self):
+        canvas = load_template(TEMPLATE_PATH, DS_PATH)
+        self.assertEqual(len(canvas.presentation.slides), 0)
+
+    def test_added_slide_strips_layout_placeholders(self):
+        canvas = load_template(TEMPLATE_PATH, DS_PATH)
+        slide = canvas.add_slide("header_light")
+        placeholders = [shape for shape in slide.shapes if shape.is_placeholder]
+        self.assertEqual(placeholders, [])
+
     def test_multi_pattern_slide_saves_and_opens(self):
         """Build a slide using multiple patterns/composers, save, reopen."""
         canvas, tokens, slide, grid = _setup()
@@ -303,11 +325,8 @@ class TestFullSliceProducesPptx(unittest.TestCase):
         )
 
         prs, path = _save_and_reopen(canvas)
-        # Template has existing slides; our new slide is the last one
-        self.assertGreater(len(prs.slides), 0)
-        # Verify shapes exist on the last (newly added) slide
-        last_slide = prs.slides[-1]
-        self.assertGreater(len(last_slide.shapes), 10)
+        self.assertEqual(len(prs.slides), 1)
+        self.assertGreater(len(prs.slides[0].shapes), 10)
 
 
 if __name__ == "__main__":

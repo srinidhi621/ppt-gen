@@ -8,10 +8,13 @@ This is the runtime validation gate (SLICE-006b): if ppt_runtime can
 reproduce this deck, it can reproduce what the LLM builder will generate.
 """
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
-from pptx.util import Emu
+BASE_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = BASE_DIR.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.ppt_runtime import (
     Grid,
@@ -22,14 +25,13 @@ from src.ppt_runtime import (
     add_text,
     draw_header_bar,
     load_template,
+    shrink_to_fit,
 )
 
 # ---------------------------------------------------------------------------
 # Setup
 # ---------------------------------------------------------------------------
 
-BASE_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = BASE_DIR.parent
 TEMPLATE_PATH = PROJECT_ROOT / "assets" / "template" / "template.pptx"
 DS_PATH = PROJECT_ROOT / "assets" / "template" / "design_system.json"
 DEFAULT_OUTPUT = BASE_DIR / "10x_program_plan.v3_runtime.pptx"
@@ -55,6 +57,11 @@ SUBTLE = tokens.color("accent_6")   # borders / deemphasized
 # Helpers (thin wrappers the builder would write at the top of build_deck.py)
 # ---------------------------------------------------------------------------
 
+def fitted_type(text, rect, *, base, min_style):
+    """Pick the largest named style that fits the target rectangle."""
+    style_name = shrink_to_fit(text, rect, base=base, min_style=min_style, tokens=tokens)
+    return tokens.type(style_name)
+
 def hero_band(slide, grid, text, kicker_text=None):
     """Dark hero band spanning full width with optional kicker."""
     band = grid.span(col=1, col_span=12,
@@ -75,7 +82,7 @@ def hero_band(slide, grid, text, kicker_text=None):
     txt_rect = Rect(inner_left, txt_top + tokens.spacing("sm"),
                     inner_w, band.height - txt_top + band.top - tokens.spacing("lg"))
     add_text(slide, txt_rect, text,
-             font_name="Space Grotesk", font_size_pt=22, bold=True, color=TXT_W)
+             type_style=fitted_type(text, txt_rect, base="hero", min_style="subtitle"), color=TXT_W)
     return band
 
 
@@ -86,9 +93,14 @@ def support_card(slide, rect, heading, body):
     pad = tokens.spacing("md")
     add_text(slide, Rect(rect.left + pad, rect.top + pad, rect.width - 2 * pad, tokens.spacing("lg")),
              heading, type_style=tokens.type("kicker"), color=C1)
-    add_text(slide, Rect(rect.left + pad, rect.top + pad + tokens.spacing("lg") + tokens.spacing("sm"),
-                         rect.width - 2 * pad, rect.height - 3 * pad - tokens.spacing("lg")),
-             body, type_style=tokens.type("body"), color=TXT)
+    body_rect = Rect(
+        rect.left + pad,
+        rect.top + pad + tokens.spacing("lg") + tokens.spacing("sm"),
+        rect.width - 2 * pad,
+        rect.height - 3 * pad - tokens.spacing("lg"),
+    )
+    add_text(slide, body_rect, body,
+             type_style=fitted_type(body, body_rect, base="body", min_style="caption"), color=TXT)
 
 
 def track_card(slide, rect, name, profile, rows):
@@ -99,7 +111,7 @@ def track_card(slide, rect, name, profile, rows):
     pad = tokens.spacing("md")
     add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("sm"),
                          rect.width - 2 * pad, tokens.spacing("lg")),
-             name, font_name="Space Grotesk", font_size_pt=20, bold=True, color=TXT_W)
+             name, type_style=tokens.type("section_title"), color=TXT_W)
     add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("lg") + tokens.spacing("sm"),
                          rect.width - 2 * pad, tokens.spacing("md")),
              profile, type_style=tokens.type("caption"), color=TXT_W)
@@ -108,10 +120,14 @@ def track_card(slide, rect, name, profile, rows):
     for label, val in rows:
         add_text(slide, Rect(rect.left + pad, y, tokens.spacing("xl") * 3, tokens.spacing("lg")),
                  label, type_style=tokens.type("kicker"), color=C2)
-        add_text(slide, Rect(rect.left + pad + tokens.spacing("xl") * 3, y,
-                             rect.width - 3 * pad - tokens.spacing("xl") * 3,
-                             tokens.spacing("xl") * 2),
-                 val, type_style=tokens.type("body"), color=TXT)
+        value_rect = Rect(
+            rect.left + pad + tokens.spacing("xl") * 3,
+            y,
+            rect.width - 3 * pad - tokens.spacing("xl") * 3,
+            tokens.spacing("xl") * 2,
+        )
+        add_text(slide, value_rect, val,
+                 type_style=fitted_type(val, value_rect, base="body", min_style="caption"), color=TXT)
         y += tokens.spacing("xl") * 2
 
 
@@ -123,7 +139,7 @@ def stage_card(slide, rect, num, when, name, what, funnel_label, funnel_val):
     add_rect(slide, Rect(rect.left, rect.top, rect.width, header_h), fill=C1)
     add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("sm"),
                          rect.width - 2 * pad, tokens.spacing("xl")),
-             num, font_name="Space Grotesk", font_size_pt=28, bold=True, color=C2)
+             num, type_style=tokens.type("title"), color=C2)
     add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("xl"),
                          rect.width - 2 * pad, tokens.spacing("md")),
              when, type_style=tokens.type("kicker"), color=TXT_W)
@@ -131,9 +147,14 @@ def stage_card(slide, rect, num, when, name, what, funnel_label, funnel_val):
     body_top = rect.top + header_h + tokens.spacing("sm")
     add_text(slide, Rect(rect.left + pad, body_top, rect.width - 2 * pad, tokens.spacing("lg")),
              name, type_style=tokens.type("subtitle"), color=C1, bold=True)
-    add_text(slide, Rect(rect.left + pad, body_top + tokens.spacing("lg") + tokens.spacing("sm"),
-                         rect.width - 2 * pad, tokens.spacing("xl") * 4),
-             what, type_style=tokens.type("body"), color=TXT)
+    what_rect = Rect(
+        rect.left + pad,
+        body_top + tokens.spacing("lg") + tokens.spacing("sm"),
+        rect.width - 2 * pad,
+        tokens.spacing("xl") * 4,
+    )
+    add_text(slide, what_rect, what,
+             type_style=fitted_type(what, what_rect, base="body", min_style="caption"), color=TXT)
 
     # Bottom stat
     bot_h = tokens.spacing("xl") + tokens.spacing("lg")
@@ -164,9 +185,10 @@ def phase_card(slide, rect, when, name, what, risk):
     div_y = rect.top + tokens.spacing("xl") * 2 + tokens.spacing("md")
     add_line(slide, rect.left + pad, div_y, rect.right - pad, div_y, color=SUBTLE, width_pt=0.5)
 
-    add_text(slide, Rect(rect.left + pad, div_y + tokens.spacing("sm"),
-                         rect.width - 2 * pad, tokens.spacing("xl") * 3),
-             what, type_style=tokens.type("body"), color=TXT)
+    what_rect = Rect(rect.left + pad, div_y + tokens.spacing("sm"),
+                     rect.width - 2 * pad, tokens.spacing("xl") * 3)
+    add_text(slide, what_rect, what,
+             type_style=fitted_type(what, what_rect, base="body", min_style="caption"), color=TXT)
 
     # Risk callout
     risk_h = tokens.spacing("xl") * 2 + tokens.spacing("md")
@@ -252,7 +274,7 @@ footer = g.span(col=1, col_span=12,
                 height_emu=tokens.spacing("md"))
 add_text(slide, footer,
          "Internal nominations run from day one and enter at Stage 2. Highest-yield source.",
-         type_style=tokens.type("kicker"), color=C1)
+         type_style=tokens.type("footer_note"), color=C1)
 
 
 # ===========================================================================
@@ -364,7 +386,7 @@ for idx, (big, label) in enumerate(stats):
     add_rect(slide, cell, fill=BG, line=SUBTLE)
     add_rect(slide, Rect(sl, st, tokens.spacing("xs"), sh_), fill=C2)
     add_text(slide, Rect(sl + pad, st + tokens.spacing("sm"), sw_ - 2 * pad, tokens.spacing("xl")),
-             big, font_name="Space Grotesk", font_size_pt=24, bold=True, color=C1)
+             big, type_style=tokens.type("metric_value"), color=C1)
     add_text(slide, Rect(sl + pad, st + tokens.spacing("xl") + tokens.spacing("sm"),
                          sw_ - 2 * pad, tokens.spacing("lg")),
              label, type_style=tokens.type("caption"), color=TXT2)
