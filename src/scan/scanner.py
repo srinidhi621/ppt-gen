@@ -198,6 +198,29 @@ def _aabb_overlap_fraction(s1, s2) -> float:
         return 0.0
 
 
+def _get_slide_layout_index(prs, slide) -> int | None:
+    """Return the slide layout index within the presentation, if determinable."""
+    try:
+        for idx, layout in enumerate(prs.slide_layouts):
+            if layout == slide.slide_layout:
+                return idx
+    except Exception:
+        pass
+    return None
+
+
+def _get_slide_canvas_def(prs, slide, ds: dict) -> dict | None:
+    """Return the design-system canvas definition for a slide's layout."""
+    layout_index = _get_slide_layout_index(prs, slide)
+    if layout_index is None:
+        return None
+
+    for canvas_def in ds.get("canvases", {}).values():
+        if canvas_def.get("layout_index") == layout_index:
+            return canvas_def
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Individual checks
 # ---------------------------------------------------------------------------
@@ -735,23 +758,27 @@ def _check_vh15(prs, ds, slide_width, slide_height) -> list[dict]:
     grid_cfg = ds.get("grid", {})
     cols = grid_cfg.get("cols", 12)
     gutter = grid_cfg.get("gutter_md_emu", 137160)
-    safe = ds.get("canvas", {}).get("safe_area", {})
-    body_left = safe.get("left_emu", 0)
-    body_right = safe.get("right_emu", 0)
-    body_width = slide_width - body_left - body_right
-
-    total_gutter = (cols - 1) * gutter
-    col_width = (body_width - total_gutter) / cols
-
-    # Compute grid column boundaries
-    grid_lefts = []
-    for c in range(cols):
-        grid_lefts.append(body_left + c * (col_width + gutter))
-
     tolerance = 45720  # 0.05 inches
 
     findings = []
     for si, slide in enumerate(prs.slides):
+        canvas_def = _get_slide_canvas_def(prs, slide, ds)
+        if canvas_def is None:
+            continue
+
+        body_region = canvas_def.get("body_region", {})
+        body_left = body_region.get("left_emu")
+        body_width = body_region.get("width_emu")
+        if body_left is None or body_width is None:
+            continue
+
+        total_gutter = (cols - 1) * gutter
+        col_width = (body_width - total_gutter) / cols
+        grid_lefts = [
+            body_left + c * (col_width + gutter)
+            for c in range(cols)
+        ]
+
         content_shapes = [
             s for s in slide.shapes
             if not _is_background_shape(s, slide_width, slide_height)
@@ -1182,16 +1209,64 @@ def _check_vh26(prs, ds, slide_width, slide_height) -> list[dict]:
 # Public API
 # ---------------------------------------------------------------------------
 
-_CHECKS = [
+_ACTIVE_CHECKS = [
     _check_vh01, _check_vh02, _check_vh03, _check_vh04, _check_vh05,
     _check_vh06, _check_vh07, _check_vh08, _check_vh09, _check_vh10,
-    _check_vh11, _check_vh12, _check_vh13, _check_vh14, _check_vh15,
+    _check_vh11, _check_vh12, _check_vh13, _check_vh15,
     _check_vh16, _check_vh17, _check_vh18, _check_vh19,
-    _check_vh20, _check_vh21, _check_vh22, _check_vh23,
     _check_vh24, _check_vh26,
 ]
 
+_DEFERRED_CHECKS = {
+    "VH-14": "Peer-gutter detection is heuristic without explicit grouping anchors.",
+    "VH-20": "Title-role inference is heuristic without explicit title anchors.",
+    "VH-21": "Title-role inference is heuristic without explicit title anchors.",
+    "VH-22": "Kicker-role inference is heuristic without explicit kicker anchors.",
+    "VH-23": "Body-role inference is heuristic without explicit body anchors.",
+}
+
 # VH-25 handled separately (needs deck_plan)
+
+
+def _describe_check(check_fn) -> tuple[str, str]:
+    """Return (check_id, check_name) for a scanner check function."""
+    doc = (check_fn.__doc__ or "").strip().splitlines()
+    if doc:
+        header = doc[0]
+        if header.startswith("VH-") and ":" in header:
+            check_id, check_name = header.split(":", 1)
+            return check_id.strip(), check_name.strip()
+
+    match = re.search(r"_check_vh(\d{2})$", check_fn.__name__)
+    if match:
+        return f"VH-{match.group(1)}", check_fn.__name__
+
+    return "VH-00", check_fn.__name__
+
+
+def _internal_error_finding(
+    check_fn,
+    exc: Exception,
+    *,
+    check_id: str | None = None,
+    check_name: str | None = None,
+) -> dict:
+    """Convert an internal scanner failure into a blocking report finding."""
+    derived_id, derived_name = _describe_check(check_fn)
+    check_id = check_id or derived_id
+    check_name = check_name or derived_name
+    return {
+        "check_id": check_id,
+        "category": "Structural",
+        "check_name": check_name,
+        "severity": "BLOCKING",
+        "pass": False,
+        "slide_index": -1,
+        "details": (
+            f"Scanner internal error while running {check_id} "
+            f"({check_name}): {type(exc).__name__}: {exc}"
+        ),
+    }
 
 
 def scan_pptx(
@@ -1199,7 +1274,7 @@ def scan_pptx(
     design_system_path: str | Path,
     deck_plan: dict | None = None,
 ) -> dict:
-    """Run all 26 visual hygiene checks on a PPTX file.
+    """Run the active objective visual hygiene checks on a PPTX file.
 
     Args:
         pptx_path: Path to the PPTX file.
@@ -1208,6 +1283,7 @@ def scan_pptx(
 
     Returns:
         A geometry_report dict with pass/fail, counts, and findings.
+        Internal scanner failures are surfaced as synthetic BLOCKING findings.
     """
     pptx_path = Path(pptx_path)
     design_system_path = Path(design_system_path)
@@ -1222,18 +1298,25 @@ def scan_pptx(
     all_findings = []
 
     # Run standard checks
-    for check_fn in _CHECKS:
+    for check_fn in _ACTIVE_CHECKS:
         try:
             findings = check_fn(prs, ds, slide_width, slide_height)
             all_findings.extend(findings)
-        except Exception:
-            pass
+        except Exception as exc:
+            all_findings.append(_internal_error_finding(check_fn, exc))
 
     # VH-25 needs deck_plan
     try:
         all_findings.extend(_check_vh25(prs, ds, slide_width, slide_height, deck_plan))
-    except Exception:
-        pass
+    except Exception as exc:
+        all_findings.append(
+            _internal_error_finding(
+                _check_vh25,
+                exc,
+                check_id="VH-25",
+                check_name="Slide count matches deck_plan",
+            )
+        )
 
     blocking_count = sum(1 for f in all_findings if f["severity"] == "BLOCKING")
     warning_count = sum(1 for f in all_findings if f["severity"] == "WARNING")

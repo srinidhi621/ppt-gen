@@ -349,7 +349,7 @@ Planner retry budget: 2 retries on schema-validation failure.
 
 **Output**: `geometry_report.json`. Any BLOCKING result triggers the repair build loop immediately. WARNING results are aggregated and passed to the reviewer as context.
 
-The scanner owns all 26 visual hygiene checks defined in `assets/benchmarks/v3_visual_hygiene_checks.xlsx` (§10.6). If a check is objectively measurable from the PPTX, code, or run artifacts, it belongs here — not in human scoring.
+The hygiene catalog in `assets/benchmarks/v3_visual_hygiene_checks.xlsx` defines 26 target checks (§10.6). The base scanner only enables checks that are objectively measurable from the PPTX, generated code, or run artifacts without heuristic role inference. Checks that depend on inferred peer groups or inferred title/kicker/body roles stay deferred until explicit anchors or grouping metadata exist. Internal scanner failures are themselves BLOCKING findings; the scanner must never silently pass because a check crashed.
 
 ### 4.7 Phase 7 — Review Image Export
 
@@ -815,22 +815,27 @@ Test categories: unit (§10.1), integration (§10.2), example regression (§10.3
 **Speed**: seconds.
 **When to run**: every pipeline execution.
 
-26 binary pass/fail checks across 6 categories. Full definitions in `assets/benchmarks/v3_visual_hygiene_checks.xlsx`.
+26 binary pass/fail target checks across 6 categories. Full definitions live in `assets/benchmarks/v3_visual_hygiene_checks.xlsx`.
 
 **Ownership rule**: if a check is objectively measurable from the PPTX, code, or exported artifacts, it belongs in the deterministic scanner. The benchmark rubric does **not** re-score objective mechanical checks.
 
-| Category | Check IDs | Owner |
+**Active scanner set (current)**: 21 objective checks are enabled in the base scanner. The remaining 5 checks are part of the hygiene catalog but deferred until they can be grounded on explicit metadata instead of inference.
+
+| Category | Check IDs | Owner / Status |
 |---|---|---|
 | Color | VH-01 – VH-05 | Scanner |
 | Typography | VH-06 – VH-09 | Scanner |
-| Spatial | VH-10 – VH-15 | Scanner |
+| Spatial | VH-10 – VH-13, VH-15 | Scanner |
+| Spatial | VH-14 | Deferred pending explicit peer-group metadata |
 | Content Rendering | VH-16 – VH-19 | Scanner |
-| Cross-Slide | VH-20 – VH-23 | Scanner |
+| Cross-Slide | VH-20 – VH-23 | Deferred pending explicit title / kicker / body anchors |
 | Structural | VH-24 – VH-26 | Scanner |
 
 **Severity**: per-check, as defined in the hygiene catalog.
 
-**Deck-level pass**: zero BLOCKING failures. WARNINGs are triaged by class; there is **no fixed global warning budget**.
+**Grounding rule**: active checks may use template metadata such as layout-index-to-canvas mappings and `body_region` bounds. They may not infer semantic roles or peer-group relationships from raw PPTX geometry alone and then treat those inferences as deterministic truth.
+
+**Deck-level pass**: zero BLOCKING failures. This includes internal scanner failures, which are surfaced as synthetic BLOCKING findings rather than being swallowed. WARNINGs are triaged by class; there is **no fixed global warning budget**.
 
 **Action rule for WARNINGs**: any warning class that repeats on release-gate prompts must be either fixed, explicitly accepted with rationale, or promoted to BLOCKING in the next scanner revision.
 

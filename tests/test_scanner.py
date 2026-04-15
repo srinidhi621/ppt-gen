@@ -10,6 +10,7 @@ from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.util import Emu, Pt
 
+import src.scan.scanner as scanner_module
 from src.scan.scanner import scan_pptx, _relative_luminance, _contrast_ratio
 
 # ---------------------------------------------------------------------------
@@ -316,6 +317,45 @@ class TestSpatialChecks:
         assert len(vh12) >= 1
         assert vh12[0]["severity"] == "WARNING"
 
+    def test_vh15_grid_alignment_uses_template_canvas_region(self):
+        """VH-15: Grid alignment uses the matched template canvas body region."""
+        ds = _load_ds()
+        body = ds["canvases"]["header_light"]["body_region"]
+        gutter = ds["grid"]["gutter_md_emu"]
+        cols = ds["grid"]["cols"]
+        col_width = (body["width_emu"] - (cols - 1) * gutter) / cols
+        prs = Presentation(str(_TEMPLATE))
+
+        # Start from template layouts/theme but not its seed slides.
+        for slide_id in list(prs.slides._sldIdLst):
+            rel_id = slide_id.rId
+            prs.part.drop_rel(rel_id)
+            prs.slides._sldIdLst.remove(slide_id)
+
+        slide = prs.slides.add_slide(prs.slide_layouts[8])
+
+        top = body["top_emu"] + 100000
+        width = int(col_width)
+        height = 250000
+
+        # Two aligned shapes and one intentionally misaligned shape.
+        _add_filled_rect(slide, int(body["left_emu"]), top, width, height,
+                         RGBColor(0x00, 0x85, 0x67))
+        _add_filled_rect(slide, int(body["left_emu"] + col_width + gutter),
+                         top + 350000, width, height,
+                         RGBColor(0x00, 0x85, 0x67))
+        _add_filled_rect(slide, int(body["left_emu"] + 100000),
+                         top + 700000, width, height,
+                         RGBColor(0x00, 0x85, 0x67))
+
+        tmp = tempfile.NamedTemporaryFile(suffix=".pptx", delete=False)
+        prs.save(tmp.name)
+
+        report = scan_pptx(tmp.name, _DESIGN_SYSTEM)
+        vh15 = [f for f in report["findings"] if f["check_id"] == "VH-15"]
+        assert len(vh15) == 1
+        assert vh15[0]["severity"] == "WARNING"
+
 
 # ---------------------------------------------------------------------------
 # Content Rendering checks (VH-16 to VH-19)
@@ -438,12 +478,12 @@ class TestStructuralChecks:
 
 
 # ---------------------------------------------------------------------------
-# Cross-slide checks (VH-20 to VH-23)
+# Deferred heuristic checks
 # ---------------------------------------------------------------------------
 
-class TestCrossSlideChecks:
-    def test_vh21_inconsistent_title_style(self):
-        """VH-21: Different title styles across slides is BLOCKING."""
+class TestDeferredHeuristicChecks:
+    def test_vh21_title_style_check_is_deferred(self):
+        """VH-21 is deferred until title roles have explicit anchors."""
         ds = _load_ds()
         prs = Presentation()
         prs.slide_width = Emu(ds["canvas"]["width_emu"])
@@ -472,8 +512,8 @@ class TestCrossSlideChecks:
 
         report = scan_pptx(tmp.name, _DESIGN_SYSTEM)
         vh21 = [f for f in report["findings"] if f["check_id"] == "VH-21"]
-        assert len(vh21) >= 1
-        assert vh21[0]["severity"] == "BLOCKING"
+        assert len(vh21) == 0
+        assert "VH-21" in scanner_module._DEFERRED_CHECKS
 
 
 # ---------------------------------------------------------------------------
@@ -566,3 +606,53 @@ class TestScanEndToEnd:
             f"Clean deck has unexpected BLOCKING findings: "
             f"{[f['check_id'] + ': ' + f['details'] for f in blocking]}"
         )
+
+
+class TestScannerInternalErrors:
+    def test_check_crash_surfaces_as_blocking_finding(self, monkeypatch):
+        """A crashed check becomes an explicit BLOCKING finding."""
+        def broken_check(*_args, **_kwargs):
+            raise RuntimeError("boom")
+
+        broken_check.__name__ = "_check_vh01"
+        broken_check.__doc__ = "VH-01: All fills use palette tokens."
+
+        monkeypatch.setattr(scanner_module, "_ACTIVE_CHECKS", [broken_check])
+        monkeypatch.setattr(scanner_module, "_check_vh25", lambda *_args, **_kwargs: [])
+
+        path = _make_pptx(lambda prs, slide, ds: None)
+        report = scan_pptx(path, _DESIGN_SYSTEM)
+
+        assert report["pass"] is False
+        assert report["blocking_count"] == 1
+        assert report["warning_count"] == 0
+        assert len(report["findings"]) == 1
+
+        finding = report["findings"][0]
+        assert finding["check_id"] == "VH-01"
+        assert finding["severity"] == "BLOCKING"
+        assert finding["slide_index"] == -1
+        assert "RuntimeError: boom" in finding["details"]
+
+    def test_vh25_crash_surfaces_as_blocking_finding(self, monkeypatch):
+        """The deck-plan-specific check also surfaces internal failures."""
+        def broken_vh25(*_args, **_kwargs):
+            raise ValueError("bad deck plan")
+
+        monkeypatch.setattr(scanner_module, "_ACTIVE_CHECKS", [])
+        monkeypatch.setattr(scanner_module, "_check_vh25", broken_vh25)
+
+        path = _make_pptx(lambda prs, slide, ds: None)
+        report = scan_pptx(path, _DESIGN_SYSTEM, deck_plan={"slides": []})
+
+        assert report["pass"] is False
+        assert report["blocking_count"] == 1
+        assert report["warning_count"] == 0
+        assert len(report["findings"]) == 1
+
+        finding = report["findings"][0]
+        assert finding["check_id"] == "VH-25"
+        assert finding["check_name"] == "Slide count matches deck_plan"
+        assert finding["severity"] == "BLOCKING"
+        assert finding["slide_index"] == -1
+        assert "ValueError: bad deck plan" in finding["details"]
