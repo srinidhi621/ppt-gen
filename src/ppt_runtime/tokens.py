@@ -51,6 +51,11 @@ class Tokens:
             )
         return dict(style)
 
+    @property
+    def type_scale(self) -> dict:
+        """Full type-scale dict (read-only reference)."""
+        return self._type_scale
+
     def spacing(self, name: str) -> int:
         key = f"{name}_emu"
         val = self._spacing.get(key)
