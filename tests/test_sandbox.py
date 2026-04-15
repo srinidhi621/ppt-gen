@@ -209,6 +209,44 @@ class TestASTScannerBlocked:
         assert result.violations[0].detail == "import 'subprocess' is not allowed"
 
 
+class TestASTScannerHexColors:
+    """Tests for raw hex color literal detection."""
+
+    def test_hex_color_string_blocked(self):
+        result = scan_ast('color = "#FF0000"')
+        assert not result.ok
+        assert any(v.rule == "raw-hex-color" for v in result.violations)
+
+    def test_hex_color_lowercase_blocked(self):
+        result = scan_ast('c = "#aabbcc"')
+        assert not result.ok
+        assert any(v.rule == "raw-hex-color" for v in result.violations)
+
+    def test_hex_color_mixed_case_blocked(self):
+        result = scan_ast('c = "#1A2B3C"')
+        assert not result.ok
+
+    def test_non_color_hex_string_allowed(self):
+        """Short hex strings (not 6 digits) should not trigger."""
+        result = scan_ast('x = "#FFF"')
+        assert result.ok
+
+    def test_hex_in_longer_string_allowed(self):
+        """Hex-like substring in a longer string should not trigger."""
+        result = scan_ast('x = "color is #FF0000 here"')
+        assert result.ok
+
+    def test_tokens_color_call_allowed(self):
+        """Using tokens.color() is the correct pattern — should pass."""
+        result = scan_ast('c = tokens.color("accent_1")')
+        assert result.ok
+
+    def test_non_hash_hex_string_allowed(self):
+        """Hex strings without # prefix are not color literals."""
+        result = scan_ast('x = "FF0000"')
+        assert result.ok
+
+
 class TestASTScannerEdgeCases:
     """Edge cases and boundary conditions."""
 
@@ -369,20 +407,9 @@ class TestRunnerTimeout:
     """Tests for wall-clock timeout enforcement."""
 
     def test_timeout_kills_script(self, tmp_path):
-        """Script that sleeps longer than timeout should be killed."""
+        """Script with infinite busy loop should be killed by wall-clock timeout."""
         script = tmp_path / "build_deck.py"
         script.write_text(textwrap.dedent("""\
-            import time
-            time.sleep(300)
-        """))
-
-        # time module is not in our blocked list (and shouldn't be — it's
-        # harmless), but we need skip_ast_scan because 'time' isn't in
-        # ALLOWED_MODULES. Let's add it to the script differently:
-        # Actually, 'time' is not allowed by default. Let's test timeout
-        # with a busy loop instead.
-        script.write_text(textwrap.dedent("""\
-            # Busy loop to trigger timeout
             import sys
             i = 0
             while True:
@@ -395,6 +422,41 @@ class TestRunnerTimeout:
         assert not result.success
         assert "timed out" in result.error.lower()
         assert result.duration_s >= 1.5  # should be close to 2s
+
+
+class TestRunnerMemory:
+    """Tests for memory limit enforcement."""
+
+    def test_memory_limit_kills_script(self, tmp_path):
+        """Script that allocates more memory than the limit should be killed."""
+        script = tmp_path / "build_deck.py"
+        # Allocate ~200MB in a tight loop — should exceed a 64MB limit.
+        # Uses sys (allowed) to avoid blocked imports.
+        script.write_text(textwrap.dedent("""\
+            import sys
+            chunks = []
+            for i in range(200):
+                chunks.append(b'x' * (1024 * 1024))  # 1MB per chunk
+        """))
+
+        result = run_in_sandbox(
+            script,
+            attempt_dir=tmp_path,
+            timeout_s=30,
+            memory_mb=64,
+            write_report=False,
+        )
+        # On macOS RLIMIT_AS/RLIMIT_RSS enforcement is best-effort.
+        # On Linux this should reliably kill the process.
+        # We accept either a non-zero exit code or a MemoryError.
+        import platform
+        if platform.system() == "Linux":
+            assert not result.success, "Memory-hungry script should have been killed"
+            assert result.exit_code != 0
+        else:
+            # macOS: RLIMIT_RSS is advisory, may not kill the process.
+            # Just verify the runner didn't crash and returned a result.
+            assert isinstance(result, ExecResult)
 
 
 class TestRunnerScriptErrors:
@@ -440,6 +502,64 @@ class TestRunnerScriptErrors:
         assert not result.ast_scan_ok
 
 
+class TestRunnerPPTXValidation:
+    """Tests for PPTX validity check and slide counting (§4.5 step 4)."""
+
+    def test_valid_pptx_counts_slides(self, tmp_path):
+        """A valid PPTX should report the correct slide count."""
+        script = tmp_path / "build_deck.py"
+        script.write_text(textwrap.dedent("""\
+            from pptx import Presentation
+            from pathlib import Path
+
+            prs = Presentation()
+            prs.slides.add_slide(prs.slide_layouts[6])
+            prs.slides.add_slide(prs.slide_layouts[6])
+            prs.slides.add_slide(prs.slide_layouts[6])
+            prs.save(Path(__file__).parent / "deck.pptx")
+        """))
+
+        result = run_in_sandbox(script, attempt_dir=tmp_path, timeout_s=30)
+        assert result.success
+        assert result.slides_built == 3
+        assert result.pptx_valid
+
+    def test_corrupt_pptx_fails_validation(self, tmp_path):
+        """A file named deck.pptx that isn't a valid PPTX should fail."""
+        script = tmp_path / "build_deck.py"
+        script.write_text(textwrap.dedent("""\
+            from pathlib import Path
+            # Write garbage bytes to deck.pptx
+            Path(__file__).parent.joinpath("deck.pptx").write_bytes(
+                b"this is not a pptx file")
+        """))
+
+        result = run_in_sandbox(
+            script, attempt_dir=tmp_path, timeout_s=30, skip_ast_scan=True
+        )
+        assert not result.success
+        assert not result.pptx_valid
+        assert "invalid or corrupt" in result.error.lower()
+
+    def test_slide_count_in_report(self, tmp_path):
+        """build_exec_report.json should contain the slide count."""
+        script = tmp_path / "build_deck.py"
+        script.write_text(textwrap.dedent("""\
+            from pptx import Presentation
+            from pathlib import Path
+
+            prs = Presentation()
+            prs.slides.add_slide(prs.slide_layouts[6])
+            prs.slides.add_slide(prs.slide_layouts[6])
+            prs.save(Path(__file__).parent / "deck.pptx")
+        """))
+
+        run_in_sandbox(script, attempt_dir=tmp_path, timeout_s=30, write_report=True)
+        report = json.loads((tmp_path / "build_exec_report.json").read_text())
+        assert report["slides_built"] == 2
+        assert report["pptx_valid"] is True
+
+
 class TestRunnerReport:
     """Tests for build_exec_report.json output."""
 
@@ -482,30 +602,79 @@ class TestRunnerReport:
             stderr="",
             duration_s=1.5,
             ast_scan_ok=True,
+            slides_built=3,
             pptx_path="/tmp/deck.pptx",
+            pptx_valid=True,
         )
         report = result.to_report()
         assert report["success"] is True
         assert report["pptx_path"] == "/tmp/deck.pptx"
         assert report["build_time_seconds"] == 1.5
+        assert report["slides_built"] == 3
+        assert report["pptx_valid"] is True
         assert "stdout" in report
 
 
 class TestRunnerEnvironment:
     """Tests for restricted environment in sandbox."""
 
-    def test_restricted_env(self, tmp_path):
-        """Subprocess should not have access to full parent environment."""
+    def test_restricted_env_excludes_secrets(self, tmp_path):
+        """Subprocess env should only contain the allowlisted keys."""
+        # Set a fake secret in the parent environment
+        import os
+        os.environ["SANDBOX_TEST_SECRET"] = "should_not_leak"
+        try:
+            script = tmp_path / "build_deck.py"
+            # skip_ast_scan=True so we can use os.environ in the script
+            script.write_text(textwrap.dedent("""\
+                import os
+                import json
+                from pathlib import Path
+                from pptx import Presentation
+
+                env_keys = sorted(os.environ.keys())
+                Path(__file__).parent.joinpath("env_keys.json").write_text(
+                    json.dumps(env_keys))
+
+                prs = Presentation()
+                prs.slides.add_slide(prs.slide_layouts[6])
+                prs.save(Path(__file__).parent / "deck.pptx")
+            """))
+
+            result = run_in_sandbox(
+                script, attempt_dir=tmp_path, timeout_s=30, skip_ast_scan=True
+            )
+            assert result.success, f"Script failed: {result.error}\nstderr: {result.stderr}"
+
+            env_keys_file = tmp_path / "env_keys.json"
+            assert env_keys_file.exists()
+            import json
+            env_keys = json.loads(env_keys_file.read_text())
+
+            # The secret should not have leaked into the subprocess
+            assert "SANDBOX_TEST_SECRET" not in env_keys
+
+            # Only allowlisted keys should be present (plus OS-injected
+            # keys like __CF_USER_TEXT_ENCODING on macOS that the runtime
+            # adds regardless of the env dict we pass).
+            allowed = {"PATH", "HOME", "LANG", "LC_ALL", "VIRTUAL_ENV", "PYTHONPATH"}
+            # macOS injects __CF_USER_TEXT_ENCODING into every subprocess
+            platform_injected = {"__CF_USER_TEXT_ENCODING", "__PYVENV_LAUNCHER__"}
+            for key in env_keys:
+                assert key in allowed or key in platform_injected, (
+                    f"Unexpected env key {key!r} in sandbox"
+                )
+        finally:
+            os.environ.pop("SANDBOX_TEST_SECRET", None)
+
+    def test_env_has_path(self, tmp_path):
+        """Subprocess should have PATH so it can find python and libraries."""
         script = tmp_path / "build_deck.py"
         script.write_text(textwrap.dedent("""\
             import sys
             from pathlib import Path
             from pptx import Presentation
 
-            # Write env keys to a file so the test can inspect them
-            env_file = Path(__file__).parent / "env_keys.txt"
-            # We can't use os.environ (os is blocked), but sys has no environ
-            # Just produce a valid pptx
             prs = Presentation()
             prs.slides.add_slide(prs.slide_layouts[6])
             prs.save(Path(__file__).parent / "deck.pptx")

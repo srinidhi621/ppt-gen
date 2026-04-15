@@ -6,10 +6,26 @@ Executes a `build_deck.py` in an isolated subprocess with:
 - restricted environment variables
 - restricted working directory (the attempt directory)
 - stdout / stderr / exit-code / traceback capture
+- PPTX validity check via python-pptx on success
 
 Produces a `build_exec_report.json` in the attempt directory.
 
 Spec reference: SPEC-v3.md §2.5, §4.5
+
+Known gaps (acceptable for S1 single-developer scope per §2.5):
+- Network blocking: not enforced at the subprocess level. The AST
+  scanner blocks network-capable imports (socket, http, requests, urllib),
+  which provides defense-in-depth but not true network isolation.
+  Full blocking would require OS-level sandboxing (macOS sandbox-exec,
+  Linux seccomp/netns).
+- Write-path restriction: the subprocess cwd is set to the attempt
+  directory, but writes outside that directory are not prevented at the
+  OS level. The AST scanner blocks open() and os.* to limit file I/O,
+  but pptx.Presentation.save() can write anywhere the process can.
+  True enforcement requires bind-mount isolation or chroot.
+- Retry loop: this module executes a single attempt. Retry orchestration
+  (up to the builder retry budget per §4.5 step 5) is the responsibility
+  of the pipeline caller, not the sandbox runner.
 """
 
 from __future__ import annotations
@@ -21,7 +37,7 @@ import subprocess
 import sys
 import time
 import traceback
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
@@ -53,7 +69,9 @@ class ExecResult:
     duration_s: float
     ast_scan_ok: bool
     ast_violations: list[str] = field(default_factory=list)
+    slides_built: int = 0
     pptx_path: Optional[str] = None
+    pptx_valid: bool = False
     error: Optional[str] = None
     traceback_str: Optional[str] = None
 
@@ -61,10 +79,11 @@ class ExecResult:
         """Convert to build_exec_report-compatible dict."""
         report: dict = {
             "success": self.success,
-            "slides_built": 0,  # filled by caller if available
+            "slides_built": self.slides_built,
             "pptx_path": self.pptx_path or "",
             "build_time_seconds": round(self.duration_s, 3),
             "ast_scan_ok": self.ast_scan_ok,
+            "pptx_valid": self.pptx_valid,
         }
         if self.ast_violations:
             report["ast_violations"] = self.ast_violations
@@ -282,6 +301,17 @@ def run_in_sandbox(
         success = False
         error_msg = "Script exited successfully but no .pptx file was produced"
 
+    # -----------------------------------------------------------------------
+    # Step 4: Validate output PPTX (§4.5 step 4)
+    # -----------------------------------------------------------------------
+    slides_built = 0
+    pptx_valid = False
+    if pptx_path is not None:
+        slides_built, pptx_valid, validation_err = _validate_pptx(pptx_path)
+        if not pptx_valid:
+            success = False
+            error_msg = validation_err
+
     result = ExecResult(
         success=success,
         exit_code=exit_code,
@@ -289,7 +319,9 @@ def run_in_sandbox(
         stderr=stderr,
         duration_s=duration,
         ast_scan_ok=True,
+        slides_built=slides_built,
         pptx_path=pptx_path,
+        pptx_valid=pptx_valid,
         error=error_msg,
         traceback_str=tb_str,
     )
@@ -297,6 +329,19 @@ def run_in_sandbox(
     if write_report:
         _write_report(result, attempt_dir)
     return result
+
+
+def _validate_pptx(pptx_path: str) -> tuple[int, bool, Optional[str]]:
+    """Open the PPTX with python-pptx to confirm it's valid (§4.5 step 4).
+
+    Returns (slides_built, is_valid, error_message_or_None).
+    """
+    try:
+        from pptx import Presentation
+        prs = Presentation(pptx_path)
+        return len(prs.slides), True, None
+    except Exception as exc:
+        return 0, False, f"Output PPTX is invalid or corrupt: {exc}"
 
 
 def _write_report(result: ExecResult, attempt_dir: Path) -> Path:

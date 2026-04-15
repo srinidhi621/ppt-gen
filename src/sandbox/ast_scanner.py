@@ -9,6 +9,7 @@ Spec reference: SPEC-v3.md §2.5, §4.5
 from __future__ import annotations
 
 import ast
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Union
@@ -158,6 +159,18 @@ class _ASTChecker(ast.NodeVisitor):
 
         self.generic_visit(node)
 
+    # -- Raw hex color literals (§10.4 Builder→Sandbox contract) -------------
+
+    # Matches 6-digit hex color strings like "#FF0000" or "#ff0000"
+    _HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
+
+    def visit_Constant(self, node: ast.Constant) -> None:
+        if isinstance(node.value, str) and self._HEX_COLOR_RE.match(node.value):
+            self._add(node, "raw-hex-color",
+                      f"raw hex color {node.value!r} found; "
+                      f"use tokens.color(...) instead")
+        self.generic_visit(node)
+
     # -- os.* attribute access (not just calls) ------------------------------
 
     def visit_Attribute(self, node: ast.Attribute) -> None:
@@ -190,21 +203,18 @@ def scan_ast(source: Union[str, Path]) -> ScanResult:
     Parameters
     ----------
     source : str or Path
-        If a Path (or string path to an existing file), the file is read
-        and parsed. Otherwise the string is treated as Python source code.
+        If a ``Path`` object, the file is read and parsed.
+        If a ``str``, it is always treated as Python source code (never
+        as a file path) to avoid ambiguity.
 
     Returns
     -------
     ScanResult
         `.ok` is True if no violations found; `.violations` lists all issues.
     """
-    # Determine if source is a file path or raw code
     if isinstance(source, Path):
         code = source.read_text(encoding="utf-8")
         filename = str(source)
-    elif isinstance(source, str) and not source.strip().startswith(("#", "\"", "'", "import", "from", "def", "class", "\n")) and Path(source).is_file():
-        code = Path(source).read_text(encoding="utf-8")
-        filename = source
     else:
         code = source
         filename = "<string>"
