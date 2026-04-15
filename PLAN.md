@@ -43,15 +43,39 @@ V3 foundation code now exists on the active PR branch, but it is still under rev
 
 ## Active Slice
 
-### SLICE-008b — Scanner scope correction
+### PR #5 Remediation — Scanner, examples, contracts, content fidelity
 **Status**: Built — awaiting user review
 **Owner**: Claude
-**Description**: Keep only objective checks in the active scanner. Heuristic peer-group and role-inference checks are deferred until they can be grounded on explicit anchors. `VH-15` uses the actual canvas body region instead of safe-area math.
-**Deliverables**: `src/scan/scanner.py` now runs an objective-only active check set, records deferred heuristic checks explicitly in-module, and resolves `VH-15` against the slide layout's mapped canvas body region. `tests/test_scanner.py` covers deferred `VH-21`, template-grounded `VH-15`, and the prior internal-error paths. Targeted verification passed (`tests/test_scanner.py`, `tests/test_contracts.py`).
+**Branch**: `feature/scanner-and-examples`
+**Description**: PR #5 batched SLICE-007 and SLICE-008 before SLICE-006b cleared review. This remediation brings the branch to spec compliance through six sub-slices.
+
+**Sub-slice status**:
+| Sub-slice | Description | Status |
+|---|---|---|
+| SLICE-008a | Scanner reliability: crashes → BLOCKING findings | Done (ported from bb16de97) |
+| SLICE-008b | Scanner scope: deferred heuristic checks, VH-15 body_region grounding | Done (ported from bb16de97) |
+| SLICE-007a | Hardened example regression gate: scanner pass + density bounds enforced | Done |
+| SLICE-007b | Seeded examples: all inline fonts → token styles, VH-04/VH-11 fixes | Done |
+| SLICE-008c | Contracts: artifact validators for sandbox→scanner and scanner→reviewer handoffs, pending list for unwired handoffs | Done |
+| SLICE-008d | Content fidelity: date/proper-noun/quoted-phrase/dollar hallucination detection, improved extraction | Done |
+
+**Deliverables**:
+- Scanner is objective-only (21 active checks, 5 deferred) and never silently passes on crash
+- All 9 examples pass the scanner, density bounds, and no-inline-font lint
+- `examples/run_all.py` runs build + scanner + density check
+- `tests/test_examples.py` enforces scanner pass, density bounds, inline-font ban
+- `src/contracts/validator.py` has `validate_sandbox_to_scanner()` and `validate_scanner_to_reviewer()` plus explicit `PENDING_HANDOFFS` list
+- `src/scan/content_fidelity.py` detects hallucinated numbers, dates, dollar amounts, quoted phrases, and proper nouns
+- `add_text()` now accepts a `fill` parameter (minimal runtime addition for scanner compliance)
+- `draw_header_bar()` sizes the kicker rect from the actual type style height
+- 394 tests pass, 4 skip
+
 **REVIEW-GATE**:
-- [ ] User confirms `VH-14` and `VH-20` through `VH-23` should stay deferred until explicit anchors/grouping metadata exist.
-- [ ] User confirms the active scanner should prefer fewer defensible checks over heuristic false positives.
-- [ ] User confirms the `VH-15` body-region grounding approach is the right basis for future grid checks.
+- [ ] User confirms scanner scope (deferred VH-14, VH-20–23) is correct.
+- [ ] User confirms the hardened example gate enforces the quality bar.
+- [ ] User confirms seeded examples now teach the correct builder contract.
+- [ ] User confirms contract coverage matrix is honest (reachable vs pending handoffs).
+- [ ] User confirms content fidelity improvements are defensible.
 
 ---
 
@@ -60,7 +84,7 @@ V3 foundation code now exists on the active PR branch, but it is still under rev
 | Item | Why it matters | Blocks |
 |---|---|---|
 | `SLICE-006b` runtime validation | Runtime fidelity against `alternate-approach/build.py` is still awaiting user review; remediation work on this branch does not count as approval of that slice. | `SLICE-007` |
-| `SLICE-008b` scanner scope correction | The scanner now defers heuristic peer/role checks and grounds `VH-15` on template canvas metadata. The user needs to confirm this narrower contract before more scanner work lands. | `SLICE-008c` |
+| PR #5 remediation | Six sub-slices completed on `feature/scanner-and-examples`. Needs user review before these fixes can be merged. | `SLICE-007c` |
 
 ---
 
@@ -116,8 +140,8 @@ These slices are ready to start as soon as their blockers clear. Listed in execu
 2. **Layout pattern reimplementation** (from non-Ascendion sources): study the layout structure of S14 (matrix grid), S21 (timeline), S09 (process flow), S07 (concept comparison), S18 (feature columns), and reimplement each on the Ascendion template using Ascendion tokens and grid.
 Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archetype capacity values based on actual measurement. Confirm or reject candidate archetypes.
 **Recovery plan on this branch**:
-1. `SLICE-007a` — Harden the example regression gate: `examples/run_all.py` and `tests/test_examples.py` must execute every example, run the full objective scanner, enforce density bounds, and fail loudly on invariant or contract violations.
-2. `SLICE-007b` — Clean up seeded examples: remove inline `font_name` / `font_size_pt` usage and any raw palette literals from seeded examples, route typography through `tokens.type(...)`, and keep geometry on grid/canvas anchors.
+1. ~~`SLICE-007a`~~ — ✓ Hardened the example regression gate: `examples/run_all.py` runs build + scanner + density check; `tests/test_examples.py` enforces scanner pass, density bounds [min, max], and no-inline-font lint.
+2. ~~`SLICE-007b`~~ — ✓ Cleaned up all 9 seeded examples: removed all inline `font_name` / `font_size_pt`, routed typography through `tokens.type(...)`, added `fill=` on text boxes overlaying colored rects for scanner VH-04 compliance, fixed VH-11 text overflow in `draw_header_bar` and examples.
 3. `SLICE-007c` — Re-approve the seeds in small batches: start with one Ascendion decomposition and one reimplemented layout, then only add more examples after each batch passes the hardened gate and the user reviews the fidelity + metadata.
 **REVIEW-GATE** (per example):
 - [ ] User confirms the archetype tag.
@@ -262,6 +286,7 @@ Unit tests against fixture decks with injected bugs (scanner), invalid handoff p
 
 ## Changelog
 
+- **2026-04-15** — PR #5 remediation complete on `feature/scanner-and-examples`. Six sub-slices delivered: (008a) ported bb16de97 — scanner crashes now surface as synthetic BLOCKING findings; (008b) ported bb16de97 — 5 heuristic checks deferred, VH-15 body_region grounded; (007a) `examples/run_all.py` rewritten with scanner + density enforcement, `tests/test_examples.py` adds scanner-pass, density-bounds, and inline-font-ban tests; (007b) all 9 seeded examples cleaned — inline `font_name`/`font_size_pt` replaced with `tokens.type(...)`, VH-04 contrast fixes via `fill=` on text boxes, VH-11 overflow fixes via rect resizing and type style height calculation; (008c) `src/contracts/validator.py` gains `validate_sandbox_to_scanner()` and `validate_scanner_to_reviewer()` artifact validators plus explicit `PENDING_HANDOFFS` list; (008d) `src/scan/content_fidelity.py` extended with date, dollar, quoted-phrase, and proper-noun hallucination detection. Runtime addition: `add_text()` accepts `fill` parameter, `draw_header_bar()` sizes kicker rect from type style. Verification: 394 passed, 4 skipped.
 - **2026-04-15** — Docs synced for scanner remediation: `SPEC-v3.md` now distinguishes the 26-check hygiene catalog from the current objective-only active scanner set, records that `VH-14` and `VH-20` through `VH-23` are deferred until explicit metadata exists, and states that internal scanner failures are BLOCKING findings.
 - **2026-04-15** — `SLICE-008b` implemented on `feature/scanner-and-examples`: deferred heuristic checks `VH-14` and `VH-20` through `VH-23` from the active scanner set, documented them in-module as deferred scope, and rewrote `VH-15` to derive grid bounds from the slide layout's mapped canvas `body_region` instead of generic safe-area math. Added regressions showing `VH-21` is intentionally deferred and `VH-15` still fires on a template-grounded misalignment. Verification: `tests/test_scanner.py` (38 passed), `tests/test_contracts.py` (27 passed).
 - **2026-04-15** — `SLICE-008a` implemented on `feature/scanner-and-examples`: `scan_pptx()` no longer swallows checker crashes. Internal scanner failures now surface as synthetic `BLOCKING` findings keyed to the failed check id, including `VH-25`. Added regressions for a crashed standard check and a crashed deck-plan check. Verification: `tests/test_scanner.py` (37 passed), `tests/test_contracts.py` (27 passed).

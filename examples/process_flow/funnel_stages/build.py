@@ -57,15 +57,16 @@ def stage_card(slide, rect, num, when, name, what, funnel_label, funnel_val):
     add_rect(slide, Rect(rect.left, rect.top, rect.width, header_h), fill=C1)
     add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("sm"),
                          rect.width - 2 * pad, tokens.spacing("xl")),
-             num, font_name="Space Grotesk", font_size_pt=28, bold=True, color=C2)
+             num, type_style=tokens.type("title"), color=TXT_W, fill=C1)
     add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("xl"),
                          rect.width - 2 * pad, tokens.spacing("md")),
-             when, type_style=tokens.type("kicker"), color=TXT_W)
+             when, type_style=tokens.type("kicker"), color=TXT_W, fill=C1)
 
     body_top = rect.top + header_h + tokens.spacing("sm")
-    add_text(slide, Rect(rect.left + pad, body_top, rect.width - 2 * pad, tokens.spacing("lg")),
+    name_h = tokens.spacing("xl")
+    add_text(slide, Rect(rect.left + pad, body_top, rect.width - 2 * pad, name_h),
              name, type_style=tokens.type("subtitle"), color=C1, bold=True)
-    add_text(slide, Rect(rect.left + pad, body_top + tokens.spacing("lg") + tokens.spacing("sm"),
+    add_text(slide, Rect(rect.left + pad, body_top + name_h + tokens.spacing("sm"),
                          rect.width - 2 * pad, tokens.spacing("xl") * 4),
              what, type_style=tokens.type("body"), color=TXT)
 

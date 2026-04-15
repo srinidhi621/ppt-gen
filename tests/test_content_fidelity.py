@@ -33,6 +33,13 @@ def _make_pptx_with_text(visible_texts, notes_texts=None):
     """Create a PPTX with given visible texts and optional notes."""
     ds = _load_ds()
     prs = Presentation(str(_TEMPLATE))
+
+    # Strip template seed slides so only test content appears
+    for sid in list(prs.slides._sldIdLst):
+        rel_id = sid.rId
+        prs.part.drop_rel(rel_id)
+        prs.slides._sldIdLst.remove(sid)
+
     layout_idx = ds["canvases"]["header_light"]["layout_index"]
     slide = prs.slides.add_slide(prs.slide_layouts[layout_idx])
 
@@ -83,6 +90,10 @@ class TestFactExtraction:
         facts = extract_facts("Q3 results were strong")
         assert "Q3" in facts
 
+    def test_extract_quarter_with_year(self):
+        facts = extract_facts("In Q3 2024 we shipped the feature")
+        assert "Q3 2024" in facts
+
     def test_extract_numbers(self):
         facts = extract_facts("We have 150 employees")
         assert "150" in facts
@@ -91,9 +102,31 @@ class TestFactExtraction:
         facts = extract_facts('The motto is "Move Fast" and grow')
         assert "Move Fast" in facts
 
+    def test_extract_single_quoted_phrases(self):
+        facts = extract_facts("The principle is 'Ship Early' always")
+        assert "Ship Early" in facts
+
     def test_extract_proper_nouns(self):
         facts = extract_facts("The project at Microsoft was successful.")
         assert "Microsoft" in facts
+
+    def test_proper_nouns_skip_common_titles(self):
+        """Words like 'The', 'This', 'Our' should not be extracted as proper nouns."""
+        facts = extract_facts("However, this approach works. The team agreed.")
+        assert "However" not in facts
+        assert "The" not in facts
+
+    def test_extract_date_with_month_name(self):
+        facts = extract_facts("The launch is scheduled for March 2025")
+        assert "March 2025" in facts
+
+    def test_extract_date_full(self):
+        facts = extract_facts("The deadline is January 15, 2025")
+        assert "January 15, 2025" in facts
+
+    def test_extract_numeric_date(self):
+        facts = extract_facts("Filed on 01/15/2025 per policy")
+        assert "01/15/2025" in facts
 
     def test_empty_input(self):
         facts = extract_facts("")
@@ -232,6 +265,50 @@ class TestHallucinatedSpecifics:
         assert "1" not in report["hallucinated_specifics"]
         assert "2" not in report["hallucinated_specifics"]
         assert "3" not in report["hallucinated_specifics"]
+
+    def test_detects_hallucinated_dates(self):
+        """Dates in PPTX not in user input are flagged."""
+        user_input = "We launched in Q3"
+        path = _make_pptx_with_text(["We launched in Q3. The next phase begins March 2026."])
+        report = check_content_fidelity(user_input, path)
+        assert "March 2026" in report["hallucinated_specifics"]
+
+    def test_detects_hallucinated_dollar_amounts(self):
+        """Dollar amounts in PPTX not in user input are flagged."""
+        user_input = "Revenue was $5M"
+        path = _make_pptx_with_text(["Revenue was $5M with $2.3B total market"])
+        report = check_content_fidelity(user_input, path)
+        assert "$2.3B" in report["hallucinated_specifics"]
+
+    def test_no_false_positive_on_input_dollars(self):
+        user_input = "Revenue was $5M"
+        path = _make_pptx_with_text(["Revenue was $5M"])
+        report = check_content_fidelity(user_input, path)
+        dollar_hallucinated = [h for h in report["hallucinated_specifics"] if h.startswith("$")]
+        assert len(dollar_hallucinated) == 0
+
+    def test_detects_hallucinated_quoted_phrases(self):
+        """Quoted phrases in PPTX not in user input are flagged."""
+        user_input = "Our motto is always deliver"
+        path = _make_pptx_with_text(['Our approach is "Zero Downtime Guaranteed" always'])
+        report = check_content_fidelity(user_input, path)
+        assert '"Zero Downtime Guaranteed"' in report["hallucinated_specifics"]
+
+    def test_detects_hallucinated_proper_nouns(self):
+        """Proper nouns in PPTX not in user input are flagged."""
+        user_input = "We partnered with a consulting firm"
+        path = _make_pptx_with_text(
+            ["We partnered with a consulting firm. Accenture led the engagement."]
+        )
+        report = check_content_fidelity(user_input, path)
+        assert "Accenture" in report["hallucinated_specifics"]
+
+    def test_no_false_positive_on_input_proper_nouns(self):
+        user_input = "The project at Microsoft was successful. Google reviewed it."
+        path = _make_pptx_with_text(["The deal included Microsoft and Google"])
+        report = check_content_fidelity(user_input, path)
+        assert "Microsoft" not in report["hallucinated_specifics"]
+        assert "Google" not in report["hallucinated_specifics"]
 
 
 # ---------------------------------------------------------------------------

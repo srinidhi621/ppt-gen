@@ -103,7 +103,7 @@ risk_h = tokens.spacing("xl")
 for i, r in enumerate(risks, 1):
     add_rect(slide, Rect(right_r.left, y, right_r.width, risk_h), fill=MUTED)
     add_text(slide, Rect(right_r.left + tokens.spacing("sm"), y + tokens.spacing("xs"),
-                         tokens.spacing("md"), tokens.spacing("md")),
+                         tokens.spacing("md"), tokens.spacing("lg")),
              str(i), type_style=tokens.type("subtitle"), color=C2, bold=True)
     add_text(slide, Rect(right_r.left + tokens.spacing("lg"), y + tokens.spacing("xs"),
                          right_r.width - tokens.spacing("xl"), risk_h - tokens.spacing("sm")),
@@ -135,7 +135,7 @@ for when, what in moves:
     add_text(slide, Rect(right_r.left + tokens.spacing("xl") * 3, y,
                          right_r.width - tokens.spacing("xl") * 3 - tokens.spacing("md"),
                          tokens.spacing("xl")),
-             what, type_style=tokens.type("caption"), color=TXT_W)
+             what, type_style=tokens.type("caption"), color=TXT_W, fill=C1)
     y += tokens.spacing("xl")
 
 # ---------------------------------------------------------------------------

@@ -9,7 +9,7 @@
     "each rubric column has colored header bar, bold caption label (white on color), and body text below",
     "rubric columns use muted (accent_5) background with distinct accent colors per column header",
     "right panel: section kicker + subtitle line, then 2x3 stat grid",
-    "each stat cell has accent bar on left edge, large number (24pt Space Grotesk bold), and caption label",
+    "each stat cell has accent bar on left edge, large number (metric_value token style), and caption label",
     "stat cells have subtle border (accent_6) on white background",
     "max 3 accent colors: accent_1 (healthy), accent_2 (over-reliance/stat bars), accent_6 (avoidance)"
   ],

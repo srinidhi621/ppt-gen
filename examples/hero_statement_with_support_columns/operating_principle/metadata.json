@@ -5,7 +5,7 @@
   "intent": "Lead with a bold thesis in a hero band; support with three contrasting columns below.",
   "invariants": [
     "hero band spans full grid width with accent bar on left edge",
-    "hero text is the largest/most prominent element (22pt Space Grotesk bold)",
+    "hero text is the largest/most prominent element (hero token style)",
     "exactly 3 support cards below, equal width (4 cols each)",
     "each support card has accent bar, kicker heading, body text",
     "max 2 accent colors used (accent_1 for hero fill, accent_2 for card bars and kicker)",

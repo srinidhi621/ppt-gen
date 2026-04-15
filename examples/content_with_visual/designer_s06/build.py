@@ -137,7 +137,7 @@ for idx, (value, label) in enumerate(outcomes):
     add_rect(slide, Rect(cl, ct, tokens.spacing("xs"), cell_h), fill=C2)
     add_text(slide, Rect(cl + pad, ct + tokens.spacing("sm"),
                          cell_w - 2 * pad, tokens.spacing("xl")),
-             value, font_name="Space Grotesk", font_size_pt=24, bold=True, color=C1)
+             value, type_style=tokens.type("metric_value"), color=C1)
     add_text(slide, Rect(cl + pad, ct + tokens.spacing("xl") + tokens.spacing("sm"),
                          cell_w - 2 * pad, cell_h - tokens.spacing("xl") - tokens.spacing("md")),
              label, type_style=tokens.type("caption"), color=TXT2)
@@ -154,7 +154,7 @@ add_text(slide, Rect(right_r.left + pad, cta_top + tokens.spacing("lg"),
                      right_r.width - 2 * pad, cta_h - tokens.spacing("xl")),
          "Schedule a 60-minute discovery workshop to map your current "
          "capabilities against the AI-readiness framework.",
-         type_style=tokens.type("body"), color=TXT_W)
+         type_style=tokens.type("body"), color=TXT_W, fill=C1)
 
 # ---------------------------------------------------------------------------
 # Save

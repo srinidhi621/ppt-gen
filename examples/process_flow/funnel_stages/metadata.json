@@ -5,7 +5,7 @@
   "intent": "Show a sequential pipeline as numbered stage cards, each with header, description, and bottom metric.",
   "invariants": [
     "exactly 4 stage cards in a row (3 cols each), equal width",
-    "each card has a dark (accent_1) header with large number (28pt Space Grotesk bold) and when-kicker",
+    "each card has a dark (accent_1) header with large number (title token style) and when-kicker",
     "stage number rendered in accent_2 color inside dark header",
     "card body has stage name (subtitle, bold, accent_1) and description (body text)",
     "each card has a muted bottom stat section with label (caption) and value (subtitle, bold, accent_1)",

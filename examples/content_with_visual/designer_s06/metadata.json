@@ -9,7 +9,7 @@
     "each flow step has bold title and caption description",
     "connector lines between flow steps (accent_6)",
     "right panel has a 2x2 outcome metric grid with accent bars",
-    "each metric cell has large value (24pt Space Grotesk bold) and caption label",
+    "each metric cell has large value (metric_value token style) and caption label",
     "CTA bar at bottom of right panel with accent_1 fill and accent_2 left bar"
   ],
   "variables": [
@@ -26,7 +26,7 @@
   "grid": {"cols": 12, "gutter": "md"},
   "density": {
     "min_shapes": 20,
-    "max_shapes": 40,
+    "max_shapes": 42,
     "text_density": "medium-high"
   },
   "limitations": [

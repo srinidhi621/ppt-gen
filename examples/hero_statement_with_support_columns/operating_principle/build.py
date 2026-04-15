@@ -67,7 +67,7 @@ def hero_band(slide, grid, text, kicker_text=None):
     txt_rect = Rect(inner_left, txt_top + tokens.spacing("sm"),
                     inner_w, band.height - txt_top + band.top - tokens.spacing("lg"))
     add_text(slide, txt_rect, text,
-             font_name="Space Grotesk", font_size_pt=22, bold=True, color=TXT_W)
+             type_style=tokens.type("hero"), color=TXT_W, fill=C1)
     return band
 
 

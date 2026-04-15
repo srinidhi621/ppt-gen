@@ -65,7 +65,7 @@ def numbered_step(slide, rect, number, title, description):
     add_rect(slide, Rect(rect.left, rect.top, rect.width, num_h), fill=C1)
     add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("sm"),
                          rect.width - 2 * pad, tokens.spacing("xl")),
-             number, font_name="Space Grotesk", font_size_pt=32, bold=True, color=C2)
+             number, type_style=tokens.type("title"), color=TXT_W, fill=C1)
 
     # Title
     title_top = rect.top + num_h + tokens.spacing("sm")

@@ -5,7 +5,7 @@
   "intent": "Compare two parallel options side by side using large track cards with structured label/value rows.",
   "invariants": [
     "exactly 2 track cards side by side (6 cols each), equal width",
-    "each card has a dark (accent_1) header with track name (20pt Space Grotesk bold) and profile subtitle",
+    "each card has a dark (accent_1) header with track name (section_title token style) and profile subtitle",
     "card body uses label/value rows: kicker-styled label on left, body text on right",
     "cards have subtle border (accent_6 line) on white background",
     "subtitle line spans full width above the cards",

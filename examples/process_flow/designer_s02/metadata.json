@@ -5,7 +5,7 @@
   "intent": "Present a numbered sequential process as an infographic with large step numbers, titles, and descriptions.",
   "invariants": [
     "4 numbered step cards in a horizontal row (3 cols each)",
-    "each step has a dark header with large step number (32pt, accent_2 on accent_1)",
+    "each step has a dark header with large step number (title token style, accent_2 on accent_1)",
     "step title in subtitle bold accent_1 below header",
     "step description in body text below title",
     "cards have subtle border on white background",

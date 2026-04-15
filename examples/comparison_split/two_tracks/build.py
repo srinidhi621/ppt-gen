@@ -57,10 +57,10 @@ def track_card(slide, rect, name, profile, rows):
     pad = tokens.spacing("md")
     add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("sm"),
                          rect.width - 2 * pad, tokens.spacing("lg")),
-             name, font_name="Space Grotesk", font_size_pt=20, bold=True, color=TXT_W)
+             name, type_style=tokens.type("section_title"), color=TXT_W, fill=C1)
     add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("lg") + tokens.spacing("sm"),
                          rect.width - 2 * pad, tokens.spacing("md")),
-             profile, type_style=tokens.type("caption"), color=TXT_W)
+             profile, type_style=tokens.type("caption"), color=TXT_W, fill=C1)
 
     y = rect.top + header_h + tokens.spacing("md")
     for label, val in rows:

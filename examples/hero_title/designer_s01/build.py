@@ -72,7 +72,7 @@ title_rect = g.span(col=1, col_span=10,
                     height_emu=tokens.spacing("xl") * 4)
 add_text(slide, title_rect,
          "Engineering the future\nwith AI-powered talent",
-         font_name="Space Grotesk", font_size_pt=40, bold=True, color=TXT_W)
+         type_style=tokens.type("display"), color=TXT_W, fill=BG_DARK)
 
 # Subtitle
 sub_rect = g.span(col=1, col_span=8,
@@ -81,7 +81,7 @@ sub_rect = g.span(col=1, col_span=8,
 add_text(slide, sub_rect,
          "A new model for identifying and developing 10x engineers "
          "who combine judgment, AI leverage, and taste.",
-         type_style=tokens.type("subtitle"), color=TXT_W)
+         type_style=tokens.type("subtitle"), color=TXT_W, fill=BG_DARK)
 
 # Bottom accent line
 accent_y = canvas.slide_height - tokens.spacing("xl")

@@ -100,9 +100,10 @@ def draw_header_bar(
     )
 
     k_style = tokens.type("kicker")
+    k_height = int(k_style["size_pt"] * k_style.get("line", 1.1) * 12700)
     kicker_rect = Rect(
         left + dot_size + pad // 2, dot_top,
-        sw - left * 2 - dot_size - pad, int(dot_size),
+        sw - left * 2 - dot_size - pad, max(int(dot_size), k_height),
     )
     add_text(
         slide, kicker_rect, kicker,

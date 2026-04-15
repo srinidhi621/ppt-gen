@@ -61,6 +61,7 @@ def add_text(
     font_size_pt: int | None = None,
     bold: bool | None = None,
     color: RGBColor | None = None,
+    fill: RGBColor | None = None,
     align: str = "left",
     anchor: str = "top",
     word_wrap: bool = True,
@@ -70,11 +71,14 @@ def add_text(
 
     Accepts either a *type_style* dict (from ``tokens.type()``) or
     explicit *font_name* / *font_size_pt* / *bold*.  Explicit values
-    override the style dict.
+    override the style dict.  *fill* sets the text-box background.
     """
     tb = slide.shapes.add_textbox(
         Emu(rect.left), Emu(rect.top), Emu(rect.width), Emu(rect.height),
     )
+    if fill is not None:
+        tb.fill.solid()
+        tb.fill.fore_color.rgb = fill
     tf = tb.text_frame
     tf.word_wrap = word_wrap
     tf.margin_left = tf.margin_right = Emu(0)

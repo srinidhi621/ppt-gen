@@ -89,7 +89,7 @@ for i, (h, c, body) in enumerate(rubric_cols):
     add_rect(slide, Rect(rl, rubric_top, rub_w, tokens.spacing("lg")), fill=c)
     add_text(slide, Rect(rl + pad, rubric_top + tokens.spacing("xs"),
                          rub_w - 2 * pad, tokens.spacing("md")),
-             h, type_style=tokens.type("caption"), color=TXT_W, bold=True)
+             h, type_style=tokens.type("caption"), color=TXT_W, fill=c, bold=True)
     add_text(slide, Rect(rl + pad, rubric_top + tokens.spacing("lg") + tokens.spacing("sm"),
                          rub_w - 2 * pad, rubric_h - tokens.spacing("xl")),
              body, type_style=tokens.type("caption"), color=TXT)
@@ -123,7 +123,7 @@ for idx, (big, label) in enumerate(stats):
     add_rect(slide, cell, fill=BG, line=SUBTLE)
     add_rect(slide, Rect(sl, st, tokens.spacing("xs"), sh_), fill=C2)
     add_text(slide, Rect(sl + pad, st + tokens.spacing("sm"), sw_ - 2 * pad, tokens.spacing("xl")),
-             big, font_name="Space Grotesk", font_size_pt=24, bold=True, color=C1)
+             big, type_style=tokens.type("metric_value"), color=C1)
     add_text(slide, Rect(sl + pad, st + tokens.spacing("xl") + tokens.spacing("sm"),
                          sw_ - 2 * pad, tokens.spacing("lg")),
              label, type_style=tokens.type("caption"), color=TXT2)

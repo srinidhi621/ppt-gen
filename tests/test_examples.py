@@ -4,7 +4,8 @@ Discovers all examples in examples/ and verifies:
 - build.py exists and has valid Python syntax
 - metadata.json exists and has required fields
 - Running build.py produces a valid PPTX
-- The PPTX has at least the min_shapes from metadata
+- The PPTX passes the objective scanner (no BLOCKING findings)
+- Shape count stays within declared density bounds (min and max)
 - The runner script discovers examples correctly
 """
 
@@ -17,6 +18,7 @@ import pytest
 
 EXAMPLES_DIR = Path(__file__).resolve().parent.parent / "examples"
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DESIGN_SYSTEM = PROJECT_ROOT / "assets" / "template" / "design_system.json"
 
 # Required fields in metadata.json
 REQUIRED_METADATA_FIELDS = {
@@ -73,6 +75,24 @@ class TestExampleStructure:
             compile(source, str(build_py), "exec")
         except SyntaxError as e:
             pytest.fail(f"Syntax error in {build_py}: {e}")
+
+    def test_build_py_no_inline_fonts(self, example_dir):
+        """Build files must use tokens.type(...), not inline font_name/font_size_pt."""
+        build_py = example_dir / "build.py"
+        source = build_py.read_text()
+        for line_num, line in enumerate(source.splitlines(), 1):
+            # Skip comments
+            stripped = line.lstrip()
+            if stripped.startswith("#"):
+                continue
+            assert "font_name=" not in line, (
+                f"{build_py}:{line_num} uses inline font_name=. "
+                f"Use tokens.type(...) instead."
+            )
+            assert "font_size_pt=" not in line, (
+                f"{build_py}:{line_num} uses inline font_size_pt=. "
+                f"Use tokens.type(...) instead."
+            )
 
     def test_metadata_json_exists(self, example_dir):
         meta = example_dir / "metadata.json"
@@ -147,7 +167,7 @@ class TestExampleExecution:
         assert output_pptx.stat().st_size > 0, "output.pptx is empty"
 
     def test_pptx_has_at_least_one_slide(self, example_dir):
-        """The output PPTX should have at least one slide (template slides + 1 new)."""
+        """The output PPTX should have at least one slide."""
         output_pptx = example_dir / "output.pptx"
         if not output_pptx.exists():
             pytest.skip("output.pptx not found; run test_build_produces_pptx first")
@@ -158,13 +178,27 @@ class TestExampleExecution:
             f"Expected at least 1 slide, got {len(prs.slides)}"
         )
 
-    def test_pptx_meets_min_shapes(self, example_dir):
-        """The last slide in the PPTX should have at least min_shapes from metadata.
+    def test_pptx_passes_objective_scanner(self, example_dir):
+        """The output PPTX must pass the active objective scanner with zero BLOCKING."""
+        output_pptx = example_dir / "output.pptx"
+        if not output_pptx.exists():
+            pytest.skip("output.pptx not found")
 
-        Each build.py adds one slide to the template. The template may
-        already contain slides, so we check the LAST slide (the one the
-        builder created).
-        """
+        from src.scan.scanner import scan_pptx
+
+        report = scan_pptx(str(output_pptx), str(DESIGN_SYSTEM))
+        blocking = [
+            f for f in report["findings"] if f["severity"] == "BLOCKING"
+        ]
+        assert report["pass"], (
+            f"Scanner found {len(blocking)} BLOCKING finding(s):\n"
+            + "\n".join(
+                f"  {f['check_id']}: {f['details']}" for f in blocking
+            )
+        )
+
+    def test_pptx_within_density_bounds(self, example_dir):
+        """Shape count on the built slide must be within [min_shapes, max_shapes]."""
         output_pptx = example_dir / "output.pptx"
         meta_path = example_dir / "metadata.json"
 
@@ -175,16 +209,20 @@ class TestExampleExecution:
 
         from pptx import Presentation
         prs = Presentation(str(output_pptx))
-        # The build script appends one slide to the template, so check the last slide
         last_slide = prs.slides[-1]
         shape_count = len(last_slide.shapes)
 
         meta = json.loads(meta_path.read_text())
         min_shapes = meta["density"]["min_shapes"]
+        max_shapes = meta["density"]["max_shapes"]
 
         assert shape_count >= min_shapes, (
             f"Last slide has {shape_count} shapes, "
             f"metadata requires at least {min_shapes}"
+        )
+        assert shape_count <= max_shapes, (
+            f"Last slide has {shape_count} shapes, "
+            f"metadata allows at most {max_shapes}"
         )
 
 
@@ -205,7 +243,6 @@ class TestRunnerScript:
 
     def test_runner_discovers_examples(self):
         """The runner's discover function should find all examples."""
-        # Import the discover function
         sys.path.insert(0, str(EXAMPLES_DIR))
         try:
             from run_all import discover_examples
