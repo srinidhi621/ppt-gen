@@ -73,6 +73,7 @@ class TestValidateDeckPlan:
         archetype_extras = {
             "hero_title": {},
             "hero_statement_with_support_columns": {
+                "hero_text": "Our north star metric doubled",
                 "supports": [{"label": "A", "body": "x"}],
             },
             "comparison_split": {
@@ -167,16 +168,57 @@ class TestValidateDeckPlan:
         errors = validate_deck_plan(plan)
         assert any("requires 'cards'" in e for e in errors)
 
+    def test_comparison_split_one_card_rejected(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="comparison_split",
+            cards=[{"title": "Only one", "body": "side"}],
+        )])
+        errors = validate_deck_plan(plan)
+        assert any("exactly 2" in e for e in errors)
+
+    def test_comparison_split_three_cards_rejected(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="comparison_split",
+            cards=[
+                {"title": "A", "body": "x"},
+                {"title": "B", "body": "y"},
+                {"title": "C", "body": "z"},
+            ],
+        )])
+        errors = validate_deck_plan(plan)
+        assert any("exactly 2" in e for e in errors)
+
+    def test_comparison_split_two_cards_passes(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="comparison_split",
+            cards=[
+                {"title": "Before", "body": "Old way"},
+                {"title": "After", "body": "New way"},
+            ],
+        )])
+        errors = validate_deck_plan(plan)
+        assert errors == []
+
     def test_hero_statement_without_supports_rejected(self):
         plan = _minimal_plan(slides=[_minimal_slide(
-            archetype="hero_statement_with_support_columns"
+            archetype="hero_statement_with_support_columns",
+            hero_text="Big claim",
         )])
         errors = validate_deck_plan(plan)
         assert any("requires 'supports'" in e for e in errors)
 
-    def test_hero_statement_with_supports_passes(self):
+    def test_hero_statement_without_hero_text_rejected(self):
         plan = _minimal_plan(slides=[_minimal_slide(
             archetype="hero_statement_with_support_columns",
+            supports=[{"label": "A", "body": "x"}],
+        )])
+        errors = validate_deck_plan(plan)
+        assert any("requires 'hero_text'" in e for e in errors)
+
+    def test_hero_statement_complete_passes(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="hero_statement_with_support_columns",
+            hero_text="Our north star metric doubled",
             supports=[{"label": "A", "body": "x"}],
         )])
         errors = validate_deck_plan(plan)

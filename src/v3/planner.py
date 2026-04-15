@@ -71,10 +71,11 @@ _FORBIDDEN_FIELD_PATTERNS = re.compile(
 
 # Required content fields per archetype.
 # Key = archetype name, value = list of (field_name, description) tuples.
-# Only the field's presence is checked (non-empty for strings, non-empty for arrays).
+# Presence check: non-empty for strings, non-empty for arrays.
 _ARCHETYPE_REQUIRED_FIELDS: dict[str, list[tuple[str, str]]] = {
     "hero_title": [],  # headline is already globally required
     "hero_statement_with_support_columns": [
+        ("hero_text", "dominant statement text"),
         ("supports", "array of {label, body} support columns"),
     ],
     "comparison_split": [
@@ -98,6 +99,12 @@ _ARCHETYPE_REQUIRED_FIELDS: dict[str, list[tuple[str, str]]] = {
     "closing_cta": [("bullets", "array of next-step strings")],
     "matrix_grid": [("cards", "array of {title, body} grid cells")],
     "section_break": [],
+}
+
+# Exact-count constraints for array fields per archetype.
+# Key = archetype, value = list of (field_name, exact_count, description).
+_ARCHETYPE_EXACT_COUNTS: dict[str, list[tuple[str, int, str]]] = {
+    "comparison_split": [("cards", 2, "exactly 2 sides (left/right)")],
 }
 
 
@@ -160,6 +167,17 @@ def validate_deck_plan(plan: dict) -> list[str]:
                 errors.append(
                     f"{prefix}: archetype '{archetype}' requires '{field_name}' "
                     f"({description})"
+                )
+
+        # Archetype-specific exact-count constraints
+        exact_counts = _ARCHETYPE_EXACT_COUNTS.get(archetype, [])
+        for field_name, expected, description in exact_counts:
+            value = slide.get(field_name)
+            if isinstance(value, list) and len(value) != expected:
+                errors.append(
+                    f"{prefix}: archetype '{archetype}' requires {field_name} "
+                    f"to have exactly {expected} items ({description}), "
+                    f"got {len(value)}"
                 )
 
     return errors

@@ -51,7 +51,7 @@ section_break, three_cards, kpi_grid, stat_list_with_icons, quote_callout, closi
 Each supported archetype requires specific fields in the slide object. Missing required fields will cause validation failure.
 
 - **hero_title**: headline, body (optional subhead)
-- **hero_statement_with_support_columns**: headline, hero_text, supports (array of {label, body}) — REQUIRED: supports
+- **hero_statement_with_support_columns**: headline, hero_text, supports (array of {label, body}) — REQUIRED: hero_text, supports
 - **comparison_split**: headline, cards (exactly 2: {title, body} where body contains the comparison points) — REQUIRED: cards
 - **content_with_visual**: headline, body, visual_intent ({must_include, avoid}) — REQUIRED: body, visual_intent
 - **process_flow**: headline, steps (array of {label, body}) — REQUIRED: steps
