@@ -37,54 +37,19 @@ V3 foundation code now exists on the active PR branch, but it is still under rev
 
 **2026-04-14 (evening) update**: Three open decisions resolved: (1) archetype vocabulary (13 active + 3 candidates) approved as-is, (2) `presentation-writing.skill` rules are hard constraints for the planner, (3) hosting + diagrams confirmed deferred. SLICE-003 (`design_system.json`) drafted and ready for review.
 
-**2026-04-15 update**: PR #5 (`feature/scanner-and-examples`) introduced draft work for example seeding, scanner checks, contracts, and content fidelity before the current `SLICE-006b` review gate cleared. Treat this branch as a remediation branch, not an approval-ready slice. The recovery plan below splits that draft back into reviewable sub-slices.
+**2026-04-15 update (evening)**: All foundation PRs merged to main. PR #4 (runtime, SLICE-003–006b), PR #6 (sandbox, SLICE-009), PR #7 (scanner/examples/contracts/fidelity, SLICE-007/008) all on main. Repo cleaned: stale branches and worktrees removed. Non-LLM foundations complete. Next: LLM layer (SLICE-010 normalize + planner).
 
 ---
 
 ## Active Slice
 
-### PR #5 Remediation — Scanner, examples, contracts, content fidelity
-**Status**: Built — awaiting user review
-**Owner**: Claude
-**Branch**: `feature/scanner-and-examples`
-**Description**: PR #5 batched SLICE-007 and SLICE-008 before SLICE-006b cleared review. This remediation brings the branch to spec compliance through six sub-slices.
-
-**Sub-slice status**:
-| Sub-slice | Description | Status |
-|---|---|---|
-| SLICE-008a | Scanner reliability: crashes → BLOCKING findings | Done (ported from bb16de97) |
-| SLICE-008b | Scanner scope: deferred heuristic checks, VH-15 body_region grounding | Done (ported from bb16de97) |
-| SLICE-007a | Hardened example regression gate: scanner pass + density bounds enforced | Done |
-| SLICE-007b | Seeded examples: all inline fonts → token styles, VH-04/VH-11 fixes | Done |
-| SLICE-008c | Contracts: artifact validators for sandbox→scanner and scanner→reviewer handoffs, pending list for unwired handoffs | Done |
-| SLICE-008d | Content fidelity: date/proper-noun/quoted-phrase/dollar hallucination detection, improved extraction | Done |
-
-**Deliverables**:
-- Scanner is objective-only (21 active checks, 5 deferred) and never silently passes on crash
-- All 9 examples pass the scanner, density bounds, and no-inline-font lint
-- `examples/run_all.py` runs build + scanner + density check
-- `tests/test_examples.py` enforces scanner pass, density bounds, inline-font ban
-- `src/contracts/validator.py` has `validate_sandbox_to_scanner()` and `validate_scanner_to_reviewer()` plus explicit `PENDING_HANDOFFS` list
-- `src/scan/content_fidelity.py` detects hallucinated numbers, dates, dollar amounts, quoted phrases, and proper nouns
-- `add_text()` now accepts a `fill` parameter (minimal runtime addition for scanner compliance)
-- `draw_header_bar()` sizes the kicker rect from the actual type style height
-- 394 tests pass, 4 skip
-
-**REVIEW-GATE**:
-- [ ] User confirms scanner scope (deferred VH-14, VH-20–23) is correct.
-- [ ] User confirms the hardened example gate enforces the quality bar.
-- [ ] User confirms seeded examples now teach the correct builder contract.
-- [ ] User confirms contract coverage matrix is honest (reachable vs pending handoffs).
-- [ ] User confirms content fidelity improvements are defensible.
+**SLICE-010** — Planner + feasibility + normalize + LLM client + cost logging (on branch `feature/slice-010-planner`).
 
 ---
 
 ## Review Queue (waiting on user)
 
-| Item | Why it matters | Blocks |
-|---|---|---|
-| `SLICE-006b` runtime validation | Runtime fidelity against `alternate-approach/build.py` is still awaiting user review; remediation work on this branch does not count as approval of that slice. | `SLICE-007` |
-| PR #5 remediation | Six sub-slices completed on `feature/scanner-and-examples`. Needs user review before these fixes can be merged. | `SLICE-007c` |
+_Empty — all foundation slices merged._
 
 ---
 
@@ -100,87 +65,40 @@ V3 foundation code now exists on the active PR branch, but it is still under rev
 
 ---
 
-## Up Next (Claude can build independently)
+## Up Next — LLM Layer (Phase 3)
 
-These slices are ready to start as soon as their blockers clear. Listed in execution order.
+All non-LLM foundations are on main. The remaining slices build the LLM pipeline from left to right: planner → builder → reviewer → repair → quality gates → benchmark.
 
-### SLICE-004 — `ppt_runtime` skeleton: canvas, grid, tokens
-**Blocker**: SLICE-003 approval
-**Description**: Create `src/ppt_runtime/` with `canvas.py`, `grid.py`, `tokens.py`. No measurement, no shape helpers yet. Unit tests for grid math and token lookups.
-**REVIEW-GATE**:
-- [ ] User reads the public API surface.
-- [ ] User confirms the named-anchor vocabulary (`canvas.body_left`, `grid.span(...)`) matches intent.
+**Prerequisites**: Azure OpenAI credentials working (probe validates — see `AzureOpenAI_Capabilities.md`). V3 uses the **Responses API only** with a new client (`src/v3/llm_client.py`). The V1 client (`src/llm/`) is NOT reused in V3. Approved models: `gpt-5.4` (planner, reviewer), `gpt-5.3-codex` (builder), `gpt-5.2` (fallback). See `AGENTS.md` Rule 9.
 
-### SLICE-005 — `measure_text` primitive
-**Blocker**: SLICE-004 approval
-**Description**: Implement `measure.py` using Pillow + bundled substitute fonts. Unit tests against known strings at known sizes, verified against PowerPoint-rendered ground truth. `shrink_to_fit` helper.
-**REVIEW-GATE**:
-- [ ] User confirms measurement accuracy is within ~5% of PowerPoint's actual layout on a test string set.
-
-### SLICE-006 — Shape helpers, patterns, and section composers
-**Blocker**: SLICE-005 approval
-**Description**: Implement `shapes.py` (`add_rect`, `add_text`, `add_image`, `add_line`), `patterns.py` (`draw_card`, `draw_header_bar`, `draw_kicker`), and `composers.py` (`compose_card_row`, `compose_stat_grid`, `compose_split_columns`, `compose_timeline`). Section composers take a bounding region + content and handle internal layout. Unit tests that produce real PPTX output and verify shape properties.
-**REVIEW-GATE**:
-- [ ] User opens the test-generated PPTX and confirms shapes look right.
-- [ ] User confirms section composers produce sensible multi-shape layouts.
-
-### SLICE-006b — Runtime validation: rewrite `alternate-approach/build.py` on runtime
-**Blocker**: SLICE-006 approval
-**Description**: Rewrite the existing 410-line `alternate-approach/build.py` on top of `ppt_runtime`. No LLM involved. This is the runtime's "can it reproduce a hand-polished deck" gate. Any missing primitive becomes a runtime addition.
-**REVIEW-GATE**:
-- [ ] User opens both decks side-by-side and confirms structural fidelity.
-- [ ] User confirms the rewritten file is shorter, clearer, or at minimum no worse than the original.
-- [ ] Any newly-added runtime primitives are explicitly listed in the review.
-
-### SLICE-007 — Example library seeding
-**Blocker**: ~~Designer slides arrive~~ (received 2026-04-14) + SLICE-006b approval + archetype vocabulary review
-**Status**: Draft implementation exists on this branch, but it is not review-ready.
-**Description**: Two tracks:
-1. **Ascendion direct decomposition** (S01, S02, S06): parse shapes, identify archetype, write runtime-code decomposition against `ppt_runtime`, execute, visually diff, iterate. S06 is complex (22 shapes, connectors) and may require runtime extensions.
-2. **Layout pattern reimplementation** (from non-Ascendion sources): study the layout structure of S14 (matrix grid), S21 (timeline), S09 (process flow), S07 (concept comparison), S18 (feature columns), and reimplement each on the Ascendion template using Ascendion tokens and grid.
-Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archetype capacity values based on actual measurement. Confirm or reject candidate archetypes.
-**Recovery plan on this branch**:
-1. ~~`SLICE-007a`~~ — ✓ Hardened the example regression gate: `examples/run_all.py` runs build + scanner + density check; `tests/test_examples.py` enforces scanner pass, density bounds [min, max], and no-inline-font lint.
-2. ~~`SLICE-007b`~~ — ✓ Cleaned up all 9 seeded examples: removed all inline `font_name` / `font_size_pt`, routed typography through `tokens.type(...)`, added `fill=` on text boxes overlaying colored rects for scanner VH-04 compliance, fixed VH-11 text overflow in `draw_header_bar` and examples.
-3. `SLICE-007c` — Re-approve the seeds in small batches: start with one Ascendion decomposition and one reimplemented layout, then only add more examples after each batch passes the hardened gate and the user reviews the fidelity + metadata.
-**REVIEW-GATE** (per example):
-- [ ] User confirms the archetype tag.
-- [ ] User confirms the runtime-code reproduction is faithful (Ascendion) or structurally sound (reimplemented).
-- [ ] User reviews the `invariants` and `variables` metadata.
-- [ ] User confirms capacity values derived from measurement.
-**Notes**: This is slow work. Expect ~1-2 hours per example. Do one, review, then next. Start with an Ascendion slide (S01) to prove the workflow, then alternate.
-
-### SLICE-008 — Deterministic post-build scanner + stage contracts + content fidelity
-**Blocker**: SLICE-006 (runtime available) — can run in parallel with SLICE-007
-**Status**: Draft implementation exists on this branch, but it currently over-claims completeness.
-**Description**: Three components:
-1. `src/scan/scanner.py` implementing all 26 objective hygiene checks from `SPEC-v3.md §10.6`. BLOCKING vs WARNING severity. `geometry_report.json` schema.
-2. `src/contracts/` with JSON Schema files + AST/artifact validators for every pipeline handoff (§10.4). Covers normalize→planner, planner→feasibility, feasibility→builder, builder→sandbox, sandbox→scanner, scanner→reviewer, reviewer→repair, repair→accept.
-3. `src/scan/content_fidelity.py` implementing the content fidelity check (§10.5). Separates visible text from notes. Detects dropped facts, hallucinated specifics, placeholder/markdown leaks. Produces `content_fidelity_report.json`.
-4. Artifact/log completeness tests — verify required run artifacts and `run_log.jsonl` stage markers.
-Unit tests against fixture decks with injected bugs (scanner), invalid handoff payloads (contracts), and known-content input/output pairs (fidelity).
-**Recovery plan on this branch**:
-1. `SLICE-008a` — Scanner reliability reset: remove blanket `except Exception: pass`, surface checker failures explicitly, and add regression fixtures for crash paths.
-2. `SLICE-008b` — Scanner scope correction: keep only fully objective checks in the base scanner; any check that infers title/kicker/body roles or peer groupings from raw PPTX without explicit anchors must be rewritten or deferred.
-3. `SLICE-008c` — Contract coverage matrix: keep the JSON Schemas, add explicit AST/artifact validators for reachable handoffs, and record the still-blocked handoffs as pending instead of claiming them complete.
-4. `SLICE-008d` — Content fidelity hardening: improve fact extraction and matching so visible-vs-notes coverage and hallucination detection handle numbers, dates, quoted phrases, and proper nouns with dedicated fixtures.
-**REVIEW-GATE**:
-- [ ] User reviews the scanner check list and severity mapping.
-- [ ] User confirms the `geometry_report.json` and `content_fidelity_report.json` schemas.
-- [ ] User reviews the contract schemas for each handoff.
-- [ ] User confirms content fidelity rules (hallucinated specifics blocking, visible-vs-notes distinction).
-
-### SLICE-009 — Sandbox execution harness
-**Blocker**: None (can start after SLICE-002)
-**Description**: `src/sandbox/` with subprocess wrapper, AST pre-scan, `resource.setrlimit` limits, RO bind-mount configuration, attempt directory management, retry loop. Unit tests for import rejection, timeout, memory cap, successful execution.
-**REVIEW-GATE**:
-- [ ] User confirms the AST rejection list.
-- [ ] User confirms the rlimit values.
-- [ ] User runs a trivial builder script end-to-end.
+**Build order and dependencies**:
+```
+SLICE-010 (planner + normalize + feasibility)
+    → SLICE-011 (builder + first end-to-end, no review)
+        → SLICE-012 (reviewer + repair loop)
+            → SLICE-013 (quality gates + CLI + metrics)
+                → SLICE-014 (V1 vs V3 benchmark)
+```
 
 ### SLICE-010 — Planner + feasibility + normalize
-**Blocker**: SLICE-001 approved, SLICE-003 approved, archetype vocabulary approved, presentation-writing skill decision
-**Description**: `src/v3/planner.py` with `deck_plan.json` schema, system prompt embedding archetype vocabulary, presentation-writing skill rules appendix, argument-spine requirement. `src/normalize/parser.py` for input normalization and cue extraction. `src/v3/feasibility.py` for capacity gate. Tests: planner validation, normalize/cues, feasibility pass/fail boundary cases, asset-resolution failure handling. Tests against one fixture content file. No builder yet.
+**Blocker**: None (all prerequisites merged)
+**Description**: First LLM pipeline stage. User text in → `deck_plan.json` out.
+
+**Implementation steps**:
+1. **Credential probe** — ~~verify Azure OpenAI connectivity~~. Done. All 3 approved models confirmed working via Responses API. See `AzureOpenAI_Capabilities.md`.
+2. **V3 LLM client** — `src/v3/llm_client.py`: Responses API client (raw HTTP, no SDK). Methods: `generate_json`, `generate_code`, `generate_json_with_images`. Model specified per call. Then `src/v3/llm_retry.py`: wraps client calls with parse → validate → retry-with-context logic per `SPEC-v3.md §4.11.5`.
+3. **Normalize** — `src/v3/normalize.py`: parse user input (markdown, plain text, or structured) into `normalized_content.json`. Extract optional cues (slide count, density, audience). Minimal — this is mostly passthrough for V3.
+4. **Planner system prompt** — `src/v3/prompts/planner_system.txt`: role definition, archetype vocabulary table, `presentation-writing.skill` rules, `deck_plan.json` schema, forbidden-field rules. Assembled at import time from design system + skill file.
+5. **Planner caller** — `src/v3/planner.py`: takes `normalized_content.json`, assembles user message, calls LLM via retry wrapper, validates against `deck_plan.schema.json`, returns validated plan.
+6. **Feasibility gate** — `src/v3/feasibility.py`: checks each slide against archetype capacity (max_items, max_words). Returns passing plan or failing slides with violations.
+7. **Deck plan schema** — `src/contracts/schemas/deck_plan.schema.json` (already exists, may need updates for `purpose` + `audience_takeaway` fields).
+8. **Tests**: planner schema validation, forbidden-field rejection, feasibility pass/fail boundary, normalize edge cases. Mocked LLM in unit tests; one live LLM call in a canary test (skipped in CI).
+
+**Files created/modified**:
+- New: `src/v3/__init__.py`, `src/v3/llm_client.py`, `src/v3/normalize.py`, `src/v3/planner.py`, `src/v3/feasibility.py`, `src/v3/llm_retry.py`, `src/v3/prompts/planner_system.txt`
+- Modified: `src/contracts/schemas/deck_plan.schema.json` (add purpose, audience_takeaway)
+- Tests: `tests/test_normalize.py`, `tests/test_planner.py`, `tests/test_feasibility.py`, `tests/test_llm_retry.py`
+
 **REVIEW-GATE**:
 - [ ] User inspects planner output for one real prompt.
 - [ ] User confirms copy quality passes the presentation-writing skill's checklist.
@@ -281,11 +199,21 @@ Unit tests against fixture decks with injected bugs (scanner), invalid handoff p
 | SLICE-004 | `ppt_runtime` skeleton | 2026-04-15 | `src/ppt_runtime/` — canvas, grid, tokens, errors. 35 unit tests |
 | SLICE-005 | `measure_text` primitive | 2026-04-15 | `measure.py` — Pillow-based measurement, `shrink_to_fit`. 19 unit tests |
 | SLICE-006 | Shape helpers, patterns, composers | 2026-04-15 | `shapes.py`, `patterns.py`, `composers.py`. 18 unit tests producing real PPTX |
+| SLICE-006b | Runtime validation rewrite | 2026-04-15 | `build_v3.py` reproduces the 10x deck on `ppt_runtime`. Clean template loading, placeholder stripping, width-aware fit. 79 tests |
+| SLICE-007 | Example library seeding | 2026-04-15 | 9 seeded examples, all token-driven, scanner-passing. `run_all.py` + `test_examples.py` regression gate |
+| SLICE-008 | Scanner, contracts, content fidelity | 2026-04-15 | 21 objective checks, artifact validators, hallucination detection. 394 tests pass |
+| SLICE-009 | Sandbox execution harness | 2026-04-15 | `src/sandbox/` — subprocess + AST pre-scan + rlimit |
 
 ---
 
 ## Changelog
 
+- **2026-04-15** — Wired persistent cost logging into the V3 application bootstrap. `ResponsesClient.from_env()` now attaches a `CostLogger` by default, writes to persistent `runs/llm_cost_log.csv` unless `V3_COST_LOG_PATH` overrides it, and can be disabled with `V3_COST_LOG_ENABLED=0`. Updated summary CLI help text and added tests for default-on application logging, env-based path override, disable flag, and persistent file writes.
+- **2026-04-15** — SLICE-010 PR #8 review findings addressed. Six fixes applied: (1) planner restricted to 6 example-backed archetypes (`SUPPORTED_ARCHETYPES`), unsupported archetypes rejected at schema and semantic level; (2) feasibility gate rewritten with per-archetype item counters — `quote_callout` counts as 1 item, `comparison_split` counts body-line points, etc.; (3) archetype-specific required fields enforced in planner validation — `process_flow` requires `steps`, `content_with_visual` requires `body` + `visual_intent`, etc.; (4) cost logging made opt-in (None=disabled), `caller` threaded through public methods and retry wrapper, exception narrowed to `OSError` only; (5) CSV hardened with `fcntl` locking, malformed-row tolerance in read/summarize; (6) image MIME detection from magic bytes + extension fallback instead of hardcoded PNG. 606 tests pass (168 targeted).
+- **2026-04-15** — SLICE-010 built on `feature/slice-010-planner`. Deliverables: `src/v3/llm_client.py` (Responses API client, 3 methods), `src/v3/llm_retry.py` (structured retry wrapper), `src/v3/normalize.py` (input parsing + cue extraction), `src/v3/planner.py` (planner caller + deck plan validation), `src/v3/feasibility.py` (capacity gate), `src/v3/cost_logger.py` (append-only CSV cost logging, wired into client), `scripts/llm_cost_summary.py` (CLI summary). Tests: 102 new tests across 6 test files. PR #8 created for review.
+- **2026-04-15** — Azure OpenAI probe completed via Responses API. All 3 approved models confirmed working: `gpt-5.4` (JSON + Vision + Code), `gpt-5.3-codex` (JSON + Code, no vision), `gpt-5.2` (JSON + Vision + Code). Rate limits: 2500 req/min, 250K tok/min all models. Rule 9 added to `AGENTS.md`: Responses API only, no Chat Completions, minimum model floor gpt-5.2. `SPEC-v3.md` §4.11.2 and §4.11.9 rewritten for Responses API client. `.env` updated with correct endpoint, API version, and per-role model assignments.
+- **2026-04-15** — `SPEC-v3.md` §4.11 added: LLM Integration Mechanics covering call sites, prompt assembly, response validation, retry strategy, error propagation, token budget, and feedback loops. `PLAN.md` Up Next section cleaned — completed slices removed, SLICE-010 expanded with concrete implementation steps and file list.
+- **2026-04-15** — All foundation work merged to main. PR #4 (SLICE-003–006b), PR #6 (SLICE-009), PR #7 (SLICE-007/008) merged. Stale branches and worktrees cleaned. Non-LLM foundations complete.
 - **2026-04-15** — PR #5 remediation complete on `feature/scanner-and-examples`. Six sub-slices delivered: (008a) ported bb16de97 — scanner crashes now surface as synthetic BLOCKING findings; (008b) ported bb16de97 — 5 heuristic checks deferred, VH-15 body_region grounded; (007a) `examples/run_all.py` rewritten with scanner + density enforcement, `tests/test_examples.py` adds scanner-pass, density-bounds, and inline-font-ban tests; (007b) all 9 seeded examples cleaned — inline `font_name`/`font_size_pt` replaced with `tokens.type(...)`, VH-04 contrast fixes via `fill=` on text boxes, VH-11 overflow fixes via rect resizing and type style height calculation; (008c) `src/contracts/validator.py` gains `validate_sandbox_to_scanner()` and `validate_scanner_to_reviewer()` artifact validators plus explicit `PENDING_HANDOFFS` list; (008d) `src/scan/content_fidelity.py` extended with date, dollar, quoted-phrase, and proper-noun hallucination detection. Runtime addition: `add_text()` accepts `fill` parameter, `draw_header_bar()` sizes kicker rect from type style. Verification: 394 passed, 4 skipped.
 - **2026-04-15** — Docs synced for scanner remediation: `SPEC-v3.md` now distinguishes the 26-check hygiene catalog from the current objective-only active scanner set, records that `VH-14` and `VH-20` through `VH-23` are deferred until explicit metadata exists, and states that internal scanner failures are BLOCKING findings.
 - **2026-04-15** — `SLICE-008b` implemented on `feature/scanner-and-examples`: deferred heuristic checks `VH-14` and `VH-20` through `VH-23` from the active scanner set, documented them in-module as deferred scope, and rewrote `VH-15` to derive grid bounds from the slide layout's mapped canvas `body_region` instead of generic safe-area math. Added regressions showing `VH-21` is intentionally deferred and `VH-15` still fires on a template-grounded misalignment. Verification: `tests/test_scanner.py` (38 passed), `tests/test_contracts.py` (27 passed).

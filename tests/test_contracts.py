@@ -207,18 +207,24 @@ class TestDeckPlanSchema:
     def test_valid_deck_plan(self):
         plan = {
             "deck_title": "Q3 Review",
-            "archetype": "report",
             "slides": [
                 {
-                    "slide_type": "title_slide",
-                    "title": "Q3 Business Review",
+                    "slide_id": "cover",
+                    "archetype": "hero_title",
+                    "purpose": "introduce",
+                    "audience_takeaway": "This is the Q3 review deck.",
+                    "headline": "Q3 Business Review",
                     "body": "Company performance overview",
                 },
                 {
-                    "slide_type": "metrics",
-                    "title": "Key Metrics",
-                    "metrics": [
-                        {"value": "14%", "label": "Revenue Growth"},
+                    "slide_id": "flow",
+                    "archetype": "process_flow",
+                    "purpose": "show_process",
+                    "audience_takeaway": "Our onboarding has three clear stages.",
+                    "headline": "Onboarding Process",
+                    "steps": [
+                        {"label": "Apply", "body": "Submit application"},
+                        {"label": "Review", "body": "Team reviews"},
                     ],
                 },
             ],
@@ -236,10 +242,10 @@ class TestDeckPlanSchema:
         ok, errors = validate(plan, "deck_plan")
         assert not ok
 
-    def test_slide_missing_title(self):
+    def test_slide_missing_required_fields(self):
         plan = {
             "slides": [
-                {"slide_type": "title_slide"},
+                {"archetype": "hero_title"},
             ],
         }
         ok, errors = validate(plan, "deck_plan")
