@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "geometry_report.schema.json",
+  "title": "Geometry Report",
+  "description": "Schema for the post-build scanner geometry report.",
+  "type": "object",
+  "required": ["pass", "blocking_count", "warning_count", "findings"],
+  "properties": {
+    "pass": {
+      "type": "boolean",
+      "description": "True if no BLOCKING findings."
+    },
+    "blocking_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "warning_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["check_id", "category", "check_name", "severity", "pass", "slide_index", "details"],
+        "properties": {
+          "check_id": {
+            "type": "string",
+            "pattern": "^VH-\\d{2}$"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["Color", "Typography", "Spatial", "Content Rendering", "Cross-Slide", "Structural"]
+          },
+          "check_name": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["BLOCKING", "WARNING"]
+          },
+          "pass": {
+            "type": "boolean"
+          },
+          "slide_index": {
+            "type": "integer"
+          },
+          "details": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,31 @@
+{
+  "archetype": "process_flow",
+  "source": "alternate-approach/build_v3.py (slide 3)",
+  "designer": "internal (10x program plan deck)",
+  "intent": "Show a sequential pipeline as numbered stage cards, each with header, description, and bottom metric.",
+  "invariants": [
+    "exactly 4 stage cards in a row (3 cols each), equal width",
+    "each card has a dark (accent_1) header with large number (28pt Space Grotesk bold) and when-kicker",
+    "stage number rendered in accent_2 color inside dark header",
+    "card body has stage name (subtitle, bold, accent_1) and description (body text)",
+    "each card has a muted bottom stat section with label (caption) and value (subtitle, bold, accent_1)",
+    "cards have subtle border (accent_6 line) on white background",
+    "uses 'sm' gutter for tighter spacing between cards"
+  ],
+  "variables": [
+    "number of stages (3-5)",
+    "stage number format (01, 02, etc.)",
+    "when-kicker text (e.g. 'WEEK 1')",
+    "stage name text (e.g. 'EVIDENCE GATE')",
+    "stage description length (20-120 chars)",
+    "bottom stat label and value text",
+    "header bar kicker and title text"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "sm"},
+  "density": {
+    "min_shapes": 28,
+    "max_shapes": 45,
+    "text_density": "high"
+  }
+}

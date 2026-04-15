@@ -1,0 +1,32 @@
+{
+  "archetype": "hero_statement_with_support_columns",
+  "source": "alternate-approach/build_v3.py (slide 1)",
+  "designer": "internal (10x program plan deck)",
+  "intent": "Lead with a bold thesis in a hero band; support with three contrasting columns below.",
+  "invariants": [
+    "hero band spans full grid width with accent bar on left edge",
+    "hero text is the largest/most prominent element (22pt Space Grotesk bold)",
+    "exactly 3 support cards below, equal width (4 cols each)",
+    "each support card has accent bar, kicker heading, body text",
+    "max 2 accent colors used (accent_1 for hero fill, accent_2 for card bars and kicker)",
+    "hero band has optional kicker text above the main statement",
+    "support cards use muted fill (accent_5) for background",
+    "vertical stacking: header bar, hero band, then card row"
+  ],
+  "variables": [
+    "hero text length (30-200 chars)",
+    "optional kicker text above hero (e.g. 'OPERATING PRINCIPLE')",
+    "number of support cards (2-4)",
+    "support heading casing (upper by default via kicker style)",
+    "support body text length (20-150 chars per card)",
+    "hero band height (currently 4x xl spacing)",
+    "header bar kicker and title text"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 12,
+    "max_shapes": 25,
+    "text_density": "medium"
+  }
+}

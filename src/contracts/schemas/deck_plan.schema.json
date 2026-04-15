@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "deck_plan.schema.json",
+  "title": "Deck Plan",
+  "description": "Schema for the deck plan that drives slide generation.",
+  "type": "object",
+  "required": ["slides"],
+  "properties": {
+    "deck_title": {
+      "type": "string",
+      "description": "Overall deck title."
+    },
+    "archetype": {
+      "type": "string",
+      "description": "Deck archetype (e.g., 'pitch', 'report', 'case_study')."
+    },
+    "slides": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["slide_type", "title"],
+        "properties": {
+          "slide_type": {
+            "type": "string",
+            "description": "Layout archetype for this slide."
+          },
+          "canvas": {
+            "type": "string",
+            "description": "Canvas name from design_system (e.g., 'header_light')."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kicker": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "bullets": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["value", "label"],
+              "properties": {
+                "value": { "type": "string" },
+                "label": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["title", "body"],
+              "properties": {
+                "title": { "type": "string" },
+                "body": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

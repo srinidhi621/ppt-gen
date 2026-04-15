@@ -1,0 +1,37 @@
+{
+  "archetype": "content_with_visual",
+  "source": "assets/ground_truth/internal_inbox/designer_reference_slides.pptx (slide 5, S06)",
+  "designer": "Ascendion brand design team",
+  "intent": "Present a delivery flow on the left with key outcome metrics on the right, ending with a call-to-action bar.",
+  "invariants": [
+    "two panels split 5:7 (left narrower for flow, right wider for outcomes)",
+    "left panel has sequential flow steps with accent_1 vertical bars",
+    "each flow step has bold title and caption description",
+    "connector lines between flow steps (accent_6)",
+    "right panel has a 2x2 outcome metric grid with accent bars",
+    "each metric cell has large value (24pt Space Grotesk bold) and caption label",
+    "CTA bar at bottom of right panel with accent_1 fill and accent_2 left bar"
+  ],
+  "variables": [
+    "number of flow steps (3-5)",
+    "step title text (1-3 words)",
+    "step description length (20-100 chars)",
+    "number of outcome metrics (3-6)",
+    "metric value text (numbers/percentages)",
+    "metric label text (1-4 words)",
+    "CTA text content",
+    "header bar kicker and title text"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 20,
+    "max_shapes": 40,
+    "text_density": "medium-high"
+  },
+  "limitations": [
+    "Original slide may use custom connector shapes or arrows between steps",
+    "Icon elements within flow steps are not reproduced",
+    "Complex connector routing is simplified to vertical lines"
+  ]
+}

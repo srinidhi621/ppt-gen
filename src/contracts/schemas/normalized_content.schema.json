@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "normalized_content.schema.json",
+  "title": "Normalized Content",
+  "description": "Schema for normalized user content after parsing and structuring.",
+  "type": "object",
+  "required": ["title", "sections"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Deck title extracted or inferred from user input."
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "Optional subtitle."
+    },
+    "audience": {
+      "type": "string",
+      "description": "Target audience hint."
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["heading", "body"],
+        "properties": {
+          "heading": {
+            "type": "string",
+            "minLength": 1
+          },
+          "body": {
+            "type": "string"
+          },
+          "bullets": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "data": {
+            "type": "object",
+            "description": "Structured data (metrics, table rows, etc.)."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Speaker notes for this section."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "source_type": {
+          "type": "string",
+          "enum": ["text", "document", "url", "structured"]
+        },
+        "word_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

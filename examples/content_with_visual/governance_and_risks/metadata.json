@@ -1,0 +1,34 @@
+{
+  "archetype": "content_with_visual",
+  "source": "alternate-approach/build_v3.py (slide 6)",
+  "designer": "internal (10x program plan deck)",
+  "intent": "Combine a structured governance list on the left with numbered risk items and a call-to-action box on the right.",
+  "invariants": [
+    "two panels split 5:7 (left narrower for list, right wider for risks + CTA)",
+    "left panel: kicker title, then role list with accent_2 vertical bars",
+    "each role row has bold role name (body style, accent_1) and description (caption style)",
+    "right panel: kicker title, then numbered risk items with muted fill",
+    "each risk item has a large number (subtitle, bold, accent_2) and risk text (caption)",
+    "CTA box at bottom of right panel with accent_1 fill and accent_2 left bar",
+    "CTA box has section kicker and when/what rows",
+    "when labels in kicker style (accent_2), what text in caption (white)"
+  ],
+  "variables": [
+    "number of governance roles (3-6)",
+    "role name text (1-3 words)",
+    "role description length (20-100 chars)",
+    "number of risk items (2-5)",
+    "risk text length (20-80 chars per item)",
+    "number of CTA/first-move items (2-4)",
+    "CTA when/what text lengths",
+    "left/right column split ratio (currently 5:7)",
+    "header bar kicker and title text"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 20,
+    "max_shapes": 45,
+    "text_density": "high"
+  }
+}

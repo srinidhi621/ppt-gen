@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "build_exec_report.schema.json",
+  "title": "Build Execution Report",
+  "description": "Schema for the build step execution report.",
+  "type": "object",
+  "required": ["success", "slides_built", "pptx_path"],
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "True if build completed without fatal errors."
+    },
+    "slides_built": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "pptx_path": {
+      "type": "string",
+      "description": "Path to the generated PPTX file."
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slide_index", "error"],
+        "properties": {
+          "slide_index": {
+            "type": "integer"
+          },
+          "error": {
+            "type": "string"
+          },
+          "traceback": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "build_time_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "geometry_report": {
+      "$ref": "geometry_report.schema.json"
+    }
+  },
+  "additionalProperties": true
+}
