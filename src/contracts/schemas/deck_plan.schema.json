@@ -2,38 +2,84 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "deck_plan.schema.json",
   "title": "Deck Plan",
-  "description": "Schema for the deck plan that drives slide generation.",
+  "description": "Schema for the deck plan that drives slide generation. Output of the planner LLM.",
   "type": "object",
   "required": ["slides"],
   "properties": {
+    "deck_id": {
+      "type": "string",
+      "description": "Short slug identifier for this deck."
+    },
     "deck_title": {
       "type": "string",
       "description": "Overall deck title."
     },
-    "archetype": {
-      "type": "string",
-      "description": "Deck archetype (e.g., 'pitch', 'report', 'case_study')."
+    "style_contract": {
+      "type": "object",
+      "description": "Deck-level style parameters.",
+      "properties": {
+        "tone": { "type": "string" },
+        "density": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "accent_strategy": { "type": "string" },
+        "illustrative_richness": { "type": "string" }
+      },
+      "additionalProperties": false
     },
     "slides": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["slide_type", "title"],
+        "required": ["slide_id", "archetype", "purpose", "audience_takeaway", "headline"],
         "properties": {
-          "slide_type": {
+          "slide_id": {
             "type": "string",
-            "description": "Layout archetype for this slide."
+            "description": "Unique identifier for this slide within the deck."
+          },
+          "archetype": {
+            "type": "string",
+            "description": "Layout archetype from the fixed vocabulary.",
+            "enum": [
+              "hero_title",
+              "section_break",
+              "hero_statement_with_support_columns",
+              "three_cards",
+              "comparison_split",
+              "kpi_grid",
+              "stat_list_with_icons",
+              "process_flow",
+              "quote_callout",
+              "content_with_visual",
+              "closing_cta",
+              "matrix_grid",
+              "timeline_roadmap"
+            ]
           },
           "canvas": {
             "type": "string",
-            "description": "Canvas name from design_system (e.g., 'header_light')."
+            "description": "Canvas name from design_system (e.g., 'header_light', 'header_dark', 'blank')."
           },
-          "title": {
+          "purpose": {
             "type": "string",
-            "minLength": 1
+            "description": "Slide's role in the argument spine (e.g., 'establish_thesis', 'present_evidence', 'compare_options', 'show_process', 'call_to_action')."
+          },
+          "audience_takeaway": {
+            "type": "string",
+            "minLength": 5,
+            "description": "Single sentence the audience should remember from this slide."
+          },
+          "headline": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Slide headline — must be a claim, not a topic label."
           },
           "kicker": {
+            "type": "string"
+          },
+          "hero_text": {
             "type": "string"
           },
           "body": {
@@ -42,6 +88,19 @@
           "bullets": {
             "type": "array",
             "items": { "type": "string" }
+          },
+          "supports": {
+            "type": "array",
+            "description": "Supporting columns for hero_statement archetype.",
+            "items": {
+              "type": "object",
+              "required": ["label", "body"],
+              "properties": {
+                "label": { "type": "string" },
+                "body": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
           },
           "metrics": {
             "type": "array",
@@ -66,6 +125,57 @@
               },
               "additionalProperties": false
             }
+          },
+          "steps": {
+            "type": "array",
+            "description": "Steps for process_flow archetype.",
+            "items": {
+              "type": "object",
+              "required": ["label"],
+              "properties": {
+                "label": { "type": "string" },
+                "body": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "left": {
+            "not": {},
+            "description": "FORBIDDEN: geometry fields are not allowed in deck plans."
+          },
+          "top": {
+            "not": {},
+            "description": "FORBIDDEN: geometry fields are not allowed in deck plans."
+          },
+          "width": {
+            "not": {},
+            "description": "FORBIDDEN: geometry fields are not allowed in deck plans."
+          },
+          "height": {
+            "not": {},
+            "description": "FORBIDDEN: geometry fields are not allowed in deck plans."
+          },
+          "visual_intent": {
+            "type": "object",
+            "properties": {
+              "must_include": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "avoid": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "additionalProperties": false
+          },
+          "density_budget": {
+            "type": "object",
+            "properties": {
+              "max_words": { "type": "integer", "minimum": 1 },
+              "max_groups": { "type": "integer", "minimum": 1 }
+            },
+            "additionalProperties": false
           },
           "notes": {
             "type": "string"

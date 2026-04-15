@@ -52,6 +52,16 @@ Protect readability through planner density budgets, `measure_text` at build tim
 ### Rule 8 — The sandbox bar is explicit
 Subprocess + AST pre-scan + `resource.setrlimit` + read-only asset bind mounts. No VM, no Firecracker, no container service. Anything beyond that for local development is yak-shaving.
 
+### Rule 9 — Responses API only. No Chat Completions. No models below gpt-5.2.
+This is a hard NO, not a preference:
+- **Only use the Azure OpenAI Responses API** (`/openai/responses?api-version=...`). The model name goes in the request body, not the URL path.
+- **Never fall back to the Chat Completions API** (`/openai/deployments/<name>/chat/completions`). Do not write code that calls it. Do not write fallback logic that tries it. If the Responses API fails, the call fails.
+- **Minimum model floor is `gpt-5.2`**. Do not use gpt-4.1, gpt-4o, gpt-4o-mini, or any model older than gpt-5.2. The three approved models are:
+  - `gpt-5.4` — primary (latest, most capable)
+  - `gpt-5.3-codex` — code-specialized tasks
+  - `gpt-5.2` — fallback if 5.4 is unavailable
+- The existing V1 client (`src/llm/azure_openai_client.py`) uses Chat Completions with raw urllib. It stays as-is for V1 baseline runs. **V3 code must not import or reuse the V1 client.** Build a new Responses API client for V3.
+
 ## Pipeline (Target V3)
 
 ```
@@ -153,6 +163,9 @@ Per `SPEC-v3.md §9`. Stage markers include `NORMALIZE_DONE`, `PLANNER_DONE`, `E
 - Do not design new architecture without updating `SPEC-v3.md` and `PLAN.md` first.
 - Do not batch multiple slices before a review.
 - Do not skip updating `PLAN.md` after a turn.
+- Do not use the Chat Completions API in V3 code. Responses API only. (See Rule 9.)
+- Do not use any model older than gpt-5.2 in V3 code. (See Rule 9.)
+- Do not reuse the V1 LLM client (`src/llm/azure_openai_client.py`) in V3 code.
 
 ## Content Quality Contract
 
