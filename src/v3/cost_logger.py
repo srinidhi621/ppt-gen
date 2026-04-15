@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import csv
 import fcntl
-import io
 import logging
 import os
 from collections import defaultdict
@@ -26,6 +25,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 _logger = logging.getLogger(__name__)
+
+_ENV_COST_LOG_ENABLED = "V3_COST_LOG_ENABLED"
+_ENV_COST_LOG_PATH = "V3_COST_LOG_PATH"
+_FALSEY_ENV_VALUES = {"0", "false", "no", "off", "disabled"}
 
 
 # ---------------------------------------------------------------------------
@@ -39,6 +42,40 @@ _DEFAULT_PRICING: dict[str, tuple[float, float]] = {
     # Users fill AZURE_OPENAI_INPUT_USD_PER_MILLION / OUTPUT in .env
     # or per-model overrides via V3_COST_<MODEL_SLUG>_INPUT / OUTPUT
 }
+
+
+def _project_root() -> Path:
+    """Return the repository root for repo-relative defaults."""
+    return Path(__file__).resolve().parent.parent.parent
+
+
+def resolve_cost_log_path(log_path: str | Path | None = None) -> Path:
+    """Resolve the persistent cost log path.
+
+    Precedence:
+    1. Explicit ``log_path`` argument
+    2. ``V3_COST_LOG_PATH`` environment variable
+    3. Repo default ``runs/llm_cost_log.csv``
+    """
+    if log_path is not None:
+        return Path(log_path)
+
+    env_path = os.environ.get(_ENV_COST_LOG_PATH, "").strip()
+    if env_path:
+        path = Path(env_path).expanduser()
+        if not path.is_absolute():
+            path = _project_root() / path
+        return path
+
+    return _project_root() / "runs" / "llm_cost_log.csv"
+
+
+def cost_logging_enabled(default: bool = True) -> bool:
+    """Return whether application-bootstrapped cost logging is enabled."""
+    raw = os.environ.get(_ENV_COST_LOG_ENABLED)
+    if raw is None:
+        return default
+    return raw.strip().lower() not in _FALSEY_ENV_VALUES
 
 
 def _get_pricing(model: str) -> tuple[float, float]:
@@ -90,10 +127,7 @@ class CostLogger:
     """Append-only CSV logger for LLM API costs."""
 
     def __init__(self, log_path: str | Path | None = None):
-        if log_path is None:
-            project_root = Path(__file__).resolve().parent.parent.parent
-            log_path = project_root / "runs" / "llm_cost_log.csv"
-        self.log_path = Path(log_path)
+        self.log_path = resolve_cost_log_path(log_path)
 
     def log_call(
         self,

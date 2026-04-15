@@ -5,6 +5,9 @@ Usage::
 
     python scripts/llm_cost_summary.py              # default log path
     python scripts/llm_cost_summary.py --log runs/llm_cost_log.csv
+
+When ``--log`` is omitted, the script uses ``V3_COST_LOG_PATH`` if set,
+otherwise it falls back to ``runs/llm_cost_log.csv``.
 """
 
 from __future__ import annotations
@@ -27,7 +30,7 @@ def main() -> None:
         "--log",
         type=Path,
         default=None,
-        help="Path to cost log CSV (default: runs/llm_cost_log.csv)",
+        help="Path to cost log CSV (default: V3_COST_LOG_PATH or runs/llm_cost_log.csv)",
     )
     args = parser.parse_args()
 

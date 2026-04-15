@@ -8,6 +8,7 @@ from unittest.mock import MagicMock, patch
 from urllib import error
 
 from src.v3.llm_client import (
+    CostLogger,
     LLMInfraError,
     LLMResponse,
     LLMUsage,
@@ -262,3 +263,42 @@ class TestFromEnv:
         monkeypatch.setenv("AZURE_OPENAI_API_KEY", "test-key")
         client = ResponsesClient.from_env()
         assert client.base_url == "https://example.com"
+
+    def test_enables_persistent_cost_logging_by_default(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://example.com/openai/responses?api-version=2025")
+        monkeypatch.setenv("AZURE_OPENAI_API_KEY", "test-key")
+        monkeypatch.setenv("V3_COST_LOG_PATH", str(tmp_path / "persistent_costs.csv"))
+        monkeypatch.delenv("V3_COST_LOG_ENABLED", raising=False)
+
+        client = ResponsesClient.from_env()
+
+        assert isinstance(client._cost_logger, CostLogger)
+        assert client._cost_logger.log_path == tmp_path / "persistent_costs.csv"
+
+    def test_can_disable_cost_logging_via_env(self, monkeypatch):
+        monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://example.com/openai/responses?api-version=2025")
+        monkeypatch.setenv("AZURE_OPENAI_API_KEY", "test-key")
+        monkeypatch.setenv("V3_COST_LOG_ENABLED", "0")
+
+        client = ResponsesClient.from_env()
+
+        assert client._cost_logger is None
+
+    @patch("src.v3.llm_client.request.urlopen")
+    def test_from_env_logs_calls_to_persistent_file(self, mock_urlopen_fn, monkeypatch, tmp_path):
+        body = _make_responses_body('{"slides": []}')
+        mock_urlopen_fn.return_value = _mock_urlopen(body)
+        log_path = tmp_path / "persistent_costs.csv"
+
+        monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://example.com/openai/responses?api-version=2025")
+        monkeypatch.setenv("AZURE_OPENAI_API_KEY", "test-key")
+        monkeypatch.setenv("V3_COST_LOG_PATH", str(log_path))
+        monkeypatch.delenv("V3_COST_LOG_ENABLED", raising=False)
+
+        client = ResponsesClient.from_env()
+        client.generate_json("gpt-5.4", instructions="test", input_text="test", caller="planner")
+
+        rows = client._cost_logger.read_log()
+        assert len(rows) == 1
+        assert rows[0]["caller"] == "planner"
+        assert rows[0]["method"] == "generate_json"

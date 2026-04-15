@@ -7,7 +7,7 @@ import os
 import pytest
 from pathlib import Path
 
-from src.v3.cost_logger import CostLogger, _get_pricing
+from src.v3.cost_logger import CostLogger, _get_pricing, cost_logging_enabled
 
 
 # ---------------------------------------------------------------------------
@@ -48,11 +48,31 @@ class TestGetPricing:
         assert _get_pricing("gpt-5.3-codex") == (1.00, 3.00)
 
 
+class TestCostLoggingEnabled:
+    def test_defaults_true(self, monkeypatch):
+        monkeypatch.delenv("V3_COST_LOG_ENABLED", raising=False)
+        assert cost_logging_enabled() is True
+
+    def test_falsey_values_disable_logging(self, monkeypatch):
+        for value in ("0", "false", "no", "off", "disabled"):
+            monkeypatch.setenv("V3_COST_LOG_ENABLED", value)
+            assert cost_logging_enabled() is False
+
+    def test_truthy_values_keep_logging_enabled(self, monkeypatch):
+        monkeypatch.setenv("V3_COST_LOG_ENABLED", "1")
+        assert cost_logging_enabled() is True
+
+
 # ---------------------------------------------------------------------------
 # CostLogger.log_call
 # ---------------------------------------------------------------------------
 
 class TestLogCall:
+    def test_default_path_uses_env_override(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("V3_COST_LOG_PATH", str(tmp_path / "custom_costs.csv"))
+        logger = CostLogger()
+        assert logger.log_path == tmp_path / "custom_costs.csv"
+
     def test_creates_csv_with_header(self, tmp_log):
         tmp_log.log_call("gpt-5.4", "generate_json", "planner",
                          input_tokens=100, output_tokens=50)

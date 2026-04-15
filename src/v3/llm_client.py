@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from urllib import error, parse, request
 
-from src.v3.cost_logger import CostLogger
+from src.v3.cost_logger import CostLogger, cost_logging_enabled
 
 
 # ---------------------------------------------------------------------------
@@ -103,8 +103,19 @@ class ResponsesClient:
         self._cost_logger = cost_logger
 
     @classmethod
-    def from_env(cls, env_path: str | Path | None = None) -> ResponsesClient:
-        """Create a client from environment variables or a .env file."""
+    def from_env(
+        cls,
+        env_path: str | Path | None = None,
+        *,
+        enable_cost_logging: bool | None = None,
+        cost_log_path: str | Path | None = None,
+    ) -> ResponsesClient:
+        """Create a client from environment variables or a .env file.
+
+        Application bootstrap enables persistent cost logging by default unless
+        ``V3_COST_LOG_ENABLED=0`` (or an explicit ``enable_cost_logging=False``)
+        disables it. The raw constructor remains opt-in.
+        """
         if env_path is not None:
             _load_dotenv(Path(env_path))
 
@@ -121,7 +132,11 @@ class ResponsesClient:
         parsed = parse.urlparse(endpoint)
         base_url = f"{parsed.scheme}://{parsed.netloc}"
 
-        return cls(base_url, api_key, api_version)
+        if enable_cost_logging is None:
+            enable_cost_logging = cost_logging_enabled(default=True)
+        logger = CostLogger(log_path=cost_log_path) if enable_cost_logging else None
+
+        return cls(base_url, api_key, api_version, cost_logger=logger)
 
     # ------------------------------------------------------------------
     # Public API

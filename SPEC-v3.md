@@ -646,7 +646,7 @@ Supporting infrastructure:
 
 ### 4.11.10 LLM Cost Logger
 
-Cost logging is **opt-in**: pass a `CostLogger` instance to `ResponsesClient` to enable. When `cost_logger` is `None` (the default), no CSV is written.
+Raw `ResponsesClient(...)` construction keeps cost logging **opt-in**: pass a `CostLogger` instance to enable it explicitly. The application/bootstrap path `ResponsesClient.from_env(...)` enables persistent logging by default unless `V3_COST_LOG_ENABLED=0` disables it.
 
 When enabled, every API call is appended to `runs/llm_cost_log.csv`. The logger (`src/v3/cost_logger.py`) is append-only, uses `fcntl` advisory locking for concurrent-writer safety, and never blocks the pipeline — `OSError` during writes is suppressed (programmer bugs propagate normally).
 
@@ -655,6 +655,8 @@ Each public client method accepts a `caller` parameter (e.g., `"planner"`, `"bui
 **CSV columns**: timestamp, date, model, method, caller, input_tokens, output_tokens, total_tokens, input_cost_usd, output_cost_usd, total_cost_usd, response_id, prompt_preview.
 
 **Pricing**: reads per-model env vars (`V3_COST_{MODEL_SLUG}_INPUT`, `V3_COST_{MODEL_SLUG}_OUTPUT`) or falls back to global `AZURE_OPENAI_INPUT_USD_PER_MILLION` / `AZURE_OPENAI_OUTPUT_USD_PER_MILLION`. When unset, costs are $0 but tokens are still recorded.
+
+**Log path**: defaults to `runs/llm_cost_log.csv` and may be overridden with `V3_COST_LOG_PATH`. The file is persistent across runs so the weekly/monthly rollups accumulate historical usage instead of resetting per invocation.
 
 **Summary CLI**: `python scripts/llm_cost_summary.py` reads the CSV and prints rollups by model, caller, day, week, and month. Read and summary paths tolerate malformed/truncated rows without crashing.
 
@@ -1321,4 +1323,3 @@ V3 ships as default when all are true:
 - Whether candidate archetypes (`persona_use_case`, `feature_columns`, `services_overview`) graduate to the active vocabulary or collapse into existing archetypes after SLICE-007 decomposition.
 - Whether section composers (`composers.py`) should be a separate module or folded into `patterns.py`. Current spec separates them for clarity; implementation may merge if the boundary is artificial.
 - Archetype capacity values are initial estimates. Final values should be derived from example decomposition + measurement during SLICE-007.
-
