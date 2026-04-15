@@ -23,6 +23,7 @@ def draw_card(
     title_style: str = "subtitle",
     body_style: str = "body",
     padding_name: str = "md",
+    text_color: RGBColor | None = None,
 ):
     """Draw a card with a coloured title bar and body text.
 
@@ -30,7 +31,13 @@ def draw_card(
     - thin accent bar (xs height)
     - title region (title style line height + padding)
     - body text fills remaining space
+
+    *text_color* defaults to ``tokens.color("text_primary")`` — pass
+    ``tokens.color("text_on_dark")`` for cards on dark backgrounds.
     """
+    if text_color is None:
+        text_color = tokens.color("text_primary")
+
     pad = tokens.spacing(padding_name)
     bar_h = tokens.spacing("xs")
     t_style = tokens.type(title_style)
@@ -47,7 +54,7 @@ def draw_card(
     )
     add_text(
         slide, title_rect, title,
-        type_style=t_style, color=tokens.color("text_primary"),
+        type_style=t_style, color=text_color,
         bold=True,
     )
 
@@ -59,7 +66,7 @@ def draw_card(
     )
     add_text(
         slide, body_rect, body,
-        type_style=b_style, color=tokens.color("text_primary"),
+        type_style=b_style, color=text_color,
     )
 
 
@@ -70,12 +77,16 @@ def draw_header_bar(
     *,
     canvas,
     tokens,
+    title_color: RGBColor | None = None,
 ):
     """Draw a slide header: top accent bar, kicker with dot, and title.
 
     Uses the full slide width.  Places elements relative to the canvas
-    safe area.
+    safe area.  *title_color* defaults to ``tokens.color("text_primary")``.
     """
+    if title_color is None:
+        title_color = tokens.color("text_primary")
+
     ds = canvas.design_system
     sa = ds["canvas"]["safe_area"]
     sw = ds["canvas"]["width_emu"]
@@ -118,7 +129,7 @@ def draw_header_bar(
     )
     add_text(
         slide, title_rect, title,
-        type_style=t_style, color=tokens.color("text_primary"),
+        type_style=t_style, color=title_color,
     )
 
 
@@ -145,6 +156,8 @@ def draw_stat_block(
     *,
     accent: RGBColor,
     tokens,
+    value_color: RGBColor | None = None,
+    label_color: RGBColor | None = None,
 ):
     """Draw a stat block: accent bar on the left, large value, smaller label.
 
@@ -153,6 +166,11 @@ def draw_stat_block(
     - value text (title style) in the top portion
     - label text (caption style) below
     """
+    if value_color is None:
+        value_color = tokens.color("text_primary")
+    if label_color is None:
+        label_color = tokens.color("text_secondary")
+
     bar_w = tokens.spacing("xs")
     pad = tokens.spacing("sm")
     v_style = tokens.type("title")
@@ -169,7 +187,7 @@ def draw_stat_block(
         slide,
         Rect(inner_left, rect.top + pad, inner_width, value_h),
         value,
-        type_style=v_style, color=tokens.color("text_primary"),
+        type_style=v_style, color=value_color,
         bold=True,
     )
 
@@ -179,5 +197,5 @@ def draw_stat_block(
         slide,
         Rect(inner_left, label_top, inner_width, rect.bottom - label_top - pad),
         label,
-        type_style=l_style, color=tokens.color("text_secondary"),
+        type_style=l_style, color=label_color,
     )

@@ -28,7 +28,7 @@ class Tokens:
 
     @classmethod
     def from_design_system(cls, path: str | Path) -> Tokens:
-        with open(Path(path)) as f:
+        with open(Path(path), encoding="utf-8") as f:
             ds = json.load(f)
         return cls(ds)
 

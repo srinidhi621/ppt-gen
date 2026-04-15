@@ -10,7 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from pptx.dml.color import RGBColor
-from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.shapes import MSO_CONNECTOR_TYPE, MSO_SHAPE
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Emu, Pt
 
@@ -132,9 +132,35 @@ def add_line(
     color: RGBColor,
     width_pt: float = 0.75,
 ):
-    """Add a straight line connector.  Returns the connector shape."""
+    """Add a straight line connector.  Returns the connector shape.
+
+    Convenience wrapper around :func:`add_connector` with
+    ``connector_type=MSO_CONNECTOR_TYPE.STRAIGHT``.
+    """
+    return add_connector(
+        slide, start_x, start_y, end_x, end_y,
+        color=color, width_pt=width_pt,
+    )
+
+
+def add_connector(
+    slide,
+    start_x: int,
+    start_y: int,
+    end_x: int,
+    end_y: int,
+    *,
+    color: RGBColor,
+    width_pt: float = 0.75,
+    connector_type=MSO_CONNECTOR_TYPE.STRAIGHT,
+):
+    """Add a connector shape.  Returns the connector shape.
+
+    *connector_type* is an ``MSO_CONNECTOR_TYPE`` enum value.
+    Defaults to ``STRAIGHT``.
+    """
     conn = slide.shapes.add_connector(
-        1,  # MSO_CONNECTOR_TYPE.STRAIGHT
+        connector_type,
         Emu(start_x), Emu(start_y),
         Emu(end_x), Emu(end_y),
     )

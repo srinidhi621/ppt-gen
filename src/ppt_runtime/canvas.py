@@ -124,7 +124,7 @@ def load_template(
     if not keep_template_slides:
         _drop_existing_slides(prs)
 
-    with open(design_system_path) as f:
+    with open(design_system_path, encoding="utf-8") as f:
         ds = json.load(f)
 
     return Canvas(prs, ds)

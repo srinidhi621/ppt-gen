@@ -11,7 +11,7 @@ from .errors import CanvasNotFoundError, GridError, PptRuntimeError, TokenNotFou
 from .grid import Grid, Rect
 from .measure import measure_text, shrink_to_fit
 from .patterns import draw_card, draw_header_bar, draw_kicker, draw_stat_block
-from .shapes import add_image, add_line, add_rect, add_text
+from .shapes import add_connector, add_image, add_line, add_rect, add_text
 from .tokens import Tokens
 
 __all__ = [
@@ -31,6 +31,7 @@ __all__ = [
     "add_text",
     "add_image",
     "add_line",
+    "add_connector",
     # patterns
     "draw_card",
     "draw_header_bar",

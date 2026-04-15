@@ -29,7 +29,7 @@ _font_cache: dict[tuple, ImageFont.FreeTypeFont] = {}
 def _load_font_map() -> dict[str, dict]:
     global _font_map
     if _font_map is None:
-        with open(_FONTS_DIR / "font_map.json") as f:
+        with open(_FONTS_DIR / "font_map.json", encoding="utf-8") as f:
             data = json.load(f)
         _font_map = {}
         for entry in data["mappings"]:

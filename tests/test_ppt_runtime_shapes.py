@@ -20,7 +20,7 @@ from src.ppt_runtime.composers import (
 )
 from src.ppt_runtime.grid import Grid, Rect
 from src.ppt_runtime.patterns import draw_card, draw_header_bar, draw_kicker, draw_stat_block
-from src.ppt_runtime.shapes import add_image, add_line, add_rect, add_text
+from src.ppt_runtime.shapes import add_connector, add_image, add_line, add_rect, add_text
 from src.ppt_runtime.tokens import Tokens
 
 TEMPLATE_PATH = Path("assets/template/template.pptx")
@@ -142,6 +142,20 @@ class TestAddText(unittest.TestCase):
         self.assertEqual(text, "Not All Caps")
 
 
+class TestAddImage(unittest.TestCase):
+    def test_creates_picture_with_correct_position(self):
+        canvas, tokens, slide, grid = _setup()
+        rect = Rect(515938, 1237129, 1000000, 1000000)
+        icon_path = Path("assets/icons/png/icon_001.png")
+        if not icon_path.exists():
+            self.skipTest("Test icon not available")
+        pic = add_image(slide, rect, icon_path)
+        self.assertEqual(pic.left, Emu(515938))
+        self.assertEqual(pic.top, Emu(1237129))
+        self.assertEqual(pic.width, Emu(1000000))
+        self.assertEqual(pic.height, Emu(1000000))
+
+
 class TestAddLine(unittest.TestCase):
     def test_creates_connector(self):
         canvas, tokens, slide, grid = _setup()
@@ -152,6 +166,37 @@ class TestAddLine(unittest.TestCase):
             color=tokens.color("accent_5"),
         )
         self.assertEqual(conn.line.color.rgb, RGBColor(0xAF, 0xAA, 0xB9))
+
+
+class TestAddConnector(unittest.TestCase):
+    def test_creates_connector_with_color(self):
+        canvas, tokens, slide, grid = _setup()
+        conn = add_connector(
+            slide,
+            start_x=515938, start_y=3000000,
+            end_x=11676060, end_y=3000000,
+            color=tokens.color("accent_1"),
+        )
+        self.assertEqual(conn.line.color.rgb, RGBColor(0x00, 0x85, 0x67))
+
+    def test_add_line_delegates_to_add_connector(self):
+        """add_line should produce the same result as add_connector with STRAIGHT."""
+        canvas, tokens, slide, grid = _setup()
+        initial_count = len(slide.shapes)
+        add_line(
+            slide,
+            start_x=0, start_y=0,
+            end_x=1000000, end_y=1000000,
+            color=tokens.color("accent_2"),
+        )
+        add_connector(
+            slide,
+            start_x=0, start_y=0,
+            end_x=1000000, end_y=1000000,
+            color=tokens.color("accent_2"),
+        )
+        # Both should create exactly 1 connector shape each
+        self.assertEqual(len(slide.shapes) - initial_count, 2)
 
 
 # ---------------------------------------------------------------------------

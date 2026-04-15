@@ -23,6 +23,7 @@ def compose_card_row(
     accent: RGBColor,
     tokens,
     gutter_name: str = "md",
+    text_color: RGBColor | None = None,
 ):
     """Lay out N equal-width cards horizontally within *region*.
 
@@ -45,6 +46,7 @@ def compose_card_row(
             body=item["body"],
             accent=accent,
             tokens=tokens,
+            text_color=text_color,
         )
 
 
@@ -55,6 +57,8 @@ def compose_stat_grid(
     *,
     cols: int = 3,
     tokens,
+    value_color: RGBColor | None = None,
+    label_color: RGBColor | None = None,
 ):
     """Lay out a grid of stat blocks within *region*.
 
@@ -83,6 +87,8 @@ def compose_stat_grid(
             label=metric["label"],
             accent=tokens.color("accent_1"),
             tokens=tokens,
+            value_color=value_color,
+            label_color=label_color,
         )
 
 
@@ -96,11 +102,16 @@ def compose_split_columns(
     tokens,
     left_style: str = "body",
     right_style: str = "body",
+    text_color: RGBColor | None = None,
 ):
     """Lay out a two-panel split within *region*.
 
     *split* is the fraction of width given to the left panel (0.0–1.0).
+    *text_color* defaults to ``tokens.color("text_primary")``.
     """
+    if text_color is None:
+        text_color = tokens.color("text_primary")
+
     gutter = tokens.spacing("md")
     left_w = int((region.width - gutter) * split)
     right_w = region.width - gutter - left_w
@@ -111,12 +122,12 @@ def compose_split_columns(
     add_text(
         slide, left_rect, left_content,
         type_style=tokens.type(left_style),
-        color=tokens.color("text_primary"),
+        color=text_color,
     )
     add_text(
         slide, right_rect, right_content,
         type_style=tokens.type(right_style),
-        color=tokens.color("text_primary"),
+        color=text_color,
     )
 
 
