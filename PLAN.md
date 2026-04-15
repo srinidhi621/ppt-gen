@@ -41,14 +41,15 @@ No V3 code exists yet. The next few slices are **non-LLM foundations**: audit, c
 
 ## Active Slice
 
-### SLICE-004 — `ppt_runtime` skeleton: canvas, grid, tokens
+### SLICE-006b — Runtime validation: rewrite `alternate-approach/build.py` on runtime
 **Status**: Built — awaiting user review
 **Owner**: Claude
-**Description**: Create `src/ppt_runtime/` with `canvas.py`, `grid.py`, `tokens.py`, `errors.py`, `__init__.py`. No measurement, no shape helpers yet. Unit tests for grid math and token lookups.
-**Deliverables**: `src/ppt_runtime/` (5 files), `tests/test_ppt_runtime.py` (35 tests, all passing)
+**Description**: Rewrite the 410-line `build.py` on `ppt_runtime`. Same content, same structural patterns, Ascendion branding via tokens.
+**Deliverables**: `alternate-approach/build_v3.py` (507 lines), produces `10x_program_plan.v3_runtime.pptx` (6 slides, 21–45 shapes per slide)
 **REVIEW-GATE**:
-- [ ] User reads the public API surface.
-- [ ] User confirms the named-anchor vocabulary (`canvas.body_left`, `grid.span(...)`) matches intent.
+- [ ] User opens both decks side-by-side and confirms structural fidelity.
+- [ ] User confirms the rewritten file is shorter, clearer, or at minimum no worse than the original.
+- [ ] Any newly-added runtime primitives are explicitly listed in the review.
 
 ---
 
@@ -239,11 +240,15 @@ Unit tests against fixture decks with injected bugs (scanner), invalid handoff p
 | PRE-06 | Benchmark test prompts + evaluation rubric | 2026-04-14 | `assets/benchmarks/v3_test_prompts.xlsx` (26 prompts, 9-axis rubric, reusable generator script) |
 | PRE-07 | Visual hygiene checks | 2026-04-14 | `assets/benchmarks/v3_visual_hygiene_checks.xlsx` (26 binary checks, 6 categories, reusable generator script) |
 | SLICE-003 | Draft `design_system.json` | 2026-04-14 | `assets/template/design_system.json` — 12-col grid, 6-level type scale, 15 color tokens, 3 canvases, accent policy |
+| SLICE-004 | `ppt_runtime` skeleton | 2026-04-15 | `src/ppt_runtime/` — canvas, grid, tokens, errors. 35 unit tests |
+| SLICE-005 | `measure_text` primitive | 2026-04-15 | `measure.py` — Pillow-based measurement, `shrink_to_fit`. 19 unit tests |
+| SLICE-006 | Shape helpers, patterns, composers | 2026-04-15 | `shapes.py`, `patterns.py`, `composers.py`. 18 unit tests producing real PPTX |
 
 ---
 
 ## Changelog
 
+- **2026-04-15** — SLICE-004 through SLICE-006b built in sequence. Runtime library complete: canvas (load_template, add_slide, body properties), grid (12-col, 1-indexed span/row), tokens (color/type/spacing from design_system.json), measure (Pillow text measurement, shrink_to_fit), shapes (add_rect, add_text, add_image, add_line), patterns (draw_card, draw_header_bar, draw_kicker, draw_stat_block), composers (compose_card_row, compose_stat_grid, compose_split_columns, compose_timeline). 72 unit tests, all passing. `alternate-approach/build_v3.py` rewrites the 410-line original on ppt_runtime (507 lines — longer due to reusable helper definitions, but token-driven with no hex literals or inline sizing). No new runtime primitives required.
 - **2026-04-14 (evening)** — Three open decisions resolved: archetype vocabulary (13 active + 3 candidates) approved as-is; `presentation-writing.skill` confirmed as hard constraints for planner; hosting (B2) and diagrams (B1) confirmed deferred. SLICE-003 drafted: `assets/template/design_system.json` authored from `canvas_config.json`, `token_overrides.json`, `reference_slide_catalog.json`, `v1_mined_notes.md`, and `alternate-approach/build.py` spacing patterns. All prior user-input blockers cleared.
 - **2026-04-14** — Visual hygiene checks added: 26 binary pass/fail checks across 6 categories (Color, Typography, Spatial, Content Rendering, Cross-Slide, Structural), 12 BLOCKING / 14 WARNING, with LLM review prompts. Generator at `scripts/generate_visual_hygiene_xlsx.py`. SPEC-v3.md updated: §4.6 cross-references hygiene suite, §10.2 added with full check taxonomy and deck-level pass criteria.
 - **2026-04-14** — SLICE-001 approved, SLICE-002 executed (19 files deleted, 5 mined). Benchmark test bed expanded to 26 prompts across 7 sections (`v3_test_prompts.xlsx`): 20 single-slide + 6 multi-slide, 9-axis rubric (7 base + 2 multi-slide-only), reusable generator script at `scripts/generate_benchmark_xlsx.py`. Evaluation criteria added to `SPEC-v3.md §10.1` and `§13`. SLICE-003 (design_system.json) now active. Designer slides received, cataloged (21 slides, 3 Ascendion-branded decomposable). `BRAINSTORM_codex.md` assessed; 5 ideas incorporated into SPEC-v3.md: archetype capacity metadata, feasibility gate, section composers, repair escalation, purpose/audience_takeaway. Archetype vocabulary expanded to 13 active + 3 candidates. SLICE-007 updated with two-track decomposition plan. `content_with_diagram` renamed to `content_with_visual`. `matrix_grid` and `timeline_roadmap` added. SLICE-006 expanded to include section composers.
