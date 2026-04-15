@@ -1,0 +1,33 @@
+{
+  "archetype": "process_flow",
+  "source": "assets/ground_truth/internal_inbox/designer_reference_slides.pptx (slide 1, S02)",
+  "designer": "Ascendion brand design team",
+  "intent": "Present a numbered sequential process as an infographic with large step numbers, titles, and descriptions.",
+  "invariants": [
+    "4 numbered step cards in a horizontal row (3 cols each)",
+    "each step has a dark header with large step number (title token style, accent_2 on accent_1)",
+    "step title in subtitle bold accent_1 below header",
+    "step description in body text below title",
+    "cards have subtle border on white background",
+    "step numbers formatted as zero-padded two digits (01, 02, ...)"
+  ],
+  "variables": [
+    "number of steps (3-5)",
+    "step number format (01/02 or 1/2 or A/B)",
+    "step title text (1-3 words)",
+    "step description text (20-100 chars)",
+    "header bar kicker and title text",
+    "header area fill color"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 20,
+    "max_shapes": 35,
+    "text_density": "medium"
+  },
+  "limitations": [
+    "Original slide may use custom icons or images within step cards",
+    "Connector arrows between steps are not reproduced"
+  ]
+}

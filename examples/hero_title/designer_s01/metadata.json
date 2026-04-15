@@ -1,0 +1,32 @@
+{
+  "archetype": "hero_title",
+  "source": "assets/ground_truth/internal_inbox/designer_reference_slides.pptx (slide 0, S01)",
+  "designer": "Ascendion brand design team",
+  "intent": "Full-bleed dark hero title slide for section openers or deck covers. Maximum visual impact with minimal elements.",
+  "invariants": [
+    "dark background fills entire slide",
+    "top accent bar spans full width (accent_1)",
+    "kicker/category label in accent_2 kicker style",
+    "hero title is the dominant element (display or title size, white text)",
+    "subtitle in lighter weight below hero title",
+    "bottom accent line as brand signature element"
+  ],
+  "variables": [
+    "hero title text (10-80 chars, 1-3 lines)",
+    "subtitle text (20-120 chars)",
+    "kicker/category text (optional, 5-20 chars)",
+    "background treatment (solid dark vs. image overlay -- image not expressible via runtime)",
+    "accent bar placement and width"
+  ],
+  "canvas": "header_dark",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 5,
+    "max_shapes": 12,
+    "text_density": "low"
+  },
+  "limitations": [
+    "Original slide may use a background image which ppt_runtime cannot reproduce",
+    "Gradient fills are not supported by the current runtime shape API"
+  ]
+}

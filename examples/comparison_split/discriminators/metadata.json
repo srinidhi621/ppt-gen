@@ -1,0 +1,33 @@
+{
+  "archetype": "comparison_split",
+  "source": "alternate-approach/build_v3.py (slide 4)",
+  "designer": "internal (10x program plan deck)",
+  "intent": "Present two distinct analytical frameworks side by side: a multi-column rubric on the left, a stat grid on the right.",
+  "invariants": [
+    "two panels split 50/50 (6 cols each)",
+    "left panel: section kicker + subtitle line, then 3 equal-width rubric columns",
+    "each rubric column has colored header bar, bold caption label (white on color), and body text below",
+    "rubric columns use muted (accent_5) background with distinct accent colors per column header",
+    "right panel: section kicker + subtitle line, then 2x3 stat grid",
+    "each stat cell has accent bar on left edge, large number (metric_value token style), and caption label",
+    "stat cells have subtle border (accent_6) on white background",
+    "max 3 accent colors: accent_1 (healthy), accent_2 (over-reliance/stat bars), accent_6 (avoidance)"
+  ],
+  "variables": [
+    "number of rubric columns (2-4)",
+    "rubric column header text and associated color",
+    "rubric body text length (20-100 chars per column)",
+    "number of stat cells (4-8)",
+    "stat value text (numbers/percentages, 2-15 chars)",
+    "stat label text (1-4 words)",
+    "section kicker and subtitle text for each panel",
+    "header bar kicker and title text"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 25,
+    "max_shapes": 45,
+    "text_density": "high"
+  }
+}

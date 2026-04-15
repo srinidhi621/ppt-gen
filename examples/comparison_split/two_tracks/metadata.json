@@ -1,0 +1,32 @@
+{
+  "archetype": "comparison_split",
+  "source": "alternate-approach/build_v3.py (slide 2)",
+  "designer": "internal (10x program plan deck)",
+  "intent": "Compare two parallel options side by side using large track cards with structured label/value rows.",
+  "invariants": [
+    "exactly 2 track cards side by side (6 cols each), equal width",
+    "each card has a dark (accent_1) header with track name (section_title token style) and profile subtitle",
+    "card body uses label/value rows: kicker-styled label on left, body text on right",
+    "cards have subtle border (accent_6 line) on white background",
+    "subtitle line spans full width above the cards",
+    "footer note at bottom of body region in kicker style",
+    "max 2 accent colors: accent_1 for card headers, accent_2 for row labels"
+  ],
+  "variables": [
+    "track name text (e.g. 'ASCENDER TRACK')",
+    "profile subtitle text (e.g. '0-2 yrs experience | external + internal')",
+    "number of label/value rows per card (2-5)",
+    "label text length (1-3 words)",
+    "value text length (10-200 chars per row)",
+    "subtitle text above cards (optional, 30-120 chars)",
+    "footer note text (optional, 30-100 chars)",
+    "header bar kicker and title text"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 15,
+    "max_shapes": 30,
+    "text_density": "medium-high"
+  }
+}

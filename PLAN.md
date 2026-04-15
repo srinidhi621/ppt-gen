@@ -37,19 +37,45 @@ V3 foundation code now exists on the active PR branch, but it is still under rev
 
 **2026-04-14 (evening) update**: Three open decisions resolved: (1) archetype vocabulary (13 active + 3 candidates) approved as-is, (2) `presentation-writing.skill` rules are hard constraints for the planner, (3) hosting + diagrams confirmed deferred. SLICE-003 (`design_system.json`) drafted and ready for review.
 
+**2026-04-15 update**: PR #5 (`feature/scanner-and-examples`) introduced draft work for example seeding, scanner checks, contracts, and content fidelity before the current `SLICE-006b` review gate cleared. Treat this branch as a remediation branch, not an approval-ready slice. The recovery plan below splits that draft back into reviewable sub-slices.
+
 ---
 
 ## Active Slice
 
-### SLICE-006b — Runtime validation: rewrite `alternate-approach/build.py` on runtime
+### PR #5 Remediation — Scanner, examples, contracts, content fidelity
 **Status**: Built — awaiting user review
 **Owner**: Claude
-**Description**: Rewrite the 410-line `build.py` on `ppt_runtime`. Same content, same structural patterns, Ascendion branding via tokens.
-**Deliverables**: `alternate-approach/build_v3.py` (507 lines), produces `10x_program_plan.v3_runtime.pptx` (6 placeholder-free slides, 20–44 shapes per slide)
+**Branch**: `feature/scanner-and-examples`
+**Description**: PR #5 batched SLICE-007 and SLICE-008 before SLICE-006b cleared review. This remediation brings the branch to spec compliance through six sub-slices.
+
+**Sub-slice status**:
+| Sub-slice | Description | Status |
+|---|---|---|
+| SLICE-008a | Scanner reliability: crashes → BLOCKING findings | Done (ported from bb16de97) |
+| SLICE-008b | Scanner scope: deferred heuristic checks, VH-15 body_region grounding | Done (ported from bb16de97) |
+| SLICE-007a | Hardened example regression gate: scanner pass + density bounds enforced | Done |
+| SLICE-007b | Seeded examples: all inline fonts → token styles, VH-04/VH-11 fixes | Done |
+| SLICE-008c | Contracts: artifact validators for sandbox→scanner and scanner→reviewer handoffs, pending list for unwired handoffs | Done |
+| SLICE-008d | Content fidelity: date/proper-noun/quoted-phrase/dollar hallucination detection, improved extraction | Done |
+
+**Deliverables**:
+- Scanner is objective-only (21 active checks, 5 deferred) and never silently passes on crash
+- All 9 examples pass the scanner, density bounds, and no-inline-font lint
+- `examples/run_all.py` runs build + scanner + density check
+- `tests/test_examples.py` enforces scanner pass, density bounds, inline-font ban
+- `src/contracts/validator.py` has `validate_sandbox_to_scanner()` and `validate_scanner_to_reviewer()` plus explicit `PENDING_HANDOFFS` list
+- `src/scan/content_fidelity.py` detects hallucinated numbers, dates, dollar amounts, quoted phrases, and proper nouns
+- `add_text()` now accepts a `fill` parameter (minimal runtime addition for scanner compliance)
+- `draw_header_bar()` sizes the kicker rect from the actual type style height
+- 394 tests pass, 4 skip
+
 **REVIEW-GATE**:
-- [ ] User opens both decks side-by-side and confirms structural fidelity.
-- [ ] User confirms the rewritten file is shorter, clearer, or at minimum no worse than the original.
-- [ ] Any newly-added runtime primitives are explicitly listed in the review.
+- [ ] User confirms scanner scope (deferred VH-14, VH-20–23) is correct.
+- [ ] User confirms the hardened example gate enforces the quality bar.
+- [ ] User confirms seeded examples now teach the correct builder contract.
+- [ ] User confirms contract coverage matrix is honest (reachable vs pending handoffs).
+- [ ] User confirms content fidelity improvements are defensible.
 
 ---
 
@@ -57,7 +83,8 @@ V3 foundation code now exists on the active PR branch, but it is still under rev
 
 | Item | Why it matters | Blocks |
 |---|---|---|
-| _(empty — no items pending user review)_ | | |
+| `SLICE-006b` runtime validation | Runtime fidelity against `alternate-approach/build.py` is still awaiting user review; remediation work on this branch does not count as approval of that slice. | `SLICE-007` |
+| PR #5 remediation | Six sub-slices completed on `feature/scanner-and-examples`. Needs user review before these fixes can be merged. | `SLICE-007c` |
 
 ---
 
@@ -107,10 +134,15 @@ These slices are ready to start as soon as their blockers clear. Listed in execu
 
 ### SLICE-007 — Example library seeding
 **Blocker**: ~~Designer slides arrive~~ (received 2026-04-14) + SLICE-006b approval + archetype vocabulary review
+**Status**: Draft implementation exists on this branch, but it is not review-ready.
 **Description**: Two tracks:
 1. **Ascendion direct decomposition** (S01, S02, S06): parse shapes, identify archetype, write runtime-code decomposition against `ppt_runtime`, execute, visually diff, iterate. S06 is complex (22 shapes, connectors) and may require runtime extensions.
 2. **Layout pattern reimplementation** (from non-Ascendion sources): study the layout structure of S14 (matrix grid), S21 (timeline), S09 (process flow), S07 (concept comparison), S18 (feature columns), and reimplement each on the Ascendion template using Ascendion tokens and grid.
 Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archetype capacity values based on actual measurement. Confirm or reject candidate archetypes.
+**Recovery plan on this branch**:
+1. ~~`SLICE-007a`~~ — ✓ Hardened the example regression gate: `examples/run_all.py` runs build + scanner + density check; `tests/test_examples.py` enforces scanner pass, density bounds [min, max], and no-inline-font lint.
+2. ~~`SLICE-007b`~~ — ✓ Cleaned up all 9 seeded examples: removed all inline `font_name` / `font_size_pt`, routed typography through `tokens.type(...)`, added `fill=` on text boxes overlaying colored rects for scanner VH-04 compliance, fixed VH-11 text overflow in `draw_header_bar` and examples.
+3. `SLICE-007c` — Re-approve the seeds in small batches: start with one Ascendion decomposition and one reimplemented layout, then only add more examples after each batch passes the hardened gate and the user reviews the fidelity + metadata.
 **REVIEW-GATE** (per example):
 - [ ] User confirms the archetype tag.
 - [ ] User confirms the runtime-code reproduction is faithful (Ascendion) or structurally sound (reimplemented).
@@ -120,12 +152,18 @@ Write metadata (`invariants`, `variables`) per `SPEC-v3.md §6.3`. Refine archet
 
 ### SLICE-008 — Deterministic post-build scanner + stage contracts + content fidelity
 **Blocker**: SLICE-006 (runtime available) — can run in parallel with SLICE-007
+**Status**: Draft implementation exists on this branch, but it currently over-claims completeness.
 **Description**: Three components:
 1. `src/scan/scanner.py` implementing all 26 objective hygiene checks from `SPEC-v3.md §10.6`. BLOCKING vs WARNING severity. `geometry_report.json` schema.
 2. `src/contracts/` with JSON Schema files + AST/artifact validators for every pipeline handoff (§10.4). Covers normalize→planner, planner→feasibility, feasibility→builder, builder→sandbox, sandbox→scanner, scanner→reviewer, reviewer→repair, repair→accept.
 3. `src/scan/content_fidelity.py` implementing the content fidelity check (§10.5). Separates visible text from notes. Detects dropped facts, hallucinated specifics, placeholder/markdown leaks. Produces `content_fidelity_report.json`.
 4. Artifact/log completeness tests — verify required run artifacts and `run_log.jsonl` stage markers.
 Unit tests against fixture decks with injected bugs (scanner), invalid handoff payloads (contracts), and known-content input/output pairs (fidelity).
+**Recovery plan on this branch**:
+1. `SLICE-008a` — Scanner reliability reset: remove blanket `except Exception: pass`, surface checker failures explicitly, and add regression fixtures for crash paths.
+2. `SLICE-008b` — Scanner scope correction: keep only fully objective checks in the base scanner; any check that infers title/kicker/body roles or peer groupings from raw PPTX without explicit anchors must be rewritten or deferred.
+3. `SLICE-008c` — Contract coverage matrix: keep the JSON Schemas, add explicit AST/artifact validators for reachable handoffs, and record the still-blocked handoffs as pending instead of claiming them complete.
+4. `SLICE-008d` — Content fidelity hardening: improve fact extraction and matching so visible-vs-notes coverage and hallucination detection handle numbers, dates, quoted phrases, and proper nouns with dedicated fixtures.
 **REVIEW-GATE**:
 - [ ] User reviews the scanner check list and severity mapping.
 - [ ] User confirms the `geometry_report.json` and `content_fidelity_report.json` schemas.
@@ -248,6 +286,12 @@ Unit tests against fixture decks with injected bugs (scanner), invalid handoff p
 
 ## Changelog
 
+- **2026-04-15** — PR #5 remediation complete on `feature/scanner-and-examples`. Six sub-slices delivered: (008a) ported bb16de97 — scanner crashes now surface as synthetic BLOCKING findings; (008b) ported bb16de97 — 5 heuristic checks deferred, VH-15 body_region grounded; (007a) `examples/run_all.py` rewritten with scanner + density enforcement, `tests/test_examples.py` adds scanner-pass, density-bounds, and inline-font-ban tests; (007b) all 9 seeded examples cleaned — inline `font_name`/`font_size_pt` replaced with `tokens.type(...)`, VH-04 contrast fixes via `fill=` on text boxes, VH-11 overflow fixes via rect resizing and type style height calculation; (008c) `src/contracts/validator.py` gains `validate_sandbox_to_scanner()` and `validate_scanner_to_reviewer()` artifact validators plus explicit `PENDING_HANDOFFS` list; (008d) `src/scan/content_fidelity.py` extended with date, dollar, quoted-phrase, and proper-noun hallucination detection. Runtime addition: `add_text()` accepts `fill` parameter, `draw_header_bar()` sizes kicker rect from type style. Verification: 394 passed, 4 skipped.
+- **2026-04-15** — Docs synced for scanner remediation: `SPEC-v3.md` now distinguishes the 26-check hygiene catalog from the current objective-only active scanner set, records that `VH-14` and `VH-20` through `VH-23` are deferred until explicit metadata exists, and states that internal scanner failures are BLOCKING findings.
+- **2026-04-15** — `SLICE-008b` implemented on `feature/scanner-and-examples`: deferred heuristic checks `VH-14` and `VH-20` through `VH-23` from the active scanner set, documented them in-module as deferred scope, and rewrote `VH-15` to derive grid bounds from the slide layout's mapped canvas `body_region` instead of generic safe-area math. Added regressions showing `VH-21` is intentionally deferred and `VH-15` still fires on a template-grounded misalignment. Verification: `tests/test_scanner.py` (38 passed), `tests/test_contracts.py` (27 passed).
+- **2026-04-15** — `SLICE-008a` implemented on `feature/scanner-and-examples`: `scan_pptx()` no longer swallows checker crashes. Internal scanner failures now surface as synthetic `BLOCKING` findings keyed to the failed check id, including `VH-25`. Added regressions for a crashed standard check and a crashed deck-plan check. Verification: `tests/test_scanner.py` (37 passed), `tests/test_contracts.py` (27 passed).
+- **2026-04-15** — Switched to `feature/scanner-and-examples` to plan remediation for PR #5. Kept `SLICE-006b` as the active review gate. Re-cut draft `SLICE-007` / `SLICE-008` work into narrower recovery steps: example regression hardening, seeded-example contract cleanup, scanner reliability/scope correction, contract coverage, and content-fidelity hardening. This branch should be treated as draft until those sub-slices pass review.
+- **2026-04-15** — Reviewed PR #5 (`feature/scanner-and-examples`) against `SPEC-v3.md` / `PLAN.md`. Findings: it batches SLICE-007 and SLICE-008 before SLICE-006b approval, the example regression path does not enforce the scanner-backed acceptance bar, the seeded examples reintroduce inline font sizing instead of token styles, and the scanner/contract layer is still heuristic/partial relative to the current spec.
 - **2026-04-15** — PR #4 follow-up fixes applied on `feature/ppt-runtime-foundation`: `load_template()` now strips the template's seed slides, `Canvas.add_slide()` strips inherited layout placeholders, `measure_text()` preserves explicit newlines, `shrink_to_fit()` rejects width overflow, and `alternate-approach/build_v3.py` now runs standalone, uses named token styles from `design_system.json`, and exercises runtime fit logic on long text blocks. Added regressions for empty-template loading, placeholder stripping, multiline measurement, width-aware fit, and standalone `build_v3.py`. Affected test set: 79 passing.
 - **2026-04-15** — SLICE-004 through SLICE-006b built in sequence. Runtime library complete: canvas (load_template, add_slide, body properties), grid (12-col, 1-indexed span/row), tokens (color/type/spacing from design_system.json), measure (Pillow text measurement, shrink_to_fit), shapes (add_rect, add_text, add_image, add_line), patterns (draw_card, draw_header_bar, draw_kicker, draw_stat_block), composers (compose_card_row, compose_stat_grid, compose_split_columns, compose_timeline). 72 unit tests, all passing. `alternate-approach/build_v3.py` rewrites the 410-line original on ppt_runtime (507 lines — longer due to reusable helper definitions, but token-driven with no hex literals or inline sizing). No new runtime primitives required.
 - **2026-04-14 (evening)** — Three open decisions resolved: archetype vocabulary (13 active + 3 candidates) approved as-is; `presentation-writing.skill` confirmed as hard constraints for planner; hosting (B2) and diagrams (B1) confirmed deferred. SLICE-003 drafted: `assets/template/design_system.json` authored from `canvas_config.json`, `token_overrides.json`, `reference_slide_catalog.json`, `v1_mined_notes.md`, and `alternate-approach/build.py` spacing patterns. All prior user-input blockers cleared.

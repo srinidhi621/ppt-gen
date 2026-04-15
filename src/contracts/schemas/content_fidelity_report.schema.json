@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "content_fidelity_report.schema.json",
+  "title": "Content Fidelity Report",
+  "description": "Schema for the content fidelity checker output.",
+  "type": "object",
+  "required": [
+    "visible_coverage_score",
+    "notes_only_fact_count",
+    "total_facts",
+    "matched_visible_facts",
+    "matched_notes_only_facts",
+    "dropped_facts",
+    "hallucinated_specifics",
+    "placeholder_leaks",
+    "markdown_leaks"
+  ],
+  "properties": {
+    "visible_coverage_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "notes_only_fact_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "total_facts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matched_visible_facts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matched_notes_only_facts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "dropped_facts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "hallucinated_specifics": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "placeholder_leaks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "markdown_leaks": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

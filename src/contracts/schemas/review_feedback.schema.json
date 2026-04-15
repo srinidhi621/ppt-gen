@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "review_feedback.schema.json",
+  "title": "Review Feedback",
+  "description": "Schema for LLM reviewer feedback on a generated deck.",
+  "type": "object",
+  "required": ["overall_score", "issues"],
+  "properties": {
+    "overall_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Overall quality score 0-10."
+    },
+    "pass": {
+      "type": "boolean",
+      "description": "True if deck meets quality threshold."
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slide_index", "severity", "description"],
+        "properties": {
+          "slide_index": {
+            "type": "integer",
+            "description": "0-based slide index, or -1 for deck-level issues."
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "major", "minor", "suggestion"]
+          },
+          "category": {
+            "type": "string",
+            "description": "Issue category (content, design, structure, etc.)."
+          },
+          "description": {
+            "type": "string"
+          },
+          "suggested_fix": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "strengths": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "summary": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}
