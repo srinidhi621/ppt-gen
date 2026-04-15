@@ -41,20 +41,13 @@
           },
           "archetype": {
             "type": "string",
-            "description": "Layout archetype from the fixed vocabulary.",
+            "description": "Layout archetype. Only supported (example-backed) archetypes are accepted.",
             "enum": [
               "hero_title",
-              "section_break",
               "hero_statement_with_support_columns",
-              "three_cards",
               "comparison_split",
-              "kpi_grid",
-              "stat_list_with_icons",
-              "process_flow",
-              "quote_callout",
               "content_with_visual",
-              "closing_cta",
-              "matrix_grid",
+              "process_flow",
               "timeline_roadmap"
             ]
           },

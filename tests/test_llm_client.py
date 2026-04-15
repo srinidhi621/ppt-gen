@@ -14,6 +14,8 @@ from src.v3.llm_client import (
     LLMValidationError,
     ResponsesClient,
     _check_model,
+    _detect_mime,
+    _encode_image_with_mime,
     _extract_output_text,
     get_model_for_role,
 )
@@ -170,6 +172,60 @@ class TestResponsesClient:
         client = self._client()
         with pytest.raises(ValueError, match="below the minimum floor"):
             client.generate_json("gpt-4o", instructions="test", input_text="test")
+
+
+# ---------------------------------------------------------------------------
+# _detect_mime / _encode_image_with_mime
+# ---------------------------------------------------------------------------
+
+class TestImageMimeDetection:
+    def test_png_bytes(self):
+        png_header = b"\x89PNG\r\n\x1a\n" + b"\x00" * 100
+        assert _detect_mime(png_header) == "image/png"
+
+    def test_jpeg_bytes(self):
+        jpeg_header = b"\xff\xd8\xff\xe0" + b"\x00" * 100
+        assert _detect_mime(jpeg_header) == "image/jpeg"
+
+    def test_gif_bytes(self):
+        gif_header = b"GIF89a" + b"\x00" * 100
+        assert _detect_mime(gif_header) == "image/gif"
+
+    def test_webp_bytes(self):
+        webp_header = b"RIFF" + b"\x00" * 4 + b"WEBP" + b"\x00" * 100
+        assert _detect_mime(webp_header) == "image/webp"
+
+    def test_unknown_bytes_defaults_to_png(self):
+        unknown = b"\x00\x00\x00\x00" + b"\x00" * 100
+        assert _detect_mime(unknown) == "image/png"
+
+    def test_encode_from_bytes_detects_jpeg(self):
+        jpeg_data = b"\xff\xd8\xff\xe0" + b"\x00" * 50
+        raw, mime = _encode_image_with_mime(jpeg_data)
+        assert mime == "image/jpeg"
+        assert raw == jpeg_data
+
+    def test_encode_from_path_uses_extension(self, tmp_path):
+        """When magic bytes are ambiguous, extension is used as fallback."""
+        # Write bytes that don't match any known signature
+        img_path = tmp_path / "photo.jpg"
+        img_path.write_bytes(b"\x00" * 100)
+        raw, mime = _encode_image_with_mime(img_path)
+        assert mime == "image/jpeg"  # from .jpg extension
+
+    def test_encode_from_path_png_detected(self, tmp_path):
+        img_path = tmp_path / "image.png"
+        png_data = b"\x89PNG\r\n\x1a\n" + b"\x00" * 50
+        img_path.write_bytes(png_data)
+        raw, mime = _encode_image_with_mime(img_path)
+        assert mime == "image/png"
+        assert raw == png_data
+
+    def test_encode_from_str_path(self, tmp_path):
+        img_path = tmp_path / "test.jpeg"
+        img_path.write_bytes(b"\xff\xd8\xff\xe0" + b"\x00" * 50)
+        raw, mime = _encode_image_with_mime(str(img_path))
+        assert mime == "image/jpeg"
 
 
 # ---------------------------------------------------------------------------

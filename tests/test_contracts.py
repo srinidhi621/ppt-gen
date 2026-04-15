@@ -217,13 +217,14 @@ class TestDeckPlanSchema:
                     "body": "Company performance overview",
                 },
                 {
-                    "slide_id": "kpis",
-                    "archetype": "kpi_grid",
-                    "purpose": "present_evidence",
-                    "audience_takeaway": "Revenue grew 14% in Q3.",
-                    "headline": "Key Metrics",
-                    "metrics": [
-                        {"value": "14%", "label": "Revenue Growth"},
+                    "slide_id": "flow",
+                    "archetype": "process_flow",
+                    "purpose": "show_process",
+                    "audience_takeaway": "Our onboarding has three clear stages.",
+                    "headline": "Onboarding Process",
+                    "steps": [
+                        {"label": "Apply", "body": "Submit application"},
+                        {"label": "Review", "body": "Team reviews"},
                     ],
                 },
             ],

@@ -98,7 +98,9 @@ class ResponsesClient:
         self.api_key = api_key
         self.api_version = api_version
         self._url = f"{self.base_url}/openai/responses?api-version={self.api_version}"
-        self._cost_logger = cost_logger or CostLogger()
+        # Cost logging is opt-in: pass a CostLogger to enable.
+        # None means disabled (no CSV writes).
+        self._cost_logger = cost_logger
 
     @classmethod
     def from_env(cls, env_path: str | Path | None = None) -> ResponsesClient:
@@ -131,6 +133,7 @@ class ResponsesClient:
         instructions: str,
         input_text: str,
         *,
+        caller: str = "unknown",
         temperature: float = 0.3,
         max_output_tokens: int = 4096,
     ) -> LLMResponse:
@@ -159,7 +162,7 @@ class ResponsesClient:
             model=meta.get("model", model),
             response_id=meta.get("id", ""),
         )
-        self._log(model, "generate_json", usage, meta, input_text)
+        self._log(model, "generate_json", caller, usage, meta, input_text)
         return resp
 
     def generate_code(
@@ -168,6 +171,7 @@ class ResponsesClient:
         instructions: str,
         input_text: str,
         *,
+        caller: str = "unknown",
         temperature: float = 0.2,
         max_output_tokens: int = 8192,
     ) -> LLMResponse:
@@ -190,7 +194,7 @@ class ResponsesClient:
             model=meta.get("model", model),
             response_id=meta.get("id", ""),
         )
-        self._log(model, "generate_code", usage, meta, input_text)
+        self._log(model, "generate_code", caller, usage, meta, input_text)
         return resp
 
     def generate_json_with_images(
@@ -200,6 +204,7 @@ class ResponsesClient:
         input_text: str,
         images: list[bytes | str | Path],
         *,
+        caller: str = "unknown",
         temperature: float = 0.3,
         max_output_tokens: int = 4096,
     ) -> LLMResponse:
@@ -211,10 +216,11 @@ class ResponsesClient:
             {"type": "input_text", "text": input_text},
         ]
         for img in images:
-            b64 = _encode_image(img)
+            raw_bytes, mime = _encode_image_with_mime(img)
+            b64 = base64.b64encode(raw_bytes).decode("ascii")
             content_parts.append({
                 "type": "input_image",
-                "image_url": f"data:image/png;base64,{b64}",
+                "image_url": f"data:{mime};base64,{b64}",
             })
 
         payload = {
@@ -246,7 +252,7 @@ class ResponsesClient:
             model=meta.get("model", model),
             response_id=meta.get("id", ""),
         )
-        self._log(model, "generate_json_with_images", usage, meta, input_text)
+        self._log(model, "generate_json_with_images", caller, usage, meta, input_text)
         return resp
 
     # ------------------------------------------------------------------
@@ -254,22 +260,34 @@ class ResponsesClient:
     # ------------------------------------------------------------------
 
     def _log(
-        self, model: str, method: str, usage: LLMUsage, meta: dict, prompt: str,
+        self,
+        model: str,
+        method: str,
+        caller: str,
+        usage: LLMUsage,
+        meta: dict,
+        prompt: str,
     ) -> None:
-        """Log an API call to the cost CSV. Failures are silently ignored."""
+        """Log an API call to the cost CSV.
+
+        Only persistence-related failures (IOError/OSError) are suppressed.
+        Programmer bugs (TypeError, KeyError, etc.) propagate normally.
+        """
+        if self._cost_logger is None:
+            return
         try:
             self._cost_logger.log_call(
                 model=model,
                 method=method,
-                caller="unknown",
+                caller=caller,
                 input_tokens=usage.input_tokens,
                 output_tokens=usage.output_tokens,
                 total_tokens=usage.total_tokens,
                 response_id=meta.get("id", ""),
                 prompt_preview=prompt,
             )
-        except Exception:
-            pass  # cost logging must never break the pipeline
+        except OSError:
+            pass  # disk/permission failures must not break the pipeline
 
     def _post(self, payload: dict) -> tuple[dict, LLMUsage, dict]:
         """POST to Responses API. Returns (body, usage, metadata)."""
@@ -330,13 +348,49 @@ def _extract_output_text(body: dict) -> str:
     return ""
 
 
-def _encode_image(img: bytes | str | Path) -> str:
-    """Encode an image to base64 string."""
+# Mapping of magic-byte prefixes to MIME types
+_IMAGE_SIGNATURES: list[tuple[bytes, str]] = [
+    (b"\x89PNG\r\n\x1a\n", "image/png"),
+    (b"\xff\xd8\xff", "image/jpeg"),
+    (b"RIFF", "image/webp"),  # WebP starts with RIFF....WEBP
+    (b"GIF87a", "image/gif"),
+    (b"GIF89a", "image/gif"),
+]
+
+# File extension to MIME fallback
+_EXT_TO_MIME: dict[str, str] = {
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".webp": "image/webp",
+    ".gif": "image/gif",
+}
+
+
+def _detect_mime(data: bytes) -> str:
+    """Detect image MIME type from magic bytes. Falls back to image/png."""
+    for sig, mime in _IMAGE_SIGNATURES:
+        if data[:len(sig)] == sig:
+            return mime
+    return "image/png"
+
+
+def _encode_image_with_mime(img: bytes | str | Path) -> tuple[bytes, str]:
+    """Read image bytes and detect MIME type.
+
+    Returns (raw_bytes, mime_type).
+    """
+    ext_hint = ""
     if isinstance(img, str):
         img = Path(img)
     if isinstance(img, Path):
+        ext_hint = img.suffix.lower()
         img = img.read_bytes()
-    return base64.b64encode(img).decode("ascii")
+    # Detect from magic bytes first, then fall back to extension
+    mime = _detect_mime(img)
+    if mime == "image/png" and ext_hint in _EXT_TO_MIME:
+        mime = _EXT_TO_MIME[ext_hint]
+    return img, mime
 
 
 def _load_dotenv(path: Path) -> None:

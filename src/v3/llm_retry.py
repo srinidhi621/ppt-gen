@@ -47,6 +47,7 @@ def retry_generate_json(
     instructions: str,
     input_text: str,
     *,
+    caller: str = "unknown",
     validator: Validator | None = None,
     max_retries: int = 2,
     temperature: float = 0.3,
@@ -86,6 +87,7 @@ def retry_generate_json(
                 model,
                 instructions,
                 current_input,
+                caller=caller,
                 temperature=temperature,
                 max_output_tokens=max_output_tokens,
             )
@@ -139,6 +141,7 @@ def retry_generate_json_with_images(
     input_text: str,
     images: list,
     *,
+    caller: str = "unknown",
     validator: Validator | None = None,
     max_retries: int = 1,
     temperature: float = 0.3,
@@ -158,6 +161,7 @@ def retry_generate_json_with_images(
                 instructions,
                 current_input,
                 images,
+                caller=caller,
                 temperature=temperature,
                 max_output_tokens=max_output_tokens,
             )

@@ -127,13 +127,139 @@ def _count_slide_words(slide: dict) -> int:
     return word_count
 
 
-def _count_slide_items(slide: dict) -> int:
-    """Count the number of content items on a slide.
+# ---------------------------------------------------------------------------
+# Per-archetype item counting rules
+# ---------------------------------------------------------------------------
 
-    Returns the count of the primary content grouping for the slide's
-    archetype: supports, cards, metrics, bullets, steps, etc.
+# Maps archetype → function(slide) → int.
+# Each function counts the items that the archetype's max_items cap applies to.
+_ARCHETYPE_ITEM_COUNTERS: dict[str, object] = {}
+
+
+def _register(name: str):
+    """Decorator to register an item counter for an archetype."""
+    def decorator(fn):
+        _ARCHETYPE_ITEM_COUNTERS[name] = fn
+        return fn
+    return decorator
+
+
+@_register("hero_title")
+def _items_hero_title(slide: dict) -> int:
+    """max_items=2: headline + optional body/subhead."""
+    count = 0
+    if slide.get("headline"):
+        count += 1
+    if slide.get("body"):
+        count += 1
+    return count
+
+
+@_register("section_break")
+def _items_section_break(slide: dict) -> int:
+    """max_items=2: headline + optional body."""
+    count = 0
+    if slide.get("headline"):
+        count += 1
+    if slide.get("body"):
+        count += 1
+    return count
+
+
+@_register("hero_statement_with_support_columns")
+def _items_hero_statement(slide: dict) -> int:
+    """max_items=4: count of support columns."""
+    return len(slide.get("supports", []))
+
+
+@_register("three_cards")
+def _items_three_cards(slide: dict) -> int:
+    """max_items=3: count of cards."""
+    return len(slide.get("cards", []))
+
+
+@_register("comparison_split")
+def _items_comparison_split(slide: dict) -> int:
+    """max_items=8: total bullet points across both sides.
+
+    Each card's body may contain newline-separated points.
+    Count cards * average points, or just total lines across all card bodies.
     """
-    # Check each possible collection field and return the largest
+    total = 0
+    for card in slide.get("cards", []):
+        body = card.get("body", "")
+        # Count non-empty lines as individual comparison points
+        lines = [ln for ln in body.split("\n") if ln.strip()]
+        total += max(len(lines), 1)  # at least 1 per card
+    return total
+
+
+@_register("kpi_grid")
+def _items_kpi_grid(slide: dict) -> int:
+    """max_items=6: count of metrics."""
+    return len(slide.get("metrics", []))
+
+
+@_register("stat_list_with_icons")
+def _items_stat_list(slide: dict) -> int:
+    """max_items=5: count of metrics/stat rows."""
+    return len(slide.get("metrics", []))
+
+
+@_register("process_flow")
+def _items_process_flow(slide: dict) -> int:
+    """max_items=6: count of steps."""
+    return len(slide.get("steps", []))
+
+
+@_register("quote_callout")
+def _items_quote_callout(slide: dict) -> int:
+    """max_items=1: the quote itself is the single item."""
+    # A quote_callout has exactly 1 logical item: the quote.
+    # headline=quote text, body=attribution — together they are 1 item.
+    return 1 if slide.get("headline") else 0
+
+
+@_register("content_with_visual")
+def _items_content_with_visual(slide: dict) -> int:
+    """max_items=2: text block + visual block."""
+    count = 0
+    if slide.get("body"):
+        count += 1
+    if slide.get("visual_intent"):
+        count += 1
+    return count
+
+
+@_register("closing_cta")
+def _items_closing_cta(slide: dict) -> int:
+    """max_items=3: count of bullet items (next steps)."""
+    return len(slide.get("bullets", []))
+
+
+@_register("matrix_grid")
+def _items_matrix_grid(slide: dict) -> int:
+    """max_items=12: count of grid cells (cards)."""
+    return len(slide.get("cards", []))
+
+
+@_register("timeline_roadmap")
+def _items_timeline_roadmap(slide: dict) -> int:
+    """max_items=5: count of phases (steps)."""
+    return len(slide.get("steps", []))
+
+
+def _count_slide_items(slide: dict) -> int:
+    """Count items using the archetype-specific counter.
+
+    Falls back to a generic count if the archetype has no registered counter.
+    """
+    archetype = slide.get("archetype", "")
+    counter = _ARCHETYPE_ITEM_COUNTERS.get(archetype)
+    if counter is not None:
+        return counter(slide)
+
+    # Fallback for unknown archetypes: count the largest collection field
     counts = [
         len(slide.get("supports", [])),
         len(slide.get("cards", [])),
@@ -141,18 +267,4 @@ def _count_slide_items(slide: dict) -> int:
         len(slide.get("bullets", [])),
         len(slide.get("steps", [])),
     ]
-
-    max_count = max(counts) if counts else 0
-
-    # For archetypes with no collection fields, count direct content blocks
-    if max_count == 0:
-        items = 0
-        if slide.get("headline"):
-            items += 1
-        if slide.get("body"):
-            items += 1
-        if slide.get("hero_text"):
-            items += 1
-        return items
-
-    return max_count
+    return max(counts) if any(counts) else 0

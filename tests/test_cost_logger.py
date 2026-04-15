@@ -216,14 +216,118 @@ class TestSummarize:
 
 
 # ---------------------------------------------------------------------------
+# Corrupted / malformed CSV handling
+# ---------------------------------------------------------------------------
+
+class TestCorruptedCSV:
+    def test_read_log_skips_empty_rows(self, tmp_path):
+        """Empty rows in the CSV are skipped."""
+        log_path = tmp_path / "cost.csv"
+        # Write a valid header + one good row + one empty row
+        log_path.write_text(
+            "timestamp,date,model,method,caller,input_tokens,output_tokens,"
+            "total_tokens,input_cost_usd,output_cost_usd,total_cost_usd,"
+            "response_id,prompt_preview\n"
+            "2026-04-15T10:00:00.000000Z,2026-04-15,gpt-5.4,generate_json,"
+            "planner,100,50,150,0.000000,0.000000,0.000000,resp_1,test\n"
+            ",,,,,,,,,,,,\n"
+        )
+        logger = CostLogger(log_path=log_path)
+        rows = logger.read_log()
+        assert len(rows) == 1
+        assert rows[0]["model"] == "gpt-5.4"
+
+    def test_summarize_tolerates_bad_token_values(self, tmp_path):
+        """Rows with non-numeric token values are skipped in summary."""
+        log_path = tmp_path / "cost.csv"
+        log_path.write_text(
+            "timestamp,date,model,method,caller,input_tokens,output_tokens,"
+            "total_tokens,input_cost_usd,output_cost_usd,total_cost_usd,"
+            "response_id,prompt_preview\n"
+            "2026-04-15T10:00:00.000000Z,2026-04-15,gpt-5.4,generate_json,"
+            "planner,100,50,150,0.000000,0.000000,0.000000,resp_1,test\n"
+            "2026-04-15T10:01:00.000000Z,2026-04-15,gpt-5.4,generate_json,"
+            "planner,BAD,BAD,BAD,BAD,BAD,BAD,resp_2,test\n"
+        )
+        logger = CostLogger(log_path=log_path)
+        summary = logger.summarize()
+        assert "Total calls: 1" in summary  # bad row skipped
+
+    def test_summarize_tolerates_bad_date(self, tmp_path):
+        """Rows with unparseable dates are skipped in summary."""
+        log_path = tmp_path / "cost.csv"
+        log_path.write_text(
+            "timestamp,date,model,method,caller,input_tokens,output_tokens,"
+            "total_tokens,input_cost_usd,output_cost_usd,total_cost_usd,"
+            "response_id,prompt_preview\n"
+            "2026-04-15T10:00:00.000000Z,NOT-A-DATE,gpt-5.4,generate_json,"
+            "planner,100,50,150,0.000000,0.000000,0.000000,resp_1,test\n"
+        )
+        logger = CostLogger(log_path=log_path)
+        summary = logger.summarize()
+        # Bad-date row is skipped; summary runs with 0 valid calls
+        assert "Total calls: 0" in summary
+
+    def test_read_log_survives_truncated_file(self, tmp_path):
+        """A CSV file truncated mid-line still returns valid rows."""
+        log_path = tmp_path / "cost.csv"
+        log_path.write_text(
+            "timestamp,date,model,method,caller,input_tokens,output_tokens,"
+            "total_tokens,input_cost_usd,output_cost_usd,total_cost_usd,"
+            "response_id,prompt_preview\n"
+            "2026-04-15T10:00:00.000000Z,2026-04-15,gpt-5.4,generate_json,"
+            "planner,100,50,150,0.000000,0.000000,0.000000,resp_1,test\n"
+            "2026-04-15T10:01:00.000000Z,2026-04-15,gpt-5"  # truncated
+        )
+        logger = CostLogger(log_path=log_path)
+        rows = logger.read_log()
+        assert len(rows) >= 1  # at least the first valid row
+
+    def test_concurrent_append_does_not_corrupt(self, tmp_path):
+        """Two loggers appending to the same file produce valid rows."""
+        log_path = tmp_path / "cost.csv"
+        logger1 = CostLogger(log_path=log_path)
+        logger2 = CostLogger(log_path=log_path)
+
+        logger1.log_call("gpt-5.4", "generate_json", "planner",
+                         input_tokens=100, output_tokens=50)
+        logger2.log_call("gpt-5.3-codex", "generate_code", "builder",
+                         input_tokens=200, output_tokens=300)
+
+        rows = logger1.read_log()
+        assert len(rows) == 2
+        models = {r["model"] for r in rows}
+        assert models == {"gpt-5.4", "gpt-5.3-codex"}
+
+
+# ---------------------------------------------------------------------------
 # Integration: CostLogger wired into ResponsesClient
 # ---------------------------------------------------------------------------
 
 class TestCostLoggerIntegration:
+    """Integration tests: CostLogger wired into ResponsesClient."""
+
+    def _mock_body(self, text='{"ok": true}', model="gpt-5.4", resp_id="resp_test",
+                   input_tokens=100, output_tokens=50):
+        import json
+        from unittest.mock import MagicMock
+        body = {
+            "id": resp_id,
+            "model": model,
+            "output": [{"type": "message", "role": "assistant",
+                        "content": [{"type": "output_text", "text": text}]}],
+            "usage": {"input_tokens": input_tokens, "output_tokens": output_tokens,
+                      "total_tokens": input_tokens + output_tokens},
+        }
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = json.dumps(body).encode("utf-8")
+        mock_resp.__enter__ = lambda s: s
+        mock_resp.__exit__ = MagicMock(return_value=False)
+        return mock_resp
+
     def test_client_logs_generate_json(self, tmp_path):
         """ResponsesClient.generate_json writes a row to the cost CSV."""
-        import json
-        from unittest.mock import MagicMock, patch
+        from unittest.mock import patch
         from src.v3.llm_client import ResponsesClient
 
         log_path = tmp_path / "cost.csv"
@@ -231,25 +335,16 @@ class TestCostLoggerIntegration:
         client = ResponsesClient("https://example.com", "key",
                                  cost_logger=cost_logger)
 
-        body = {
-            "id": "resp_test",
-            "model": "gpt-5.4",
-            "output": [{"type": "message", "role": "assistant",
-                        "content": [{"type": "output_text", "text": '{"ok": true}'}]}],
-            "usage": {"input_tokens": 100, "output_tokens": 50, "total_tokens": 150},
-        }
-        mock_resp = MagicMock()
-        mock_resp.read.return_value = json.dumps(body).encode("utf-8")
-        mock_resp.__enter__ = lambda s: s
-        mock_resp.__exit__ = MagicMock(return_value=False)
-
-        with patch("src.v3.llm_client.request.urlopen", return_value=mock_resp):
-            client.generate_json("gpt-5.4", instructions="test", input_text="test input")
+        with patch("src.v3.llm_client.request.urlopen",
+                   return_value=self._mock_body()):
+            client.generate_json("gpt-5.4", instructions="test",
+                                 input_text="test input", caller="planner")
 
         rows = _read_csv(log_path)
         assert len(rows) == 1
         assert rows[0]["model"] == "gpt-5.4"
         assert rows[0]["method"] == "generate_json"
+        assert rows[0]["caller"] == "planner"
         assert rows[0]["input_tokens"] == "100"
         assert rows[0]["output_tokens"] == "50"
         assert rows[0]["response_id"] == "resp_test"
@@ -257,8 +352,7 @@ class TestCostLoggerIntegration:
 
     def test_client_logs_generate_code(self, tmp_path):
         """ResponsesClient.generate_code writes a row to the cost CSV."""
-        import json
-        from unittest.mock import MagicMock, patch
+        from unittest.mock import patch
         from src.v3.llm_client import ResponsesClient
 
         log_path = tmp_path / "cost.csv"
@@ -266,53 +360,68 @@ class TestCostLoggerIntegration:
         client = ResponsesClient("https://example.com", "key",
                                  cost_logger=cost_logger)
 
-        body = {
-            "id": "resp_code",
-            "model": "gpt-5.3-codex",
-            "output": [{"type": "message", "role": "assistant",
-                        "content": [{"type": "output_text", "text": "def hello(): pass"}]}],
-            "usage": {"input_tokens": 200, "output_tokens": 100, "total_tokens": 300},
-        }
-        mock_resp = MagicMock()
-        mock_resp.read.return_value = json.dumps(body).encode("utf-8")
-        mock_resp.__enter__ = lambda s: s
-        mock_resp.__exit__ = MagicMock(return_value=False)
-
-        with patch("src.v3.llm_client.request.urlopen", return_value=mock_resp):
-            client.generate_code("gpt-5.3-codex", instructions="test", input_text="write code")
+        with patch("src.v3.llm_client.request.urlopen",
+                   return_value=self._mock_body("def hello(): pass",
+                                                model="gpt-5.3-codex",
+                                                resp_id="resp_code",
+                                                input_tokens=200, output_tokens=100)):
+            client.generate_code("gpt-5.3-codex", instructions="test",
+                                 input_text="write code", caller="builder")
 
         rows = _read_csv(log_path)
         assert len(rows) == 1
         assert rows[0]["method"] == "generate_code"
         assert rows[0]["model"] == "gpt-5.3-codex"
+        assert rows[0]["caller"] == "builder"
 
-    def test_logging_failure_does_not_break_client(self, tmp_path):
-        """If cost logging fails, the API call still succeeds."""
-        import json
+    def test_no_logger_means_no_csv(self, tmp_path):
+        """When cost_logger is None (default), no CSV is created."""
+        from unittest.mock import patch
+        from src.v3.llm_client import ResponsesClient
+
+        client = ResponsesClient("https://example.com", "key")
+        assert client._cost_logger is None
+
+        with patch("src.v3.llm_client.request.urlopen",
+                   return_value=self._mock_body()):
+            result = client.generate_json("gpt-5.4", instructions="test",
+                                          input_text="test")
+
+        assert result.parsed == {"ok": True}
+        # No CSV file should exist anywhere
+
+    def test_oserror_does_not_break_client(self, tmp_path):
+        """If cost logging hits an OS error, the API call still succeeds."""
         from unittest.mock import MagicMock, patch
         from src.v3.llm_client import ResponsesClient
 
         cost_logger = CostLogger(log_path=tmp_path / "cost.csv")
-        cost_logger.log_call = MagicMock(side_effect=IOError("disk full"))
+        cost_logger.log_call = MagicMock(side_effect=OSError("disk full"))
         client = ResponsesClient("https://example.com", "key",
                                  cost_logger=cost_logger)
 
-        body = {
-            "id": "resp_ok",
-            "model": "gpt-5.4",
-            "output": [{"type": "message", "role": "assistant",
-                        "content": [{"type": "output_text", "text": '{"ok": true}'}]}],
-            "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15},
-        }
-        mock_resp = MagicMock()
-        mock_resp.read.return_value = json.dumps(body).encode("utf-8")
-        mock_resp.__enter__ = lambda s: s
-        mock_resp.__exit__ = MagicMock(return_value=False)
-
-        with patch("src.v3.llm_client.request.urlopen", return_value=mock_resp):
-            result = client.generate_json("gpt-5.4", instructions="test", input_text="test")
+        with patch("src.v3.llm_client.request.urlopen",
+                   return_value=self._mock_body()):
+            result = client.generate_json("gpt-5.4", instructions="test",
+                                          input_text="test")
 
         assert result.parsed == {"ok": True}
+
+    def test_programmer_bug_propagates(self, tmp_path):
+        """Non-OS errors (programmer bugs) are NOT swallowed."""
+        from unittest.mock import MagicMock, patch
+        from src.v3.llm_client import ResponsesClient
+
+        cost_logger = CostLogger(log_path=tmp_path / "cost.csv")
+        cost_logger.log_call = MagicMock(side_effect=TypeError("bad arg"))
+        client = ResponsesClient("https://example.com", "key",
+                                 cost_logger=cost_logger)
+
+        with patch("src.v3.llm_client.request.urlopen",
+                   return_value=self._mock_body()):
+            with pytest.raises(TypeError, match="bad arg"):
+                client.generate_json("gpt-5.4", instructions="test",
+                                     input_text="test")
 
 
 # ---------------------------------------------------------------------------

@@ -17,11 +17,15 @@ Usage::
 from __future__ import annotations
 
 import csv
+import fcntl
 import io
+import logging
 import os
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+
+_logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -140,27 +144,48 @@ class CostLogger:
         return row
 
     def _append_row(self, row: dict) -> None:
-        """Append a row to the CSV, creating the file + header if needed."""
+        """Append a row to the CSV, creating the file + header if needed.
+
+        Uses fcntl advisory locking so concurrent processes don't interleave
+        partial lines.
+        """
         self.log_path.parent.mkdir(parents=True, exist_ok=True)
         write_header = not self.log_path.exists() or self.log_path.stat().st_size == 0
 
         with open(self.log_path, "a", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=_CSV_COLUMNS)
-            if write_header:
-                writer.writeheader()
-            writer.writerow(row)
+            fcntl.flock(f, fcntl.LOCK_EX)
+            try:
+                # Re-check after acquiring lock — another writer may have created header
+                if write_header and self.log_path.stat().st_size > 0:
+                    write_header = False
+                writer = csv.DictWriter(f, fieldnames=_CSV_COLUMNS)
+                if write_header:
+                    writer.writeheader()
+                writer.writerow(row)
+            finally:
+                fcntl.flock(f, fcntl.LOCK_UN)
 
     # ------------------------------------------------------------------
     # Summary / reader
     # ------------------------------------------------------------------
 
     def read_log(self) -> list[dict]:
-        """Read all rows from the cost log."""
+        """Read all rows from the cost log, skipping malformed rows."""
         if not self.log_path.exists():
             return []
-        with open(self.log_path, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            return list(reader)
+        rows: list[dict] = []
+        try:
+            with open(self.log_path, newline="", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for line_no, row in enumerate(reader, start=2):
+                    # Skip rows that are completely empty or lack required fields
+                    if not row.get("timestamp"):
+                        _logger.debug("Skipping malformed row at line %d", line_no)
+                        continue
+                    rows.append(row)
+        except (csv.Error, UnicodeDecodeError) as exc:
+            _logger.warning("Error reading cost log %s: %s", self.log_path, exc)
+        return rows
 
     def summarize(self) -> str:
         """Generate a human-readable summary of costs by day, week, and month.
@@ -171,23 +196,23 @@ class CostLogger:
         if not rows:
             return "No LLM calls logged yet."
 
-        # Parse into structured data
+        # Parse into structured data, tolerating bad values
         calls = []
         for r in rows:
             try:
                 dt = datetime.strptime(r["date"], "%Y-%m-%d")
-            except (ValueError, KeyError):
+                calls.append({
+                    "date": r["date"],
+                    "week": dt.strftime("%Y-W%W"),
+                    "month": dt.strftime("%Y-%m"),
+                    "model": r.get("model", "?"),
+                    "caller": r.get("caller", "?"),
+                    "input_tokens": int(r.get("input_tokens") or 0),
+                    "output_tokens": int(r.get("output_tokens") or 0),
+                    "total_cost": float(r.get("total_cost_usd") or 0),
+                })
+            except (ValueError, KeyError, TypeError):
                 continue
-            calls.append({
-                "date": r["date"],
-                "week": dt.strftime("%Y-W%W"),
-                "month": dt.strftime("%Y-%m"),
-                "model": r.get("model", "?"),
-                "caller": r.get("caller", "?"),
-                "input_tokens": int(r.get("input_tokens", 0)),
-                "output_tokens": int(r.get("output_tokens", 0)),
-                "total_cost": float(r.get("total_cost_usd", 0)),
-            })
 
         lines = []
         lines.append("=" * 72)

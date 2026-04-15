@@ -34,7 +34,8 @@ _SYSTEM_PROMPT_PATH = _PROMPTS_DIR / "planner_system.txt"
 # Archetype vocabulary (from SPEC-v3.md §5)
 # ---------------------------------------------------------------------------
 
-ARCHETYPE_VOCABULARY = {
+# Full vocabulary — every archetype the system knows about.
+ARCHETYPE_VOCABULARY: dict[str, dict] = {
     "hero_title":                          {"max_items": 2,  "max_words": 30,  "canvas_pref": "header_dark"},
     "section_break":                       {"max_items": 2,  "max_words": 20,  "canvas_pref": "header_dark"},
     "hero_statement_with_support_columns": {"max_items": 4,  "max_words": 85,  "canvas_pref": "header_light"},
@@ -50,11 +51,54 @@ ARCHETYPE_VOCABULARY = {
     "timeline_roadmap":                    {"max_items": 5,  "max_words": 100, "canvas_pref": "blank"},
 }
 
+# Supported archetypes — only those backed by validated examples (SPEC-v3.md §5).
+# The planner may only select from this subset. Others stay in the vocabulary
+# for feasibility/schema awareness but are not offered to the LLM.
+SUPPORTED_ARCHETYPES: frozenset[str] = frozenset({
+    "hero_title",
+    "hero_statement_with_support_columns",
+    "comparison_split",
+    "content_with_visual",
+    "process_flow",
+    "timeline_roadmap",
+})
+
 # Fields that are forbidden in deck plans (geometry/styling)
 _FORBIDDEN_FIELD_PATTERNS = re.compile(
     r"(left|top|width|height|^x$|^y$|emu|inch|hex|rgb|size_pt|font_size|font_name|color_code)",
     re.IGNORECASE,
 )
+
+# Required content fields per archetype.
+# Key = archetype name, value = list of (field_name, description) tuples.
+# Only the field's presence is checked (non-empty for strings, non-empty for arrays).
+_ARCHETYPE_REQUIRED_FIELDS: dict[str, list[tuple[str, str]]] = {
+    "hero_title": [],  # headline is already globally required
+    "hero_statement_with_support_columns": [
+        ("supports", "array of {label, body} support columns"),
+    ],
+    "comparison_split": [
+        ("cards", "array of exactly 2 {title, body} sides"),
+    ],
+    "content_with_visual": [
+        ("body", "text content"),
+        ("visual_intent", "visual description object"),
+    ],
+    "process_flow": [
+        ("steps", "array of {label, body} steps"),
+    ],
+    "timeline_roadmap": [
+        ("steps", "array of {label, body} phases"),
+    ],
+    # Unsupported archetypes — rules kept for future use
+    "three_cards": [("cards", "array of {title, body} cards")],
+    "kpi_grid": [("metrics", "array of {value, label} metrics")],
+    "stat_list_with_icons": [("metrics", "array of {value, label} stats")],
+    "quote_callout": [],  # headline=quote, body=attribution — headline globally required
+    "closing_cta": [("bullets", "array of next-step strings")],
+    "matrix_grid": [("cards", "array of {title, body} grid cells")],
+    "section_break": [],
+}
 
 
 # ---------------------------------------------------------------------------
@@ -77,13 +121,20 @@ def validate_deck_plan(plan: dict) -> list[str]:
     for i, slide in enumerate(slides):
         prefix = f"slides[{i}]"
 
-        # Archetype must be in vocabulary
+        # Archetype must be in the supported subset (backed by examples)
         archetype = slide.get("archetype", "")
-        if archetype not in ARCHETYPE_VOCABULARY:
-            errors.append(
-                f"{prefix}: archetype '{archetype}' not in vocabulary. "
-                f"Valid: {sorted(ARCHETYPE_VOCABULARY.keys())}"
-            )
+        if archetype not in SUPPORTED_ARCHETYPES:
+            if archetype in ARCHETYPE_VOCABULARY:
+                errors.append(
+                    f"{prefix}: archetype '{archetype}' is not yet supported — "
+                    f"no validated examples. "
+                    f"Supported: {sorted(SUPPORTED_ARCHETYPES)}"
+                )
+            else:
+                errors.append(
+                    f"{prefix}: archetype '{archetype}' not in vocabulary. "
+                    f"Valid: {sorted(ARCHETYPE_VOCABULARY.keys())}"
+                )
 
         # Forbidden fields
         for key in slide:
@@ -100,6 +151,16 @@ def validate_deck_plan(plan: dict) -> list[str]:
             errors.append(f"{prefix}: missing 'audience_takeaway'")
         if not slide.get("headline"):
             errors.append(f"{prefix}: missing 'headline'")
+
+        # Archetype-specific required content fields
+        required_fields = _ARCHETYPE_REQUIRED_FIELDS.get(archetype, [])
+        for field_name, description in required_fields:
+            value = slide.get(field_name)
+            if not value:
+                errors.append(
+                    f"{prefix}: archetype '{archetype}' requires '{field_name}' "
+                    f"({description})"
+                )
 
     return errors
 
@@ -146,10 +207,10 @@ def _build_user_message(normalized_content: dict) -> str:
                 parts.append(f"- {bullet}")
         parts.append("")
 
-    # Available archetypes
+    # Available archetypes — only the supported subset
     parts.append("\n## Available archetypes")
     parts.append("Use only these archetype labels:")
-    for name in sorted(ARCHETYPE_VOCABULARY.keys()):
+    for name in sorted(SUPPORTED_ARCHETYPES):
         cap = ARCHETYPE_VOCABULARY[name]
         parts.append(f"- {name} (max {cap['max_items']} items, {cap['max_words']} words)")
 
@@ -192,6 +253,7 @@ def plan_deck(
         model=model,
         instructions=instructions,
         input_text=user_message,
+        caller="planner",
         validator=validate_deck_plan,
         max_retries=max_retries,
     )

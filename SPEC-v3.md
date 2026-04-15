@@ -646,13 +646,17 @@ Supporting infrastructure:
 
 ### 4.11.10 LLM Cost Logger
 
-Every API call through `ResponsesClient` is automatically logged to `runs/llm_cost_log.csv`. The logger (`src/v3/cost_logger.py`) is append-only and never blocks the pipeline — logging failures are silently ignored.
+Cost logging is **opt-in**: pass a `CostLogger` instance to `ResponsesClient` to enable. When `cost_logger` is `None` (the default), no CSV is written.
+
+When enabled, every API call is appended to `runs/llm_cost_log.csv`. The logger (`src/v3/cost_logger.py`) is append-only, uses `fcntl` advisory locking for concurrent-writer safety, and never blocks the pipeline — `OSError` during writes is suppressed (programmer bugs propagate normally).
+
+Each public client method accepts a `caller` parameter (e.g., `"planner"`, `"builder"`, `"reviewer"`) so cost rows attribute usage to a pipeline stage. The planner already threads `caller="planner"`.
 
 **CSV columns**: timestamp, date, model, method, caller, input_tokens, output_tokens, total_tokens, input_cost_usd, output_cost_usd, total_cost_usd, response_id, prompt_preview.
 
 **Pricing**: reads per-model env vars (`V3_COST_{MODEL_SLUG}_INPUT`, `V3_COST_{MODEL_SLUG}_OUTPUT`) or falls back to global `AZURE_OPENAI_INPUT_USD_PER_MILLION` / `AZURE_OPENAI_OUTPUT_USD_PER_MILLION`. When unset, costs are $0 but tokens are still recorded.
 
-**Summary CLI**: `python scripts/llm_cost_summary.py` reads the CSV and prints rollups by model, caller, day, week, and month.
+**Summary CLI**: `python scripts/llm_cost_summary.py` reads the CSV and prints rollups by model, caller, day, week, and month. Read and summary paths tolerate malformed/truncated rows without crashing.
 
 ## 5) Archetype Vocabulary
 

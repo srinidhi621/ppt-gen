@@ -29,41 +29,33 @@ Return a single JSON object matching this structure:
 
 ## Archetype vocabulary
 
-You MUST use one of these archetypes for each slide. Do not invent new ones.
+You MUST use one of the SUPPORTED archetypes below. Do not invent new ones. Do not use archetypes from the "not yet supported" list.
+
+### Supported archetypes (use these)
 
 | Archetype | Intent | max_items | max_words | Default canvas |
 |---|---|---|---|---|
 | hero_title | Deck cover: headline, optional subhead, optional backdrop | 2 | 30 | header_dark |
-| section_break | Divider between deck sections | 2 | 20 | header_dark |
 | hero_statement_with_support_columns | One dominant statement + 2-4 supporting columns | 4 supports | 85 | header_light |
-| three_cards | Three parallel concepts with title + body | 3 cards | 90 | blank |
 | comparison_split | Two-sided before/after, problem/solution | 2 sides, 4 pts/side | 80 | blank |
-| kpi_grid | Grid of 4-6 large metrics with labels | 6 metrics | 60 | blank |
-| stat_list_with_icons | Vertical list of stats with icon per row | 5 rows | 75 | header_light |
-| process_flow | Linear or staged process with 3-6 steps | 6 steps | 90 | blank |
-| quote_callout | Single large quotation with attribution | 1 quote | 50 | header_dark |
 | content_with_visual | Text on one side, image/diagram on the other | 1 text + 1 visual | 60 | blank |
-| closing_cta | Call-to-action closer with next steps | 3 items | 50 | header_light |
-| matrix_grid | Labeled rows x columns of content cells | 4 rows x 3 cols | 150 | blank |
+| process_flow | Linear or staged process with 3-6 steps | 6 steps | 90 | blank |
 | timeline_roadmap | Phased timeline with milestones and durations | 5 phases | 100 | blank |
+
+### NOT yet supported (do NOT use — no validated examples)
+
+section_break, three_cards, kpi_grid, stat_list_with_icons, quote_callout, closing_cta, matrix_grid
 
 ## Archetype content fields
 
-Each archetype expects specific fields in the slide object:
+Each supported archetype requires specific fields in the slide object. Missing required fields will cause validation failure.
 
 - **hero_title**: headline, body (optional subhead)
-- **section_break**: headline, body (optional)
-- **hero_statement_with_support_columns**: headline, hero_text, supports (array of {label, body})
-- **three_cards**: headline, cards (array of {title, body})
-- **comparison_split**: headline, cards (exactly 2: {title, body} where body contains the comparison points)
-- **kpi_grid**: headline, metrics (array of {value, label})
-- **stat_list_with_icons**: headline, metrics (array of {value, label})
-- **process_flow**: headline, steps (array of {label, body})
-- **quote_callout**: headline (the quote), body (attribution)
-- **content_with_visual**: headline, body, visual_intent
-- **closing_cta**: headline, bullets (next steps)
-- **matrix_grid**: headline, cards (grid cells as array of {title, body})
-- **timeline_roadmap**: headline, steps (phases as array of {label, body})
+- **hero_statement_with_support_columns**: headline, hero_text, supports (array of {label, body}) — REQUIRED: supports
+- **comparison_split**: headline, cards (exactly 2: {title, body} where body contains the comparison points) — REQUIRED: cards
+- **content_with_visual**: headline, body, visual_intent ({must_include, avoid}) — REQUIRED: body, visual_intent
+- **process_flow**: headline, steps (array of {label, body}) — REQUIRED: steps
+- **timeline_roadmap**: headline, steps (phases as array of {label, body}) — REQUIRED: steps
 
 ## FORBIDDEN
 

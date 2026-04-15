@@ -3,7 +3,12 @@
 from __future__ import annotations
 
 import pytest
-from src.v3.planner import validate_deck_plan, ARCHETYPE_VOCABULARY, _build_user_message
+from src.v3.planner import (
+    validate_deck_plan,
+    ARCHETYPE_VOCABULARY,
+    SUPPORTED_ARCHETYPES,
+    _build_user_message,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -46,16 +51,49 @@ class TestValidateDeckPlan:
         errors = validate_deck_plan({"slides": []})
         assert any("minItems" in e or "slides" in e for e in errors)
 
-    def test_invalid_archetype(self):
+    def test_invented_archetype_rejected(self):
         plan = _minimal_plan(slides=[_minimal_slide(archetype="invented_type")])
         errors = validate_deck_plan(plan)
         assert any("not in vocabulary" in e or "archetype" in e for e in errors)
 
-    def test_all_archetypes_accepted(self):
-        for archetype in ARCHETYPE_VOCABULARY:
+    def test_unsupported_archetype_rejected(self):
+        """Archetypes in vocabulary but not backed by examples are rejected.
+
+        These fail at the JSON Schema level (enum restriction) before
+        semantic checks run, so the error message comes from the schema.
+        """
+        unsupported = set(ARCHETYPE_VOCABULARY) - SUPPORTED_ARCHETYPES
+        for archetype in sorted(unsupported):
             plan = _minimal_plan(slides=[_minimal_slide(archetype=archetype)])
             errors = validate_deck_plan(plan)
-            assert errors == [], f"Archetype {archetype} rejected: {errors}"
+            assert errors, f"Unsupported archetype '{archetype}' was not rejected"
+
+    def test_all_supported_archetypes_accepted(self):
+        """Each supported archetype with its required fields passes."""
+        archetype_extras = {
+            "hero_title": {},
+            "hero_statement_with_support_columns": {
+                "supports": [{"label": "A", "body": "x"}],
+            },
+            "comparison_split": {
+                "cards": [{"title": "Left", "body": "x"}, {"title": "Right", "body": "y"}],
+            },
+            "content_with_visual": {
+                "body": "Some text",
+                "visual_intent": {"must_include": ["chart"]},
+            },
+            "process_flow": {
+                "steps": [{"label": "Step 1", "body": "Do it"}],
+            },
+            "timeline_roadmap": {
+                "steps": [{"label": "Phase 1", "body": "Begin"}],
+            },
+        }
+        for archetype in SUPPORTED_ARCHETYPES:
+            extras = archetype_extras.get(archetype, {})
+            plan = _minimal_plan(slides=[_minimal_slide(archetype=archetype, **extras)])
+            errors = validate_deck_plan(plan)
+            assert errors == [], f"Supported archetype {archetype} rejected: {errors}"
 
     def test_forbidden_field_left(self):
         slide = _minimal_slide()
@@ -99,9 +137,92 @@ class TestValidateDeckPlan:
     def test_multiple_slides_validated(self):
         plan = _minimal_plan(slides=[
             _minimal_slide(slide_id="s1", archetype="hero_title"),
-            _minimal_slide(slide_id="s2", archetype="three_cards"),
-            _minimal_slide(slide_id="s3", archetype="closing_cta"),
+            _minimal_slide(slide_id="s2", archetype="comparison_split",
+                           cards=[{"title": "A", "body": "x"}, {"title": "B", "body": "y"}]),
+            _minimal_slide(slide_id="s3", archetype="process_flow",
+                           steps=[{"label": "S1", "body": "Do"}]),
         ])
+        errors = validate_deck_plan(plan)
+        assert errors == []
+
+    # ------------------------------------------------------------------
+    # Archetype-specific required fields
+    # ------------------------------------------------------------------
+
+    def test_process_flow_without_steps_rejected(self):
+        plan = _minimal_plan(slides=[_minimal_slide(archetype="process_flow")])
+        errors = validate_deck_plan(plan)
+        assert any("requires 'steps'" in e for e in errors)
+
+    def test_process_flow_with_steps_passes(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="process_flow",
+            steps=[{"label": "Step 1", "body": "Do it"}],
+        )])
+        errors = validate_deck_plan(plan)
+        assert errors == []
+
+    def test_comparison_split_without_cards_rejected(self):
+        plan = _minimal_plan(slides=[_minimal_slide(archetype="comparison_split")])
+        errors = validate_deck_plan(plan)
+        assert any("requires 'cards'" in e for e in errors)
+
+    def test_hero_statement_without_supports_rejected(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="hero_statement_with_support_columns"
+        )])
+        errors = validate_deck_plan(plan)
+        assert any("requires 'supports'" in e for e in errors)
+
+    def test_hero_statement_with_supports_passes(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="hero_statement_with_support_columns",
+            supports=[{"label": "A", "body": "x"}],
+        )])
+        errors = validate_deck_plan(plan)
+        assert errors == []
+
+    def test_content_with_visual_without_visual_intent_rejected(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="content_with_visual",
+            body="Some text",
+        )])
+        errors = validate_deck_plan(plan)
+        assert any("requires 'visual_intent'" in e for e in errors)
+
+    def test_content_with_visual_without_body_rejected(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="content_with_visual",
+            visual_intent={"must_include": ["chart"]},
+        )])
+        errors = validate_deck_plan(plan)
+        assert any("requires 'body'" in e for e in errors)
+
+    def test_content_with_visual_complete_passes(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="content_with_visual",
+            body="Some text",
+            visual_intent={"must_include": ["chart"]},
+        )])
+        errors = validate_deck_plan(plan)
+        assert errors == []
+
+    def test_timeline_roadmap_without_steps_rejected(self):
+        plan = _minimal_plan(slides=[_minimal_slide(archetype="timeline_roadmap")])
+        errors = validate_deck_plan(plan)
+        assert any("requires 'steps'" in e for e in errors)
+
+    def test_timeline_roadmap_with_steps_passes(self):
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="timeline_roadmap",
+            steps=[{"label": "Phase 1", "body": "Begin"}],
+        )])
+        errors = validate_deck_plan(plan)
+        assert errors == []
+
+    def test_hero_title_needs_no_extra_fields(self):
+        """hero_title only requires the globally-required fields."""
+        plan = _minimal_plan(slides=[_minimal_slide(archetype="hero_title")])
         errors = validate_deck_plan(plan)
         assert errors == []
 
@@ -138,11 +259,15 @@ class TestBuildUserMessage:
         msg = _build_user_message(nc)
         assert "5" in msg
 
-    def test_includes_archetype_list(self):
+    def test_includes_supported_archetypes_only(self):
         nc = {"title": "Test", "sections": [{"heading": "S1", "body": "x"}], "metadata": {}}
         msg = _build_user_message(nc)
         assert "hero_title" in msg
-        assert "three_cards" in msg
+        assert "process_flow" in msg
+        # Unsupported archetypes must NOT appear in the user message
+        assert "three_cards" not in msg
+        assert "kpi_grid" not in msg
+        assert "matrix_grid" not in msg
 
     def test_includes_section_content(self):
         nc = {"title": "Test", "sections": [{"heading": "Revenue", "body": "Q3 grew 14%"}], "metadata": {}}
