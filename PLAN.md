@@ -39,11 +39,13 @@ V3 foundation code now exists on the active PR branch, but it is still under rev
 
 **2026-04-15 update (evening)**: All foundation PRs merged to main. PR #4 (runtime, SLICE-003–006b), PR #6 (sandbox, SLICE-009), PR #7 (scanner/examples/contracts/fidelity, SLICE-007/008) all on main. Repo cleaned: stale branches and worktrees removed. Non-LLM foundations complete. Next: LLM layer (SLICE-010 normalize + planner).
 
+**2026-04-16 update**: SLICE-010 merged to main (PR #8). Planner, feasibility gate, normalize, LLM client (Responses API), retry wrapper, and cost logging all on main. 617 tests passing. Stale branches pruned. Ready for SLICE-011 (builder + first end-to-end).
+
 ---
 
 ## Active Slice
 
-**SLICE-010** — Planner + feasibility + normalize + LLM client + cost logging (on branch `feature/slice-010-planner`).
+**SLICE-011** — Builder prompt + end-to-end plan→build→scan (no review loop).
 
 ---
 
@@ -99,13 +101,10 @@ SLICE-010 (planner + normalize + feasibility)
 - Modified: `src/contracts/schemas/deck_plan.schema.json` (add purpose, audience_takeaway)
 - Tests: `tests/test_normalize.py`, `tests/test_planner.py`, `tests/test_feasibility.py`, `tests/test_llm_retry.py`
 
-**REVIEW-GATE**:
-- [ ] User inspects planner output for one real prompt.
-- [ ] User confirms copy quality passes the presentation-writing skill's checklist.
-- [ ] User confirms feasibility gate correctly rejects an overstuffed slide.
+**REVIEW-GATE**: _(deferred — planner output will be validated as part of SLICE-011 end-to-end)_
 
 ### SLICE-011 — Builder prompt + end-to-end plan→build→scan (no review)
-**Blocker**: SLICE-007 has at least one working example per seeded archetype, SLICE-008 + SLICE-009 + SLICE-010 done
+**Blocker**: ~~SLICE-007 has at least one working example per seeded archetype, SLICE-008 + SLICE-009 + SLICE-010 done~~ All clear
 **Description**: Builder prompt assembly, runtime API docs generation, few-shot example injection. First end-to-end happy path: prompt → plan → build → sandbox-execute → scan → PPTX. No review loop yet. Integration tests for happy paths, contract-violation handling, review-image export smoke. Canary live benchmark on 3-5 release-gate prompts.
 **REVIEW-GATE**:
 - [ ] User inspects the built PPTX on a real prompt.
@@ -203,6 +202,7 @@ SLICE-010 (planner + normalize + feasibility)
 | SLICE-007 | Example library seeding | 2026-04-15 | 9 seeded examples, all token-driven, scanner-passing. `run_all.py` + `test_examples.py` regression gate |
 | SLICE-008 | Scanner, contracts, content fidelity | 2026-04-15 | 21 objective checks, artifact validators, hallucination detection. 394 tests pass |
 | SLICE-009 | Sandbox execution harness | 2026-04-15 | `src/sandbox/` — subprocess + AST pre-scan + rlimit |
+| SLICE-010 | Planner + feasibility + normalize + LLM client + cost logging | 2026-04-16 | `src/v3/planner.py`, `feasibility.py`, `normalize.py`, `llm_client.py`, `llm_retry.py`, `cost_logger.py`. 6 example-backed archetypes, per-archetype validation, persistent cost logging. 617 tests |
 
 ---
 
