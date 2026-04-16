@@ -142,6 +142,7 @@ def _rlimit_preexec(cpu_s: int, mem_mb: int):
 def run_in_sandbox(
     script_path: Path,
     *,
+    script_args: Optional[list[str]] = None,
     attempt_dir: Optional[Path] = None,
     python: Optional[str] = None,
     timeout_s: int = DEFAULT_TIMEOUT_S,
@@ -157,6 +158,9 @@ def run_in_sandbox(
     ----------
     script_path : Path
         Path to the build_deck.py to execute.
+    script_args : list[str], optional
+        Additional arguments passed to the script (e.g. output path for
+        ``sys.argv[1]``).
     attempt_dir : Path, optional
         Working directory for the subprocess. Defaults to script_path.parent.
     python : str, optional
@@ -215,8 +219,9 @@ def run_in_sandbox(
 
     t0 = time.monotonic()
     try:
+        cmd = [python, str(script_path)] + (script_args or [])
         proc = subprocess.run(
-            [python, str(script_path)],
+            cmd,
             cwd=str(attempt_dir),
             env=env,
             capture_output=True,

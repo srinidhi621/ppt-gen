@@ -26,7 +26,7 @@ import logging
 import shutil
 import time
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
@@ -117,122 +117,130 @@ def generate(
     if client is None:
         client = ResponsesClient.from_env()
 
-    # ------------------------------------------------------------------
-    # Stage 1: Normalize
-    # ------------------------------------------------------------------
-    logger.info("[%s] Stage 1: Normalize", run_id)
-    result.stage = "normalize"
     try:
-        normalized = normalize(user_input)
-        result.normalized_content = normalized
-        _write_artifact(run_dir / "normalized_content.json", normalized)
-    except Exception as exc:
-        result.error = f"Normalize failed: {exc}"
-        result.duration_s = time.monotonic() - t0
-        return result
-
-    # ------------------------------------------------------------------
-    # Stage 2: Plan
-    # ------------------------------------------------------------------
-    logger.info("[%s] Stage 2: Plan", run_id)
-    result.stage = "planner"
-    try:
-        deck_plan = plan_deck(client, normalized)
-        result.deck_plan = deck_plan
-        _write_artifact(run_dir / "deck_plan.json", deck_plan)
-    except Exception as exc:
-        result.error = f"Planner failed: {exc}"
-        result.duration_s = time.monotonic() - t0
-        return result
-
-    # ------------------------------------------------------------------
-    # Stage 3: Feasibility
-    # ------------------------------------------------------------------
-    logger.info("[%s] Stage 3: Feasibility", run_id)
-    result.stage = "feasibility"
-    try:
-        feasibility = check_feasibility(deck_plan)
-        result.feasibility = feasibility
-        _write_artifact(run_dir / "feasibility.json", feasibility)
-
-        if not feasibility["passed"]:
-            violations = feasibility.get("violations", [])
-            msg = f"Feasibility gate rejected {len(violations)} slide(s)"
-            for v in violations:
-                msg += f"\n  - slide {v.get('slide_index')}: {v.get('issues', [])}"
-            result.error = msg
-            result.duration_s = time.monotonic() - t0
+        # ------------------------------------------------------------------
+        # Stage 1: Normalize
+        # ------------------------------------------------------------------
+        logger.info("[%s] Stage 1: Normalize", run_id)
+        result.stage = "normalize"
+        try:
+            normalized = normalize(user_input)
+            result.normalized_content = normalized
+            _write_artifact(run_dir / "normalized_content.json", normalized)
+        except Exception as exc:
+            result.error = f"Normalize failed: {exc}"
             return result
-    except Exception as exc:
-        result.error = f"Feasibility check failed: {exc}"
-        result.duration_s = time.monotonic() - t0
-        return result
 
-    # ------------------------------------------------------------------
-    # Stage 4: Build
-    # ------------------------------------------------------------------
-    logger.info("[%s] Stage 4: Build", run_id)
-    result.stage = "builder"
-    try:
-        build_result = build_deck(
-            client,
-            deck_plan,
-            max_attempts=max_build_attempts,
-            work_dir=run_dir / "build",
-            cleanup=False,  # Keep artifacts for inspection
-        )
-        result.build_result = build_result
+        # ------------------------------------------------------------------
+        # Stage 2: Plan
+        # ------------------------------------------------------------------
+        logger.info("[%s] Stage 2: Plan", run_id)
+        result.stage = "planner"
+        try:
+            deck_plan = plan_deck(client, normalized)
+            result.deck_plan = deck_plan
+            _write_artifact(run_dir / "deck_plan.json", deck_plan)
+        except Exception as exc:
+            result.error = f"Planner failed: {exc}"
+            return result
 
-        if build_result.success:
-            # Copy PPTX to run root
-            src_pptx = Path(build_result.pptx_path)
-            dst_pptx = run_dir / "deck.pptx"
-            shutil.copy2(src_pptx, dst_pptx)
-            result.pptx_path = str(dst_pptx)
-            result.success = True
+        # ------------------------------------------------------------------
+        # Stage 3: Feasibility
+        # ------------------------------------------------------------------
+        logger.info("[%s] Stage 3: Feasibility", run_id)
+        result.stage = "feasibility"
+        try:
+            feasibility = check_feasibility(deck_plan)
+            result.feasibility = feasibility
+            _write_artifact(run_dir / "feasibility.json", feasibility)
 
-            # Save build code
-            (run_dir / "build_deck.py").write_text(
-                build_result.code, encoding="utf-8"
+            if not feasibility["passed"]:
+                violations = feasibility.get("violations", [])
+                msg = f"Feasibility gate rejected {len(violations)} slide(s)"
+                for v in violations:
+                    msg += f"\n  - slide {v.get('slide_index')}: {v.get('issues', [])}"
+                result.error = msg
+                return result
+        except Exception as exc:
+            result.error = f"Feasibility check failed: {exc}"
+            return result
+
+        # ------------------------------------------------------------------
+        # Stage 4: Build
+        # ------------------------------------------------------------------
+        # Persist builder input artifact (SPEC-v3.md §8)
+        _write_artifact(run_dir / "builder_input.json", {
+            "deck_plan": deck_plan,
+            "design_system_path": "assets/template/design_system.json",
+            "examples_dir": "examples/",
+        })
+
+        logger.info("[%s] Stage 4: Build", run_id)
+        result.stage = "builder"
+        try:
+            build_result = build_deck(
+                client,
+                deck_plan,
+                max_attempts=max_build_attempts,
+                work_dir=run_dir / "build_attempts",
+                cleanup=False,  # Keep artifacts for inspection
             )
+            result.build_result = build_result
 
-            # Save scanner report from last attempt
-            last_attempt = build_result.attempts[-1] if build_result.attempts else None
-            if last_attempt and last_attempt.scanner_report:
-                result.scanner_report = last_attempt.scanner_report
-                _write_artifact(
-                    run_dir / "geometry_report.json",
-                    last_attempt.scanner_report,
+            if build_result.success:
+                # Copy PPTX to run root
+                src_pptx = Path(build_result.pptx_path)
+                dst_pptx = run_dir / "deck.pptx"
+                shutil.copy2(src_pptx, dst_pptx)
+                result.pptx_path = str(dst_pptx)
+                result.success = True
+
+                # Save build code
+                (run_dir / "build_deck.py").write_text(
+                    build_result.code, encoding="utf-8"
                 )
-        else:
-            result.error = build_result.error or "Builder failed"
-    except Exception as exc:
-        result.error = f"Builder failed: {exc}"
-        logger.exception("Builder exception in run %s", run_id)
 
-    result.duration_s = time.monotonic() - t0
+                # Save scanner report from last attempt
+                last_attempt = build_result.attempts[-1] if build_result.attempts else None
+                if last_attempt and last_attempt.scanner_report:
+                    result.scanner_report = last_attempt.scanner_report
+                    _write_artifact(
+                        run_dir / "geometry_report.json",
+                        last_attempt.scanner_report,
+                    )
+            else:
+                result.error = build_result.error or "Builder failed"
+        except Exception as exc:
+            result.error = f"Builder failed: {exc}"
+            logger.exception("Builder exception in run %s", run_id)
+    finally:
+        result.duration_s = time.monotonic() - t0
+        _write_run_summary(run_dir, result)
+        logger.info(
+            "[%s] Pipeline %s in %.1fs (stage: %s)",
+            run_id,
+            "succeeded" if result.success else "failed",
+            result.duration_s,
+            result.stage,
+        )
 
-    # Write run summary
+    return result
+
+
+def _write_run_summary(run_dir: Path, result: PipelineResult) -> None:
+    """Write run_summary.json — called from finally so it covers all exit paths."""
+    br = result.build_result
     _write_artifact(run_dir / "run_summary.json", {
-        "run_id": run_id,
+        "run_id": result.run_id,
         "success": result.success,
         "stage": result.stage,
         "error": result.error,
         "duration_s": round(result.duration_s, 3),
         "pptx_path": result.pptx_path,
-        "build_attempts": len(build_result.attempts) if result.build_result else 0,
-        "total_input_tokens": build_result.total_input_tokens if result.build_result else 0,
-        "total_output_tokens": build_result.total_output_tokens if result.build_result else 0,
+        "build_attempts": len(br.attempts) if br else 0,
+        "total_input_tokens": br.total_input_tokens if br else 0,
+        "total_output_tokens": br.total_output_tokens if br else 0,
     })
-
-    logger.info(
-        "[%s] Pipeline %s in %.1fs (stage: %s)",
-        run_id,
-        "succeeded" if result.success else "failed",
-        result.duration_s,
-        result.stage,
-    )
-    return result
 
 
 def _write_artifact(path: Path, data: dict) -> None:

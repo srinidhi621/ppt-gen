@@ -17,7 +17,10 @@ Every script begins:
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[N]  # adjust N to reach repo root
+# Derive PROJECT_ROOT from an imported package — the script runs in a temp dir,
+# so Path(__file__) does NOT reach the repo.  PYTHONPATH is pre-configured.
+import src.ppt_runtime as _rt
+PROJECT_ROOT = Path(_rt.__file__).resolve().parents[2]
 TEMPLATE_PATH = PROJECT_ROOT / "assets" / "template" / "template.pptx"
 DS_PATH = PROJECT_ROOT / "assets" / "template" / "design_system.json"
 OUTPUT_PATH = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("deck.pptx")

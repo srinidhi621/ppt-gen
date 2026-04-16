@@ -28,6 +28,7 @@ import ast
 import json
 import logging
 import re
+import shutil
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -41,6 +42,7 @@ from src.v3.example_selector import (
     select_examples,
 )
 from src.v3.llm_client import (
+    LLMError,
     LLMResponse,
     ResponsesClient,
     get_model_for_role,
@@ -55,7 +57,6 @@ logger = logging.getLogger(__name__)
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _PROMPTS_DIR = Path(__file__).resolve().parent / "prompts"
 _SYSTEM_PROMPT_PATH = _PROMPTS_DIR / "builder_system.txt"
-_TEMPLATE_PATH = _PROJECT_ROOT / "assets" / "template" / "template.pptx"
 _DS_PATH = _PROJECT_ROOT / "assets" / "template" / "design_system.json"
 
 
@@ -93,20 +94,53 @@ class BuildResult:
 # Code extraction
 # ---------------------------------------------------------------------------
 
-_FENCE_RE = re.compile(
-    r"```(?:python)?\s*\n(.*?)\n```",
+_PYTHON_FENCE_RE = re.compile(
+    r"```python\s*\n(.*?)\n```",
+    re.DOTALL,
+)
+_ANY_FENCE_RE = re.compile(
+    r"```(?:\w*)?\s*\n(.*?)\n```",
     re.DOTALL,
 )
 
 
+def _is_valid_python(code: str) -> bool:
+    """Quick syntax check for candidate extraction."""
+    try:
+        ast.parse(code)
+        return True
+    except SyntaxError:
+        return False
+
+
 def extract_code(text: str) -> str:
-    """Extract Python code from LLM response, stripping markdown fences."""
-    # Try to find fenced code blocks
-    matches = _FENCE_RE.findall(text)
-    if matches:
-        # Use the longest match (likely the full script)
-        return max(matches, key=len).strip()
-    # If no fences, assume the whole response is code
+    """Extract Python code from LLM response, stripping markdown fences.
+
+    Strategy (deterministic, most-specific first):
+    1. Python-tagged fences — pick the longest parseable one.
+    2. Any fenced block — pick the longest parseable one.
+    3. Raw text if it parses as Python.
+    4. Longest raw fenced block (even if not parseable, for error reporting).
+    """
+    # 1. Prefer explicitly python-tagged fences
+    py_matches = _PYTHON_FENCE_RE.findall(text)
+    if py_matches:
+        parseable = [m.strip() for m in py_matches if _is_valid_python(m.strip())]
+        if parseable:
+            return max(parseable, key=len)
+        # All python-tagged blocks have syntax errors — return the longest
+        # so the builder retry loop gets the real error
+        return max(py_matches, key=len).strip()
+
+    # 2. Any fenced block
+    all_matches = _ANY_FENCE_RE.findall(text)
+    if all_matches:
+        parseable = [m.strip() for m in all_matches if _is_valid_python(m.strip())]
+        if parseable:
+            return max(parseable, key=len)
+        return max(all_matches, key=len).strip()
+
+    # 3. Raw text
     return text.strip()
 
 
@@ -196,13 +230,12 @@ def assemble_user_message(
         "The script will be executed with `sys.argv[1]` as the output path.\n"
     )
     parts.append(
-        "IMPORTANT: The script runs from a temporary directory. "
-        "Set PROJECT_ROOT by navigating upward from the script's location "
-        "to reach the repository root, OR accept it as an environment variable. "
-        "Use this pattern:\n"
+        "IMPORTANT: The script runs from a temporary directory, so "
+        "Path(__file__) will NOT point to the repo. Derive PROJECT_ROOT "
+        "from an imported package (PYTHONPATH is pre-configured):\n"
         "```\n"
-        "PROJECT_ROOT = Path(os.environ.get('PPT_GEN_ROOT', "
-        "Path(__file__).resolve().parent))\n"
+        "import src.ppt_runtime as _rt\n"
+        "PROJECT_ROOT = Path(_rt.__file__).resolve().parents[2]\n"
         "```\n"
     )
 
@@ -311,7 +344,7 @@ def build_deck(
                 temperature=0.2,
                 max_output_tokens=16384,
             )
-        except Exception as exc:
+        except (LLMError, ValueError) as exc:
             logger.error("LLM call failed: %s", exc)
             result.error = f"LLM call failed: {exc}"
             break
@@ -341,20 +374,27 @@ def build_deck(
             continue
 
         # Step 2: Write script and execute in sandbox
-        attempt_dir = work_dir / f"attempt_{attempt_num}"
+        attempt_dir = work_dir / f"attempt_{attempt_num:02d}"
+        # Clean any stale attempt dir to prevent misclassifying old output
+        if attempt_dir.exists():
+            shutil.rmtree(attempt_dir)
         attempt_dir.mkdir(parents=True, exist_ok=True)
         script_path = attempt_dir / "build_deck.py"
-        output_path = attempt_dir / "deck.pptx"
+        expected_output = attempt_dir / "deck.pptx"
         script_path.write_text(code, encoding="utf-8")
 
-        # Set up environment so the script can find the project root
+        # Set up environment so the script can import from the project.
+        # NOTE: This broadens the sandbox execution context (the subprocess
+        # can traverse PROJECT_ROOT via PYTHONPATH imports). The AST scanner
+        # blocks os.environ access and dangerous imports, but path-write
+        # restriction remains best-effort until OS-level isolation (SLICE-015+).
         extra_env = {
-            "PPT_GEN_ROOT": str(_PROJECT_ROOT),
             "PYTHONPATH": str(_PROJECT_ROOT),
         }
 
         exec_result = run_in_sandbox(
             script_path,
+            script_args=[str(expected_output)],
             attempt_dir=attempt_dir,
             extra_env=extra_env,
             write_report=True,
@@ -388,39 +428,55 @@ def build_deck(
             logger.warning("Attempt %d: execution failed: %s", attempt_num, err)
             continue
 
-        # Step 3: Run scanner on output PPTX
-        pptx_path = exec_result.pptx_path
-        if pptx_path and Path(pptx_path).exists():
-            try:
-                scanner_report = scan_pptx(
-                    pptx_path, str(_DS_PATH), deck_plan=deck_plan,
-                )
-                attempt.scanner_report = scanner_report
-                blocking = scanner_report.get("blocking_count", 0)
-                if blocking > 0:
-                    attempt.error = f"Scanner found {blocking} BLOCKING finding(s)"
-                    result.attempts.append(attempt)
-                    prior_code = code
-                    findings_text = _format_scanner_findings(scanner_report)
-                    error_context = (
-                        f"The PPTX was built successfully but the scanner found "
-                        f"{blocking} BLOCKING finding(s):\n{findings_text}\n\n"
-                        "Fix the issues and regenerate the complete script."
-                    )
-                    logger.warning("Attempt %d: scanner found %d blocking", attempt_num, blocking)
-                    continue
-                attempt.scanner_pass = True
-            except Exception as exc:
-                logger.warning("Scanner failed (non-fatal): %s", exc)
-                # Scanner failure is non-fatal — treat as pass
-                attempt.scanner_pass = True
-
-        else:
-            # No PPTX produced but exec_result.success was True — shouldn't happen
-            attempt.error = "No PPTX file found after successful execution"
+        # Validate the exact expected output path — not just any .pptx
+        if not expected_output.exists():
+            attempt.exec_success = False
+            attempt.error = (
+                "Script exited successfully but did not write to the expected "
+                f"output path: {expected_output.name}"
+            )
             result.attempts.append(attempt)
             prior_code = code
-            error_context = "The script ran successfully but no .pptx file was found."
+            error_context = (
+                f"The script exited successfully but did not produce the expected "
+                f"output file at sys.argv[1] ({expected_output.name}). "
+                f"Make sure the script writes to Path(sys.argv[1])."
+            )
+            logger.warning("Attempt %d: expected output missing", attempt_num)
+            continue
+
+        pptx_path = str(expected_output)
+
+        # Step 3: Run scanner on output PPTX
+        try:
+            scanner_report = scan_pptx(
+                pptx_path, str(_DS_PATH), deck_plan=deck_plan,
+            )
+            attempt.scanner_report = scanner_report
+            blocking = scanner_report.get("blocking_count", 0)
+            if blocking > 0:
+                attempt.error = f"Scanner found {blocking} BLOCKING finding(s)"
+                result.attempts.append(attempt)
+                prior_code = code
+                findings_text = _format_scanner_findings(scanner_report)
+                error_context = (
+                    f"The PPTX was built successfully but the scanner found "
+                    f"{blocking} BLOCKING finding(s):\n{findings_text}\n\n"
+                    "Fix the issues and regenerate the complete script."
+                )
+                logger.warning("Attempt %d: scanner found %d blocking", attempt_num, blocking)
+                continue
+            attempt.scanner_pass = True
+        except Exception as exc:
+            attempt.error = f"Scanner crashed: {exc}"
+            result.attempts.append(attempt)
+            prior_code = code
+            error_context = (
+                f"The post-build scanner crashed while analyzing the PPTX:\n"
+                f"{type(exc).__name__}: {exc}\n\n"
+                "This likely indicates a malformed PPTX. Regenerate the script."
+            )
+            logger.warning("Attempt %d: scanner exception: %s", attempt_num, exc)
             continue
 
         # SUCCESS
@@ -435,17 +491,10 @@ def build_deck(
         )
         break
     else:
-        # All attempts exhausted
-        result.error = f"All {max_attempts} build attempts failed"
+        # All attempts exhausted — include last error for diagnostics
+        last_err = result.attempts[-1].error if result.attempts else "unknown"
+        result.error = f"All {max_attempts} build attempts failed; last error: {last_err}"
         logger.error("Builder exhausted %d attempts", max_attempts)
-
-    # Cleanup on failure if managed
-    if managed_work_dir and cleanup and not result.success:
-        # Keep work_dir for debugging on failure
-        pass
-    elif managed_work_dir and cleanup and result.success:
-        # Copy the successful PPTX out before cleanup
-        pass  # caller reads pptx_path before cleanup
 
     return result
 
