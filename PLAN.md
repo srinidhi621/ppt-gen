@@ -1,6 +1,6 @@
 # PLAN.md — V3 Project Board
 
-**Updated**: 2026-04-15
+**Updated**: 2026-04-16
 **Active phase**: Foundations (Phase 1 of `SPEC-v3.md §11`)
 **Source of truth for architecture**: `SPEC-v3.md`
 
@@ -39,17 +39,19 @@ V3 foundation code now exists on the active PR branch, but it is still under rev
 
 **2026-04-15 update (evening)**: All foundation PRs merged to main. PR #4 (runtime, SLICE-003–006b), PR #6 (sandbox, SLICE-009), PR #7 (scanner/examples/contracts/fidelity, SLICE-007/008) all on main. Repo cleaned: stale branches and worktrees removed. Non-LLM foundations complete. Next: LLM layer (SLICE-010 normalize + planner).
 
+**2026-04-16 update**: SLICE-010 merged to main (PR #8). Planner, feasibility gate, normalize, LLM client (Responses API), retry wrapper, and cost logging all on main. 617 tests passing. Stale branches pruned. Ready for SLICE-011 (builder + first end-to-end).
+
 ---
 
 ## Active Slice
 
-**SLICE-010** — Planner + feasibility + normalize + LLM client + cost logging (on branch `feature/slice-010-planner`).
+**SLICE-011** — Builder prompt + end-to-end plan→build→scan (no review loop).
 
 ---
 
 ## Review Queue (waiting on user)
 
-_Empty — all foundation slices merged._
+- **SLICE-011 / PR #9 review** — all 9 review findings fixed and regression-tested (676 passed). Ready for re-review and merge.
 
 ---
 
@@ -99,13 +101,10 @@ SLICE-010 (planner + normalize + feasibility)
 - Modified: `src/contracts/schemas/deck_plan.schema.json` (add purpose, audience_takeaway)
 - Tests: `tests/test_normalize.py`, `tests/test_planner.py`, `tests/test_feasibility.py`, `tests/test_llm_retry.py`
 
-**REVIEW-GATE**:
-- [ ] User inspects planner output for one real prompt.
-- [ ] User confirms copy quality passes the presentation-writing skill's checklist.
-- [ ] User confirms feasibility gate correctly rejects an overstuffed slide.
+**REVIEW-GATE**: _(deferred — planner output will be validated as part of SLICE-011 end-to-end)_
 
 ### SLICE-011 — Builder prompt + end-to-end plan→build→scan (no review)
-**Blocker**: SLICE-007 has at least one working example per seeded archetype, SLICE-008 + SLICE-009 + SLICE-010 done
+**Blocker**: ~~SLICE-007 has at least one working example per seeded archetype, SLICE-008 + SLICE-009 + SLICE-010 done~~ All clear
 **Description**: Builder prompt assembly, runtime API docs generation, few-shot example injection. First end-to-end happy path: prompt → plan → build → sandbox-execute → scan → PPTX. No review loop yet. Integration tests for happy paths, contract-violation handling, review-image export smoke. Canary live benchmark on 3-5 release-gate prompts.
 **REVIEW-GATE**:
 - [ ] User inspects the built PPTX on a real prompt.
@@ -203,11 +202,18 @@ SLICE-010 (planner + normalize + feasibility)
 | SLICE-007 | Example library seeding | 2026-04-15 | 9 seeded examples, all token-driven, scanner-passing. `run_all.py` + `test_examples.py` regression gate |
 | SLICE-008 | Scanner, contracts, content fidelity | 2026-04-15 | 21 objective checks, artifact validators, hallucination detection. 394 tests pass |
 | SLICE-009 | Sandbox execution harness | 2026-04-15 | `src/sandbox/` — subprocess + AST pre-scan + rlimit |
+| SLICE-010 | Planner + feasibility + normalize + LLM client + cost logging | 2026-04-16 | `src/v3/planner.py`, `feasibility.py`, `normalize.py`, `llm_client.py`, `llm_retry.py`, `cost_logger.py`. 6 example-backed archetypes, per-archetype validation, persistent cost logging. 617 tests |
 
 ---
 
 ## Changelog
 
+- **2026-04-16** — PR #9 second review round applied. Six additional fixes: (5) artifact path naming aligned to spec — `build/attempt_N` → `build_attempts/attempt_NN` (zero-padded); (6) `builder_input.json` persisted before build (SPEC §8 artifact contract); (8) `extract_code` rewritten with deterministic priority: python-tagged fences → parseable fences → raw text; (10) missing test coverage added: `max_attempts=1` behavior, `shutil.copy2` failure, `builder_input.json` presence, zero-padded dir naming, python-fence preference; (11) unused imports cleaned (`field`, `json`, `BuildAttempt`, `BuildResult`, `PipelineResult`); (12) `extra_env` broadening documented in-code with future hardening reference. Full suite: 685 passed, 4 skipped.
+- **2026-04-16** — PR #9 review fixes applied on `feature/slice-011-builder`. Nine fixes: (1) scanner exceptions now fail the attempt and fold error context into retry instead of silently passing; (2) sandbox subprocess receives `script_args=[str(expected_output)]` so `sys.argv[1]` works, and builder validates exact expected output path instead of globbing any `.pptx`; (3) pipeline `run_summary.json` now writes on all exit paths via `try/finally` (previously skipped on normalize/planner/feasibility failures); (4) prompt `os.environ.get('PPT_GEN_ROOT', ...)` replaced with `Path(src.ppt_runtime.__file__).resolve().parents[2]` — `os.environ` is blocked by AST scanner; (5) builder LLM catch narrowed from `except Exception` to `except (LLMError, ValueError)` so unexpected bugs propagate; (6) stale attempt dirs cleaned via `shutil.rmtree` before recreation; (7) exhaustion message includes last attempt error for diagnostics; (8) `extract_code` edge case tests added (nested fences, multi-language, blank lines, whitespace-only); (9) 9 regression tests covering all fixed bugs. Full suite: 676 passed, 4 skipped.
+- **2026-04-16** — Removed the 6 placeholder/test rows from `runs/llm_cost_log.csv`; the persistent V3 cost ledger is now clean and reports no logged calls until real planner/builder/reviewer traffic is recorded.
+- **2026-04-16** — Inspected the persistent V3 LLM cost log. Current `runs/llm_cost_log.csv` contains 6 placeholder/test rows only (`caller=unknown`, prompt preview `test`) and reports `$0.0000` total because token pricing env vars are not configured.
+- **2026-04-16** — Re-validated PR #9 locally on `feature/slice-011-builder`: targeted builder/example/pipeline tests passed (46) and full suite passed (`663 passed, 4 skipped`), but merge remains blocked on four contract gaps — scanner exceptions treated as pass, sandbox never passes `sys.argv[1]`, early pipeline failures skip `run_summary.json`, and the builder prompt's `os.environ` guidance contradicts the AST allowlist.
+- **2026-04-16** — Reviewed PR #9 (`feature/slice-011-builder` → `main`) against `SPEC-v3.md` sections for builder/sandbox/LLM mechanics. Logged blocking gaps (scanner-failure handling, `sys.argv[1]` execution contract mismatch, missing failure-path `run_summary.json`, prompt contradiction with `os.environ`) plus warnings on artifact path/schema drift and test coverage gaps.
 - **2026-04-15** — Wired persistent cost logging into the V3 application bootstrap. `ResponsesClient.from_env()` now attaches a `CostLogger` by default, writes to persistent `runs/llm_cost_log.csv` unless `V3_COST_LOG_PATH` overrides it, and can be disabled with `V3_COST_LOG_ENABLED=0`. Updated summary CLI help text and added tests for default-on application logging, env-based path override, disable flag, and persistent file writes.
 - **2026-04-15** — SLICE-010 PR #8 review findings addressed. Six fixes applied: (1) planner restricted to 6 example-backed archetypes (`SUPPORTED_ARCHETYPES`), unsupported archetypes rejected at schema and semantic level; (2) feasibility gate rewritten with per-archetype item counters — `quote_callout` counts as 1 item, `comparison_split` counts body-line points, etc.; (3) archetype-specific required fields enforced in planner validation — `process_flow` requires `steps`, `content_with_visual` requires `body` + `visual_intent`, etc.; (4) cost logging made opt-in (None=disabled), `caller` threaded through public methods and retry wrapper, exception narrowed to `OSError` only; (5) CSV hardened with `fcntl` locking, malformed-row tolerance in read/summarize; (6) image MIME detection from magic bytes + extension fallback instead of hardcoded PNG. 606 tests pass (168 targeted).
 - **2026-04-15** — SLICE-010 built on `feature/slice-010-planner`. Deliverables: `src/v3/llm_client.py` (Responses API client, 3 methods), `src/v3/llm_retry.py` (structured retry wrapper), `src/v3/normalize.py` (input parsing + cue extraction), `src/v3/planner.py` (planner caller + deck plan validation), `src/v3/feasibility.py` (capacity gate), `src/v3/cost_logger.py` (append-only CSV cost logging, wired into client), `scripts/llm_cost_summary.py` (CLI summary). Tests: 102 new tests across 6 test files. PR #8 created for review.

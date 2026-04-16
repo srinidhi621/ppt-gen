@@ -43,6 +43,7 @@ env/
 ~$*.ppt
 
 # Project specific
+.env
 runs/
 review_images/
 
