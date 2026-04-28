@@ -36,15 +36,15 @@ _SYSTEM_PROMPT_PATH = _PROMPTS_DIR / "planner_system.txt"
 
 # Full vocabulary — every archetype the system knows about.
 ARCHETYPE_VOCABULARY: dict[str, dict] = {
-    "hero_title":                          {"max_items": 2,  "max_words": 30,  "canvas_pref": "header_dark"},
-    "section_break":                       {"max_items": 2,  "max_words": 20,  "canvas_pref": "header_dark"},
+    "hero_title":                          {"max_items": 2,  "max_words": 30,  "canvas_pref": "header_light"},
+    "section_break":                       {"max_items": 2,  "max_words": 20,  "canvas_pref": "header_light"},
     "hero_statement_with_support_columns": {"max_items": 4,  "max_words": 85,  "canvas_pref": "header_light"},
     "three_cards":                         {"max_items": 3,  "max_words": 90,  "canvas_pref": "blank"},
     "comparison_split":                    {"max_items": 8,  "max_words": 80,  "canvas_pref": "blank"},
     "kpi_grid":                            {"max_items": 6,  "max_words": 60,  "canvas_pref": "blank"},
     "stat_list_with_icons":                {"max_items": 5,  "max_words": 75,  "canvas_pref": "header_light"},
     "process_flow":                        {"max_items": 6,  "max_words": 90,  "canvas_pref": "blank"},
-    "quote_callout":                       {"max_items": 1,  "max_words": 50,  "canvas_pref": "header_dark"},
+    "quote_callout":                       {"max_items": 1,  "max_words": 50,  "canvas_pref": "header_light"},
     "content_with_visual":                 {"max_items": 2,  "max_words": 60,  "canvas_pref": "blank"},
     "closing_cta":                         {"max_items": 3,  "max_words": 50,  "canvas_pref": "header_light"},
     "matrix_grid":                         {"max_items": 12, "max_words": 150, "canvas_pref": "blank"},

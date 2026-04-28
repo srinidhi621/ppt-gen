@@ -1,7 +1,7 @@
 # PLAN.md — V3 Project Board
 
-**Updated**: 2026-04-16
-**Active phase**: Foundations (Phase 1 of `SPEC-v3.md §11`)
+**Updated**: 2026-04-28
+**Active phase**: LLM Layer (Phase 3 of `SPEC-v3.md §11`)
 **Source of truth for architecture**: `SPEC-v3.md`
 
 ---
@@ -41,17 +41,21 @@ V3 foundation code now exists on the active PR branch, but it is still under rev
 
 **2026-04-16 update**: SLICE-010 merged to main (PR #8). Planner, feasibility gate, normalize, LLM client (Responses API), retry wrapper, and cost logging all on main. 617 tests passing. Stale branches pruned. Ready for SLICE-011 (builder + first end-to-end).
 
+**2026-04-28 update**: Git `main` is at `5eb803eb` with SLICE-011 builder work merged locally and on `origin/main`: builder prompt, example selector, V3 pipeline wiring, sandbox execution handoff, scan handling, and PR #9 review fixes are in the codebase. The slice is still review-gated: user validation of a real built PPTX and canary prompts is still pending before SLICE-012 starts.
+
 ---
 
 ## Active Slice
 
-**SLICE-011** — Builder prompt + end-to-end plan→build→scan (no review loop).
+**SLICE-011** — Review gate for builder prompt + end-to-end plan→build→scan (no review loop).
 
 ---
 
 ## Review Queue (waiting on user)
 
-- **SLICE-011 / PR #9 review** — all 9 review findings fixed and regression-tested (676 passed). Ready for re-review and merge.
+- **SLICE-011 user review gate** — code is on `main`; user still needs to inspect a built PPTX from a real prompt and confirm canary prompts produce no catastrophic failures.
+- **SLICE-011 eval output review** — full benchmark prompt set run on 2026-04-28. 19/26 produced accepted `deck.pptx` outputs after rerunning TP-21 successfully; 7 failed in planner/feasibility/builder and are captured in `runs/v3_eval_outputs.csv` plus `runs/v3_eval_outputs_review.md`.
+- **SLICE-011 TP-21 feedback remediation** — user review found black cover background and repeated heading/content overlaps. Scanner now blocks readable overlap collisions and full black slide backgrounds; old TP-21 output is correctly rejected. Fresh TP-21 retry blocked attempt 1, then timed out during builder repair (`runs/eval_20260428_feedback_tp21/`).
 
 ---
 
@@ -106,6 +110,7 @@ SLICE-010 (planner + normalize + feasibility)
 ### SLICE-011 — Builder prompt + end-to-end plan→build→scan (no review)
 **Blocker**: ~~SLICE-007 has at least one working example per seeded archetype, SLICE-008 + SLICE-009 + SLICE-010 done~~ All clear
 **Description**: Builder prompt assembly, runtime API docs generation, few-shot example injection. First end-to-end happy path: prompt → plan → build → sandbox-execute → scan → PPTX. No review loop yet. Integration tests for happy paths, contract-violation handling, review-image export smoke. Canary live benchmark on 3-5 release-gate prompts.
+**Status**: Implemented on `main` at `5eb803eb`; review gate pending.
 **REVIEW-GATE**:
 - [ ] User inspects the built PPTX on a real prompt.
 - [ ] User confirms canary prompts produce no catastrophic failures.
@@ -208,6 +213,13 @@ SLICE-010 (planner + normalize + feasibility)
 
 ## Changelog
 
+- **2026-04-28** — Reconciled `PLAN.md` with git state: SLICE-011 code is on `main` at `5eb803eb`, while the user-facing SLICE-011 review gate remains open before SLICE-012 can start.
+- **2026-04-28** — Ran all 26 prompts from the V3 eval set through the SLICE-011 pipeline under `eval_20260428_*`. Result: 18 accepted PPTX outputs, 2 planner timeouts, 2 feasibility failures, 4 builder/scanner failures. Review manifests written to `runs/v3_eval_outputs.csv` and `runs/v3_eval_outputs_review.md`. Added a resumable eval runner and patched Responses JSON-mode input hinting after Azure rejected JSON mode without an explicit "JSON" input hint. Focused verification: `tests/test_llm_client.py` passed (30).
+- **2026-04-28** — Reran TP-21 (`Executive Pitch Deck`, expected 5-6 slides) with `--force`; it passed and produced `runs/eval_20260428_tp21/deck.pptx`. Eval manifest refreshed: 19 accepted outputs, 7 remaining failures.
+- **2026-04-28** — Applied TP-21 feedback remediation. `VH-13` now classifies readable text/text and text/non-container overlaps as BLOCKING while allowing text intentionally layered inside filled containers. Added `VH-27` to block full black slide backgrounds/full-bleed black rectangles that hide branding. Planner and builder prompts now avoid `header_dark`; hero/section/quote canvas preferences moved to `header_light`. Regenerated example outputs for the stricter gate. Verification: focused scanner/examples/planner/builder suite passed (210), full suite passed (689, 4 skipped). Fresh TP-21 run under `eval_20260428_feedback_tp21` was blocked by scanner on attempt 1 and then builder repair timed out.
+- **2026-04-28** — Completed Azure OpenAI INR pricing/backfill. Configured GPT-5.4 Standard Global rates from the Microsoft Retail Prices API (`₹237.0031/1M input`, `₹1,422.0188/1M output`), added INR cost columns to `src/v3/cost_logger.py`, backfilled all 90 rows in `runs/llm_cost_log.csv`, and updated summaries to prefer INR when present. Current ledger totals: `₹329.080256` all-time; `₹274.680456` on 2026-04-28. Verification: `tests/test_cost_logger.py` passed (36).
+- **2026-04-28** — Reran TP-21 end to end after pricing/backfill work. Run `eval_20260428_tp21_rerun_tp21` succeeded in one build attempt with 6 slides, zero scanner-blocking findings, and final PPTX at `runs/eval_20260428_tp21_rerun_tp21/deck.pptx`. Aspose preview export produced 6 nonblank PNGs under `runs/eval_20260428_tp21_rerun_tp21/review_images/v1/`; LibreOffice preview export failed locally with an abort trap.
+- **2026-04-28** — Ingested `assets/ground_truth/internal_inbox/10x Approach-v1.pptx` as a detailed multi-slide benchmark reference. Exported 15 slide previews and montage under `assets/ground_truth/annotations/10x_approach_v1_images/`, documented slide-by-slide constituents in `assets/ground_truth/annotations/10x_approach_v1_breakdown.md`, mapped the style to a process-flow-led operating-model pattern using current supported archetypes, and added `TP-27` (`Detailed Operating Model / Assessment Funnel`, expected 12-15 slides) to the multi-slide stress tests in `scripts/generate_benchmark_xlsx.py`. Regenerated `assets/benchmarks/v3_test_prompts.xlsx` with 27 prompts. Verification: generator ran successfully and `py_compile` passed for benchmark/eval scripts.
 - **2026-04-16** — PR #9 second review round applied. Six additional fixes: (5) artifact path naming aligned to spec — `build/attempt_N` → `build_attempts/attempt_NN` (zero-padded); (6) `builder_input.json` persisted before build (SPEC §8 artifact contract); (8) `extract_code` rewritten with deterministic priority: python-tagged fences → parseable fences → raw text; (10) missing test coverage added: `max_attempts=1` behavior, `shutil.copy2` failure, `builder_input.json` presence, zero-padded dir naming, python-fence preference; (11) unused imports cleaned (`field`, `json`, `BuildAttempt`, `BuildResult`, `PipelineResult`); (12) `extra_env` broadening documented in-code with future hardening reference. Full suite: 685 passed, 4 skipped.
 - **2026-04-16** — PR #9 review fixes applied on `feature/slice-011-builder`. Nine fixes: (1) scanner exceptions now fail the attempt and fold error context into retry instead of silently passing; (2) sandbox subprocess receives `script_args=[str(expected_output)]` so `sys.argv[1]` works, and builder validates exact expected output path instead of globbing any `.pptx`; (3) pipeline `run_summary.json` now writes on all exit paths via `try/finally` (previously skipped on normalize/planner/feasibility failures); (4) prompt `os.environ.get('PPT_GEN_ROOT', ...)` replaced with `Path(src.ppt_runtime.__file__).resolve().parents[2]` — `os.environ` is blocked by AST scanner; (5) builder LLM catch narrowed from `except Exception` to `except (LLMError, ValueError)` so unexpected bugs propagate; (6) stale attempt dirs cleaned via `shutil.rmtree` before recreation; (7) exhaustion message includes last attempt error for diagnostics; (8) `extract_code` edge case tests added (nested fences, multi-language, blank lines, whitespace-only); (9) 9 regression tests covering all fixed bugs. Full suite: 676 passed, 4 skipped.
 - **2026-04-16** — Removed the 6 placeholder/test rows from `runs/llm_cost_log.csv`; the persistent V3 cost ledger is now clean and reports no logged calls until real planner/builder/reviewer traffic is recorded.

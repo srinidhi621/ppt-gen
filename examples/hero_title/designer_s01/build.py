@@ -1,8 +1,8 @@
 """Example: hero_title / designer_s01
 
 Decomposition of designer reference slide S01: Hero title with
-background visual. A full-bleed dark background with a large
-hero title, subtitle, and brand accent elements.
+background visual. A light canvas with a large hero title, subtitle,
+and brand accent elements.
 
 Source: assets/ground_truth/internal_inbox/designer_reference_slides.pptx (slide 0)
 
@@ -41,19 +41,19 @@ tokens = Tokens.from_design_system(DS_PATH)
 # Shorthand colours
 C1 = tokens.color("accent_1")
 C2 = tokens.color("accent_2")
-BG_DARK = tokens.color("bg_dark")
-TXT_W = tokens.color("text_on_dark")
+BG = tokens.color("bg_primary")
+TXT = tokens.color("text_primary")
+TXT2 = tokens.color("text_secondary")
 
 # ---------------------------------------------------------------------------
 # Build slide
 # ---------------------------------------------------------------------------
 
-slide = canvas.add_slide("header_dark")
+slide = canvas.add_slide("header_light")
 g = Grid(canvas, cols=12, gutter="md")
 
-# Full-width dark background (simulates background visual overlay)
-full_bg = Rect(0, 0, canvas.slide_width, canvas.slide_height)
-add_rect(slide, full_bg, fill=BG_DARK)
+# NOTE: canvas.add_slide() automatically sets the slide background
+# based on the canvas theme — no full-slide rect needed.
 
 # Top accent bar
 bar_h = tokens.spacing("xs")
@@ -64,7 +64,7 @@ kicker_rect = g.span(col=1, col_span=8,
                      top=canvas.body_top + tokens.spacing("xl"),
                      height_emu=tokens.spacing("lg"))
 add_text(slide, kicker_rect, "ASCENDION",
-         type_style=tokens.type("kicker"), color=C2)
+         type_style=tokens.type("kicker"), color=C1)
 
 # Hero title
 title_rect = g.span(col=1, col_span=10,
@@ -72,7 +72,7 @@ title_rect = g.span(col=1, col_span=10,
                     height_emu=tokens.spacing("xl") * 4)
 add_text(slide, title_rect,
          "Engineering the future\nwith AI-powered talent",
-         type_style=tokens.type("display"), color=TXT_W, fill=BG_DARK)
+         type_style=tokens.type("display"), color=TXT, fill=BG)
 
 # Subtitle
 sub_rect = g.span(col=1, col_span=8,
@@ -81,7 +81,7 @@ sub_rect = g.span(col=1, col_span=8,
 add_text(slide, sub_rect,
          "A new model for identifying and developing 10x engineers "
          "who combine judgment, AI leverage, and taste.",
-         type_style=tokens.type("subtitle"), color=TXT_W, fill=BG_DARK)
+         type_style=tokens.type("subtitle"), color=TXT2, fill=BG)
 
 # Bottom accent line
 accent_y = canvas.slide_height - tokens.spacing("xl")

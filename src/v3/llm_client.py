@@ -154,10 +154,11 @@ class ResponsesClient:
     ) -> LLMResponse:
         """Generate a JSON response. Returns LLMResponse with .parsed dict."""
         _check_model(model)
+        json_input = _ensure_json_mode_hint(input_text)
         payload = {
             "model": model,
             "instructions": instructions,
-            "input": input_text,
+            "input": json_input,
             "temperature": temperature,
             "max_output_tokens": max_output_tokens,
             "text": {"format": {"type": "json_object"}},
@@ -225,10 +226,11 @@ class ResponsesClient:
     ) -> LLMResponse:
         """Generate JSON with image inputs (vision). Returns LLMResponse with .parsed dict."""
         _check_model(model)
+        json_input = _ensure_json_mode_hint(input_text)
 
         # Build multimodal input
         content_parts: list[dict] = [
-            {"type": "input_text", "text": input_text},
+            {"type": "input_text", "text": json_input},
         ]
         for img in images:
             raw_bytes, mime = _encode_image_with_mime(img)
@@ -317,7 +319,7 @@ class ResponsesClient:
             method="POST",
         )
         try:
-            with request.urlopen(req, timeout=120) as resp:
+            with request.urlopen(req, timeout=300) as resp:
                 body = json.loads(resp.read().decode("utf-8"))
         except error.HTTPError as exc:
             status = exc.code
@@ -361,6 +363,13 @@ def _extract_output_text(body: dict) -> str:
                 if c.get("text"):
                     return c["text"]
     return ""
+
+
+def _ensure_json_mode_hint(input_text: str) -> str:
+    """Azure JSON mode requires the input messages to mention JSON."""
+    if "json" in input_text.lower():
+        return input_text
+    return f"{input_text}\n\nReturn valid JSON only."
 
 
 # Mapping of magic-byte prefixes to MIME types

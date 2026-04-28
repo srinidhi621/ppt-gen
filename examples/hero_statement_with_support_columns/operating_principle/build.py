@@ -62,10 +62,12 @@ def hero_band(slide, grid, text, kicker_text=None):
         k_rect = Rect(inner_left, band.top + tokens.spacing("md"), inner_w, tokens.spacing("lg"))
         add_text(slide, k_rect, kicker_text,
                  type_style=tokens.type("kicker"), color=C2)
+        txt_top = k_rect.bottom + tokens.spacing("sm")
+    else:
+        txt_top = band.top + tokens.spacing("md")
 
-    txt_top = band.top + (tokens.spacing("lg") if kicker_text else tokens.spacing("md"))
-    txt_rect = Rect(inner_left, txt_top + tokens.spacing("sm"),
-                    inner_w, band.height - txt_top + band.top - tokens.spacing("lg"))
+    txt_rect = Rect(inner_left, txt_top,
+                    inner_w, band.bottom - txt_top - tokens.spacing("md"))
     add_text(slide, txt_rect, text,
              type_style=tokens.type("hero"), color=TXT_W, fill=C1)
     return band

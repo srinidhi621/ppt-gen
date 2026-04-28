@@ -35,7 +35,7 @@ You MUST use one of the SUPPORTED archetypes below. Do not invent new ones. Do n
 
 | Archetype | Intent | max_items | max_words | Default canvas |
 |---|---|---|---|---|
-| hero_title | Deck cover: headline, optional subhead, optional backdrop | 2 | 30 | header_dark |
+| hero_title | Deck cover: headline, optional subhead, optional backdrop | 2 | 30 | header_light |
 | hero_statement_with_support_columns | One dominant statement + 2-4 supporting columns | 4 supports | 85 | header_light |
 | comparison_split | Two-sided before/after, problem/solution | 2 sides, 4 pts/side | 80 | blank |
 | content_with_visual | Text on one side, image/diagram on the other | 1 text + 1 visual | 60 | blank |
@@ -45,6 +45,9 @@ You MUST use one of the SUPPORTED archetypes below. Do not invent new ones. Do n
 ### NOT yet supported (do NOT use — no validated examples)
 
 section_break, three_cards, kpi_grid, stat_list_with_icons, quote_callout, closing_cta, matrix_grid
+
+Canvas rule: do not use `header_dark` for any slide. Full black backgrounds hide
+template branding and are rejected by the scanner.
 
 ## Archetype content fields
 

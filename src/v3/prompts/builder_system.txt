@@ -143,11 +143,14 @@ fitted_style = shrink_to_fit(text, rect, base="title", min_style="body", tokens=
 
 ## Architecture principles
 
-- **Each slide**: call `canvas.add_slide(canvas_name)` with the canvas from the deck plan.
+- **Each slide**: call `canvas.add_slide(canvas_name)` with the canvas from the deck plan, except never use `header_dark`. If the plan asks for `header_dark`, substitute `header_light`.
+- **Background is automatic**: `canvas.add_slide()` sets the slide background fill based on the canvas theme (dark → black, light → white). The template provides branded elements (logo, corner accents, footer bar, coloured sidebar). **Do NOT add a full-slide background rectangle** — it will cover the template branding.
+- **No full black backgrounds**: do not create a full black slide, including cover slides. Full black hides the Ascendion logo and is blocked by the scanner.
 - **Grid**: create `Grid(canvas, cols=12, gutter="md")` per slide. Use `g.span()` for positioned regions and `g.row()` for horizontal layouts.
 - **Header bar**: most non-hero slides start with `draw_header_bar(slide, kicker=..., title=..., canvas=canvas, tokens=tokens)`.
 - **Colour shorthand**: assign `C1 = tokens.color("accent_1")` etc. at the top for readability.
 - **Vertical rhythm**: use `tokens.spacing(...)` for all vertical offsets. Build downward from `canvas.body_top`.
+- **Header clearance**: after calling `draw_header_bar`, do not place content at `canvas.body_top`. Start the main content region at least `canvas.body_top + tokens.spacing("xl") + tokens.spacing("lg")`, and reduce content height accordingly. The scanner blocks any content that overlaps heading text.
 - **Content from plan**: use the exact text from the deck plan. Do not invent content.
 - **Helper functions**: define reusable helpers (e.g., `def step_card(slide, rect, ...)`) above the slide-building code when the same pattern appears on multiple slides.
 
@@ -155,7 +158,7 @@ fitted_style = shrink_to_fit(text, rect, base="title", min_style="body", tokens=
 
 | Archetype | Typical pattern |
 |-----------|----------------|
-| hero_title | Full-bleed dark bg, display/hero text, kicker, accent bars |
+| hero_title | Display/hero text, kicker, accent bars (bg is automatic) |
 | hero_statement_with_support_columns | Hero band (accent bg + large text) + support cards below via `g.row()` |
 | comparison_split | Two-column layout via `g.row()` with equal cards, each with header + rows |
 | content_with_visual | Split layout (text left, visual/metrics right) via `g.row()` |
@@ -164,10 +167,27 @@ fitted_style = shrink_to_fit(text, rect, base="title", min_style="body", tokens=
 | quote_callout | Large quote text with attribution, accent elements |
 | kpi_grid | Stat blocks via `compose_stat_grid()` or manual grid |
 
+## Contrast-safe colour usage (WCAG AA ≥ 4.5:1 required)
+
+The scanner blocks any text/background pair below 4.5:1. Use this cheat-sheet:
+
+**On dark backgrounds** (`bg_dark` / `#000000`):
+- SAFE for text: `text_on_dark`, `accent_1`, `accent_3`, `accent_5`, `accent_6`, `success`, `warning`
+- UNSAFE for text (will be rejected): `accent_2`, `accent_4`, `risk`, `hyperlink`
+
+**On light backgrounds** (`bg_primary` / `#FFFFFF`):
+- SAFE for text: `text_primary`, `accent_1`, `accent_2`, `accent_4`, `accent_6`, `text_secondary`, `risk`, `hyperlink`, `success`
+- UNSAFE for text (will be rejected): `accent_3`, `accent_5`, `warning`
+
+When in doubt, use `text_on_dark` for text on dark canvases and `text_primary` for text on light canvases.
+
 ## Common mistakes to avoid
 
+- **Adding a full-slide background rectangle** (e.g., `Rect(0, 0, slide_width, slide_height)`) — this covers the Ascendion template branding. The background is set automatically by `canvas.add_slide()`.
 - Forgetting `fill=BG_DARK` on text boxes placed on dark backgrounds (text invisible without it)
-- Using `canvas.body_top` as the card top without accounting for header bar height — add `tokens.spacing("sm")` after `draw_header_bar`
+- Using `canvas.body_top` as the card top without accounting for header bar height — reserve a real header clearance band before cards, columns, rows, metrics, or timelines
+- Letting text boxes overlap other text boxes or slide headings — readable text collisions are blocking scanner failures
 - Placing shapes below `canvas.body_top + canvas.body_height` (off-canvas)
 - Using Inches() or Pt() for geometry — use EMU values from grid/tokens
 - Forgetting to handle multi-line text wrapping in fixed-height text boxes
+- Using `accent_2` or `risk` as text colour on dark backgrounds — contrast is only 3.76:1 (below 4.5:1 threshold)

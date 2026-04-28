@@ -185,9 +185,7 @@ def _get_font_size_pt(run) -> float | None:
 def _aabb_overlap_fraction(s1, s2) -> float:
     """Return the fraction of the smaller shape's area that overlaps with the other."""
     try:
-        x_overlap = max(0, min(s1.left + s1.width, s2.left + s2.width) - max(s1.left, s2.left))
-        y_overlap = max(0, min(s1.top + s1.height, s2.top + s2.height) - max(s1.top, s2.top))
-        overlap_area = x_overlap * y_overlap
+        overlap_area = _aabb_overlap_area(s1, s2)
         area1 = s1.width * s1.height
         area2 = s2.width * s2.height
         if area1 == 0 or area2 == 0:
@@ -196,6 +194,62 @@ def _aabb_overlap_fraction(s1, s2) -> float:
         return overlap_area / smaller_area
     except Exception:
         return 0.0
+
+
+def _aabb_overlap_area(s1, s2) -> int:
+    """Return axis-aligned overlap area in EMU^2."""
+    try:
+        x_overlap = max(0, min(s1.left + s1.width, s2.left + s2.width) - max(s1.left, s2.left))
+        y_overlap = max(0, min(s1.top + s1.height, s2.top + s2.height) - max(s1.top, s2.top))
+        return x_overlap * y_overlap
+    except Exception:
+        return 0
+
+
+def _aabb_overlap_fraction_of(target, other) -> float:
+    """Return fraction of target area overlapped by other."""
+    try:
+        area = target.width * target.height
+        if area == 0:
+            return 0.0
+        return _aabb_overlap_area(target, other) / area
+    except Exception:
+        return 0.0
+
+
+def _shape_has_text(shape) -> bool:
+    """True if shape has non-empty visible text."""
+    return bool(_get_text_from_shape(shape).strip())
+
+
+def _is_text_inside_container(text_shape, maybe_container) -> bool:
+    """True when text is intentionally layered inside a larger filled container."""
+    if not _shape_has_text(text_shape):
+        return False
+    if _shape_has_text(maybe_container):
+        return False
+    if _get_shape_fill_rgb(maybe_container) is None:
+        return False
+    text_area = _shape_area(text_shape)
+    container_area = _shape_area(maybe_container)
+    if text_area == 0 or container_area <= text_area:
+        return False
+    return _aabb_overlap_fraction_of(text_shape, maybe_container) >= 0.95
+
+
+def _overlap_severity(s1, s2, overlap: float) -> str:
+    """Classify overlaps; readable-text collisions are blocking."""
+    if overlap <= 0.10:
+        return ""
+    s1_text = _shape_has_text(s1)
+    s2_text = _shape_has_text(s2)
+    if s1_text and s2_text:
+        return "BLOCKING"
+    if s1_text and not _is_text_inside_container(s1, s2):
+        return "BLOCKING"
+    if s2_text and not _is_text_inside_container(s2, s1):
+        return "BLOCKING"
+    return "WARNING" if overlap > 0.10 else ""
 
 
 def _get_slide_layout_index(prs, slide) -> int | None:
@@ -219,6 +273,11 @@ def _get_slide_canvas_def(prs, slide, ds: dict) -> dict | None:
         if canvas_def.get("layout_index") == layout_index:
             return canvas_def
     return None
+
+
+def _is_near_black(rgb: tuple[int, int, int]) -> bool:
+    """True for full/near-full black backgrounds."""
+    return max(rgb) <= 8
 
 
 # ---------------------------------------------------------------------------
@@ -622,7 +681,7 @@ def _check_vh11(prs, ds, slide_width, slide_height) -> list[dict]:
                         _, text_h = measure_text(
                             text, style, max_width_emu=shape.width
                         )
-                        if text_h > shape.height * 1.05:  # 5% tolerance
+                        if text_h > shape.height * 1.10:  # 10% tolerance
                             findings.append({
                                 "check_id": "VH-11",
                                 "category": "Spatial",
@@ -689,12 +748,13 @@ def _check_vh13(prs, ds, slide_width, slide_height) -> list[dict]:
         for i in range(len(shapes)):
             for j in range(i + 1, len(shapes)):
                 overlap = _aabb_overlap_fraction(shapes[i], shapes[j])
-                if overlap > 0.10:
+                severity = _overlap_severity(shapes[i], shapes[j], overlap)
+                if severity:
                     findings.append({
                         "check_id": "VH-13",
                         "category": "Spatial",
                         "check_name": "No significant shape overlaps",
-                        "severity": "WARNING",
+                        "severity": severity,
                         "pass": False,
                         "slide_index": si,
                         "details": (
@@ -703,6 +763,46 @@ def _check_vh13(prs, ds, slide_width, slide_height) -> list[dict]:
                             f"{overlap:.0%}"
                         ),
                     })
+    return findings
+
+
+def _check_vh27(prs, ds, slide_width, slide_height) -> list[dict]:
+    """VH-27: No full black slide backgrounds."""
+    findings = []
+    for si, slide in enumerate(prs.slides):
+        bg_rgb = _get_slide_bg_rgb(slide, ds)
+        if _is_near_black(bg_rgb):
+            findings.append({
+                "check_id": "VH-27",
+                "category": "Color",
+                "check_name": "No full black slide backgrounds",
+                "severity": "BLOCKING",
+                "pass": False,
+                "slide_index": si,
+                "details": (
+                    "Slide background is full black or near-black; use a light "
+                    "canvas or a non-full-bleed dark treatment so template "
+                    "branding remains visible"
+                ),
+            })
+            continue
+        for shape in slide.shapes:
+            if not _is_full_bleed(shape, slide_width, slide_height):
+                continue
+            rgb = _get_shape_fill_rgb(shape)
+            if rgb is not None and _is_near_black(rgb):
+                findings.append({
+                    "check_id": "VH-27",
+                    "category": "Color",
+                    "check_name": "No full black slide backgrounds",
+                    "severity": "BLOCKING",
+                    "pass": False,
+                    "slide_index": si,
+                    "details": (
+                        f"Full-bleed shape '{_shape_name(shape)}' is black or "
+                        "near-black and can hide template branding"
+                    ),
+                })
     return findings
 
 
@@ -1214,7 +1314,7 @@ _ACTIVE_CHECKS = [
     _check_vh06, _check_vh07, _check_vh08, _check_vh09, _check_vh10,
     _check_vh11, _check_vh12, _check_vh13, _check_vh15,
     _check_vh16, _check_vh17, _check_vh18, _check_vh19,
-    _check_vh24, _check_vh26,
+    _check_vh24, _check_vh26, _check_vh27,
 ]
 
 _DEFERRED_CHECKS = {

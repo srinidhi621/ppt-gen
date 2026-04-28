@@ -58,7 +58,7 @@ def stage_card(slide, rect, num, when, name, what, funnel_label, funnel_val):
     add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("sm"),
                          rect.width - 2 * pad, tokens.spacing("xl")),
              num, type_style=tokens.type("title"), color=TXT_W, fill=C1)
-    add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("xl"),
+    add_text(slide, Rect(rect.left + pad, rect.top + tokens.spacing("sm") + tokens.spacing("xl"),
                          rect.width - 2 * pad, tokens.spacing("md")),
              when, type_style=tokens.type("kicker"), color=TXT_W, fill=C1)
 

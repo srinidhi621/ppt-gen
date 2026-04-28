@@ -7,7 +7,7 @@ import os
 import pytest
 from pathlib import Path
 
-from src.v3.cost_logger import CostLogger, _get_pricing, cost_logging_enabled
+from src.v3.cost_logger import CostLogger, _get_pricing, _get_pricing_inr, cost_logging_enabled
 
 
 # ---------------------------------------------------------------------------
@@ -46,6 +46,18 @@ class TestGetPricing:
         monkeypatch.setenv("V3_COST_GPT_5_3_CODEX_INPUT", "1.00")
         monkeypatch.setenv("V3_COST_GPT_5_3_CODEX_OUTPUT", "3.00")
         assert _get_pricing("gpt-5.3-codex") == (1.00, 3.00)
+
+    def test_reads_global_inr_env(self, monkeypatch):
+        monkeypatch.setenv("AZURE_OPENAI_INPUT_INR_PER_MILLION", "237.0031")
+        monkeypatch.setenv("AZURE_OPENAI_OUTPUT_INR_PER_MILLION", "1422.0188")
+        assert _get_pricing_inr("gpt-5.4") == (237.0031, 1422.0188)
+
+    def test_per_model_inr_overrides_global(self, monkeypatch):
+        monkeypatch.setenv("AZURE_OPENAI_INPUT_INR_PER_MILLION", "237.0031")
+        monkeypatch.setenv("AZURE_OPENAI_OUTPUT_INR_PER_MILLION", "1422.0188")
+        monkeypatch.setenv("V3_COST_GPT_5_4_INPUT_INR", "260.7034")
+        monkeypatch.setenv("V3_COST_GPT_5_4_OUTPUT_INR", "1564.2206")
+        assert _get_pricing_inr("gpt-5.4") == (260.7034, 1564.2206)
 
 
 class TestCostLoggingEnabled:
@@ -100,6 +112,8 @@ class TestLogCall:
     def test_cost_computed_from_env(self, tmp_log, monkeypatch):
         monkeypatch.setenv("AZURE_OPENAI_INPUT_USD_PER_MILLION", "2.00")
         monkeypatch.setenv("AZURE_OPENAI_OUTPUT_USD_PER_MILLION", "8.00")
+        monkeypatch.setenv("AZURE_OPENAI_INPUT_INR_PER_MILLION", "200.00")
+        monkeypatch.setenv("AZURE_OPENAI_OUTPUT_INR_PER_MILLION", "800.00")
 
         row = tmp_log.log_call("gpt-5.4", "generate_json", "planner",
                                input_tokens=1_000_000, output_tokens=500_000)
@@ -107,15 +121,21 @@ class TestLogCall:
         assert float(row["input_cost_usd"]) == pytest.approx(2.00)
         assert float(row["output_cost_usd"]) == pytest.approx(4.00)
         assert float(row["total_cost_usd"]) == pytest.approx(6.00)
+        assert float(row["input_cost_inr"]) == pytest.approx(200.00)
+        assert float(row["output_cost_inr"]) == pytest.approx(400.00)
+        assert float(row["total_cost_inr"]) == pytest.approx(600.00)
 
     def test_cost_zero_without_env(self, tmp_log, monkeypatch):
         monkeypatch.delenv("AZURE_OPENAI_INPUT_USD_PER_MILLION", raising=False)
         monkeypatch.delenv("AZURE_OPENAI_OUTPUT_USD_PER_MILLION", raising=False)
+        monkeypatch.delenv("AZURE_OPENAI_INPUT_INR_PER_MILLION", raising=False)
+        monkeypatch.delenv("AZURE_OPENAI_OUTPUT_INR_PER_MILLION", raising=False)
 
         row = tmp_log.log_call("gpt-5.4", "generate_json", "planner",
                                input_tokens=500, output_tokens=200)
 
         assert float(row["total_cost_usd"]) == 0.0
+        assert float(row["total_cost_inr"]) == 0.0
 
     def test_prompt_preview_truncated(self, tmp_log):
         long_prompt = "word " * 100  # 500 chars
@@ -219,19 +239,24 @@ class TestSummarize:
     def test_summary_cost_note_zero(self, tmp_log, monkeypatch):
         monkeypatch.delenv("AZURE_OPENAI_INPUT_USD_PER_MILLION", raising=False)
         monkeypatch.delenv("AZURE_OPENAI_OUTPUT_USD_PER_MILLION", raising=False)
+        monkeypatch.delenv("AZURE_OPENAI_INPUT_INR_PER_MILLION", raising=False)
+        monkeypatch.delenv("AZURE_OPENAI_OUTPUT_INR_PER_MILLION", raising=False)
         tmp_log.log_call("gpt-5.4", "generate_json", "planner",
                          input_tokens=500, output_tokens=200)
 
         summary = tmp_log.summarize()
-        assert "Costs are $0" in summary
+        assert "Costs are 0" in summary
 
     def test_summary_cost_note_configured(self, tmp_log, monkeypatch):
         monkeypatch.setenv("AZURE_OPENAI_INPUT_USD_PER_MILLION", "2.00")
         monkeypatch.setenv("AZURE_OPENAI_OUTPUT_USD_PER_MILLION", "8.00")
+        monkeypatch.setenv("AZURE_OPENAI_INPUT_INR_PER_MILLION", "200.00")
+        monkeypatch.setenv("AZURE_OPENAI_OUTPUT_INR_PER_MILLION", "800.00")
         tmp_log.log_call("gpt-5.4", "generate_json", "planner",
                          input_tokens=1_000_000, output_tokens=500_000)
 
         summary = tmp_log.summarize()
+        assert "Cost INR" in summary
         assert "Costs computed from env-configured rates" in summary
 
 

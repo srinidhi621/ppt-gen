@@ -9,6 +9,7 @@ from __future__ import annotations
 from pptx.dml.color import RGBColor
 
 from .grid import Rect
+from .measure import measure_text
 from .shapes import add_rect, add_text
 
 
@@ -121,13 +122,15 @@ def draw_header_bar(
         type_style=k_style, color=tokens.color("accent_2"),
     )
 
-    # Title
+    # Title — measure actual text height to handle wrapping
     t_style = tokens.type("title")
     title_top = dot_top + dot_size + pad
-    title_rect = Rect(
-        left, title_top,
-        sw - left * 2, int(t_style["size_pt"] * t_style.get("line", 1.08) * 12700),
-    )
+    title_width = sw - left * 2
+    _, measured_h = measure_text(title, t_style, max_width_emu=title_width)
+    # Add small padding and enforce a minimum of one line
+    one_line = int(t_style["size_pt"] * t_style.get("line", 1.08) * 12700)
+    title_h = max(measured_h + pad // 2, one_line)
+    title_rect = Rect(left, title_top, title_width, title_h)
     add_text(
         slide, title_rect, title,
         type_style=t_style, color=title_color,

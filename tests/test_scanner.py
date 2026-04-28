@@ -317,6 +317,62 @@ class TestSpatialChecks:
         assert len(vh12) >= 1
         assert vh12[0]["severity"] == "WARNING"
 
+    def test_vh13_text_text_overlap_is_blocking(self):
+        """VH-13: Overlapping text boxes are blocking, not warnings."""
+        def build(prs, slide, ds):
+            _add_textbox(slide, 600000, 600000, 3000000, 500000,
+                         "Slide title", font_name="Inter", font_size_pt=28)
+            _add_textbox(slide, 650000, 700000, 3000000, 500000,
+                         "Body content", font_name="Inter", font_size_pt=12)
+
+        path = _make_pptx(build)
+        report = scan_pptx(path, _DESIGN_SYSTEM)
+        vh13 = [f for f in report["findings"] if f["check_id"] == "VH-13"]
+        assert any(f["severity"] == "BLOCKING" for f in vh13)
+        assert report["pass"] is False
+
+    def test_vh13_text_inside_filled_card_is_allowed(self):
+        """VH-13: Text intentionally layered inside a filled card is not blocking."""
+        def build(prs, slide, ds):
+            _add_filled_rect(slide, 600000, 600000, 3000000, 1200000,
+                             RGBColor(0x00, 0x85, 0x67))
+            _add_textbox(slide, 750000, 750000, 2700000, 300000,
+                         "Card heading", font_name="Inter", font_size_pt=16)
+
+        path = _make_pptx(build)
+        report = scan_pptx(path, _DESIGN_SYSTEM)
+        vh13 = [f for f in report["findings"] if f["check_id"] == "VH-13"]
+        assert not any(f["severity"] == "BLOCKING" for f in vh13)
+
+    def test_vh13_text_overlapping_non_container_shape_is_blocking(self):
+        """VH-13: Text colliding with a nearby non-container shape is blocking."""
+        def build(prs, slide, ds):
+            _add_textbox(slide, 600000, 600000, 3000000, 500000,
+                         "Slide title", font_name="Inter", font_size_pt=28)
+            _add_filled_rect(slide, 800000, 700000, 3500000, 1200000,
+                             RGBColor(0x00, 0x85, 0x67))
+
+        path = _make_pptx(build)
+        report = scan_pptx(path, _DESIGN_SYSTEM)
+        vh13 = [f for f in report["findings"] if f["check_id"] == "VH-13"]
+        assert any(f["severity"] == "BLOCKING" for f in vh13)
+
+    def test_vh27_black_slide_background_is_blocking(self):
+        """VH-27: Full black slide backgrounds are blocking."""
+        def build(prs, slide, ds):
+            slide.background.fill.solid()
+            slide.background.fill.fore_color.rgb = RGBColor(0x00, 0x00, 0x00)
+            _add_textbox(slide, 600000, 600000, 3000000, 500000,
+                         "Visible text", font_name="Inter", font_size_pt=20,
+                         color=RGBColor(0xFF, 0xFF, 0xFF))
+
+        path = _make_pptx(build)
+        report = scan_pptx(path, _DESIGN_SYSTEM)
+        vh27 = [f for f in report["findings"] if f["check_id"] == "VH-27"]
+        assert len(vh27) == 1
+        assert vh27[0]["severity"] == "BLOCKING"
+        assert report["pass"] is False
+
     def test_vh15_grid_alignment_uses_template_canvas_region(self):
         """VH-15: Grid alignment uses the matched template canvas body region."""
         ds = _load_ds()

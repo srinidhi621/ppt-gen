@@ -32,15 +32,20 @@ _FALSEY_ENV_VALUES = {"0", "false", "no", "off", "disabled"}
 
 
 # ---------------------------------------------------------------------------
-# Default pricing (USD per million tokens)
+# Default pricing (per million tokens)
 # ---------------------------------------------------------------------------
 
-# These are configurable via .env.  When not set, we use zeros so rows
-# still record tokens even without cost data.
+# These are configurable via .env.  When not set, we use zeros so rows still
+# record tokens even without cost data.
 _DEFAULT_PRICING: dict[str, tuple[float, float]] = {
     # model_prefix: (input_usd_per_M, output_usd_per_M)
     # Users fill AZURE_OPENAI_INPUT_USD_PER_MILLION / OUTPUT in .env
     # or per-model overrides via V3_COST_<MODEL_SLUG>_INPUT / OUTPUT
+}
+_DEFAULT_INR_PRICING: dict[str, tuple[float, float]] = {
+    # model_prefix: (input_inr_per_M, output_inr_per_M)
+    # Users fill AZURE_OPENAI_INPUT_INR_PER_MILLION / OUTPUT in .env
+    # or per-model overrides via V3_COST_<MODEL_SLUG>_INPUT_INR / OUTPUT_INR
 }
 
 
@@ -79,7 +84,7 @@ def cost_logging_enabled(default: bool = True) -> bool:
 
 
 def _get_pricing(model: str) -> tuple[float, float]:
-    """Return (input_cost_per_M_tokens, output_cost_per_M_tokens) for a model."""
+    """Return USD (input_cost_per_M_tokens, output_cost_per_M_tokens)."""
     # Try per-model env var first: V3_COST_GPT_5_4_INPUT, V3_COST_GPT_5_4_OUTPUT
     slug = model.replace("-", "_").replace(".", "_").upper()
     input_rate = os.environ.get(f"V3_COST_{slug}_INPUT")
@@ -94,6 +99,28 @@ def _get_pricing(model: str) -> tuple[float, float]:
 
     if input_rate and output_rate:
         return float(input_rate), float(output_rate)
+
+    return 0.0, 0.0
+
+
+def _get_pricing_inr(model: str) -> tuple[float, float]:
+    """Return INR (input_cost_per_M_tokens, output_cost_per_M_tokens)."""
+    slug = model.replace("-", "_").replace(".", "_").upper()
+    input_rate = os.environ.get(f"V3_COST_{slug}_INPUT_INR")
+    output_rate = os.environ.get(f"V3_COST_{slug}_OUTPUT_INR")
+
+    if input_rate and output_rate:
+        return float(input_rate), float(output_rate)
+
+    input_rate = os.environ.get("AZURE_OPENAI_INPUT_INR_PER_MILLION", "")
+    output_rate = os.environ.get("AZURE_OPENAI_OUTPUT_INR_PER_MILLION", "")
+
+    if input_rate and output_rate:
+        return float(input_rate), float(output_rate)
+
+    for prefix, rates in _DEFAULT_INR_PRICING.items():
+        if model.startswith(prefix):
+            return rates
 
     return 0.0, 0.0
 
@@ -114,6 +141,9 @@ _CSV_COLUMNS = [
     "input_cost_usd",     # computed from tokens * rate
     "output_cost_usd",
     "total_cost_usd",
+    "input_cost_inr",
+    "output_cost_inr",
+    "total_cost_inr",
     "response_id",        # Responses API id
     "prompt_preview",     # first 200 chars of the input, for debugging
 ]
@@ -147,10 +177,14 @@ class CostLogger:
         """
         now = datetime.now(timezone.utc)
         input_rate, output_rate = _get_pricing(model)
+        input_rate_inr, output_rate_inr = _get_pricing_inr(model)
 
         input_cost = (input_tokens / 1_000_000) * input_rate
         output_cost = (output_tokens / 1_000_000) * output_rate
         total_cost = input_cost + output_cost
+        input_cost_inr = (input_tokens / 1_000_000) * input_rate_inr
+        output_cost_inr = (output_tokens / 1_000_000) * output_rate_inr
+        total_cost_inr = input_cost_inr + output_cost_inr
 
         if not total_tokens:
             total_tokens = input_tokens + output_tokens
@@ -170,6 +204,9 @@ class CostLogger:
             "input_cost_usd": f"{input_cost:.6f}",
             "output_cost_usd": f"{output_cost:.6f}",
             "total_cost_usd": f"{total_cost:.6f}",
+            "input_cost_inr": f"{input_cost_inr:.6f}",
+            "output_cost_inr": f"{output_cost_inr:.6f}",
+            "total_cost_inr": f"{total_cost_inr:.6f}",
             "response_id": response_id,
             "prompt_preview": preview,
         }
@@ -230,6 +267,11 @@ class CostLogger:
         if not rows:
             return "No LLM calls logged yet."
 
+        has_inr = any(float(r.get("total_cost_inr") or 0) > 0 for r in rows)
+        cost_key = "total_cost_inr" if has_inr else "total_cost_usd"
+        currency_label = "INR" if has_inr else "USD"
+        currency_symbol = "₹" if has_inr else "$"
+
         # Parse into structured data, tolerating bad values
         calls = []
         for r in rows:
@@ -243,7 +285,7 @@ class CostLogger:
                     "caller": r.get("caller", "?"),
                     "input_tokens": int(r.get("input_tokens") or 0),
                     "output_tokens": int(r.get("output_tokens") or 0),
-                    "total_cost": float(r.get("total_cost_usd") or 0),
+                    "total_cost": float(r.get(cost_key) or 0),
                 })
             except (ValueError, KeyError, TypeError):
                 continue
@@ -262,7 +304,7 @@ class CostLogger:
         lines.append("")
         lines.append(f"  Total input tokens:  {total_in:>12,}")
         lines.append(f"  Total output tokens: {total_out:>12,}")
-        lines.append(f"  Total cost:          ${total_cost:>11,.4f}")
+        lines.append(f"  Total cost:          {currency_symbol}{total_cost:>11,.4f}")
 
         # By model
         lines.append("")
@@ -274,11 +316,11 @@ class CostLogger:
             m["in"] += c["input_tokens"]
             m["out"] += c["output_tokens"]
             m["cost"] += c["total_cost"]
-        lines.append(f"  {'Model':<20} {'Calls':>6} {'Input Tok':>12} {'Output Tok':>12} {'Cost USD':>12}")
+        lines.append(f"  {'Model':<20} {'Calls':>6} {'Input Tok':>12} {'Output Tok':>12} {('Cost ' + currency_label):>12}")
         lines.append(f"  {'-'*20} {'-'*6} {'-'*12} {'-'*12} {'-'*12}")
         for model in sorted(by_model):
             m = by_model[model]
-            lines.append(f"  {model:<20} {m['calls']:>6} {m['in']:>12,} {m['out']:>12,} ${m['cost']:>11,.4f}")
+            lines.append(f"  {model:<20} {m['calls']:>6} {m['in']:>12,} {m['out']:>12,} {currency_symbol}{m['cost']:>11,.4f}")
 
         # By caller
         lines.append("")
@@ -290,11 +332,11 @@ class CostLogger:
             m["in"] += c["input_tokens"]
             m["out"] += c["output_tokens"]
             m["cost"] += c["total_cost"]
-        lines.append(f"  {'Caller':<20} {'Calls':>6} {'Input Tok':>12} {'Output Tok':>12} {'Cost USD':>12}")
+        lines.append(f"  {'Caller':<20} {'Calls':>6} {'Input Tok':>12} {'Output Tok':>12} {('Cost ' + currency_label):>12}")
         lines.append(f"  {'-'*20} {'-'*6} {'-'*12} {'-'*12} {'-'*12}")
         for caller in sorted(by_caller):
             m = by_caller[caller]
-            lines.append(f"  {caller:<20} {m['calls']:>6} {m['in']:>12,} {m['out']:>12,} ${m['cost']:>11,.4f}")
+            lines.append(f"  {caller:<20} {m['calls']:>6} {m['in']:>12,} {m['out']:>12,} {currency_symbol}{m['cost']:>11,.4f}")
 
         # Daily
         lines.append("")
@@ -306,11 +348,11 @@ class CostLogger:
             m["in"] += c["input_tokens"]
             m["out"] += c["output_tokens"]
             m["cost"] += c["total_cost"]
-        lines.append(f"  {'Date':<12} {'Calls':>6} {'Input Tok':>12} {'Output Tok':>12} {'Cost USD':>12}")
+        lines.append(f"  {'Date':<12} {'Calls':>6} {'Input Tok':>12} {'Output Tok':>12} {('Cost ' + currency_label):>12}")
         lines.append(f"  {'-'*12} {'-'*6} {'-'*12} {'-'*12} {'-'*12}")
         for date in sorted(by_day):
             m = by_day[date]
-            lines.append(f"  {date:<12} {m['calls']:>6} {m['in']:>12,} {m['out']:>12,} ${m['cost']:>11,.4f}")
+            lines.append(f"  {date:<12} {m['calls']:>6} {m['in']:>12,} {m['out']:>12,} {currency_symbol}{m['cost']:>11,.4f}")
 
         # Weekly
         lines.append("")
@@ -322,11 +364,11 @@ class CostLogger:
             m["in"] += c["input_tokens"]
             m["out"] += c["output_tokens"]
             m["cost"] += c["total_cost"]
-        lines.append(f"  {'Week':<12} {'Calls':>6} {'Input Tok':>12} {'Output Tok':>12} {'Cost USD':>12}")
+        lines.append(f"  {'Week':<12} {'Calls':>6} {'Input Tok':>12} {'Output Tok':>12} {('Cost ' + currency_label):>12}")
         lines.append(f"  {'-'*12} {'-'*6} {'-'*12} {'-'*12} {'-'*12}")
         for week in sorted(by_week):
             m = by_week[week]
-            lines.append(f"  {week:<12} {m['calls']:>6} {m['in']:>12,} {m['out']:>12,} ${m['cost']:>11,.4f}")
+            lines.append(f"  {week:<12} {m['calls']:>6} {m['in']:>12,} {m['out']:>12,} {currency_symbol}{m['cost']:>11,.4f}")
 
         # Monthly
         lines.append("")
@@ -338,15 +380,18 @@ class CostLogger:
             m["in"] += c["input_tokens"]
             m["out"] += c["output_tokens"]
             m["cost"] += c["total_cost"]
-        lines.append(f"  {'Month':<12} {'Calls':>6} {'Input Tok':>12} {'Output Tok':>12} {'Cost USD':>12}")
+        lines.append(f"  {'Month':<12} {'Calls':>6} {'Input Tok':>12} {'Output Tok':>12} {('Cost ' + currency_label):>12}")
         lines.append(f"  {'-'*12} {'-'*6} {'-'*12} {'-'*12} {'-'*12}")
         for month in sorted(by_month):
             m = by_month[month]
-            lines.append(f"  {month:<12} {m['calls']:>6} {m['in']:>12,} {m['out']:>12,} ${m['cost']:>11,.4f}")
+            lines.append(f"  {month:<12} {m['calls']:>6} {m['in']:>12,} {m['out']:>12,} {currency_symbol}{m['cost']:>11,.4f}")
 
         lines.append("")
         lines.append("=" * 72)
-        pricing_note = "Costs are $0 — set AZURE_OPENAI_INPUT/OUTPUT_USD_PER_MILLION in .env"
+        pricing_note = (
+            "Costs are 0 — set AZURE_OPENAI_INPUT/OUTPUT_INR_PER_MILLION "
+            "or AZURE_OPENAI_INPUT/OUTPUT_USD_PER_MILLION in .env"
+        )
         if total_cost > 0:
             pricing_note = "Costs computed from env-configured rates"
         lines.append(f"  Note: {pricing_note}")

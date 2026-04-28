@@ -472,6 +472,54 @@ TEST_PROMPTS = [
         "can impose narrative structure on a flat content dump. "
         "The content is real but the organization is absent.",
     ),
+    (
+        "TP-27", "Detailed Operating Model / Assessment Funnel",
+        "hero_title, hero_statement_with_support_columns, process_flow, "
+        "content_with_visual, comparison_split, timeline_roadmap",
+        "Create a detailed deck for a 10x AI engineering approach. "
+        "The audience is senior delivery, talent, and engineering leaders. "
+        "The deck should explain what a 10x AI professional is, how AI delivery "
+        "moves from architecture intent to code generation to safe production, "
+        "how to select the right candidates, how premium AI pods are packaged, "
+        "what outcomes clients should expect, and how a campus rollout assessment "
+        "funnel works. Build it as a serious operating-model deck, not a marketing "
+        "overview. Aim for 12-15 slides.\n\n"
+        "Slide content guidance: open with the 10x AI Engineering Approach; "
+        "define the 10x AI professional through architecture-first mindset, "
+        "AI-driven problem solving, zoom-in/zoom-out judgment, systems thinking, "
+        "fast learning/teaching, and security-first behavior; show the delivery "
+        "framework as three connected stages: Architecture to Code, Code Generation, "
+        "and Code to Production; explain candidate selection through target profiles, "
+        "evaluation criteria, and talent sourcing; package 10x AI Pods with "
+        "composition, premium offshore pricing of 10-15K per resource per month, "
+        "engagement model, and scope; show outcomes around faster time-to-value, "
+        "quality/reliability, AI maturity uplift, ROI, and economic advantage; "
+        "then detail a campus rollout assessment funnel with HackerRank test, "
+        "business problem/system design, solution presentation or technical panel, "
+        "HR/org fit, psychometric test, and offer rollout. Include level-detail "
+        "slides for Level 1 HackerRank, Level 2 business problem/system design, "
+        "Level 3 solution presentation/technical panel, final HR assessment and "
+        "offer rollout, and operational mechanics showing Talent Acquisition, "
+        "business leaders, technical panel, HR, Eightfold, and HackerRank.\n\n"
+        "Visual cues: use a premium but readable Ascendion-style layout with a "
+        "clean working canvas, strong header discipline, color-coded stages, "
+        "compact cards, step connectors, role/platform lanes, one screenshot-style "
+        "placeholder for the HackerRank snapshot, and bottom summary bands such as "
+        "'Signal we're looking for' or 'Operating principle'. Do not use full black "
+        "backgrounds. If content is too dense, split it across slides rather than "
+        "shrinking or overlapping text.",
+        "That this is a detailed operating-model benchmark, not a short pitch; "
+        "the planner must spread dense content across many slides, choose supported "
+        "archetypes that approximate assessment matrices and swimlanes, keep the "
+        "assessment funnel coherent, preserve the 10x role/talent/service packaging "
+        "story, and avoid layout collisions in header-heavy dense slides.",
+        "12-15",
+        "Reference-inspired multi-slide stress test based on "
+        "`assets/ground_truth/internal_inbox/10x Approach-v1.pptx` and documented "
+        "in `assets/ground_truth/annotations/10x_approach_v1_breakdown.md`. "
+        "Tests whether supported archetypes can express a detailed operating model "
+        "and staged assessment funnel without introducing a new archetype.",
+    ),
 ]
 
 
@@ -542,7 +590,7 @@ def build_prompts_sheet(wb):
         ("Single-slide: audience variations", "TP-17", "TP-18"),
         ("Single-slide: content type variations", "TP-19", "TP-20"),
         ("Multi-slide: deck-level tests", "TP-21", "TP-24"),
-        ("Multi-slide: stress tests", "TP-25", "TP-26"),
+        ("Multi-slide: stress tests", "TP-25", "TP-27"),
     ]
 
     row = 2
@@ -593,7 +641,7 @@ def build_rubric_sheet(wb):
         ("Single-slide: audience variations", "TP-17", "TP-18"),
         ("Single-slide: content type variations", "TP-19", "TP-20"),
         ("Multi-slide: deck-level tests", "TP-21", "TP-24"),
-        ("Multi-slide: stress tests", "TP-25", "TP-26"),
+        ("Multi-slide: stress tests", "TP-25", "TP-27"),
     ]
 
     row = 2
@@ -689,7 +737,7 @@ def build_rubric_sheet(wb):
     ws.cell(row=row, column=1, value="Multi-slide axes:").font = BOLD_FONT
     ws.cell(row=row, column=2, value=(
         "Cross-Slide Consistency and Narrative Flow are scored only for multi-slide "
-        "tests (TP-21 through TP-26). Single-slide tests show 'n/a' for those columns."
+        "tests (TP-21 through TP-27). Single-slide tests show 'n/a' for those columns."
     )).font = BODY_FONT
     ws.merge_cells(start_row=row, start_column=2, end_row=row, end_column=notes_col)
 

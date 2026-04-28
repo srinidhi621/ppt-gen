@@ -11,8 +11,15 @@ import json
 from pathlib import Path
 
 from pptx import Presentation
+from pptx.dml.color import RGBColor
 
 from .errors import CanvasNotFoundError
+
+# Theme → background color mapping
+_THEME_BG: dict[str, str] = {
+    "dark": "bg_dark",
+    "light": "bg_primary",
+}
 
 
 class Canvas:
@@ -89,6 +96,7 @@ class Canvas:
         layout = self._prs.slide_layouts[layout_index]
         slide = self._prs.slides.add_slide(layout)
         _remove_placeholders(slide)
+        _apply_theme_background(slide, canvas_def, self._ds)
         return slide
 
     def save(self, output_path: str | Path) -> None:
@@ -145,3 +153,22 @@ def _remove_placeholders(slide) -> None:
             continue
         element = shape._element
         element.getparent().remove(element)
+
+
+def _apply_theme_background(slide, canvas_def: dict, ds: dict) -> None:
+    """Set the slide background fill based on the canvas theme.
+
+    This uses the slide-level background (rendered behind master/layout
+    shapes) so that template branding elements remain visible.
+    """
+    theme = canvas_def.get("theme", "")
+    color_name = _THEME_BG.get(theme)
+    if not color_name:
+        return
+    hex_val = ds.get("colors", {}).get(color_name)
+    if not hex_val:
+        return
+    hex_val = hex_val.lstrip("#")
+    fill = slide.background.fill
+    fill.solid()
+    fill.fore_color.rgb = RGBColor.from_string(hex_val)
