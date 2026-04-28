@@ -514,11 +514,9 @@ TEST_PROMPTS = [
         "assessment funnel coherent, preserve the 10x role/talent/service packaging "
         "story, and avoid layout collisions in header-heavy dense slides.",
         "12-15",
-        "Reference-inspired multi-slide stress test based on "
-        "`assets/ground_truth/internal_inbox/10x Approach-v1.pptx` and documented "
-        "in `assets/ground_truth/annotations/10x_approach_v1_breakdown.md`. "
-        "Tests whether supported archetypes can express a detailed operating model "
-        "and staged assessment funnel without introducing a new archetype.",
+        "Reference-inspired multi-slide stress test. Tests whether supported "
+        "archetypes can express a detailed operating model and staged assessment "
+        "funnel without introducing a new archetype.",
     ),
 ]
 
@@ -804,6 +802,8 @@ def main():
     build_axis_definitions_sheet(wb)
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    if OUTPUT_PATH.exists():
+        OUTPUT_PATH.unlink()
     wb.save(str(OUTPUT_PATH))
     print(f"Generated {OUTPUT_PATH} with {len(TEST_PROMPTS)} test prompts")
     print(f"  - Single-slide: {sum(1 for p in TEST_PROMPTS if p[5] == '1')}")
