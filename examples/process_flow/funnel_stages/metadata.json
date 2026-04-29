@@ -22,10 +22,19 @@
     "header bar kicker and title text"
   ],
   "canvas": "header_light",
-  "grid": {"cols": 12, "gutter": "sm"},
+  "grid": {
+    "cols": 12,
+    "gutter": "sm"
+  },
   "density": {
     "min_shapes": 28,
     "max_shapes": 45,
     "text_density": "high"
+  },
+  "style": {
+    "tone": "executive_formal",
+    "density": "high",
+    "illustrative_richness": "minimal",
+    "accent_strategy": "full_palette"
   }
 }

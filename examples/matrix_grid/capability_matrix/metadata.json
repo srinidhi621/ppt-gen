@@ -1,0 +1,35 @@
+{
+  "archetype": "matrix_grid",
+  "source": "Inspired by assets/ground_truth/internal_inbox/designer_reference_slides.pptx slide 14 (S14 — 'Our proposition for Globe Telecom'). The original is a denser 4-row × 3-column matrix with row labels and column headers; our flat cards schema cannot express the 2D structure directly, so this example flattens to 6 representative capability cells. A 2D variant would require schema extension (row_labels, column_labels).",
+  "designer": "internal (Ascendion Globe Telecom proposition deck)",
+  "intent": "Show six (or fewer fillable) parallel capabilities, components, or scope areas as a structured matrix when ordering does not imply sequence. Use for capability matrices, component overviews, scope grids — not for processes or comparisons.",
+  "invariants": [
+    "exactly 6 cells laid out as a 2-row × 3-column grid",
+    "each cell has a top accent bar (xs height) in a distinct theme color",
+    "cell title uses subtitle type style, bold, text_primary",
+    "cell body uses body type style, text_secondary",
+    "card has bg_primary fill with subtle accent_6 border",
+    "header bar with kicker + claim-headline sits above the matrix",
+    "no metrics, no images, no bullets — pure title+body cells"
+  ],
+  "variables": [
+    "number of cells (4-6, padded to fill 2x2, 2x3 or 3x2 grids evenly)",
+    "cell title (1-3 word noun phrase)",
+    "cell body length (12-25 words, single-sentence prose)",
+    "accent rotation order across cells",
+    "header kicker label and headline phrasing"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 22,
+    "max_shapes": 32,
+    "text_density": "medium"
+  },
+  "style": {
+    "tone": "executive_formal",
+    "density": "medium",
+    "illustrative_richness": "moderate",
+    "accent_strategy": "full_palette"
+  }
+}

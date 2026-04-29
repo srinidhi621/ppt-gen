@@ -61,6 +61,12 @@ SUPPORTED_ARCHETYPES: frozenset[str] = frozenset({
     "content_with_visual",
     "process_flow",
     "timeline_roadmap",
+    "kpi_grid",
+    "section_break",
+    "three_cards",
+    "matrix_grid",
+    "quote_callout",
+    "closing_cta",
 })
 
 # Fields that are forbidden in deck plans (geometry/styling)
@@ -106,6 +112,23 @@ _ARCHETYPE_REQUIRED_FIELDS: dict[str, list[tuple[str, str]]] = {
 _ARCHETYPE_EXACT_COUNTS: dict[str, list[tuple[str, int, str]]] = {
     "comparison_split": [("cards", 2, "exactly 2 sides (left/right)")],
 }
+
+# Strings that, if they appear inside a kpi_grid metric value, indicate the
+# planner invented a stand-in instead of using a real number from the source.
+# Match is case-insensitive substring on the value field.
+_KPI_PLACEHOLDER_TOKENS: tuple[str, ...] = (
+    "placeholder",
+    "tbd",
+    "tktk",
+    "n/a",
+    "todo",
+    "xxx",
+    "[",  # any bracketed annotation like "[insert metric]"
+)
+
+# Pattern that a *real* kpi_grid value must match: contains at least one
+# digit OR a currency symbol. Length cap of 8 chars matches the prompt.
+_KPI_VALUE_REAL_PATTERN = re.compile(r"[\d$£€¥₹]")
 
 
 # ---------------------------------------------------------------------------
@@ -179,6 +202,43 @@ def validate_deck_plan(plan: dict) -> list[str]:
                     f"to have exactly {expected} items ({description}), "
                     f"got {len(value)}"
                 )
+
+        # kpi_grid: metric values must be real tokens (no placeholders).
+        # The planner must not pick kpi_grid when the source has no numbers;
+        # this check forces a retry with feedback if it does anyway.
+        if archetype == "kpi_grid":
+            metrics = slide.get("metrics") or []
+            for mi, metric in enumerate(metrics):
+                if not isinstance(metric, dict):
+                    continue
+                raw_value = metric.get("value")
+                if not isinstance(raw_value, str):
+                    continue
+                value_str = raw_value.strip()
+                value_lc = value_str.lower()
+                # Placeholder substring check
+                bad_token = next(
+                    (tok for tok in _KPI_PLACEHOLDER_TOKENS if tok in value_lc),
+                    None,
+                )
+                if bad_token:
+                    errors.append(
+                        f"{prefix}.metrics[{mi}]: kpi_grid value "
+                        f"{raw_value!r} contains placeholder token {bad_token!r}. "
+                        f"Use a real number from the source, or pick a different "
+                        f"archetype (three_cards / hero_statement_with_support_columns / "
+                        f"content_with_visual) when source content has no quantified outcomes."
+                    )
+                    continue
+                # Reality check: must contain at least one digit or currency symbol
+                if value_str and not _KPI_VALUE_REAL_PATTERN.search(value_str):
+                    errors.append(
+                        f"{prefix}.metrics[{mi}]: kpi_grid value {raw_value!r} "
+                        f"contains no digit or currency symbol. kpi_grid values must "
+                        f"be real numeric tokens (e.g. '40%', '$2.3M', '3 weeks'). "
+                        f"If the source has no numbers, switch to three_cards or "
+                        f"hero_statement_with_support_columns."
+                    )
 
     return errors
 

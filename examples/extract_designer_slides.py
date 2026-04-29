@@ -1,8 +1,7 @@
 """Extract shape data from designer reference slides.
 
 Reads assets/ground_truth/internal_inbox/designer_reference_slides.pptx
-and produces JSON files in examples/source/ for slides S01, S02, S06
-(indices 0, 1, 5).
+and produces JSON files in examples/source/ for the targeted slides.
 
 Run:
     PYTHONPATH=. .venv/bin/python examples/extract_designer_slides.py
@@ -20,10 +19,17 @@ OUTPUT_DIR = PROJECT_ROOT / "examples" / "source"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Slide definitions: (index, file_suffix, name, proposed_archetype)
+# Targets reflect the audit at assets/ground_truth/annotations/designer_reference_slides_audit.md.
 TARGETS = [
-    (0, "S01", "S01 - Hero title with background visual", "hero_title"),
-    (1, "S02", "S02 - Numbered infographic overlay", "process_flow"),
-    (5, "S06", "S06 - Solution flow with connectors", "content_with_visual"),
+    (0,  "S01", "S01 - Hero title with background visual", "hero_title"),
+    (1,  "S02", "S02 - Numbered infographic overlay",      "process_flow"),
+    (2,  "S03", "S03 - Image-only section divider",        "section_break"),
+    (3,  "S04", "S04 - Image-only section divider (alt)",  "section_break"),
+    (5,  "S06", "S06 - Solution flow with connectors",     "content_with_visual"),
+    (6,  "S07", "S07 - Five concept cards (prompt eng.)",  "three_cards"),
+    (13, "S14", "S14 - Four-quadrant proposition matrix",  "matrix_grid"),
+    (14, "S15", "S15 - KPI band + value-prop grid",        "kpi_grid"),
+    (17, "S18", "S18 - Priority-stratified scope cards",   "three_cards"),
 ]
 
 

@@ -1,0 +1,37 @@
+{
+  "archetype": "section_break",
+  "source": "assets/template/Business Process Agentification (Session 4).pptx (slides 3, 5, 13, 17, 24) \u2014 all 5 chapter dividers use the same 3-shape pattern",
+  "designer": "internal (Ascendion Business Process Agentification deck)",
+  "intent": "Reset deck rhythm at the start of a new chapter / section. Provides a visual breath between content-dense slides and signals a topic transition.",
+  "invariants": [
+    "right half of the slide is a full-bleed accent panel (no text on it)",
+    "left half has exactly two text blocks: section number and section title, stacked vertically",
+    "section number uses the display type style and the same accent color as the right panel",
+    "section title uses the title type style and text_primary color",
+    "no header bar, no body content, no bullets \u2014 the slide is itself the heading",
+    "an optional thin secondary accent strip runs along the bottom of the left half"
+  ],
+  "variables": [
+    "section number format ('01', '03', 'Part II', etc.)",
+    "section title text (3-7 words, claim-style or topic-style both acceptable)",
+    "right-panel accent color (any palette accent \u2014 choose to mark the section's color identity)",
+    "secondary accent strip color (typically a contrasting palette accent or omit entirely)",
+    "presence of editorial image on the right panel (in a hosted deck, the panel would carry an image; the example uses a flat fill as a stand-in)"
+  ],
+  "canvas": "blank",
+  "grid": {
+    "cols": 12,
+    "gutter": "md"
+  },
+  "density": {
+    "min_shapes": 3,
+    "max_shapes": 6,
+    "text_density": "low"
+  },
+  "style": {
+    "tone": "executive_formal",
+    "density": "low",
+    "illustrative_richness": "minimal",
+    "accent_strategy": "monochrome_plus_one"
+  }
+}

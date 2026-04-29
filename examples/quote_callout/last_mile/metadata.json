@@ -1,0 +1,33 @@
+{
+  "archetype": "quote_callout",
+  "source": "Inspired by assets/Corp Deck 2025 - Nov.pptx slide 17 ('… AI-powered solutions don't work \"out of the box\" / Nearly every company needs help to go the Last Mile for value / That's where we come in!'). The original stacks three statements; this example collapses to the single canonical quote_callout shape (one statement + attribution).",
+  "designer": "internal (Ascendion Corp Deck Nov 2025)",
+  "intent": "Slow the deck rhythm with a single oversized statement that the audience should remember verbatim. Use for principles, market observations, customer quotes, leadership claims — never for facts that need a metric or a list.",
+  "invariants": [
+    "exactly one quote statement, oversized (hero type style)",
+    "exactly one attribution line below the quote (kicker type style, accent_1 color)",
+    "thin vertical accent bar on the left edge of the body region",
+    "decorative oversized opening quotation glyph in accent_2",
+    "no header bar, no metrics, no cards, no bullets",
+    "quote text fits in 4 lines or fewer at hero size"
+  ],
+  "variables": [
+    "quote text length (15-40 words)",
+    "attribution source (deck name + date, speaker name + title, or document citation)",
+    "vertical bar accent color (any palette accent — typically accent_1)",
+    "glyph color (any palette accent that contrasts the bar — typically accent_2)"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 3,
+    "max_shapes": 6,
+    "text_density": "low"
+  },
+  "style": {
+    "tone": "executive_formal",
+    "density": "low",
+    "illustrative_richness": "minimal",
+    "accent_strategy": "monochrome_plus_one"
+  }
+}

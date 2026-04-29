@@ -19,7 +19,10 @@
     "accent bar placement and width"
   ],
   "canvas": "header_dark",
-  "grid": {"cols": 12, "gutter": "md"},
+  "grid": {
+    "cols": 12,
+    "gutter": "md"
+  },
   "density": {
     "min_shapes": 5,
     "max_shapes": 12,
@@ -28,5 +31,11 @@
   "limitations": [
     "Original slide may use a background image which ppt_runtime cannot reproduce",
     "Gradient fills are not supported by the current runtime shape API"
-  ]
+  ],
+  "style": {
+    "tone": "executive_formal",
+    "density": "low",
+    "illustrative_richness": "minimal",
+    "accent_strategy": "monochrome_plus_one"
+  }
 }

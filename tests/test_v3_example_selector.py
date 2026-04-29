@@ -10,6 +10,9 @@ from src.v3.example_selector import (
     ExampleSnippet,
     _discover_examples,
     _load_snippet,
+    _load_style,
+    _rank_candidates,
+    _score_style_match,
     format_examples_for_prompt,
     select_examples,
 )
@@ -178,3 +181,176 @@ class TestFormatExamples:
         text = format_examples_for_prompt(snippets)
         assert "Example 1" in text
         assert "Example 2" in text
+
+
+# ---------------------------------------------------------------------------
+# Style-aware selection (PR-B-b)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def styled_tree(tmp_path):
+    """Library where process_flow has two examples with different styles."""
+    fixtures = [
+        # archetype, name, style block
+        ("hero_title", "ex_a", {
+            "tone": "executive_formal", "density": "low",
+            "illustrative_richness": "minimal", "accent_strategy": "monochrome_plus_one",
+        }),
+        ("process_flow", "low_dense", {
+            "tone": "executive_formal", "density": "low",
+            "illustrative_richness": "minimal", "accent_strategy": "monochrome_plus_one",
+        }),
+        ("process_flow", "high_dense", {
+            "tone": "executive_formal", "density": "high",
+            "illustrative_richness": "minimal", "accent_strategy": "full_palette",
+        }),
+        # Third example with no style block, to test missing-style behavior.
+        ("comparison_split", "no_style", None),
+    ]
+    for arch, name, style in fixtures:
+        d = tmp_path / arch / name
+        d.mkdir(parents=True)
+        (d / "build.py").write_text(f"# {arch}/{name}\n")
+        meta = {"archetype": arch}
+        if style is not None:
+            meta["style"] = style
+        (d / "metadata.json").write_text(json.dumps(meta))
+    return tmp_path
+
+
+def _plan_with_style(archetypes, style_contract):
+    plan = _plan(archetypes)
+    plan["style_contract"] = style_contract
+    return plan
+
+
+class TestScoreStyleMatch:
+    def test_full_match_scores_4(self):
+        s = {"tone": "executive_formal", "density": "medium",
+             "illustrative_richness": "minimal", "accent_strategy": "monochrome_plus_one"}
+        assert _score_style_match(s, dict(s)) == 4.0
+
+    def test_zero_match_scores_zero(self):
+        plan = {"tone": "creative_bold", "density": "high",
+                "illustrative_richness": "rich", "accent_strategy": "full_palette"}
+        ex = {"tone": "executive_formal", "density": "low",
+              "illustrative_richness": "minimal", "accent_strategy": "monochrome_plus_one"}
+        # tone diff, density diff=2 (0.0), illust diff, accent diff → 0.0
+        assert _score_style_match(plan, ex) == 0.0
+
+    def test_density_one_step_partial_credit(self):
+        plan = {"density": "medium"}
+        ex_low = {"density": "low"}
+        ex_high = {"density": "high"}
+        ex_medium = {"density": "medium"}
+        assert _score_style_match(plan, ex_medium) == 1.0
+        assert _score_style_match(plan, ex_low) == 0.5
+        assert _score_style_match(plan, ex_high) == 0.5
+
+    def test_density_two_step_no_credit(self):
+        assert _score_style_match({"density": "low"}, {"density": "high"}) == 0.0
+
+    def test_empty_plan_or_example_returns_zero(self):
+        assert _score_style_match({}, {"tone": "executive_formal"}) == 0.0
+        assert _score_style_match({"tone": "executive_formal"}, {}) == 0.0
+        assert _score_style_match({}, {}) == 0.0
+
+    def test_missing_field_contributes_zero(self):
+        # Plan has density only; example matches density only.
+        assert _score_style_match({"density": "medium"}, {"density": "medium"}) == 1.0
+
+    def test_unknown_density_value_contributes_zero(self):
+        # "extreme" is not in the rank map, so the density dimension yields 0.
+        assert _score_style_match({"density": "extreme"}, {"density": "high"}) == 0.0
+
+
+class TestRankCandidates:
+    def test_picks_better_match_first(self, styled_tree):
+        plan_style = {"density": "high", "tone": "executive_formal",
+                      "illustrative_richness": "minimal", "accent_strategy": "full_palette"}
+        candidates = [
+            styled_tree / "process_flow" / "low_dense",
+            styled_tree / "process_flow" / "high_dense",
+        ]
+        ranked = _rank_candidates(candidates, plan_style)
+        assert ranked[0].name == "high_dense"
+        assert ranked[1].name == "low_dense"
+
+    def test_no_plan_style_preserves_alpha_order(self, styled_tree):
+        candidates = [
+            styled_tree / "process_flow" / "low_dense",
+            styled_tree / "process_flow" / "high_dense",
+        ]
+        # Empty plan style → input order preserved (alpha from sorted iterdir)
+        assert _rank_candidates(candidates, {}) == candidates
+
+    def test_tie_breaks_alphabetically(self, styled_tree):
+        plan_style = {"density": "low", "tone": "executive_formal",
+                      "illustrative_richness": "minimal", "accent_strategy": "monochrome_plus_one"}
+        # Both score equally if styles match — but only low_dense matches here.
+        # Add a same-score scenario via a twin.
+        twin = styled_tree / "process_flow" / "alpha_first"
+        twin.mkdir()
+        (twin / "build.py").write_text("")
+        (twin / "metadata.json").write_text(json.dumps({
+            "archetype": "process_flow",
+            "style": {"tone": "executive_formal", "density": "low",
+                      "illustrative_richness": "minimal",
+                      "accent_strategy": "monochrome_plus_one"},
+        }))
+        ranked = _rank_candidates(
+            [styled_tree / "process_flow" / "low_dense", twin], plan_style
+        )
+        # Both score 4.0, alpha_first wins on name tiebreak.
+        assert ranked[0].name == "alpha_first"
+
+
+class TestStyleAwareSelection:
+    def test_picks_high_density_example_for_high_density_plan(self, styled_tree):
+        plan = _plan_with_style(["process_flow"], {
+            "tone": "executive_formal", "density": "high",
+            "illustrative_richness": "minimal", "accent_strategy": "full_palette",
+        })
+        snippets = select_examples(plan, max_examples=1, examples_dir=styled_tree)
+        assert len(snippets) == 1
+        assert snippets[0].name == "process_flow/high_dense"
+
+    def test_picks_low_density_example_for_low_density_plan(self, styled_tree):
+        plan = _plan_with_style(["process_flow"], {
+            "tone": "executive_formal", "density": "low",
+            "illustrative_richness": "minimal", "accent_strategy": "monochrome_plus_one",
+        })
+        snippets = select_examples(plan, max_examples=1, examples_dir=styled_tree)
+        assert len(snippets) == 1
+        assert snippets[0].name == "process_flow/low_dense"
+
+    def test_no_style_contract_falls_back_to_alpha(self, styled_tree):
+        plan = _plan(["process_flow"])  # no style_contract
+        snippets = select_examples(plan, max_examples=1, examples_dir=styled_tree)
+        # Alpha order: high_dense < low_dense, so high_dense wins.
+        assert snippets[0].name == "process_flow/high_dense"
+
+    def test_example_without_style_block_still_selectable(self, styled_tree):
+        plan = _plan_with_style(["comparison_split"], {
+            "tone": "executive_formal", "density": "medium",
+            "illustrative_richness": "minimal", "accent_strategy": "full_palette",
+        })
+        snippets = select_examples(plan, max_examples=1, examples_dir=styled_tree)
+        # Only one comparison_split example exists; it has no style block,
+        # but selection must still return it (Phase 1 picks the only candidate).
+        assert len(snippets) == 1
+        assert snippets[0].archetype == "comparison_split"
+
+
+class TestLoadStyle:
+    def test_returns_style_block(self, styled_tree):
+        style = _load_style(styled_tree / "process_flow" / "high_dense")
+        assert style["density"] == "high"
+        assert style["accent_strategy"] == "full_palette"
+
+    def test_missing_style_returns_empty_dict(self, styled_tree):
+        style = _load_style(styled_tree / "comparison_split" / "no_style")
+        assert style == {}
+
+    def test_missing_metadata_returns_empty_dict(self, tmp_path):
+        assert _load_style(tmp_path / "nonexistent") == {}

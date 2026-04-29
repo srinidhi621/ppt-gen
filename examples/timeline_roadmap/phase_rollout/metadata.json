@@ -1,0 +1,35 @@
+{
+  "archetype": "timeline_roadmap",
+  "source": "assets/ground_truth/internal_inbox/designer_reference_slides.pptx slide 21 ('Roadmap & Timeline – Phase 2.0'). The original has 4 phase blocks with rounded-corner duration tags ('6 weeks', '8 weeks', '6 weeks') and 'Feedback Alignment' descriptions per phase, connected by directional arrows. This example reproduces the 4-phase shape with simplified phase contents (number + name + 2-3 activity bullets + duration pill) and a horizontal connector line tying the discs together.",
+  "designer": "Ascendion designer reference set",
+  "intent": "Dense 4-phase rollout slide where each phase carries a number, name, set of 2-3 activities, and an explicit duration. Use for program plans that span 16-32 weeks across 4 distinct phases (Foundation → MVP → Scale → Production is the canonical shape). Distinct from development_arc (3 phases with risk callouts) — choose phase_rollout when the audience needs to see week durations and concrete activities per phase.",
+  "invariants": [
+    "exactly 4 phase columns laid out horizontally",
+    "horizontal connector line behind the phase discs",
+    "each phase: numbered disc on the connector line + phase name + duration pill + activity card with 2-3 bulleted items",
+    "phase number disc uses accent_1 fill with text_on_dark (no separate rect — text shape's own fill draws the disc)",
+    "duration pill uses accent_2 fill with text_on_dark, kicker type style",
+    "activity card has bg_primary fill with subtle accent_6 outline; bullet markers are small accent_1 squares",
+    "no risk callouts (use development_arc for that pattern)"
+  ],
+  "variables": [
+    "phase number ('01' through '04')",
+    "phase name (1-2 words: Foundation / MVP / Scale / Production / Discovery / Pilot / Rollout / Hand-off)",
+    "phase duration ('4 weeks' / '6 weeks' / '8 weeks' / '12 weeks')",
+    "activity bullets (3 per phase, 4-7 words each, action-led verb opener)",
+    "headline (claim with total program duration mentioned)"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 38,
+    "max_shapes": 52,
+    "text_density": "high"
+  },
+  "style": {
+    "tone": "executive_formal",
+    "density": "high",
+    "illustrative_richness": "minimal",
+    "accent_strategy": "monochrome_plus_one"
+  }
+}

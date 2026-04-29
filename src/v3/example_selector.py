@@ -2,8 +2,19 @@
 
 Given a deck plan, picks 1–3 example ``build.py`` files from the
 ``examples/`` library to inject as context into the builder prompt.
-Prefers one example per unique archetype; caps at ``max_examples``
-to stay within token budget.
+Prefers one example per unique archetype; within an archetype, picks
+the example whose ``metadata.json:style`` block best matches the
+deck plan's ``style_contract``. Caps at ``max_examples`` to stay
+within token budget.
+
+Selection is style-aware: when an archetype has multiple examples,
+the selector scores each candidate's style against the deck-level
+style contract on four dimensions (tone, density,
+illustrative_richness, accent_strategy). ``density`` is treated as
+ordinal (low<medium<high) so a "medium" plan prefers a "medium"
+example over a "high" one over a "low" one. The other three fields
+score 1.0 for an exact match, 0.0 otherwise. Ties fall back to
+alphabetical example name (deterministic).
 
 Usage::
 
@@ -23,6 +34,10 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 _EXAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "examples"
+
+# Density is the only ordinal style dimension; map to numeric for
+# distance scoring. Unknown values get None and contribute 0.0.
+_DENSITY_RANK = {"low": 0, "medium": 1, "high": 2}
 
 
 @dataclass(frozen=True)
@@ -65,6 +80,61 @@ def _discover_examples(examples_dir: Path | None = None) -> dict[str, list[Path]
     return result
 
 
+def _load_style(example_dir: Path) -> dict:
+    """Return the example's ``metadata.json:style`` block, or {} if absent."""
+    try:
+        meta = json.loads((example_dir / "metadata.json").read_text(encoding="utf-8"))
+        style = meta.get("style") or {}
+        return style if isinstance(style, dict) else {}
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
+def _score_style_match(plan_style: dict, ex_style: dict) -> float:
+    """Score how well an example's style matches the plan's style contract.
+
+    Maximum score is 4.0 (one point per dimension). ``density`` uses ordinal
+    distance: exact match = 1.0, one step away = 0.5, two steps = 0.0. The
+    other three dimensions (tone, illustrative_richness, accent_strategy)
+    score 1.0 for an exact match, 0.0 otherwise. Missing fields on either
+    side contribute 0.0.
+    """
+    if not plan_style or not ex_style:
+        return 0.0
+
+    score = 0.0
+
+    # Density: ordinal, partial credit
+    plan_d = _DENSITY_RANK.get(plan_style.get("density"))
+    ex_d = _DENSITY_RANK.get(ex_style.get("density"))
+    if plan_d is not None and ex_d is not None:
+        diff = abs(plan_d - ex_d)
+        if diff == 0:
+            score += 1.0
+        elif diff == 1:
+            score += 0.5
+        # diff == 2 contributes 0.0
+
+    # Other dimensions: exact match only
+    for field in ("tone", "illustrative_richness", "accent_strategy"):
+        p = plan_style.get(field)
+        e = ex_style.get(field)
+        if p and e and p == e:
+            score += 1.0
+
+    return score
+
+
+def _rank_candidates(candidates: list[Path], plan_style: dict) -> list[Path]:
+    """Order candidates by style match (descending), name (ascending) as tiebreak."""
+    if not plan_style:
+        # No style guidance: preserve historic alphabetical order.
+        return list(candidates)
+    scored = [(_score_style_match(plan_style, _load_style(c)), c.name, c) for c in candidates]
+    scored.sort(key=lambda t: (-t[0], t[1]))
+    return [c for _, _, c in scored]
+
+
 def select_examples(
     deck_plan: dict,
     *,
@@ -75,14 +145,19 @@ def select_examples(
 
     Strategy:
     1. Collect unique archetypes from the deck plan's slides.
-    2. For each archetype, pick the first available example.
-    3. Cap at *max_examples* (prefer diversity over duplicates).
-    4. If fewer archetypes than max_examples, fill with additional
-       examples from archetypes that have multiple options.
+    2. For each archetype, pick the example whose ``style`` block best
+       matches the deck plan's ``style_contract`` (see
+       :func:`_score_style_match`). Ties fall back to alphabetical
+       example name (deterministic).
+    3. Cap at *max_examples* (prefer archetype diversity over second
+       examples of the same archetype).
+    4. If fewer plan archetypes than *max_examples*, fill remaining
+       slots with second-best examples from already-covered archetypes.
 
     Returns a list of ExampleSnippet with the source code.
     """
     library = _discover_examples(examples_dir)
+    plan_style = deck_plan.get("style_contract") or {}
 
     # Collect unique archetypes in plan order
     seen: set[str] = set()
@@ -96,12 +171,12 @@ def select_examples(
     selected: list[ExampleSnippet] = []
     used_dirs: set[Path] = set()
 
-    # Phase 1: one example per unique archetype
+    # Phase 1: one style-best example per unique archetype
     for arch in plan_archetypes:
         if len(selected) >= max_examples:
             break
-        candidates = library.get(arch, [])
-        for cdir in candidates:
+        ranked = _rank_candidates(library.get(arch, []), plan_style)
+        for cdir in ranked:
             if cdir not in used_dirs:
                 snippet = _load_snippet(cdir, arch)
                 if snippet:
@@ -109,13 +184,15 @@ def select_examples(
                     used_dirs.add(cdir)
                     break
 
-    # Phase 2: fill remaining slots with second examples (diversity)
+    # Phase 2: fill remaining slots with second-best examples for the
+    # same plan archetypes (still style-ranked, just skipping the one
+    # already used).
     if len(selected) < max_examples:
         for arch in plan_archetypes:
             if len(selected) >= max_examples:
                 break
-            candidates = library.get(arch, [])
-            for cdir in candidates:
+            ranked = _rank_candidates(library.get(arch, []), plan_style)
+            for cdir in ranked:
                 if cdir not in used_dirs:
                     snippet = _load_snippet(cdir, arch)
                     if snippet:
@@ -123,12 +200,13 @@ def select_examples(
                         used_dirs.add(cdir)
                         break
 
-    # Phase 3: if still short, pick from any available archetype
+    # Phase 3: if still short (very rare), pick from any archetype.
     if len(selected) < max_examples:
         for arch, dirs in library.items():
             if len(selected) >= max_examples:
                 break
-            for cdir in dirs:
+            ranked = _rank_candidates(dirs, plan_style)
+            for cdir in ranked:
                 if cdir not in used_dirs:
                     snippet = _load_snippet(cdir, arch)
                     if snippet:
@@ -137,9 +215,10 @@ def select_examples(
                         break
 
     logger.info(
-        "Selected %d examples for %d plan archetypes: %s",
+        "Selected %d examples for %d plan archetypes (style=%s): %s",
         len(selected),
         len(plan_archetypes),
+        plan_style or "none",
         [s.name for s in selected],
     )
     return selected

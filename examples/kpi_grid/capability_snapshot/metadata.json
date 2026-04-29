@@ -1,0 +1,40 @@
+{
+  "archetype": "kpi_grid",
+  "source": "assets/ground_truth/internal_inbox/designer_reference_slides.pptx (slide 14, S15) \u2014 KPI band inspiration",
+  "designer": "internal (Collabera Digital AI Services Suite slide)",
+  "intent": "Present six headline outcome metrics from a capability area as equal-weight stat blocks. Use when the audience needs to absorb numeric proof points fast (capability snapshot, post-engagement results, baseline/target gap).",
+  "invariants": [
+    "exactly 6 stat cells laid out as a 3-column, 2-row grid",
+    "each cell has a thin vertical accent bar on the left edge (xs width)",
+    "vertical bars rotate through the theme palette (accent_1..accent_4 + accent_6) so each metric carries its own hue rather than one shared accent",
+    "value text uses the title type style and text_primary color",
+    "label text uses caption type style and text_secondary color",
+    "header bar with kicker and title sits above the metrics",
+    "a single sub-line caption introduces what the metrics represent",
+    "values are short tokens (number + unit, percentage, dollar amount, or duration)"
+  ],
+  "variables": [
+    "number of metrics (4-6, padded to fill the grid evenly)",
+    "value format (count, percentage, currency, duration)",
+    "label phrasing (noun-led short phrase, 3-7 words)",
+    "header bar kicker and title text",
+    "sub-line caption text (1 sentence)",
+    "accent rotation order (any palette ordering across cells)"
+  ],
+  "canvas": "header_light",
+  "grid": {
+    "cols": 12,
+    "gutter": "md"
+  },
+  "density": {
+    "min_shapes": 18,
+    "max_shapes": 28,
+    "text_density": "moderate"
+  },
+  "style": {
+    "tone": "executive_formal",
+    "density": "medium",
+    "illustrative_richness": "minimal",
+    "accent_strategy": "full_palette"
+  }
+}

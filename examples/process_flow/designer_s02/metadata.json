@@ -20,7 +20,10 @@
     "header area fill color"
   ],
   "canvas": "header_light",
-  "grid": {"cols": 12, "gutter": "md"},
+  "grid": {
+    "cols": 12,
+    "gutter": "md"
+  },
   "density": {
     "min_shapes": 20,
     "max_shapes": 35,
@@ -29,5 +32,11 @@
   "limitations": [
     "Original slide may use custom icons or images within step cards",
     "Connector arrows between steps are not reproduced"
-  ]
+  ],
+  "style": {
+    "tone": "executive_formal",
+    "density": "medium",
+    "illustrative_richness": "minimal",
+    "accent_strategy": "full_palette"
+  }
 }

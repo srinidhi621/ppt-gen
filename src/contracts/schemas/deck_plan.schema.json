@@ -48,7 +48,13 @@
               "comparison_split",
               "content_with_visual",
               "process_flow",
-              "timeline_roadmap"
+              "timeline_roadmap",
+              "kpi_grid",
+              "section_break",
+              "three_cards",
+              "matrix_grid",
+              "quote_callout",
+              "closing_cta"
             ]
           },
           "canvas": {

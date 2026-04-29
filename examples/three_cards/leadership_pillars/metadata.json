@@ -1,0 +1,34 @@
+{
+  "archetype": "three_cards",
+  "source": "Inspired by assets/Corp Deck 2025 - Nov.pptx slide 13 (Three Challenges) and assets/template/Business Process Agentification (Session 4).pptx slide 8 (Components). Corp S13 uses a PowerPoint TABLE that does not decompose into our shape model, so this is a structural seed, not a pixel reproduction.",
+  "designer": "internal (Ascendion executive-pitch shape)",
+  "intent": "Read-fast 3-pillar framing for a claim-led headline ('three forces / pillars / challenges'). Use when the audience needs to absorb three parallel concepts as equal-weight, where ordering does not imply sequence and metrics are not the point.",
+  "invariants": [
+    "exactly 3 cards in a row, equal width via the 12-col grid (4/4/4)",
+    "each card has a top accent bar (xs height) in a distinct theme color",
+    "card title uses hero type style (large, bold) and text_primary color",
+    "card body is 2-3 sentences in body type style; no bullets",
+    "header bar with kicker + claim-headline sits above the cards",
+    "no images, no metrics, no icons in this variant — pure typographic"
+  ],
+  "variables": [
+    "card titles (1-2 word noun)",
+    "card body length (35-65 words each, prose not bullets)",
+    "accent rotation order across the three cards",
+    "header kicker label (matches the framing word, e.g. 'Three forces')",
+    "headline (claim with a verb, must include 'three' or its synonym)"
+  ],
+  "canvas": "header_light",
+  "grid": {"cols": 12, "gutter": "md"},
+  "density": {
+    "min_shapes": 11,
+    "max_shapes": 18,
+    "text_density": "medium"
+  },
+  "style": {
+    "tone": "executive_formal",
+    "density": "medium",
+    "illustrative_richness": "minimal",
+    "accent_strategy": "full_palette"
+  }
+}

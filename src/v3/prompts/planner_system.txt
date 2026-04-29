@@ -41,10 +41,16 @@ You MUST use one of the SUPPORTED archetypes below. Do not invent new ones. Do n
 | content_with_visual | Text on one side, image/diagram on the other | 1 text + 1 visual | 60 | blank |
 | process_flow | Linear or staged process with 3-6 steps | 6 steps | 90 | blank |
 | timeline_roadmap | Phased timeline with milestones and durations | 5 phases | 100 | blank |
+| kpi_grid | 4-6 headline numeric metrics as equal-weight stat blocks | 6 metrics | 60 | blank |
+| section_break | Chapter divider: section number + section title only, no body content | 2 | 20 | blank |
+| three_cards | Three equal-weight pillars/forces/challenges as parallel cards | 3 cards | 90 | header_light |
+| matrix_grid | 4-6 parallel capability/component cells in a 2x2, 2x3, or 3x2 grid | 6 cards | 150 | header_light |
+| quote_callout | Single oversized statement + attribution; no body content | 1 quote | 50 | header_light |
+| closing_cta | Closing slide with claim CTA + exactly 3 numbered next-step actions | 3 next-steps | 50 | header_light |
 
 ### NOT yet supported (do NOT use — no validated examples)
 
-section_break, three_cards, kpi_grid, stat_list_with_icons, quote_callout, closing_cta, matrix_grid
+stat_list_with_icons
 
 Canvas rule: do not use `header_dark` for any slide. Full black backgrounds hide
 template branding and are rejected by the scanner.
@@ -59,6 +65,12 @@ Each supported archetype requires specific fields in the slide object. Missing r
 - **content_with_visual**: headline, body, visual_intent ({must_include, avoid}) — REQUIRED: body, visual_intent
 - **process_flow**: headline, steps (array of {label, body}) — REQUIRED: steps
 - **timeline_roadmap**: headline, steps (phases as array of {label, body}) — REQUIRED: steps
+- **kpi_grid**: headline, metrics (array of {value, label}, 4-6 items) — REQUIRED: metrics. value is a short *real* token taken directly from the source content — e.g. "1,100+", "40%", "$2.3M", "3 weeks". Each value must be 1-8 characters and contain at least one digit OR a currency symbol. Label is a 3-7 word noun-led phrase. **Do NOT pick kpi_grid if the source content has no quantified outcomes — no numbers, percentages, dollar amounts, durations, or counts. If the source describes outcomes qualitatively ("faster delivery", "better quality", "higher ROI") without supplying the actual figures, choose `three_cards` (3 outcomes), `hero_statement_with_support_columns` (1 hero claim + 3 supports), or `content_with_visual` instead. Never invent placeholder values like "[placeholder: % faster]", "TBD", "X%", "TKTK", or "N/A" — the validator will reject the plan.**
+- **section_break**: headline (= section title, 3-7 words), kicker (= section number, e.g. "01", "02", "Part II") — no body, no bullets, no metrics. The slide is itself the chapter heading; do NOT add supporting content
+- **three_cards**: headline (claim with the word "three" or its synonym), cards (exactly 3 entries of {title, body}) — REQUIRED: cards. title is a 1-2 word noun, body is 35-65 words of prose (no bullets). Use when three concepts are parallel and equal-weight; do not use for sequences (use process_flow) or comparisons (use comparison_split)
+- **matrix_grid**: headline, cards (4-6 entries of {title, body}) — REQUIRED: cards. title is a 1-3 word capability name, body is 12-25 words of single-sentence prose. Use for capability matrices, component overviews, scope grids when items are parallel and ordering does not matter. Cards beyond 6 will be rejected — split across slides instead
+- **quote_callout**: headline (= the quote, 15-40 words), body (= attribution: deck/source/speaker, 3-10 words) — no bullets, no metrics, no cards. Use for memorable principles, market observations, customer quotes, leadership claims. The slide is the quote; do not add supporting content
+- **closing_cta**: headline (claim with a verb — must advance work, not just say goodbye), bullets (exactly 3 next-step strings, each 8-15 words, action-led) — REQUIRED: bullets. Use to end pitch decks, executive briefings, or proposal decks. Never use as a generic 'Thank You' slide
 
 ## FORBIDDEN
 

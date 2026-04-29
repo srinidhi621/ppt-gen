@@ -89,6 +89,31 @@ class TestValidateDeckPlan:
             "timeline_roadmap": {
                 "steps": [{"label": "Phase 1", "body": "Begin"}],
             },
+            "kpi_grid": {
+                "metrics": [{"value": "10x", "label": "Faster delivery"}],
+            },
+            "section_break": {},
+            "three_cards": {
+                "cards": [
+                    {"title": "Talent", "body": "x"},
+                    {"title": "Tooling", "body": "y"},
+                    {"title": "Trust", "body": "z"},
+                ],
+            },
+            "matrix_grid": {
+                "cards": [
+                    {"title": "A", "body": "x"},
+                    {"title": "B", "body": "y"},
+                    {"title": "C", "body": "z"},
+                    {"title": "D", "body": "w"},
+                ],
+            },
+            "quote_callout": {
+                "body": "Source attribution",
+            },
+            "closing_cta": {
+                "bullets": ["Sign SOW", "Run audit", "Produce 30-60-90"],
+            },
         }
         for archetype in SUPPORTED_ARCHETYPES:
             extras = archetype_extras.get(archetype, {})
@@ -278,6 +303,91 @@ class TestValidateDeckPlan:
         errors = validate_deck_plan(plan)
         assert errors == []
 
+    # ------------------------------------------------------------------
+    # kpi_grid placeholder/non-numeric value rejection (PR-C-b)
+    # ------------------------------------------------------------------
+    # Regression guard for the MS-02 failure mode where the planner picked
+    # kpi_grid for content with no numbers and invented placeholder strings
+    # like "[placeholder: % faster]" that overflowed the value box.
+
+    def _kpi_plan(self, *metrics):
+        return _minimal_plan(slides=[_minimal_slide(
+            archetype="kpi_grid",
+            metrics=list(metrics),
+        )])
+
+    def test_kpi_value_with_placeholder_token_rejected(self):
+        plan = self._kpi_plan({"value": "[placeholder: % faster]", "label": "speed"})
+        errors = validate_deck_plan(plan)
+        assert any("placeholder" in e for e in errors)
+
+    def test_kpi_value_tbd_rejected(self):
+        plan = self._kpi_plan({"value": "TBD", "label": "later"})
+        errors = validate_deck_plan(plan)
+        assert any("placeholder" in e.lower() or "TBD" in e for e in errors)
+
+    def test_kpi_value_bracketed_annotation_rejected(self):
+        plan = self._kpi_plan({"value": "[insert metric]", "label": "speed"})
+        errors = validate_deck_plan(plan)
+        assert any("placeholder" in e for e in errors)
+
+    def test_kpi_value_without_digit_or_currency_rejected(self):
+        plan = self._kpi_plan({"value": "fast", "label": "speed"})
+        errors = validate_deck_plan(plan)
+        assert any("digit or currency" in e for e in errors)
+
+    def test_kpi_value_with_digit_accepted(self):
+        plan = self._kpi_plan(
+            {"value": "40%", "label": "faster cycle time"},
+            {"value": "11,000+", "label": "Ascenders globally"},
+            {"value": "3 weeks", "label": "average lead time"},
+            {"value": "$2.3M", "label": "annual savings"},
+        )
+        errors = validate_deck_plan(plan)
+        assert errors == []
+
+    def test_kpi_value_with_currency_only_accepted(self):
+        # Edge case: a pure currency token like "₹" is unusual but allowed
+        # since the symbol satisfies the reality check.
+        plan = self._kpi_plan({"value": "₹2L", "label": "indian rupee threshold"})
+        errors = validate_deck_plan(plan)
+        assert errors == []
+
+    def test_kpi_one_bad_value_rejects_whole_plan(self):
+        plan = self._kpi_plan(
+            {"value": "40%", "label": "good metric"},
+            {"value": "[placeholder: ROI]", "label": "bad metric"},
+            {"value": "10x", "label": "another good"},
+        )
+        errors = validate_deck_plan(plan)
+        # Exactly one error pointing at metrics[1]
+        placeholder_errors = [e for e in errors if "placeholder" in e]
+        assert len(placeholder_errors) == 1
+        assert "metrics[1]" in placeholder_errors[0]
+
+    def test_kpi_validator_does_not_apply_to_other_archetypes(self):
+        # three_cards has cards with title/body — "TBD" body is fine here
+        # because we don't validate kpi_grid rules against three_cards.
+        plan = _minimal_plan(slides=[_minimal_slide(
+            archetype="three_cards",
+            cards=[
+                {"title": "A", "body": "TBD body content"},
+                {"title": "B", "body": "Real body"},
+                {"title": "C", "body": "More body"},
+            ],
+        )])
+        errors = validate_deck_plan(plan)
+        assert errors == []
+
+    def test_kpi_validator_helpful_error_suggests_alternatives(self):
+        plan = self._kpi_plan({"value": "[placeholder]", "label": "x"})
+        errors = validate_deck_plan(plan)
+        msg = " ".join(errors)
+        # Error must point the planner at concrete alternatives so the
+        # retry has guidance, not just a "no" signal.
+        assert "three_cards" in msg
+        assert "hero_statement_with_support_columns" in msg
+
 
 # ---------------------------------------------------------------------------
 # _build_user_message
@@ -306,10 +416,14 @@ class TestBuildUserMessage:
         msg = _build_user_message(nc)
         assert "hero_title" in msg
         assert "process_flow" in msg
+        assert "kpi_grid" in msg
+        assert "section_break" in msg
+        assert "three_cards" in msg
+        assert "matrix_grid" in msg
+        assert "quote_callout" in msg
+        assert "closing_cta" in msg
         # Unsupported archetypes must NOT appear in the user message
-        assert "three_cards" not in msg
-        assert "kpi_grid" not in msg
-        assert "matrix_grid" not in msg
+        assert "stat_list_with_icons" not in msg
 
     def test_includes_section_content(self):
         nc = {"title": "Test", "sections": [{"heading": "Revenue", "body": "Q3 grew 14%"}], "metadata": {}}
